@@ -1,0 +1,87 @@
+.main {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.welcomeSection {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 10%;
+    height: 300px;
+    min-width: 60vw;
+    border-radius: 20px;
+    overflow: hidden;
+    clip-path: inset(0 round 20px);
+    // border: 1px solid black;
+    background-color: transparent;
+    transition: 0.2s;
+    a {
+        color: #e8a18e;
+    }
+}
+
+.welcomeSectionImageContainer {
+    position: fixed;
+    bottom: 0;
+    right: 13%;
+    opacity: 0;
+    transition: opacity 0.2s, right 0.2s, filter 0.3s;
+}
+
+.welcomeSectionImageContainer {
+    animation: mirai;
+    animation-fill-mode: forwards;
+    animation-duration: 0.3s;
+    animation-play-state: paused;
+}
+
+.welcomeSection:hover {
+    background-color: rgba(255, 231, 231, 255);
+    .welcomeSectionImageContainer {
+        animation-play-state: running;
+    }
+}
+
+@keyframes mirai {
+    100% {
+        opacity: 1;
+        right: 15%;
+        filter: drop-shadow(0px 3px 5px black);
+    }
+}
+
+@media (orientation: portrait) {
+    .welcomeSection {
+        height: 70vh;
+    }
+    .welcomeSectionDescription {
+        background-color: rgba($color: #000000, $alpha: 0.75);
+        h1,
+        p {
+            text-align: center;
+        }
+    }
+    .welcomeSectionImageContainer {
+        bottom: 50%;
+    }
+}
+
+.welcomeSectionDescription {
+    width: 100%;
+    text-align: left;
+    color: #bc9d94;
+    padding: 3vw;
+    a:hover {
+        text-decoration: underline;
+    }
+    h1 {
+        margin: 0;
+        line-height: 1.15;
+        font-size: 4rem;
+    }
+}
