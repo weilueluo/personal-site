@@ -1,12 +1,12 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.scss'
 
-import NavHeader from '../components/NavHeader'
+import styles from '../components/home/Home.module.sass'
 
-import mirai from '../public/images/mirai.png'
+import WelcomeSection from '../components/home/WelcomeSection'
+import CVSection from '../components/home/CVSection'
+import ThreeJSSection from '../components/home/ThreeJSSection'
 
-export default function HomePage() {
+export default function Home() {
   return (
     <div>
       <Head>
@@ -15,25 +15,10 @@ export default function HomePage() {
         <link rel="icon" href="/icons/favicon-32x32.png" />
       </Head>
 
-
       <main className={styles.main}>
-        <section className={styles.welcomeSection}>
-          <div className={styles.welcomeSectionDescription}>
-            <h1>
-              Welcome to<br /> 
-              <a href="/">Weilue's Place</a>
-            </h1>
-            <p>A Computer Graphics Student at UCL.</p>
-          </div>
-          <div className={styles.welcomeSectionImageContainer}>
-            <Image className={styles.welcomeSectionImage} src={mirai} alt="Mirai Image" />
-          </div>
-        </section>
-
-        <NavHeader/>
-
-        <Image className={styles.welcomeSectionImage} src={mirai} alt="Mirai Image" />
-
+        {/* <WelcomeSection/>
+        <CVSection /> */}
+        <ThreeJSSection />
       </main>
     </div>
   )
