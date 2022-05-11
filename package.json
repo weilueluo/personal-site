@@ -20,6 +20,7 @@
     "troika-3d-text": "^0.46.4"
   },
   "devDependencies": {
+    "@babel/plugin-transform-react-jsx-source": "^7.16.7",
     "eslint": "8.14.0",
     "eslint-config-next": "12.1.6"
   }
