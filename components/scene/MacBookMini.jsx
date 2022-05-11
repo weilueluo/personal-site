@@ -6,27 +6,57 @@ source: https://sketchfab.com/3d-models/mini-macbook-pro-2b054523279747c8b5b2e5e
 title: Mini MacBook Pro
 */
 
-import React, { useRef } from 'react'
+import React, { useState } from 'react'
 import { useGLTF } from '@react-three/drei'
+import { animated, config, easings, useSpring } from '@react-spring/three'
+import Text from '../Text';
 
-export default function Model({ ...props }) {
-  const group = useRef()
-  const { nodes, materials } = useGLTF('/models/macbookmini/macbookmini.gltf')
+export default function MacBookMini({ ...props }) {
+
+  const { nodes, materials } = useGLTF('/models/macbookmini/macbookmini.gltf');
+
+  const baseScale = 0.001;
+
+  const [hover, setHover] = useState(false);
+
+  const styles = useSpring({
+    scale: baseScale * (hover ? 1.2 : 1.0),
+    y: (hover ? 0.2 : 0.1),
+    textY: (hover ? 0.1 : -0.5),
+    config: {
+      easing: easings.easeOutExpo,
+      duration: 1000, //ms
+    }
+  })
+
+
   return (
-    <group ref={group} {...props} dispose={null}>
-      <group rotation={[-Math.PI / 2, 0, 0]}>
-        <group rotation={[Math.PI / 2, 0, 0]}>
-          <group position={[8.58, 13.85, 134]} rotation={[0, Math.PI / 2, 0]}>
-            <mesh castShadow receiveShadow geometry={nodes.MacBook_1_MacBook1_0.geometry} material={materials['MacBook.1']} />
-          </group>
-          <group position={[-8.58, -13.85, -134]} rotation={[Math.PI, -0.28, Math.PI]}>
-            <mesh castShadow receiveShadow geometry={nodes.Muis_1_Mat_2.geometry} material={materials.material} />
-            <mesh castShadow receiveShadow geometry={nodes.Muis_1_Mat_0.geometry} material={materials.Mat_0} />
-          </group>
-        </group>
-      </group>
-    </group>
+    <>
+      <animated.group {...props}
+        dispose={null}
+        onPointerOver={() => setHover(true)}
+        onPointerOut={() => setHover(false)}
+        scale={styles.scale}
+        position-y={styles.y}
+      >
+        <animated.group rotation={[-Math.PI / 2, 0, 0]}>
+          <animated.group rotation={[Math.PI / 2, 0, 0]}>
+            <animated.group position={[8.58, 13.85, 134]} rotation={[0, Math.PI / 2, 0]}>
+              <animated.mesh castShadow receiveShadow geometry={nodes.MacBook_1_MacBook1_0.geometry} material={materials['MacBook.1']} />
+            </animated.group>
+            <animated.group position={[-8.58, -13.85, -134]} rotation={[Math.PI, -0.28, Math.PI]}>
+              <animated.mesh castShadow receiveShadow geometry={nodes.Muis_1_Mat_2.geometry} material={materials.material} />
+              <animated.mesh castShadow receiveShadow geometry={nodes.Muis_1_Mat_0.geometry} material={materials.Mat_0} />
+            </animated.group>
+          </animated.group>
+        </animated.group>
+      </animated.group>
+      <Text position-x={0} position-y={styles.textY} position-z={-0.5}>
+        Coding
+      </Text>
+    </>
   )
 }
+
 
 useGLTF.preload('/models/macbookmini/macbookmini.gltf')

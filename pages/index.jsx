@@ -2,9 +2,7 @@ import Head from 'next/head'
 
 import styles from '../components/home/Home.module.sass'
 
-import WelcomeSection from '../components/home/WelcomeSection'
-import CVSection from '../components/home/CVSection'
-import ThreeJSSection from '../components/home/ThreeJSSection'
+import ThreeJSSection from '../components/home/Home'
 
 export default function Home() {
   return (
@@ -16,8 +14,6 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        {/* <WelcomeSection/>
-        <CVSection /> */}
         <ThreeJSSection />
       </main>
     </div>
