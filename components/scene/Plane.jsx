@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import { MeshReflectorMaterial } from "@react-three/drei";
+import { ConfigContext } from "../context/ConfigContext";
+
+
 
 export default function Plane(props) {
+    const config = useContext(ConfigContext)
+
     return (
         <mesh rotation={props.rotation} position={props.position} receiveShadow castShadow>
-            <planeBufferGeometry attach="geometry" args={props.size} />
+            <planeBufferGeometry attach="geometry" args={[config.mapSize, config.mapSize]} />
             <MeshReflectorMaterial
                 blur={[0, 0]} // Blur ground reflections (width, heigt), 0 skips blur
                 mixBlur={0.5} // How much blur mixes with surface roughness (default = 1)
@@ -26,9 +31,8 @@ export default function Plane(props) {
                   3 = distortion channel
                   4 = lod channel (based on the roughness)
                 */
-                args={[20, 20]} // PlaneBufferGeometry arguments
                 
-            //    reflectorOffset={0.2} // Offsets the virtual camera that projects the reflection. Useful when the reflective surface is some distance from the object's origin (default = 0)
+               reflectorOffset={0.1} // Offsets the virtual camera that projects the reflection. Useful when the reflective surface is some distance from the object's origin (default = 0)
             />
         </mesh>
     );
@@ -37,6 +41,5 @@ export default function Plane(props) {
 Plane.defaultProps = {
     'rotation': [-Math.PI / 2, 0, 0],
     'position': [0, 0, 0],
-    'color': '#bfbfbf',
-    'size': [20, 20]
+    'color': '#bfbfbf'
 }

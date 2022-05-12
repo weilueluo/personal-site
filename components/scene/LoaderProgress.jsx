@@ -35,6 +35,7 @@ export default function LoaderProgress() {
     DefaultLoadingManager.onError = function (url) {
         console.log('There was an error loading ' + url);
         setError(url);
+        setComplete(false)
     };
 
     return (
