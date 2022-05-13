@@ -15,7 +15,7 @@ export default function Text(props) {
         <Suspense fallback={null}>
             <animated.mesh {...props} castShadow receiveShadow>
                 <textGeometry args={[props.children, { font, size: props.size, height: props.height }]} />
-                <meshPhysicalMaterial attach={'material'} color={'gray'}/>
+                <meshPhysicalMaterial attach={'material'} color={props.color}/>
             </animated.mesh>
         </Suspense>
     )
@@ -23,5 +23,6 @@ export default function Text(props) {
 
 Text.defaultProps = {
     size: 0.2,
-    height: 0.05
+    height: 0.05,
+    color: 'gray',
 }

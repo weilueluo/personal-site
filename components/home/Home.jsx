@@ -49,7 +49,7 @@ export default function Home() {
                 /> */}
 
                 <spotLight args={['#ffffff']}
-                    position={[0, 6, 0]}
+                    position={[0, 10, 0]}
                     intensity={10}
                     castShadow={true}
                     shadow-bias={-0.00001}  // solve z fighting
@@ -60,11 +60,12 @@ export default function Home() {
                     shadow-camera-fov={30}
                     penumbra={0.5}
                     decay={1}
-                    // shadow-camera-left={-10}
-                    // shadow-camera-right={10}
-                    // shadow-camera-top={10}
-                    // shadow-camera-bottom={-10}
+                    shadow-camera-left={-10}
+                    shadow-camera-right={10}
+                    shadow-camera-top={10}
+                    shadow-camera-bottom={-10}
                 />
+
 
                 <Plane />
 
