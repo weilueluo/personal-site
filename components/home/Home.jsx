@@ -8,10 +8,10 @@ import ShibaDog from '../models/ShibaDog';
 import MacBookPro from '../models/Macbookpro';
 import WelcomeText from '../scene/WelcomeText';
 import { ConfigContext } from '../context/ConfigContext';
-import Rushia from '../models/Rushia';
-import Gura from '../models/Gura';
 import SmolComputer from '../models/SmolComputer';
 import Jelly from '../models/Jelly';
+import PurplePlanet from '../models/PurplePlanet';
+import Mona from '../models/mona';
 
 export default function Home() {
 
@@ -48,7 +48,7 @@ export default function Home() {
                     shadow-camera-bottom={-10}
                 /> */}
 
-                <spotLight args={['#ffffff']}
+                {/* <spotLight args={['#ffffff']}
                     position={[0, 10, 0]}
                     intensity={10}
                     castShadow={true}
@@ -64,7 +64,7 @@ export default function Home() {
                     shadow-camera-right={10}
                     shadow-camera-top={10}
                     shadow-camera-bottom={-10}
-                />
+                /> */}
 
 
                 <Plane />
@@ -73,10 +73,12 @@ export default function Home() {
                 <MapControls ref={controlsRef} />
                 <Environment />
                 <MacBookPro />
-                <ShibaDog />
+                {/* <ShibaDog /> */}
                 <WelcomeText />
                 <SmolComputer />
                 <Jelly />
+                <PurplePlanet />
+                <Mona />
                 
             </Canvas>
             <LoaderProgress />

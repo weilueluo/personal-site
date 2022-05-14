@@ -1,0 +1,11 @@
+Model Information:
+* title:	Purple Planet
+* source:	https://sketchfab.com/3d-models/purple-planet-264eb22207184fc99a5e3b1279a763b8
+* author:	Yo.Ri (https://sketchfab.com/grox777)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Purple Planet" (https://sketchfab.com/3d-models/purple-planet-264eb22207184fc99a5e3b1279a763b8) by Yo.Ri (https://sketchfab.com/grox777) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

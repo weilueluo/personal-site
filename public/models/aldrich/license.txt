@@ -1,0 +1,11 @@
+Model Information:
+* title:	Aldrich, Devourer of Gods
+* source:	https://sketchfab.com/3d-models/aldrich-devourer-of-gods-f0af1612a6ad43bb9b1bd7178ea0e2e4
+* author:	9S (https://sketchfab.com/NlNES)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Aldrich, Devourer of Gods" (https://sketchfab.com/3d-models/aldrich-devourer-of-gods-f0af1612a6ad43bb9b1bd7178ea0e2e4) by 9S (https://sketchfab.com/NlNES) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

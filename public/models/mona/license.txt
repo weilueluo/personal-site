@@ -1,0 +1,11 @@
+Model Information:
+* title:	Mona fbx with textures
+* source:	https://sketchfab.com/3d-models/mona-fbx-with-textures-cd55004dcab14b32b702c197213b297a
+* author:	_INSTICT_ (https://sketchfab.com/_INSTICT_)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Mona fbx with textures" (https://sketchfab.com/3d-models/mona-fbx-with-textures-cd55004dcab14b32b702c197213b297a) by _INSTICT_ (https://sketchfab.com/_INSTICT_) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
