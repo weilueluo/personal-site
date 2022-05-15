@@ -11,15 +11,16 @@ export default function Plane(props) {
     return (
         <mesh rotation={props.rotation} position={props.position} receiveShadow castShadow>
             <planeBufferGeometry attach="geometry" args={[config.mapSize, config.mapSize]} />
-            <meshStandardMaterial color={0x000000}/>
+            <meshStandardMaterial color={props.color} opacity={props.opacity}/>
         </mesh>
     );
 }
 
 Plane.defaultProps = {
-    'rotation': [-Math.PI / 2, 0, 0],
-    'position': [0, 0, 0],
-    'color': '#bfbfbf'
+    rotation: [-Math.PI / 2, 0, 0],
+    position: [0, 0, 0],
+    color: 'black',
+    opacity: 0.75
 }
 
 //<MeshReflectorMaterial

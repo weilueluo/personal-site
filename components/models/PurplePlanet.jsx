@@ -30,20 +30,20 @@ export default function PurplePlanet({ ...props }) {
     for (const material of Object.keys(materials)) {
         console.log(materials[material]);
         materials[material].transparent = true
-        materials[material].opacity = 0.7
+        materials[material].opacity = 0.5
         materials[material].fog = false
-        materials[material].emissive = new Color('skyblue')
-        materials[material].emissiveIntensity = 100
+        materials[material].emissive = new Color(0xffffff)
+        materials[material].emissiveIntensity = 1
     }
 
     return (
-        <group ref={group} {...props} dispose={null} position={[50, 5, -50]} rotation={[Math.PI/2, 0, Math.PI/4]}>
+        <group ref={group} {...props} dispose={null} position={[50, 25, 50]} rotation={[-Math.PI/2, 0, Math.PI/4]}>
             <SpotLight
             // position={[0,0,0]}
                 translateY={-5}
                 penumbra={0} 
                 distance={256} 
-                angle={10}
+                angle={128}
                 anglePower={1}
                 attenuation={100}
                 ref={lightRef}

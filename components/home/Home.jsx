@@ -1,17 +1,16 @@
 import { Canvas } from '@react-three/fiber'
-import { MapControls } from '@react-three/drei'
+import { MapControls, useHelper } from '@react-three/drei'
 import { useContext, useRef } from 'react';
 import Plane from '../scene/Plane';
-import Environment from '../scene/Environment';
 import LoaderProgress from '../scene/LoaderProgress';
-import ShibaDog from '../models/ShibaDog';
 import MacBookPro from '../models/Macbookpro';
 import WelcomeText from '../scene/WelcomeText';
 import { ConfigContext } from '../context/ConfigContext';
-import SmolComputer from '../models/SmolComputer';
 import Jelly from '../models/Jelly';
-import PurplePlanet from '../models/PurplePlanet';
-import Mona from '../models/mona';
+import Sun from '../scene/Sun';
+import Sunlight from '../scene/Sunlight';
+import { PointLightHelper } from 'three';
+
 
 export default function Home() {
 
@@ -21,21 +20,21 @@ export default function Home() {
     return (
         <>
             <Canvas
-                camera={{ 
-                    position: [-10, 5, 10], 
+                camera={{
+                    position: [-30, 15, 0],
                     fov: 75,
                     near: 0.1,
-                    far: config['mapSize']
+                    far: config['mapSize'] * 2
                 }}
                 shadows={true}
             >
-                <color attach="background" args={["gray"]} />
-                <fogExp2 attach="fog" args={["gray", 0.05]} />
+                <color attach="background" args={[0xc2c2c2]} />
+                {/* <fogExp2 attach="fog" args={["gray", 0.05]} /> */}
 
                 <ambientLight args={['#ffffff']} intensity={1} />
                 {/* <pointLight args={['#ffffff']}
-                    position={[0, 1, 0]}
-                    intensity={0.35}
+                    position={[0, 10, 0]}
+                    intensity={10}
                     castShadow={true}
                     shadow-bias={-0.00001}
                     shadow-camera-near={0.1}
@@ -49,7 +48,7 @@ export default function Home() {
                 /> */}
 
                 {/* <spotLight args={['#ffffff']}
-                    position={[0, 10, 0]}
+                    position={[20, 10, 20]}
                     intensity={10}
                     castShadow={true}
                     shadow-bias={-0.00001}  // solve z fighting
@@ -68,18 +67,20 @@ export default function Home() {
 
 
                 <Plane />
+                <Sun />
+
 
                 <gridHelper args={[config['mapSize'], config['mapSize']]} />
                 <MapControls ref={controlsRef} />
-                <Environment />
+                {/* <Environment /> */}
                 <MacBookPro />
                 {/* <ShibaDog /> */}
                 <WelcomeText />
-                <SmolComputer />
+                {/* <SmolComputer /> */}
                 <Jelly />
-                <PurplePlanet />
-                <Mona />
-                
+                {/* <PurplePlanet /> */}
+                {/* <Mona /> */}
+
             </Canvas>
             <LoaderProgress />
         </>

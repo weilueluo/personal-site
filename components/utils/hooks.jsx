@@ -10,7 +10,7 @@ export function useHover() {
     return [hover, pointerOverHandler, pointerOutHandler]
 }
 
-export function useUpdateEffect(func, deps) {
+export function useUpdateEffect(func, deps = []) {
     const [firstTime, setFirstTime] = useState(true)
 
     useEffect(() => {
@@ -22,9 +22,13 @@ export function useUpdateEffect(func, deps) {
     }, deps)
 }
 
+export function useOddClick() {
+    const [oddClick, setOddClick] = useState(false);
+    return [() => setOddClick(!oddClick), oddClick]
+}
 
 export function playAnimationsOnClick(actions, reverseOnOddClick = true, duration = 1) {
-    const [oddClick, setOddClick] = useState(false);
+    const [handler, oddClick] = useOddClick()
     useUpdateEffect(() => {
         for (const action of actions) {
             if (reverseOnOddClick) {
@@ -39,7 +43,7 @@ export function playAnimationsOnClick(actions, reverseOnOddClick = true, duratio
         }
     }, [oddClick])
 
-    return () => setOddClick(!oddClick)
+    return handler
 }
 
 export function runOnClick(func, oddClickFunc = null) {

@@ -22,7 +22,8 @@ const gridInnerRadius = 10
 const innerArea = gridInnerRadius ** 2 * Math.PI
 
 // const colors = [0x34131a, 0x431c22, 0x52242a, 0x612d32, 0x6f353a, 0x7e3e42, 0x8c464a, 0x9b4f52, 0xa95759, 0xb86061, 0xc66868].reverse()
-const colors = [0x828282, 0x787878, 0x6e6e6e, 0x646464, 0x5a5a5a, 0x505050, 0x464646, 0x3c3c3c, 0x313131, 0x272727, 0x1c1c1c]
+// const colors = [0x828282, 0x787878, 0x6e6e6e, 0x646464, 0x5a5a5a, 0x505050, 0x464646, 0x3c3c3c, 0x313131, 0x272727, 0x1c1c1c]
+const colors = [0x313131]
 // const colorLength = (gridOuterRadius - gridInnerRadius) / colors.length
 // const colorAreas = Array(colors.length)
 // for (let i = 0, currLength = gridInnerRadius; i < colorAreas.length; i++, currLength += colorLength) {
@@ -46,7 +47,7 @@ while (i < dataArray.length) {
     // }
     dataArray[i] = {
         position: new Vector3(posX, 0, posZ),
-        scale: new Vector3(0.5, Math.random() * 5 + 2, 0.5),
+        scale: new Vector3(0.5, Math.random() * 2, 0.5),
         color: colors[Math.floor(Math.random() * colors.length)]
     }
     i++
@@ -62,32 +63,35 @@ function Boxes() {
         // meshRef.current.rotation.x = Math.sin(time / 4)
         // meshRef.current.rotation.y = Math.sin(time / 2)
         for (let i = 0; i < dataArray.length; i++) {
-            tempObject.position.set(...dataArray[i].position)
             // tempObject.rotation.y = time
             // tempObject.rotation.z = tempObject.rotation.y * 2
             
-            
             // const scale = (dataArray[i].scale = )
             // tempObject.scale.setScalar(scale)
-            tempObject.updateMatrix()
-            meshRef.current.setMatrixAt(i, tempObject.matrix)
             tempObject.scale.set(...dataArray[i].scale)
-
-            if (i == hovered) {
-                tempColor.set('black')
-                meshRef.current.instanceColor.needsUpdate = true
-            } else {
-                tempColor.set(dataArray[i].color)
-            }
             
+            let position = dataArray[i].position.clone()
+            position.y += tempObject.scale.y / 2
+
+            tempObject.position.set(...position)
+            tempObject.updateMatrix()
+
+            // if (i == hovered) {
+            //     tempColor.set('black')
+            //     meshRef.current.instanceColor.needsUpdate = true
+            // } else {
+            //     tempColor.set(dataArray[i].color)
+            // }
+
+            meshRef.current.setMatrixAt(i, tempObject.matrix)
             meshRef.current.setColorAt(i, tempColor)
         }
 
         meshRef.current.instanceMatrix.needsUpdate = true
     })
     return (
-        <instancedMesh castShadow receiveShadow ref={meshRef} args={[null, null, 1000]} onPointerMove={(e) => set(e.instanceId)} onPointerOut={(e) => set(null)}>
-            <boxGeometry args={[0.6, 0.6, 0.6]}>
+        <instancedMesh castShadow receiveShadow ref={meshRef} args={[null, null, dataArray.length]} onPointerMove={(e) => set(e.instanceId)} onPointerOut={(e) => set(null)}>
+            <boxGeometry args={[1, 1, 1]}>
                 {/* <instancedBufferAttribute attachObject={['attributes', 'color']} args={[colorArray, 3]} /> */}
             </boxGeometry>
             <meshBasicMaterial opacity={0.5}/>
