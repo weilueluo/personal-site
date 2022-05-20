@@ -13,9 +13,7 @@ export default function Home() {
         <link rel="icon" href="/icons/favicon-32x32.png" />
       </Head>
 
-      <main className={styles.main}>
-        <ThreeJSSection />
-      </main>
+    <ThreeJSSection />
     </div>
   )
 }

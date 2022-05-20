@@ -36,22 +36,23 @@ export default function MacBookPro({ ...props }) {
   // 
   // trous
   // touche
-  for (const mat of Object.keys(materials)) {
-    console.log(mat);
-    if (mat == "écran noir") {
-      materials[mat] = animated(materials[mat])
-    }
-  }
+  // for (const mat of Object.keys(materials)) {
+  //   if (mat == "écran noir") {
+      
+  //   }
+  // }
+
+  // materials["écran noir"] = animated(materials["écran noir"])
+  // materials["écran noir"].color.set(whiteColor)
 
   const [onClickHandler, oddClick] = useOddClick()
-  const duration = 0.5
 
   useUpdateEffect(() => {
     for (const name of ['Cube.006Action', 'Cube.012Action']) {
       if (oddClick) {
-        playAnimation(actions[name], duration)
+        playAnimation(actions[name], 0.5)
       } else {
-        playAnimationReverse(actions[name], duration)
+        playAnimationReverse(actions[name], 0.5)
       }
     }
   }, [oddClick])
@@ -64,28 +65,13 @@ export default function MacBookPro({ ...props }) {
       color: oddClick ? whiteColor : blackColor
     },
     config: {
-      duration: 1,
-      easing: easings.easeInOutExpo
-      
+      duration: 0.5
     }
   })
 
-  // useUpdateEffect(() => {
-  //   console.log('animating');
-  //   animate({
-  //     color: oddClick ? whiteColor : blackColor,
-  //     onChange: () => {
-  //       console.log('onchange');
-  //       // materials["écran noir"].color = styles.color
-  //     }
-  //   })
-  // }, [oddClick])
-
-  // useFrame(() => {
-  //   console.log(materials["écran noir"]);
-  //   materials["écran noir"].color.set(styles.color)
-  // })
-
+  useFrame(() => {
+    materials["écran noir"].color.set(styles.color)
+  })
 
   const [hover, overHander, outHandler] = useHover();
   setCursorPointerOnHover(hover)

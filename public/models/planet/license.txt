@@ -1,0 +1,11 @@
+Model Information:
+* title:	Planet
+* source:	https://sketchfab.com/3d-models/planet-0104234961624b7aa0cb85d03161babe
+* author:	PounUP (https://sketchfab.com/PounUP)
+
+Model License:
+* license type:	CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
+* requirements:	Author must be credited. No commercial use.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Planet" (https://sketchfab.com/3d-models/planet-0104234961624b7aa0cb85d03161babe) by PounUP (https://sketchfab.com/PounUP) licensed under CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)

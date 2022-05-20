@@ -12,6 +12,11 @@ import { playAnimationsIndefinitely, setCursorPointerOnHover } from '../utils/ut
 import { playAnimationsOnClick, useHover } from '../utils/hooks'
 import { AnimationMixer } from 'three'
 import { LoopOnce } from 'three'
+import { Vector3 } from 'three'
+import { useFrame } from '@react-three/fiber'
+
+
+let position = new Vector3(0, 0.5, 9)
 
 export default function Jelly({ ...props }) {
     const group = useRef()
@@ -48,10 +53,14 @@ export default function Jelly({ ...props }) {
     const [hover, overHandler, outHandler] = useHover()
     setCursorPointerOnHover(hover)
 
+    useFrame(() => {
+        position.x += 0.01
+    })
+
     return (
         <group ref={group} {...props} dispose={null}
             scale={0.02}
-            position={[0, 0.5, 9]}
+            position={position}
             rotation={[0, -Math.PI/2, 0]}
             onClick={onClickHandler}
             onPointerOver={overHandler}
