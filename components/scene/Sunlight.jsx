@@ -41,7 +41,6 @@ export default function Sunlight(props) {
 
     return (
         <pointLight ref={ref} 
-            {...props}
             intensity={10}
             distance={100}
             decay={0.1}
@@ -55,6 +54,7 @@ export default function Sunlight(props) {
             shadow-camera-right={10}
             shadow-camera-top={10}
             shadow-camera-bottom={-10}
+                {...props}
         >
         </pointLight>
     )

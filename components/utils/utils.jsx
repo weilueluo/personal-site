@@ -1,6 +1,5 @@
-import { LoopOnce } from "three";
+import { LoopOnce, LoopRepeat } from "three";
 import { useEffect } from "react";
-import { LoopRepeat } from "three";
 
 export function playAnimation(action, duration = 1) {
     action.reset()

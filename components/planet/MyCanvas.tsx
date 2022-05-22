@@ -3,11 +3,15 @@ import { ACESFilmicToneMapping, sRGBEncoding } from "three";
 import React from "react";
 
 export default function MyCanvas(props) {
+    const {children, ...otherProps} = props
     return (
         <Canvas
             style={{
                 height: '100vh',
                 width: '100vw',
+                position: 'fixed',
+                top: 0,
+                left: 0
             }}
             // https://docs.pmnd.rs/react-three-fiber/api/canvas#render-props
             camera={{
@@ -25,8 +29,9 @@ export default function MyCanvas(props) {
             raycaster={{}}
             shadows={true}
             onCreated={onCreated}
+            {...otherProps}
         >
-            {props.children}
+            {children}
         </Canvas>
     )
 }

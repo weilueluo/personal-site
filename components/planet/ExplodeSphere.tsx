@@ -17,7 +17,7 @@ export default function Model({ ...props }) {
     useUpdateEffect(() => {
         for (const animation of Object.keys(actions)) {
             if (oddClick) {
-                playAnimation(actions[animation])
+                playAnimation(actions[animation], 1, 0.1)
             } else {
                 playAnimationReverse(actions[animation])
             }

@@ -1,19 +1,37 @@
-import MyCanvas from "../planet/MyCanvas";
-import ExplodeSphere from "../planet/ExplodeSphere"
-
 import { OrbitControls, useHelper } from "@react-three/drei";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { DirectionalLightHelper } from "three";
 import Sunlight from "../scene/Sunlight"
+import MyCanvas from "../planet/MyCanvas";
+import ExplodeSphere from "../planet/ExplodeSphere";
+import { getScrollPercent, ScrollContext } from "../context/ScrollContext";
+import SnowBall from "../planet/SnowBall";
+
+const pages = 3
 
 export default function Home() {
+    const scrollAreaRef = useRef()
+    const [scrollPercent, setScrollPercent] = useState(0)
+    useEffect(() => {
+        window.addEventListener('scroll', () => setScrollPercent(getScrollPercent()))
+    })
     return (
-        <MyCanvas>
-            <ExplodeSphere/>
-            <OrbitControls/>
-            <color attach={"background"} args={[0x3c3c3c]}/>
-            <MyLight/>
-        </MyCanvas>
+        <>
+            <MyCanvas>
+                <ScrollContext.Provider value={scrollPercent}>
+                    {/*<ExplodeSphere/>*/}
+                    <SnowBall />
+                </ScrollContext.Provider>
+
+                <OrbitControls enablePan={false}/>
+                <color attach={"background"} args={[0x3c3c3c]}/>
+                <MyLight/>
+
+            </MyCanvas>
+            <div className="scrollArea" ref={scrollAreaRef}>
+                <div style={{ height: `${pages * 100}vh`, width: `100vw` }}/>
+            </div>
+        </>
     );
 }
 
@@ -39,7 +57,7 @@ function MyLight() {
                 shadow-camera-bottom={-10}
             />
 
-            <Sunlight args={['#ffffff']} position={[0,0,0]} />
+            <Sunlight args={['#ffffff']} position={[0, 0, 0]} intensity={100}/>
         </>
     )
 }
