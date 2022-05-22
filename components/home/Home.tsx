@@ -6,6 +6,7 @@ import MyCanvas from "../planet/MyCanvas";
 import ExplodeSphere from "../planet/ExplodeSphere";
 import { getScrollPercent, ScrollContext } from "../context/ScrollContext";
 import SnowBall from "../planet/SnowBall";
+import RockSphere from "../planet/RockSphere";
 
 const pages = 3
 
@@ -20,7 +21,8 @@ export default function Home() {
             <MyCanvas>
                 <ScrollContext.Provider value={scrollPercent}>
                     {/*<ExplodeSphere/>*/}
-                    <SnowBall />
+                    {/*<SnowBall />*/}
+                    <RockSphere />
                 </ScrollContext.Provider>
 
                 <OrbitControls enablePan={false}/>
