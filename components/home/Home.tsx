@@ -3,12 +3,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { DirectionalLightHelper } from "three";
 import Sunlight from "../scene/Sunlight"
 import MyCanvas from "../planet/MyCanvas";
-import ExplodeSphere from "../planet/ExplodeSphere";
 import { getScrollPercent, ScrollContext } from "../context/ScrollContext";
 import SnowBall from "../planet/SnowBall";
-import RockSphere from "../planet/RockSphere";
+import { EffectComposer, Bloom } from '@react-three/postprocessing'
+import { KernelSize } from "postprocessing";
 
-const pages = 3
+const pages = 10
 
 export default function Home() {
     const scrollAreaRef = useRef()
@@ -21,13 +21,17 @@ export default function Home() {
             <MyCanvas>
                 <ScrollContext.Provider value={scrollPercent}>
                     {/*<ExplodeSphere/>*/}
-                    {/*<SnowBall />*/}
-                    <RockSphere />
+                    <SnowBall />
                 </ScrollContext.Provider>
 
-                <OrbitControls enablePan={false}/>
-                <color attach={"background"} args={[0x3c3c3c]}/>
+                <OrbitControls enablePan={false} enableZoom={false}/>
+                <color attach={"background"} args={[0x000000]}/>
                 <MyLight/>
+
+                {/*<EffectComposer multisampling={8}>*/}
+                {/*    <Bloom kernelSize={3} luminanceThreshold={0} luminanceSmoothing={0.4} intensity={0.6} />*/}
+                {/*    <Bloom kernelSize={KernelSize.HUGE} luminanceThreshold={0} luminanceSmoothing={0} intensity={0.5} />*/}
+                {/*</EffectComposer>*/}
 
             </MyCanvas>
             <div className="scrollArea" ref={scrollAreaRef}>

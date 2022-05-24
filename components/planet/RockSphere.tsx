@@ -8,13 +8,27 @@ import { useUpdateEffect } from "../utils/hooks";
 import { playAnimation, playAnimationReverse } from "../utils/utils";
 import { getScrollPercent } from "../context/ScrollContext";
 import { log } from "util";
-import { LoopOnce } from "three";
+import { AnimationMixer, LoopOnce } from "three";
 import { useFrame } from "@react-three/fiber";
 
 export default function Model({ ...props }) {
     const group = useRef()
     const { nodes, materials, animations } = useGLTF('/models/rocksphere/rocksphere-transformed.glb')
     const { actions } = useAnimations(animations, group)
+
+    // let mixer = useRef();
+    // useEffect(() => {
+    //     mixer.current = new AnimationMixer(group.current)
+    //     for (const animation of animations) {
+    //         mixer.current.clipAction(animation).play()
+    //     }
+    // }, [])
+
+    // useFrame(state => {
+    //     if (mixer.current) {
+    //         mixer.current.update(0.01)
+    //     }
+    // })
 
     const [oddClick, setOddClick] = useState(false);
     // useUpdateEffect(() => {
@@ -26,42 +40,42 @@ export default function Model({ ...props }) {
     //         }
     //     }
     // }, [oddClick])
-
-    const wireframeMaterial = materials[''].clone()
-    wireframeMaterial.wireframe = true
+        console.log(materials)
+    // const wireframeMaterial = materials[''].clone()
+    // wireframeMaterial.wireframe = true
     // materials[''].wireframe = true
     // nodes.Sphere_cell001.material.wireframe = true
     const meshes = getMeshes(nodes);
 
 
     const [scrollPercent, setScrollPercent] = useState(0.0)
-    useEffect(() => {
-        window.addEventListener('scroll', () => {
-            console.log('scrolled')
-            setScrollPercent(getScrollPercent())
-        })
-
-        for (const animation of Object.keys(actions)) {
-            actions[animation].reset()
-            actions[animation].setLoop(LoopOnce);
-            actions[animation].clampWhenFinished = true;
-        }
-
-
-    }, [])
+    // useEffect(() => {
+    //     window.addEventListener('scroll', () => {
+    //         console.log('scrolled')
+    //         setScrollPercent(getScrollPercent())
+    //     })
+    //
+    //     for (const animation of Object.keys(actions)) {
+    //         actions[animation].reset()
+    //         actions[animation].setLoop(LoopOnce);
+    //         actions[animation].clampWhenFinished = true;
+    //     }
+    //
+    //
+    // }, [])
 
     // useEffect(() => {
     //     console.log('running animation')
     //
     // }, [actions, scrollPercent])
     //
-    useFrame(state => {
-        for (const animation of Object.keys(actions)) {
-            const action = actions[animation]
-            // const time = action.getClip().duration * scrollPercent / 100
-            action.getMixer().update(state.clock.getDelta())
-        }
-    })
+    // useFrame(state => {
+    //     for (const animation of Object.keys(actions)) {
+    //         const action = actions[animation]
+    //         // const time = action.getClip().duration * scrollPercent / 100
+    //         action.getMixer().update(state.clock.getDelta())
+    //     }
+    // })
 
 
     return (
