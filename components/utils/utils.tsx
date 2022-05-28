@@ -36,7 +36,7 @@ export function clamp(num: number, min: number, max: number) {
 }
 
 // https://stackoverflow.com/a/19270021/6880256
-export function getRandom(arr, n) {
+export function getRandom(arr: Array<any>, n: number) {
     let result = new Array(n),
         len = arr.length,
         taken = new Array(len);

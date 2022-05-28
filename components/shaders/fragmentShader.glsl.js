@@ -4,7 +4,7 @@ export const fragmentShader = `
 
 precision mediump float;
 
-uniform sampler2D uColorMap;
+// uniform sampler2D uColorMap;
 uniform float uTime;
 uniform vec3 uPosition;
 uniform float uScrolledAmount;
@@ -13,29 +13,56 @@ varying vec3 vNormal;
 varying vec2 vUv;
 
 
-void applyShadow(inout vec3 color) {
+bool isSurface() {
     float angle = acos(dot(normalize(uPosition), normalize(vNormal)));
-    if (angle > PI / 2.0) {
-        color *= 0.8;
+    return angle < PI / 8.0;
+}
+
+vec3 applyShadow(in vec3 color) {
+    float angle = acos(dot(normalize(uPosition), normalize(vNormal)));
+    for (int i = 1; i <= 8; i++) {
+        if (angle < PI / float(i)) {
+            color *= 0.8;
+        }
     }
-    //color /= (PI - angle) / (PI * 0.5);
-    // color = vec3(angle / PI, 0.0, 0.0);
+
+    return color;
+}
+
+vec2 tile(vec2 uv, float _zoom){
+    uv *= _zoom;
+    return fract(uv);
+}
+
+float make_cross(vec2 uv, float width) {
+    float line1 = smoothstep(uv.x-width, uv.x, uv.y);
+    line1 -= smoothstep(uv.x, uv.x+width, uv.y);
+    float line2 = smoothstep(uv.x-width, uv.x, 1.0-uv.y);
+    line2 -= smoothstep(uv.x, uv.x+width, 1.0-uv.y);
+
+    return line1 + line2;
 }
 
 void main() {
     //gl_FragColor = vec4(texture2D(uColorMap, vUv).xyz, 1.0);
-
     //vec3 color = vNormal * 0.5 + 0.5;  // diff color for diff normal 
-    vec3 color = normalize(uPosition) * 0.5 + 0.5;  // diff color for diff mesh
-
-    //vec3 color = vec3(sin(uTime), 1.0, 0.0);
-    // gl_FragColor = vec4(color, (sin(uTime) * 0.5 + 0.5)); // change opacity by time
     
-    applyShadow(color);
-    gl_FragColor = vec4(color, 1.0);
+    vec3 color = normalize(uPosition) * 0.5 + 0.5;  // diff color for diff mesh
+    color = vec3(color.xy, abs(sin(uTime * 0.2)));
+    
+    bool surface = isSurface();
+
+    vec2 tile_uv = tile(vUv, 10.0);
+    float lines = make_cross(tile_uv,0.03);
+    if (lines > 0.1 && surface) {
+        color = vec3(0.0,0.0,0.0);
+    }
+
+    color = applyShadow(color);
+    gl_FragColor = vec4(color, 0.9);
+
     //gl_FragColor = vec4(color, 1.0 - uScrolledAmount);
 
     //gl_FragColor = vec4(vNormal, 1.0);
 }
-
 `

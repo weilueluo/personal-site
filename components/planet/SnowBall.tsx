@@ -9,6 +9,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { getScrollPercent } from "../context/ScrollContext";
 import { clamp, getRandom } from "../utils/utils";
 import { Vector3 } from 'three';
+import { useScrollPercent } from '../utils/hooks';
 
 import { fragmentShader } from '../shaders/fragmentShader.glsl'
 import { vertexShader } from '../shaders/vertexShader.glsl'
@@ -23,6 +24,27 @@ export default function Model({ ...props }) {
       const group = useRef()
       const { nodes, materials, animations } = useGLTF('/models/snowball/snow_02_4k-transformed.glb')
       const { actions } = useAnimations(animations, group)
+      
+
+      const uniforms = {
+            // uColorMap: { value: colorMap },
+            uTime: { value: 0.5 },
+            uPosition: { value: new Vector3(0, 0, 0) },
+            uOffsetAmount: { value: 0.0 },
+            uWaveAmount: { value: 0.0 },
+            uScrolledAmount: {value: 0.0 },
+      }
+
+      const meshSharedMaterial = new ShaderMaterial({
+            uniforms: uniforms,
+            vertexShader: vertexShader,
+            fragmentShader: fragmentShader,
+            transparent: true,
+            depthWrite: true,
+      });
+
+      const [meshes, meshMaterials] = getMeshes(nodes, meshSharedMaterial)
+
 
       let mixer = useRef<AnimationMixer>();
       const [maxAnimationDuration, setMaxAnimationDuration] = useState(0)
@@ -31,22 +53,30 @@ export default function Model({ ...props }) {
             for (const animation of animations) {
                   setMaxAnimationDuration(Math.max(maxAnimationDuration, animation.duration))
                   const action = mixer.current.clipAction(animation) as AnimationAction
-                  action.setLoop(LoopPingPong, 1)
+                  action.setLoop(LoopPingPong, Infinity)
                   action.play()
             }
       }, [animations, maxAnimationDuration])
 
-      const [scrollPercent, setScrollPercent] = useState(0.1)
-      useEffect(() => {
-            window.addEventListener('scroll', () => {
-                  setScrollPercent(clamp(getScrollPercent(), 0.1, 99.9))  // avoid flashing at 100%
-            })
-      }, [])
+      const scroll = useScrollPercent(0, 100)
 
       useFrame(state => {
-            if (mixer.current) {
-                  mixer.current.setTime(maxAnimationDuration * scrollPercent / 100)
+            let altScroll = scroll * 2
+            if (altScroll > 1) {
+                  altScroll = 2 - altScroll
             }
+            altScroll = clamp(altScroll, 0, 0.99)  // avoid flashing at 100% animation
+            
+            const time = state.clock.getElapsedTime()
+
+            if (mixer.current) {
+                  mixer.current.setTime(maxAnimationDuration * altScroll)
+            }
+
+            meshMaterials.forEach(mat => {
+                  mat.uniforms.uTime.value = time;
+                  mat.uniforms.uScrolledAmount.value = altScroll;
+            })
       })
 
 
@@ -62,30 +92,16 @@ export default function Model({ ...props }) {
       //       }
       // }, [sceneRef.current]) as Array<Mesh>
 
-      const colorMap = useTexture('/textures/snowball/snow_02_diff_4k.jpg')
-      colorMap.wrapS = colorMap.wrapT = RepeatWrapping
-      const uniforms = {
-            uColorMap: { value: colorMap },
-            uTime: { value: 0.5 },
-            uPosition: { value: new Vector3(0, 0, 0) },
-            uOffsetAmount: { value: 0.0 },
-            uWaveAmount: { value: 0.0 },
-            uScrolledAmount: {value: 0.0 },
-      }
+      // const colorMap = useTexture('/textures/snowball/snow_02_diff_4k.jpg')
+      // colorMap.wrapS = colorMap.wrapT = RepeatWrapping
+      
 
-      const material = new ShaderMaterial({
-            uniforms: uniforms,
-            vertexShader: vertexShader,
-            fragmentShader: fragmentShader
-      });
+
 
       useFrame((state) => {
-            if (scrollPercent > 0.1) {
-                  return
-            }
             const scene = sceneRef.current
-            if (scene) {
-                  scene.rotateOnAxis(new Vector3(1,1,1), state.clock.getDelta() * 1)
+            if (scene && getScrollPercent() < 1) {
+                  scene.rotateOnAxis(new Vector3(1,1,1).normalize(), state.clock.getDelta() * 1.5)
             }
       })
 
@@ -102,7 +118,7 @@ export default function Model({ ...props }) {
                         <group name="Sphere_cell016_cell007_cell001" position={[0.89, 0.38, 0.26]} />
                         <group name="Sphere_cell018_cell_cell004" position={[-0.01, -0.99, 0.14]} />
                         <group name="Sphere_cell018_cell_cell005" position={[0, -0.99, 0.12]} />
-                        <SceneNodes nodes={nodes} sharedMaterial={material} />
+                        {meshes}
                         {atmosphere}
                   </group>
             </group>
@@ -128,7 +144,7 @@ function getAtmosphere() {
 
 import { meshNameToPosition } from './meshData'
 
-function SceneNodes({ nodes, sharedMaterial }) {
+function getMeshes(nodes, sharedMaterial) {
       const meshNodes = Object.entries(nodes).filter(entry => entry[1].type == 'Mesh' && entry[0] != 'Sphere')
       const meshRefs = meshNodes.map(() => useRef())
 
@@ -141,12 +157,17 @@ function SceneNodes({ nodes, sharedMaterial }) {
                   const geometry = nodes[entry[0]].geometry
                   const material: ShaderMaterial = sharedMaterial.clone()
                   const position = meshNameToPosition[entry[0]]
-                  // geometry.computeVertexNormals()
+                  
+                  if (Math.random() < 0.25) {
+                        material.wireframe = true;
+                        // material.depthWrite = false;
+                  }
+
                   const distToCenter = new Vector3(...position).clone().length()
                   
                   material.uniforms.uPosition.value = position
-                  material.uniforms.uWaveAmount.value = Math.random() * distToCenter
-                  material.uniforms.uOffsetAmount.value = Math.random() * distToCenter
+                  material.uniforms.uWaveAmount.value = Math.random() * distToCenter * 0.3
+                  material.uniforms.uOffsetAmount.value = Math.random() * distToCenter * 0.5
                   
                   materials[i] = material
                   meshes[i] = <mesh ref={meshRefs[i]} key={entry[0]} name={entry[0]} castShadow receiveShadow geometry={geometry} material={material} position={position} />
@@ -155,20 +176,11 @@ function SceneNodes({ nodes, sharedMaterial }) {
             return [meshes, materials]
       }, [])
 
-      useFrame((state) => {
-            const time = state.clock.getElapsedTime()
-            const scrolledAmount = clamp(getScrollPercent(), 0, 100) / 100
-            materials.forEach(mat => {
-                  mat.uniforms.uTime.value = time;
-                  mat.uniforms.uScrolledAmount.value = scrolledAmount;
-            })
-      })
-
       // meshRefs.forEach((meshRef) => {
       //       useHelper(meshRef, VertexNormalsHelper)
       // })
       
-      return meshes
+      return [meshes, materials]
 }
 
 useGLTF.preload('/models/snowball/snow_02_4k-transformed.glb')
