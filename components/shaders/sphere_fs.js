@@ -1,4 +1,4 @@
-export const fragmentShader = `
+export const sphere_fs = `
 
 #define PI 3.1415926538
 
@@ -31,6 +31,8 @@ vec3 applyShadow(in vec3 color) {
 
 vec2 tile(vec2 uv, float _zoom){
     uv *= _zoom;
+    uv.x += uTime * 0.1;
+    uv.y += uTime * 0.1 * 2.0;
     return fract(uv);
 }
 
@@ -40,7 +42,7 @@ float make_cross(vec2 uv, float width) {
     float line2 = smoothstep(uv.x-width, uv.x, 1.0-uv.y);
     line2 -= smoothstep(uv.x, uv.x+width, 1.0-uv.y);
 
-    return line1 + line2;
+    return line1;
 }
 
 void main() {
@@ -55,13 +57,15 @@ void main() {
     vec2 tile_uv = tile(vUv, 10.0);
     float lines = make_cross(tile_uv,0.03);
     if (lines > 0.1 && surface) {
-        color = vec3(0.0,0.0,0.0);
+        color = vec3(1.0,1.0,1.0);
     }
 
     color = applyShadow(color);
-    gl_FragColor = vec4(color, 0.9);
+    //gl_FragColor = vec4(color, 0.9);
 
-    //gl_FragColor = vec4(color, 1.0 - uScrolledAmount);
+    //float opacity = max(0.0, 0.9 - uScrolledAmount);
+    float opacity = 0.95;
+    gl_FragColor = vec4(color, opacity);
 
     //gl_FragColor = vec4(vNormal, 1.0);
 }

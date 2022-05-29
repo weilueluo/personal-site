@@ -11,8 +11,8 @@ import { clamp, getRandom } from "../utils/utils";
 import { Vector3 } from 'three';
 import { useScrollPercent } from '../utils/hooks';
 
-import { fragmentShader } from '../shaders/fragmentShader.glsl'
-import { vertexShader } from '../shaders/vertexShader.glsl'
+import { sphere_fs } from '../shaders/sphere_fs'
+import { sphere_vs } from '../shaders/sphere_vs'
 
 import { atmosphereFragmentShader } from '../shaders/atmosphereFragmentShader.glsl'
 import { atmosphereVertexShader } from '../shaders/atmosphereVertexShader.glsl'
@@ -37,8 +37,8 @@ export default function Model({ ...props }) {
 
       const meshSharedMaterial = new ShaderMaterial({
             uniforms: uniforms,
-            vertexShader: vertexShader,
-            fragmentShader: fragmentShader,
+            vertexShader: sphere_vs,
+            fragmentShader: sphere_fs,
             transparent: true,
             depthWrite: true,
       });
@@ -158,7 +158,7 @@ function getMeshes(nodes, sharedMaterial) {
                   const material: ShaderMaterial = sharedMaterial.clone()
                   const position = meshNameToPosition[entry[0]]
                   
-                  if (Math.random() < 0.25) {
+                  if (Math.random() < 0.15) {
                         material.wireframe = true;
                         // material.depthWrite = false;
                   }
