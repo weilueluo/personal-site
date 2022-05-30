@@ -2,7 +2,7 @@ import assert from 'assert';
 import { useState, useEffect } from 'react'
 import { LoopRepeat } from 'three';
 import { getScrollPercent } from '../context/ScrollContext';
-import { playAnimationReverse, playAnimation } from './utils';
+import { playAnimationReverse, playAnimation, clamp } from './utils';
 
 export function useHover() {
     const [hover, setHover] = useState(false);
@@ -89,4 +89,14 @@ export function useScrollPercent(from: number, to: number) {
     }, []) 
 
     return scroll;
+}
+
+export function useAltScroll() {
+    const scroll = useScrollPercent(0, 100);
+    let altScroll = scroll * 2
+    if (altScroll > 1) {
+        altScroll = 2 - altScroll
+    }
+    altScroll = clamp(altScroll, 0, 0.99)  // avoid flashing animation at 100%
+    return altScroll
 }
