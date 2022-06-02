@@ -13,7 +13,8 @@ function Content() {
     return (
         <>
             <MainBall />
-            <SurroundingText />
+            <MainBall scale={5}/>
+            <SurroundingText text={'Hello World'} />
             <GradientBackground />
 
             <OrbitControls enablePan={false} enableZoom={false} />

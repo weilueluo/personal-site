@@ -1,8 +1,7 @@
-export const sphere_fs = `
-
-#define PI 3.1415926538
 
 precision mediump float;
+
+#define PI 3.1415926538
 
 // uniform sampler2D uColorMap;
 uniform float uTime;
@@ -115,4 +114,3 @@ void main() {
 
     //gl_FragColor = vec4(vNormal, 1.0);
 }
-`
