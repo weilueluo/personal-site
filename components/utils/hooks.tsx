@@ -1,6 +1,7 @@
+import { useFrame } from '@react-three/fiber';
 import assert from 'assert';
-import { useState, useEffect } from 'react'
-import { LoopRepeat } from 'three';
+import { useState, useEffect } from 'react';
+import { LoopRepeat, Raycaster } from 'three';
 import { getScrollPercent } from '../context/ScrollContext';
 import { playAnimationReverse, playAnimation, clamp } from './utils';
 
@@ -9,43 +10,47 @@ export function useHover() {
     const pointerOverHandler = () => setHover(true);
     const pointerOutHandler = () => setHover(false);
 
-    return [hover, pointerOverHandler, pointerOutHandler]
+    return [hover, pointerOverHandler, pointerOutHandler];
 }
 
 export function useUpdateEffect(func, deps = []) {
-    const [firstTime, setFirstTime] = useState(true)
+    const [firstTime, setFirstTime] = useState(true);
 
     useEffect(() => {
         if (firstTime) {
-            setFirstTime(false)
+            setFirstTime(false);
         } else {
-            func()
+            func();
         }
-    }, deps)
+    }, deps);
 }
 
 export function useOddClick() {
     const [oddClick, setOddClick] = useState(false);
-    return [() => setOddClick(!oddClick), oddClick]
+    return [() => setOddClick(!oddClick), oddClick];
 }
 
-export function playAnimationsOnClick(actions, reverseOnOddClick = true, duration = 1) {
-    const [handler, oddClick] = useOddClick()
+export function playAnimationsOnClick(
+    actions,
+    reverseOnOddClick = true,
+    duration = 1
+) {
+    const [handler, oddClick] = useOddClick();
     useUpdateEffect(() => {
         for (const action of actions) {
             if (reverseOnOddClick) {
                 if (oddClick) {
-                    playAnimation(action, duration)
+                    playAnimation(action, duration);
                 } else {
-                    playAnimationReverse(action, duration)
+                    playAnimationReverse(action, duration);
                 }
             } else {
-                playAnimation(action)
+                playAnimation(action);
             }
         }
-    }, [oddClick])
+    }, [oddClick]);
 
-    return handler
+    return handler;
 }
 
 export function runOnClick(func, oddClickFunc = null) {
@@ -53,50 +58,79 @@ export function runOnClick(func, oddClickFunc = null) {
     useUpdateEffect(() => {
         for (const action of actions) {
             if (oddClickFunc && oddClick) {
-                oddClickFunc()
+                oddClickFunc();
             } else {
-                func()
+                func();
             }
-               
         }
-    }, [oddClick])
+    }, [oddClick]);
 
-    return () => setOddClick(!oddClick)
+    return () => setOddClick(!oddClick);
 }
 
 // return a state that takes value from 0-1, for the give from and to percentage of scroll
 export function useScrollPercent(from: number, to: number) {
-    assert(from < to && from >= 0 && to <= 100)
-    const upper = to - from
+    assert(from < to && from >= 0 && to <= 100);
+    const upper = to - from;
     const sp = getScrollPercent();
-    let initValue: number
+    let initValue: number;
     if (sp <= from) {
-        initValue = 0
+        initValue = 0;
     } else if (sp >= to) {
-        initValue = 1.0
+        initValue = 1.0;
     } else {
-        initValue = (sp - from) / upper
+        initValue = (sp - from) / upper;
     }
-    
-    const [scroll, setScroll] = useState(initValue)
+
+    const [scroll, setScroll] = useState(initValue);
     useEffect(() => {
-        window.addEventListener('scroll', event => {
+        window.addEventListener('scroll', (event) => {
             const sp = getScrollPercent();
             if (sp >= from && sp <= to) {
-                setScroll((sp - from) / upper)
+                setScroll((sp - from) / upper);
             }
-        })
-    }, []) 
+        });
+    }, []);
 
     return scroll;
 }
 
 export function useAltScroll() {
     const scroll = useScrollPercent(0, 100);
-    let altScroll = scroll * 2
+    let altScroll = scroll * 2;
     if (altScroll > 1) {
-        altScroll = 2 - altScroll
+        altScroll = 2 - altScroll;
     }
-    altScroll = clamp(altScroll, 0, 0.99)  // avoid flashing animation at 100%
-    return altScroll
+    altScroll = clamp(altScroll, 0, 0.99); // avoid flashing animation at 100%
+
+    // make number stay at 0.99 longer
+    const stay_duration = 0.3
+    altScroll = (Math.min(0.99, altScroll+stay_duration) - stay_duration) / (1 - stay_duration)
+
+    return altScroll;
+}
+
+export function useMouseHover(objectRef) {
+    const [hover, setHover] = useState(false);
+
+    useFrame((state) => {
+        const object = objectRef.current;
+        if (!object) {
+            setHover(false)
+            return;
+        }
+
+        const objectId = object.id
+        const raycaster = state.raycaster;
+        raycaster.setFromCamera(state.mouse, state.camera);
+
+        const intersects = raycaster.intersectObject(state.scene, true);
+        if (intersects.length > 0 && intersects[0].object.id == objectId) {
+            setHover(true)
+        } else {
+            setHover(false)
+        }
+    });
+
+    return hover;
 }

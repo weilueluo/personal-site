@@ -1,0 +1,157 @@
+import { useAnimations, useGLTF } from '@react-three/drei';
+import { useEffect, useMemo, useRef } from 'react';
+import {
+    AnimationMixer,
+    Group,
+    LoopPingPong,
+    ShaderMaterial,
+    Vector3,
+} from 'three';
+import type { GLTFActions, GLTFResult, Nodes } from '../types/ball';
+import { meshNameToPosition } from './ballMeshData';
+import sphere_fs from '../shaders/sphere_fs.glsl';
+import sphere_vs from '../shaders/sphere_vs.glsl';
+import { useAltScroll } from '../utils/hooks';
+import { useMaxAnimationDuration } from '../utils/utils';
+import { useFrame } from '@react-three/fiber';
+import { useMainBallRadius } from './global';
+
+export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
+    const ballRef = useRef<Group>();
+    const { nodes, animations } = useGLTF(
+        '/models/ball/ball-transformed.glb'
+    ) as GLTFResult;
+    const { actions } = useAnimations<GLTFActions>(animations, ballRef);
+
+    const uniforms = {
+        uTime: { value: 0.5 },
+        uPosition: { value: new Vector3(0, 0, 0) },
+        uOffsetAmount: { value: 0.0 },
+        uWaveAmount: { value: 0.0 },
+        uScrolledAmount: { value: 0.0 },
+    };
+
+    const meshSharedMaterial = new ShaderMaterial({
+        uniforms: uniforms,
+        vertexShader: sphere_vs,
+        fragmentShader: sphere_fs,
+        transparent: true,
+        depthWrite: true,
+    });
+
+    const [meshes, meshMaterials] = getMeshes(nodes, meshSharedMaterial);
+
+    const maxAnimationDuration = useMaxAnimationDuration(animations);
+
+    let mixer = useRef(null);
+    useEffect(() => {
+        mixer.current = new AnimationMixer(ballRef.current);
+        for (const animation of animations) {
+            const action = mixer.current.clipAction(animation);
+            action.setLoop(LoopPingPong, Infinity);
+            action.play();
+        }
+    }, [animations, maxAnimationDuration]);
+
+    const altScroll = useAltScroll();
+
+    useFrame((state) => {
+        const time = state.clock.getElapsedTime();
+
+        if (mixer.current) {
+            mixer.current.setTime(maxAnimationDuration * altScroll);
+        }
+
+        meshMaterials.forEach((mat) => {
+            mat.uniforms.uTime.value = time;
+            mat.uniforms.uScrolledAmount.value = altScroll;
+        });
+    });
+
+    useFrame((state) => {
+        const scene = ballRef.current;
+        if (scene) {
+            scene.rotateOnAxis(
+                new Vector3(1, 1, 1).normalize(),
+                state.clock.getDelta() * 1.5
+            );
+        }
+    });
+
+    const radius = useMainBallRadius();
+
+    return (
+        <group ref={ballRef} scale={radius} dispose={null} {...props}>
+            <group name='Scene'>
+                <group
+                    name='Ball_cell198_cell006'
+                    position={[-0.27, -0.81, -0.02]}
+                />
+                <group
+                    name='Ball_cell196_cell001'
+                    position={[0.32, -0.75, -0.27]}
+                />
+                <group
+                    name='Ball_cell186_cell005'
+                    position={[-0.7, -0.34, 0.36]}
+                />
+                {meshes}
+            </group>
+        </group>
+    );
+}
+
+function getMeshes(nodes: Nodes, sharedMaterial: ShaderMaterial) {
+    const meshNodes = Object.entries(nodes).filter(
+        (entry) => entry[1].type == 'Mesh'
+    );
+    const meshRefs = meshNodes.map((_) => useRef());
+
+    const [meshes, materials] = useMemo(() => {
+        const meshes = Array(meshNodes.length);
+        const materials = Array(meshNodes.length);
+        meshNodes.forEach((entry, i) => {
+            const geometry = nodes[entry[0]].geometry;
+            const material = sharedMaterial.clone();
+            const position = meshNameToPosition[entry[0]];
+
+            if (Math.random() < 0.15) {
+                material.wireframe = true;
+                // material.depthWrite = false;
+            }
+
+            const distToCenter = new Vector3(...position).clone().length();
+
+            material.uniforms.uPosition.value = position;
+            material.uniforms.uWaveAmount.value =
+                Math.random() * distToCenter * 0.0;
+            material.uniforms.uOffsetAmount.value =
+                Math.random() * distToCenter * 0;
+
+            materials[i] = material;
+            geometry.computeVertexNormals();
+            meshes[i] = (
+                <mesh
+                    ref={meshRefs[i]}
+                    key={entry[0]}
+                    name={entry[0]}
+                    castShadow
+                    receiveShadow
+                    geometry={geometry}
+                    material={material}
+                    position={position}
+                />
+            );
+        });
+
+        return [meshes, materials];
+    }, []);
+
+    // meshRefs.forEach((meshRef) => {
+    //       useHelper(meshRef, VertexNormalsHelper)
+    // })
+
+    return [meshes, materials];
+}
+
+useGLTF.preload('/models/ball/ball-transformed.glb');

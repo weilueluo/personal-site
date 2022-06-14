@@ -1,6 +1,6 @@
 import Head from 'next/head'
 
-import ThreeJSSection from '../components/home/Home'
+import ThreeJSHome from '../components/home/Home'
 
 export default function Home() {
     return (
@@ -11,7 +11,7 @@ export default function Home() {
                 <link rel="icon" href="/icons/favicon-32x32.png"/>
             </Head>
 
-            <ThreeJSSection/>
+            <ThreeJSHome/>
         </div>
     )
 }
