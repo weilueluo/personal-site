@@ -23,8 +23,14 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.jsx"  ],
+    "**/*.jsx",
+    "**/*.glsl"
+  ],
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "typeRoots": [
+    "components/types"
+  ],
+  "exportTrailingSlash": true,
 }

@@ -2,22 +2,19 @@ import { useEffect, useRef } from 'react';
 import {
     Color,
     InstancedMesh,
-    MeshStandardMaterial,
     Object3D,
-    SphereBufferGeometry,
-    TetrahedronGeometry,
 } from 'three';
 import { polar2xyz, uniformSphereSample } from '../utils/utils';
-import { useMainBallRadius, useVisibleRadius } from './global';
+import { getMainBallRadius, getVisibleRadius } from './global';
 
 const tempObject = new Object3D();
 const tempColor = new Color();
 const amount = 500;
 const size = 0.1;
 
-const radius = useVisibleRadius();
+const radius = getVisibleRadius();
 
-const mainBallRadius = useMainBallRadius()
+const mainBallRadius = getMainBallRadius()
 
 const positions = Array(amount * 3)
 
@@ -61,7 +58,7 @@ export default function Stars() {
         }
         mesh.instanceMatrix.needsUpdate = true;
         mesh.instanceColor.needsUpdate = true
-    }, [meshRef.current]);
+    }, []);
 
     return (
         <instancedMesh ref={meshRef} args={[null, null, amount]}>

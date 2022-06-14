@@ -1,38 +1,63 @@
 import { useFrame, useLoader } from '@react-three/fiber';
-import { useEffect, useMemo, useState } from 'react';
-import {
-    Box3,
-    DoubleSide,
-    Group,
-    Matrix4,
-    Mesh,
-    MeshBasicMaterial,
-    MeshStandardMaterial,
-    ShaderMaterial,
-    Vector3,
-} from 'three';
+import { useMemo, useState } from 'react';
+import { DoubleSide, ShaderMaterial } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { useAltScroll } from '../utils/hooks';
-import { shorten } from '../utils/utils';
+import { deg2rad, shorten } from '../utils/utils';
 
 import text_fs from '../shaders/text_fs.glsl';
 import text_vs from '../shaders/text_vs.glsl';
-
-function polar2xyz(r, phi, theta) {
-    const x = r * Math.cos(phi) * Math.sin(theta);
-    const y = r * Math.sin(phi) * Math.sin(theta);
-    const z = r * Math.cos(theta);
-
-    return new Vector3(x, y, z);
-}
 
 export default function SurroundingText(props) {
     const altScroll = useAltScroll();
 
     const font = useLoader(FontLoader, '/fonts/Montserrat Medium_Regular.json');
 
-    let [fontMesh, setFontMesh] = useState(null);
+    const characters = props.text.split('');
+
+    let [meshes, meshMaterials, offsets] =
+        computeMeshAndMaterial(
+            characters,
+            font,
+            props.initOffset,
+            props.rotationZ
+        );
+
+    useFrame((state) => {
+        const v = shorten(altScroll, 0.3);
+        const radius = props.radius + props.expandOnScrollSpeed * v;
+        const opacity = 1 - (props.expandOnScrollSpeed == 0 ? 0 : v);
+        const time = state.clock.getElapsedTime();
+
+        let phi = 0;
+        let theta = props.initOffset;
+        const charSpacingAngle = Math.PI / 96;
+
+        for (let i = 0; i < characters.length; i++) {
+            const mat = meshMaterials[i];
+            const offset = offsets[i];
+
+            mat.uniforms.uTime.value = time;
+            mat.uniforms.uRadius.value = radius;
+            mat.uniforms.uOpacity.value = opacity;
+            mat.uniforms.uPhi.value = phi;
+            mat.uniforms.uTheta.value = theta;
+            mat.uniforms.uCenterOffset.value = offset;
+
+            theta +=  Math.atan2(offset, mat.uniforms.uRadius.value) + charSpacingAngle;
+        }
+    });
+
+    return <group>{meshes}</group>;
+}
+
+function computeMeshAndMaterial(characters, font, initOffset, rotationZ) {
+    const spaceWidth = 0.5;
+
+    const charMeshes = new Array(characters.length);
+    const meshMaterials = new Array(characters.length);
+    const offsets = new Array(characters.length);
 
     const uniforms = {
         uOpacity: { value: 1.0 },
@@ -51,84 +76,37 @@ export default function SurroundingText(props) {
         side: DoubleSide,
     });
 
-    const characters = props.text.split('')
-
-    const geometries = useMemo(() => {
-        const _geometries = Array(characters.length)
-        for (const [i, char] of characters.entries()) {
-            _geometries[i] = new TextGeometry(char, {
-                font: font,
-                size: 1,
-                height: 0.1,
-            });
-        }
-        return _geometries;
-    }, [])
-
-    useFrame((state) => {
-        const v = shorten(altScroll, 0.3);
-        sharedMaterial.uniforms.uTime.value = state.clock.getElapsedTime();
-        sharedMaterial.uniforms.uRadius.value =  props.radius + props.expandOnScrollSpeed * v;
-        sharedMaterial.uniforms.uOpacity.value = 1 - (props.expandOnScrollSpeed == 0 ? 0 : v);
-
-        setFontMesh(reComputeMeshes(geometries, sharedMaterial, props.rotationZ, props.initOffset));
-    });
-
-    return fontMesh;
-}
-
-function reComputeMeshes(geometries, sharedMaterial, rotationZ, initOffset) {
-
-    const charSpacingAngle = Math.PI / 96;
-    const spaceWidth = 0.5;
-
-    let phi = 0;
-    let theta = initOffset;
-    const charMeshes = [];
-
-    for (const [i, geometry] of geometries.entries()) {
+    for (const [i, char] of characters.entries()) {
+        const geometry = new TextGeometry(char, {
+            font: font,
+            size: 1,
+            height: 0.1,
+        });
 
         geometry.computeBoundingBox();
-        // const charPosition = polar2xyz(r, phi, theta);
 
-        const centerOffset = isFinite(geometry.boundingBox.max.x) // space character
+        offsets[i] = isFinite(geometry.boundingBox.max.x) // check if space character
             ? geometry.boundingBox.max.x - geometry.boundingBox.min.x
-            : spaceWidth;
+            : spaceWidth;;
 
-        const material = sharedMaterial.clone();
-        material.uniforms.uPhi.value = phi;
-        material.uniforms.uTheta.value = theta;
-        material.uniforms.uCenterOffset.value = theta;
-        // material.uniforms.uPosition.value = charPosition;
+        meshMaterials[i] = sharedMaterial.clone();
 
-        // const translateMat = new Matrix4().makeTranslation(
-        //     charPosition.x,
-        //     charPosition.y,
-        //     charPosition.z
-        // );
-        // const rotationMat = new Matrix4().makeRotationY(theta);
-        // geometry.applyMatrix4(rotationMat);
-        // geometry.applyMatrix4(translateMat);
-
-        charMeshes.push(<mesh
-            key={i}
-            // position={charPosition.toArray()}
-            geometry={geometry}
-            material={material}
-            rotation-z={rotationZ}
-        />);
-
-        theta += Math.atan2(centerOffset, sharedMaterial.uniforms.uRadius.value) + charSpacingAngle;
+        charMeshes[i] = (
+            <mesh
+                key={i}
+                geometry={geometry}
+                material={meshMaterials[i]}
+                rotation-z={rotationZ}
+            />
+        );
     }
 
-    return <group>{charMeshes}</group>
+    return [charMeshes, meshMaterials, offsets];
 }
-
-
 
 SurroundingText.defaultProps = {
     radius: 8.5,
     expandOnScrollSpeed: 8,
     rotationZ: 0,
-    initOffset: 0
-}
+    initOffset: 0,
+};

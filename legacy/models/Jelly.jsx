@@ -8,8 +8,8 @@ title: Takodachi_Rigged_Hololive
 
 import React, { useEffect, useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
-import { playAnimationsIndefinitely, setCursorPointerOnHover } from '../../utils/utils'
-import { playAnimationsOnClick, useHover } from '../../utils/hooks'
+import { playAnimationsIndefinitely, useCursorPointerOnHover } from '../../components/utils/utils'
+import { playAnimationsOnClick, useHover } from '../../components/utils/hooks'
 import { AnimationMixer } from 'three'
 import { LoopOnce } from 'three'
 import { Vector3 } from 'three'
@@ -51,7 +51,7 @@ export default function Jelly({ ...props }) {
     }
 
     const [hover, overHandler, outHandler] = useHover()
-    setCursorPointerOnHover(hover)
+    useCursorPointerOnHover(hover)
 
     useFrame(() => {
         position.x += 0.01

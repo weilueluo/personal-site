@@ -1,5 +1,3 @@
-import { useProgress } from "@react-three/drei";
-import { Html } from "next/document";
 import { useState } from "react";
 import { DefaultLoadingManager } from "three";
 import styles from './LoaderProgress.module.sass'

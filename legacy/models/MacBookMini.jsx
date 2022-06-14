@@ -10,7 +10,7 @@ import React, { Suspense, useState, useEffect, useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 import { animated, config, easings, useSpring } from '@react-spring/three'
 import Text from '../../utils/Text';
-import { useHover } from '../../utils/hooks';
+import { useHover } from '../../components/utils/hooks';
 import { Vector3 } from 'three';
 import { Box3 } from 'three';
 

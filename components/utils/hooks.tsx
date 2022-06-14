@@ -1,9 +1,8 @@
 import { useFrame } from '@react-three/fiber';
 import assert from 'assert';
-import { useState, useEffect } from 'react';
-import { LoopRepeat, Raycaster } from 'three';
+import { useEffect, useState } from 'react';
 import { getScrollPercent } from '../context/ScrollContext';
-import { playAnimationReverse, playAnimation, clamp } from './utils';
+import { clamp, playAnimation, playAnimationReverse } from './utils';
 
 export function useHover() {
     const [hover, setHover] = useState(false);
@@ -13,59 +12,10 @@ export function useHover() {
     return [hover, pointerOverHandler, pointerOutHandler];
 }
 
-export function useUpdateEffect(func, deps = []) {
-    const [firstTime, setFirstTime] = useState(true);
-
-    useEffect(() => {
-        if (firstTime) {
-            setFirstTime(false);
-        } else {
-            func();
-        }
-    }, deps);
-}
 
 export function useOddClick() {
     const [oddClick, setOddClick] = useState(false);
     return [() => setOddClick(!oddClick), oddClick];
-}
-
-export function playAnimationsOnClick(
-    actions,
-    reverseOnOddClick = true,
-    duration = 1
-) {
-    const [handler, oddClick] = useOddClick();
-    useUpdateEffect(() => {
-        for (const action of actions) {
-            if (reverseOnOddClick) {
-                if (oddClick) {
-                    playAnimation(action, duration);
-                } else {
-                    playAnimationReverse(action, duration);
-                }
-            } else {
-                playAnimation(action);
-            }
-        }
-    }, [oddClick]);
-
-    return handler;
-}
-
-export function runOnClick(func, oddClickFunc = null) {
-    const [oddClick, setOddClick] = useState(false);
-    useUpdateEffect(() => {
-        for (const action of actions) {
-            if (oddClickFunc && oddClick) {
-                oddClickFunc();
-            } else {
-                func();
-            }
-        }
-    }, [oddClick]);
-
-    return () => setOddClick(!oddClick);
 }
 
 // return a state that takes value from 0-1, for the give from and to percentage of scroll
@@ -90,7 +40,7 @@ export function useScrollPercent(from: number, to: number) {
                 setScroll((sp - from) / upper);
             }
         });
-    }, []);
+    }, [from, to, upper]);
 
     return scroll;
 }
@@ -104,8 +54,10 @@ export function useAltScroll() {
     altScroll = clamp(altScroll, 0, 0.99); // avoid flashing animation at 100%
 
     // make number stay at 0.99 longer
-    const stay_duration = 0.3
-    altScroll = (Math.min(0.99, altScroll+stay_duration) - stay_duration) / (1 - stay_duration)
+    const stay_duration = 0.15;
+    altScroll =
+        (Math.min(0.99, altScroll + stay_duration) - stay_duration) /
+        (1 - stay_duration);
 
     return altScroll;
 }
@@ -116,19 +68,19 @@ export function useMouseHover(objectRef) {
     useFrame((state) => {
         const object = objectRef.current;
         if (!object) {
-            setHover(false)
+            setHover(false);
             return;
         }
 
-        const objectId = object.id
+        const objectId = object.id;
         const raycaster = state.raycaster;
         raycaster.setFromCamera(state.mouse, state.camera);
 
         const intersects = raycaster.intersectObject(state.scene, true);
         if (intersects.length > 0 && intersects[0].object.id == objectId) {
-            setHover(true)
+            setHover(true);
         } else {
-            setHover(false)
+            setHover(false);
         }
     });
 

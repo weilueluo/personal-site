@@ -12,8 +12,8 @@ import { Vector3 } from 'three'
 import { Object3D } from 'three'
 import { interpolateAs } from 'next/dist/shared/lib/router/router'
 import next from 'next'
-import { useHover } from '../../utils/hooks'
-import { setCursorPointerOnHover } from '../../utils/utils'
+import { useHover } from '../../components/utils/hooks'
+import { useCursorPointerOnHover } from '../../components/utils/utils'
 import { easings, useSpring } from '@react-spring/three'
 import { animated } from '@react-spring/three'
 
@@ -24,7 +24,7 @@ export default function ShibaDog({ ...props }) {
   const { nodes, materials } = useGLTF(modelDir)
 
   const [hover, overHander, outHandler] = useHover()
-  setCursorPointerOnHover(hover)
+  useCursorPointerOnHover(hover)
 
   const scales = Array.from({ length: 4 }, (_, i) => i + 2)
   const [currIndex, setIndex] = useState(0)

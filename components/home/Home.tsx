@@ -7,14 +7,14 @@ import {
 } from 'three';
 import Ball from '../scene/Ball';
 import CV from '../scene/CV';
-import { useNScrollPages } from '../scene/global';
+import { getNScrollPages as getScrollPagesAmount } from '../scene/global';
 import GradientBackground from '../scene/GradientBackground';
 import Lines from '../scene/Lines';
 import LoaderProgress from '../scene/LoaderProgress';
 import Stars from '../scene/Stars';
 import SurroundingText from '../Text/SurroundingText';
 
-const pages = useNScrollPages();
+const pages = getScrollPagesAmount();
 
 function Content() {
     return (

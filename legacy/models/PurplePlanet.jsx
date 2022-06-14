@@ -8,8 +8,8 @@ title: Purple Planet
 
 import React, { useContext, useEffect, useRef } from 'react'
 import { useGLTF, useAnimations, useHelper, SpotLight } from '@react-three/drei'
-import { playAnimationsIndefinitely } from '../../utils/utils'
-import { ConfigContext } from '../../context/ConfigContext'
+import { playAnimationsIndefinitely } from '../../components/utils/utils'
+import { ConfigContext } from '../../components/context/ConfigContext'
 import { DirectionalLightHelper } from 'three'
 import { SpotLightHelper } from 'three'
 import { Color } from 'three'

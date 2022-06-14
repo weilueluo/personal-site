@@ -8,8 +8,8 @@ title: Smol(ler) Gura - Gawr Gura, HoloMyth
 
 import React, { useEffect, useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
-import { playAnimationsOnClick, useHover } from '../../utils/hooks'
-import { playAnimationsIndefinitely, setCursorPointerOnHover } from '../../utils/utils'
+import { playAnimationsOnClick, useHover } from '../../components/utils/hooks'
+import { playAnimationsIndefinitely, useCursorPointerOnHover } from '../../components/utils/utils'
 import { LoopRepeat } from 'three'
 
 export default function Gura({ ...props }) {
@@ -18,7 +18,7 @@ export default function Gura({ ...props }) {
     const { actions } = useAnimations(animations, group)
 
     const [hover, inHandler, outHandler] = useHover()
-    setCursorPointerOnHover(hover)
+    useCursorPointerOnHover(hover)
 
     // const onClickHandler = playAnimationsOnClick([actions.idle], 1)
     useEffect(() => {

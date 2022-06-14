@@ -8,7 +8,7 @@ title: Uruha Rushia - Hololive Vtuber
 
 import React, { useEffect, useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
-import { playAnimation } from '../../utils/utils'
+import { playAnimation } from '../../components/utils/utils'
 
 export default function Rushia({ ...props }) {
   const group = useRef()

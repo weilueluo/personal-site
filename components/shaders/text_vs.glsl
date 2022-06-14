@@ -29,10 +29,7 @@ void main() {
 
     vec3 offset = polar2xyz(uRadius, phi, theta);
     mat4 translate_mat = make_translation(offset);
-    mat4 rotation_mat1 = make_local_rotation(vec3(0, 1, 0), -theta);
+    mat4 rotation_mat = make_local_rotation(vec3(0, 1, 0), -theta);
 
-    vec3 axis =  vec3(1, 0, 0); //(rotation_mat1 * vec4(1, 0, 0, 1)).xyz;
-    mat4 rotation_mat2 = make_local_rotation(axis, phi);
-
-    gl_Position = projectionMatrix * modelViewMatrix * translate_mat * rotation_mat1 * vec4(position, 1.0);
+    gl_Position = projectionMatrix * modelViewMatrix * translate_mat * rotation_mat * vec4(position, 1.0);
 }
