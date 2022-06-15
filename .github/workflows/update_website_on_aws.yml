@@ -15,8 +15,12 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          version: 14.x
-      - run: npm install --legacy-peer-deps
+          node-version: '14.x'
+          
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+      
+      - name: Build website
       - run: npm run build
       
       - name: Upload S3
