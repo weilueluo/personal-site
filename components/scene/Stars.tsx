@@ -5,19 +5,18 @@ import {
     Object3D,
 } from 'three';
 import { polar2xyz, uniformSphereSample } from '../utils/utils';
-import { useMainBallRadius, getVisibleRadius } from './global';
+import { useMainBallRadius as getMainBallRadius, getVisibleRadius } from './global';
 
 const tempObject = new Object3D();
 const tempColor = new Color();
 const size = 0.1;
 const amount = 500;
 
-function computePositions() {
-
+function getRandomPositions() {
 
     const radius = getVisibleRadius();
 
-    const mainBallRadius = useMainBallRadius()
+    const mainBallRadius = getMainBallRadius()
 
     const positions = Array(amount * 3)
 
@@ -36,7 +35,7 @@ function computePositions() {
 export default function Stars() {
     const meshRef = useRef();
 
-    const positions = useMemo(() => computePositions(), [])
+    const positions = useMemo(() => getRandomPositions(), [])
 
     useEffect(() => {
         const mesh: InstancedMesh = meshRef.current;

@@ -61,6 +61,6 @@ export default function CV() {
     );
 }
 
-function openCVOnClick(meshRef, state) {
+function openCVOnClick() {
     window.open('/docs/weilue_cv.pdf', '_blank');
 }
