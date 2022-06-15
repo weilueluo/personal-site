@@ -1,6 +1,6 @@
 import { OrbitControls, Stats } from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
-import { EffectComposer } from '@react-three/postprocessing';
+import { Canvas, useThree } from '@react-three/fiber';
+import { EffectComposer, SMAA } from '@react-three/postprocessing';
 import { useMemo, useRef } from 'react';
 import { ACESFilmicToneMapping, sRGBEncoding } from 'three';
 import Ball from '../scene/Ball';
@@ -20,7 +20,12 @@ const pages = getScrollPagesAmount();
 
 function Content() {
 
+    const enableControl = getDeviceDependent(false, true)
     const textRadius = useMainBallRadius() + 0.1;
+
+    // console.log(`enabled: ${enableControl}`);
+    
+
     return (
         <>
             <Ball />
@@ -48,11 +53,11 @@ function Content() {
             <GradientBackground />
             <Lights />
 
-            <OrbitControls enablePan={false} enableZoom={false} enableRotate={true} />
+            <OrbitControls enabled={enableControl} enablePan={false} enableZoom={false} enableRotate={true}/>
 
             <EffectComposer multisampling={8}>
                 {/* https://docs.pmnd.rs/react-postprocessing */}
-                {/* <SMAA /> */}
+                <SMAA />
             </EffectComposer>
 
             <Stats showPanel={0} className={styles.panel1} />
