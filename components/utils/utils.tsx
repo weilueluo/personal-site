@@ -50,13 +50,6 @@ export function getRandom(arr: Array<any>, n: number) {
     return result;
 }
 
-export function shorten(value, limit) {
-    // value: 0 - 1
-    // limit: 0 > limit < 1
-    // output: 0 - limit but normalized to 0 - 1
-
-    return (Math.min(0, value - limit) + limit) / limit;
-}
 
 export function polar2xyz(theta: number, phi: number, r: number) {
     const x = r * Math.sin(theta) * Math.cos(phi);

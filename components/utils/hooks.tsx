@@ -1,8 +1,16 @@
 import { useFrame } from '@react-three/fiber';
 import assert from 'assert';
 import { useEffect, useState } from 'react';
-import { getScrollPercent } from '../context/ScrollContext';
+import { isMobileOrTablet } from '../scene/global';
 import { clamp, playAnimation, playAnimationReverse } from './utils';
+
+export function getScrollPercent() {
+    let h = document.documentElement,
+        b = document.body,
+        st = 'scrollTop',
+        sh = 'scrollHeight';
+    return clamp((h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100, 0, 100);
+}
 
 export function useHover() {
     const [hover, setHover] = useState(false);
@@ -62,6 +70,15 @@ export function useAltScroll() {
     return altScroll;
 }
 
+export function checkIntersect(object, state) {
+    const objectId = object.id;
+    const raycaster = state.raycaster;
+    raycaster.setFromCamera(state.mouse, state.camera);
+
+    const intersects = raycaster.intersectObject(state.scene, true);
+    return intersects.length > 0 && intersects[0].object.id == objectId
+}
+
 export function useMouseHover(objectRef) {
     const [hover, setHover] = useState(false);
 
@@ -72,17 +89,12 @@ export function useMouseHover(objectRef) {
             return;
         }
 
-        const objectId = object.id;
-        const raycaster = state.raycaster;
-        raycaster.setFromCamera(state.mouse, state.camera);
-
-        const intersects = raycaster.intersectObject(state.scene, true);
-        if (intersects.length > 0 && intersects[0].object.id == objectId) {
-            setHover(true);
-        } else {
-            setHover(false);
-        }
+        setHover(checkIntersect(object, state));
     });
 
     return hover;
+}
+
+export function getDeviceDependent(mobileValue, DesktopValue) {
+    return isMobileOrTablet() ? mobileValue : DesktopValue;
 }

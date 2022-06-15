@@ -10,7 +10,7 @@
 
 # next.js
 /.next/
-# /out/
+# /out/  # will be uploaded to aws s3 to update website
 
 # production
 /build

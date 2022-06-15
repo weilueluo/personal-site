@@ -4,7 +4,6 @@ import { DoubleSide, ShaderMaterial } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { useAltScroll } from '../utils/hooks';
-import { deg2rad, shorten } from '../utils/utils';
 
 import text_fs from '../shaders/text_fs.glsl';
 import text_vs from '../shaders/text_vs.glsl';
@@ -25,9 +24,8 @@ export default function SurroundingText(props) {
         );
 
     useFrame((state) => {
-        const v = shorten(altScroll, 0.3);
-        const radius = props.radius + props.expandOnScrollSpeed * v;
-        const opacity = 1 - (props.expandOnScrollSpeed == 0 ? 0 : v);
+        const radius = props.radius + props.expandOnScrollSpeed * altScroll;
+        const opacity = 1 - (props.expandOnScrollSpeed == 0 ? 0 : altScroll);
         const time = state.clock.getElapsedTime();
 
         let phi = 0;

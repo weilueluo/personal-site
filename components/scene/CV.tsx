@@ -1,11 +1,7 @@
-import { CycleRaycast } from '@react-three/drei';
-import { useFrame, useThree } from '@react-three/fiber';
-import { Bloom, EffectComposer } from '@react-three/postprocessing';
-import { useEffect, useRef } from 'react';
-import { Raycaster, Vector2 } from 'three';
+import { useFrame } from '@react-three/fiber';
+import { useRef, useState } from 'react';
 import SurroundingText from '../Text/SurroundingText';
-import { BlurPass, Resizer, KernelSize } from 'postprocessing';
-import { useMouseHover } from '../utils/hooks';
+import { checkIntersect, useMouseHover } from '../utils/hooks';
 
 export default function CV() {
     const meshRef = useRef();
@@ -51,7 +47,7 @@ export default function CV() {
                 expandOnScrollSpeed={0}
             />
             
-            <mesh ref={meshRef} castShadow receiveShadow onClick={openCV}>
+            <mesh ref={meshRef} castShadow receiveShadow onClick={openCVOnClick}>
                 <tetrahedronGeometry args={[2, 0]} />
                 <meshStandardMaterial
                     color={0xffffff}
@@ -65,6 +61,6 @@ export default function CV() {
     );
 }
 
-function openCV() {
-    window.open('/docs/weilue_cv.pdf', '_blank')
+function openCVOnClick(meshRef, state) {
+    window.open('/docs/weilue_cv.pdf', '_blank');
 }

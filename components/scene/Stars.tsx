@@ -1,34 +1,42 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import {
     Color,
     InstancedMesh,
     Object3D,
 } from 'three';
 import { polar2xyz, uniformSphereSample } from '../utils/utils';
-import { getMainBallRadius, getVisibleRadius } from './global';
+import { useMainBallRadius, getVisibleRadius } from './global';
 
 const tempObject = new Object3D();
 const tempColor = new Color();
-const amount = 500;
 const size = 0.1;
+const amount = 500;
 
-const radius = getVisibleRadius();
+function computePositions() {
 
-const mainBallRadius = getMainBallRadius()
 
-const positions = Array(amount * 3)
+    const radius = getVisibleRadius();
 
-for (let i = 0; i < amount * 3; i+=3) {
-    const [theta, phi, r] = uniformSphereSample(1)
-    // ensure it does not land in the ball
-    const [x, y, z] = polar2xyz(theta, phi, mainBallRadius + r * (radius - mainBallRadius))
-    positions[i] = x
-    positions[i+1] = y
-    positions[i+2] = z
+    const mainBallRadius = useMainBallRadius()
+
+    const positions = Array(amount * 3)
+
+    for (let i = 0; i < amount * 3; i+=3) {
+        const [theta, phi, r] = uniformSphereSample(1)
+        // ensure it does not land in the ball
+        const [x, y, z] = polar2xyz(theta, phi, mainBallRadius + r * (radius - mainBallRadius))
+        positions[i] = x
+        positions[i+1] = y
+        positions[i+2] = z
+    }
+
+    return positions;
 }
 
 export default function Stars() {
     const meshRef = useRef();
+
+    const positions = useMemo(() => computePositions(), [])
 
     useEffect(() => {
         const mesh: InstancedMesh = meshRef.current;

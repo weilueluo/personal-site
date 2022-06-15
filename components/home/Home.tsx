@@ -1,56 +1,65 @@
 import { OrbitControls, Stats } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import { EffectComposer, SMAA } from '@react-three/postprocessing';
+import { EffectComposer } from '@react-three/postprocessing';
 import { useMemo, useRef } from 'react';
-import {
-    ACESFilmicToneMapping, sRGBEncoding
-} from 'three';
+import { ACESFilmicToneMapping, sRGBEncoding } from 'three';
 import Ball from '../scene/Ball';
 import CV from '../scene/CV';
-import { getNScrollPages as getScrollPagesAmount } from '../scene/global';
+import {
+    getNScrollPages as getScrollPagesAmount, useMainBallRadius
+} from '../scene/global';
 import GradientBackground from '../scene/GradientBackground';
 import Lines from '../scene/Lines';
 import LoaderProgress from '../scene/LoaderProgress';
 import Stars from '../scene/Stars';
+import styles from '../styles/StatsPanel.module.sass';
 import SurroundingText from '../Text/SurroundingText';
+import { getDeviceDependent } from '../utils/hooks';
 
 const pages = getScrollPagesAmount();
 
 function Content() {
+
+    const enableRotateControl = getDeviceDependent(false, true)
+    const textRadius = useMainBallRadius() + 0.1;
+
     return (
         <>
-            {/* <MainBall /> */}
             <Ball />
             <CV />
             <Lines />
-            {/* <MainBall scale={5}/> */}
             <Stars />
             <SurroundingText
                 text={"Weilue's Place"}
+                radius={textRadius}
                 rotationZ={0}
                 initOffset={Math.PI}
             />
             <SurroundingText
                 text={"Weilue's Place"}
+                radius={textRadius}
                 rotationZ={Math.PI / 4}
                 initOffset={Math.PI / 2}
             />
             <SurroundingText
                 text={"Weilue's Place"}
+                radius={textRadius}
                 rotationZ={-Math.PI / 4}
                 initOffset={-Math.PI / 2}
             />
             <GradientBackground />
             <Lights />
 
-            <OrbitControls enablePan={false} enableZoom={false} />
+            <OrbitControls enablePan={false} enableZoom={false} enableRotate={enableRotateControl} />
 
             <EffectComposer multisampling={8}>
                 {/* https://docs.pmnd.rs/react-postprocessing */}
-                <SMAA />
+                {/* <SMAA /> */}
             </EffectComposer>
 
-            <Stats />
+            <Stats showPanel={0} className={styles.panel1} />
+            <Stats showPanel={1} className={styles.panel2} />
+            <Stats showPanel={2} className={styles.panel3} />
         </>
     );
 }
@@ -58,7 +67,7 @@ function Content() {
 function Lights() {
     const lightRef = useRef();
 
-    // useHelper(lightRef, DirectionalLightHelper, 0x000000)
+    const mapSize = getDeviceDependent(128, 512);
 
     return (
         <>
@@ -68,8 +77,8 @@ function Lights() {
                 color={0xffffff}
                 intensity={5}
                 castShadow
-                shadow-mapSize-height={512}
-                shadow-mapSize-width={512}
+                shadow-mapSize-height={mapSize}
+                shadow-mapSize-width={mapSize}
                 shadow-camera-near={0.1}
                 shadow-camera-far={20}
                 shadow-camera-left={-10}
@@ -78,7 +87,7 @@ function Lights() {
                 shadow-camera-bottom={-10}
             />
 
-            <pointLight
+            {/* <pointLight
                 position={[0, 0, 0]}
                 color={0xffffff}
                 intensity={5}
@@ -91,7 +100,7 @@ function Lights() {
                 shadow-camera-right={10}
                 shadow-camera-top={10}
                 shadow-camera-bottom={-10}
-            />
+            /> */}
 
             <ambientLight color={0xffffff} intensity={0.3} />
         </>
@@ -133,10 +142,10 @@ function MyCanvas(props) {
             }}
             // https://docs.pmnd.rs/react-three-fiber/api/canvas#render-props
             camera={{
-                position: [0, 10, 10],
-                fov: 100,
+                position: [0, 20, 20],
+                fov: 50,
                 near: 0.1,
-                far: 1000,
+                far: 100,
             }}
             gl={{
                 antialias: true,
