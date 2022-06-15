@@ -14,7 +14,7 @@ import sphere_vs from '../shaders/sphere_vs.glsl';
 import { useAltScroll } from '../utils/hooks';
 import { useMaxAnimationDuration } from '../utils/utils';
 import { useFrame } from '@react-three/fiber';
-import { useMainBallRadius } from './global';
+import { getMainBallRadius } from './global';
 
 export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
     const ballRef = useRef();
@@ -61,7 +61,7 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
         }
     });
 
-    const radius = useMainBallRadius();
+    const radius = getMainBallRadius();
 
     return (
         <group ref={ballRef} scale={radius} dispose={null} {...props}>

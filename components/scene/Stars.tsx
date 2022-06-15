@@ -5,7 +5,7 @@ import {
     Object3D,
 } from 'three';
 import { polar2xyz, uniformSphereSample } from '../utils/utils';
-import { useMainBallRadius as getMainBallRadius, getVisibleRadius } from './global';
+import { getMainBallRadius as getMainBallRadius, getVisibleRadius } from './global';
 
 const tempObject = new Object3D();
 const tempColor = new Color();

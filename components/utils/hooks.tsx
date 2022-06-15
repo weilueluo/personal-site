@@ -4,12 +4,80 @@ import { useEffect, useState } from 'react';
 import { isMobileOrTablet } from '../scene/global';
 import { clamp, playAnimation, playAnimationReverse } from './utils';
 
-export function getScrollPercent() {
+function getDesktopScrollPercent() {
     let h = document.documentElement,
         b = document.body,
         st = 'scrollTop',
         sh = 'scrollHeight';
-    return clamp((h[st]||b[st]) / ((h[sh]||b[sh]) - h.clientHeight) * 100, 0, 100);
+
+    return clamp(
+        ((h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight)) * 100,
+        0,
+        100
+    );
+}
+
+let consistentRealTarget = null;
+function getMobileOffset(e) {
+    let touch = e.touches[0] || e.changedTouches[0];
+    let realTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+
+    if (realTarget) {
+        consistentRealTarget = realTarget;
+    }
+
+    let offsetX =
+        touch.clientX - consistentRealTarget.getBoundingClientRect().x;
+    let offsetY =
+        touch.clientY - consistentRealTarget.getBoundingClientRect().y;
+
+    return [offsetX, offsetY];
+}
+
+let mobileScrolled = 0;
+let persistentScrolledAmount = 0;
+let scrollEventStartOffsetY = 0;
+const scrollSpeed = 1.5;
+
+export function initMobileScroll() {
+    window.addEventListener('touchstart', (e) => {
+        const [_, offsetY] = getMobileOffset(e);
+        scrollEventStartOffsetY = offsetY;
+    });
+
+    ['touchend', 'touchcancel'].forEach((eventName) => {
+        window.addEventListener(eventName, (e) => {
+            const [_, offsetY] = getMobileOffset(e);
+            persistentScrolledAmount += -(offsetY - scrollEventStartOffsetY);
+            mobileScrolled = persistentScrolledAmount;
+        });
+    });
+
+    window.addEventListener('touchmove', (e) => {
+        const [_, offsetY] = getMobileOffset(e);
+        mobileScrolled =
+            persistentScrolledAmount + -(offsetY - scrollEventStartOffsetY);
+    });
+}
+
+function getMobileScrollPercent() {
+    let h = document.documentElement,
+        b = document.body,
+        sh = 'scrollHeight';
+
+    return clamp(
+        (mobileScrolled / ((h[sh] || b[sh]) - h.clientHeight)) * 100 * scrollSpeed,
+        0,
+        100
+    );
+}
+
+export function getScrollPercent() {
+    if (getDeviceDependent(false, true)) {
+        return getDesktopScrollPercent();
+    } else {
+        return getMobileScrollPercent();
+    }
 }
 
 export function useHover() {
@@ -19,7 +87,6 @@ export function useHover() {
 
     return [hover, pointerOverHandler, pointerOutHandler];
 }
-
 
 export function useOddClick() {
     const [oddClick, setOddClick] = useState(false);
@@ -42,11 +109,13 @@ export function useScrollPercent(from: number, to: number) {
 
     const [scroll, setScroll] = useState(initValue);
     useEffect(() => {
-        window.addEventListener('scroll', (event) => {
-            const sp = getScrollPercent();
-            if (sp >= from && sp <= to) {
-                setScroll((sp - from) / upper);
-            }
+        ['scroll', 'touchmove'].forEach((eventName) => {
+            window.addEventListener(eventName, (event) => {
+                const sp = getScrollPercent();
+                if (sp >= from && sp <= to) {
+                    setScroll((sp - from) / upper);
+                }
+            });
         });
     }, [from, to, upper]);
 
@@ -76,7 +145,7 @@ export function checkIntersect(object, state) {
     raycaster.setFromCamera(state.mouse, state.camera);
 
     const intersects = raycaster.intersectObject(state.scene, true);
-    return intersects.length > 0 && intersects[0].object.id == objectId
+    return intersects.length > 0 && intersects[0].object.id == objectId;
 }
 
 export function useMouseHover(objectRef) {

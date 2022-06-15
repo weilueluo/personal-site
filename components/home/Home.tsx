@@ -1,30 +1,27 @@
 import { OrbitControls, Stats } from '@react-three/drei';
 import { Canvas, useThree } from '@react-three/fiber';
 import { EffectComposer, SMAA } from '@react-three/postprocessing';
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { ACESFilmicToneMapping, sRGBEncoding } from 'three';
 import Ball from '../scene/Ball';
 import CV from '../scene/CV';
-import {
-    getNScrollPages as getScrollPagesAmount, useMainBallRadius
-} from '../scene/global';
+import { getNScrollPages, getMainBallRadius } from '../scene/global';
 import GradientBackground from '../scene/GradientBackground';
 import Lines from '../scene/Lines';
 import LoaderProgress from '../scene/LoaderProgress';
 import Stars from '../scene/Stars';
 import styles from '../styles/StatsPanel.module.sass';
 import SurroundingText from '../Text/SurroundingText';
-import { getDeviceDependent } from '../utils/hooks';
+import { getDeviceDependent, initMobileScroll } from '../utils/hooks';
 
-const pages = getScrollPagesAmount();
 
 function Content() {
+    const enableControl = getDeviceDependent(false, true);
+    const textRadius = getMainBallRadius() + 0.1;
 
-    const enableControl = getDeviceDependent(false, true)
-    const textRadius = useMainBallRadius() + 0.1;
-
-    // console.log(`enabled: ${enableControl}`);
-    
+    useEffect(() => {
+        initMobileScroll();
+    });
 
     return (
         <>
@@ -53,7 +50,12 @@ function Content() {
             <GradientBackground />
             <Lights />
 
-            <OrbitControls enabled={enableControl} enablePan={false} enableZoom={false} enableRotate={true}/>
+            <OrbitControls
+                enabled={enableControl}
+                enablePan={false}
+                enableZoom={false}
+                enableRotate={true}
+            />
 
             <EffectComposer multisampling={8}>
                 {/* https://docs.pmnd.rs/react-postprocessing */}
@@ -110,6 +112,8 @@ function Lights() {
     );
 }
 
+
+const pages = getNScrollPages()
 export default function Home() {
     return (
         <>
@@ -142,6 +146,7 @@ function MyCanvas(props) {
                 position: 'fixed',
                 top: 0,
                 left: 0,
+                overflowY: 'scroll',
             }}
             // https://docs.pmnd.rs/react-three-fiber/api/canvas#render-props
             camera={{

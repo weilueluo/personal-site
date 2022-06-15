@@ -7,7 +7,7 @@ export function isMobileOrTablet() {
     return check;
 }
 
-export function useMainBallRadius() {
+export function getMainBallRadius() {
     return getDeviceDependent(5.0, 8.0)
 }
 
@@ -16,6 +16,6 @@ export function getVisibleRadius() {
 }
 
 export function getNScrollPages() {
-    return 30.0;
+    return 25.0;
 }
 
