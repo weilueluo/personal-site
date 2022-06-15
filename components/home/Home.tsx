@@ -20,9 +20,7 @@ const pages = getScrollPagesAmount();
 
 function Content() {
 
-    const enableRotateControl = getDeviceDependent(false, true)
     const textRadius = useMainBallRadius() + 0.1;
-
     return (
         <>
             <Ball />
@@ -50,7 +48,7 @@ function Content() {
             <GradientBackground />
             <Lights />
 
-            <OrbitControls enablePan={false} enableZoom={false} enableRotate={enableRotateControl} />
+            <OrbitControls enablePan={false} enableZoom={false} enableRotate={true} />
 
             <EffectComposer multisampling={8}>
                 {/* https://docs.pmnd.rs/react-postprocessing */}
