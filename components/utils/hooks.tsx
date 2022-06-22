@@ -37,7 +37,7 @@ function getMobileOffset(e) {
 let mobileScrolled = 0;
 let persistentScrolledAmount = 0;
 let scrollEventStartOffsetY = 0;
-const scrollSpeed = 1.5;
+const mobileScrollSpeed = 1.0
 
 export function initMobileScroll() {
     window.addEventListener('touchstart', (e) => {
@@ -66,7 +66,7 @@ function getMobileScrollPercent() {
         sh = 'scrollHeight';
 
     return clamp(
-        (mobileScrolled / ((h[sh] || b[sh]) - h.clientHeight)) * 100 * scrollSpeed,
+        (mobileScrolled / ((h[sh] || b[sh]) - h.clientHeight)) * 100 * mobileScrollSpeed,
         0,
         100
     );
@@ -110,7 +110,7 @@ export function useScrollPercent(from: number, to: number) {
     const [scroll, setScroll] = useState(initValue);
     useEffect(() => {
         ['scroll', 'touchmove'].forEach((eventName) => {
-            window.addEventListener(eventName, (event) => {
+            window.addEventListener(eventName, () => {
                 const sp = getScrollPercent();
                 if (sp >= from && sp <= to) {
                     setScroll((sp - from) / upper);

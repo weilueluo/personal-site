@@ -1,7 +1,7 @@
 import { OrbitControls, Stats } from '@react-three/drei';
 import { Canvas, useThree } from '@react-three/fiber';
 import { EffectComposer, SMAA } from '@react-three/postprocessing';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ACESFilmicToneMapping, sRGBEncoding } from 'three';
 import Ball from '../scene/Ball';
 import CV from '../scene/CV';
@@ -113,8 +113,13 @@ function Lights() {
 }
 
 
-const pages = getNScrollPages()
 export default function Home() {
+    const [pages, setPages] = useState(1)
+
+    useEffect(() => {
+        setPages(getNScrollPages())
+    })
+    
     return (
         <>
             <MyCanvas>

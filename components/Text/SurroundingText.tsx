@@ -15,13 +15,11 @@ export default function SurroundingText(props) {
 
     const characters = props.text.split('');
 
-    let [meshes, meshMaterials, offsets] =
-        computeMeshAndMaterial(
-            characters,
-            font,
-            props.initOffset,
-            props.rotationZ
-        );
+    let [meshes, meshMaterials, offsets] = useMemo(() => computeMeshAndMaterial(
+        characters,
+        font,
+        props.rotationZ
+    ), [])
 
     useFrame((state) => {
         const radius = props.radius + props.expandOnScrollSpeed * altScroll;
@@ -50,7 +48,7 @@ export default function SurroundingText(props) {
     return <group>{meshes}</group>;
 }
 
-function computeMeshAndMaterial(characters, font, initOffset, rotationZ) {
+function computeMeshAndMaterial(characters, font, rotationZ) {
     const spaceWidth = 0.5;
 
     const charMeshes = new Array(characters.length);
