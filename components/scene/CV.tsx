@@ -25,7 +25,7 @@ export default function CV() {
 
     const openCVOnClick = () => {
         if (meshHovered) {
-            window.open('/docs/weilue_cv.pdf', '_blank');
+            window.open('https://github.com/Redcxx/cv/blob/master/resume.pdf', '_blank');
         }
     }
 

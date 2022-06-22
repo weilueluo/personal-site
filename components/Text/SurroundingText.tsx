@@ -105,7 +105,7 @@ function computeMeshAndMaterial(characters, font, fontSize, rotationZ) {
 
 SurroundingText.defaultProps = {
     radius: 8.5,
-    expandOnScrollSpeed: 8,
+    expandOnScrollSpeed: 30,
     rotationZ: 0,
     initOffset: 0,
 };
