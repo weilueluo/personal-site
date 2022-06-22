@@ -128,11 +128,11 @@ function useMeshes(nodes: Nodes) {
 
             material.uniforms.uPosition.value = position;
 
-            if (distToCenter > 0.8 && Math.random() < 0.15) {
-                material.uniforms.uWaveAmount.value = Math.random() * 0.1;
-                material.uniforms.uOffsetAmount.value = Math.random() * 0.1;
-                material.uniforms.uWaveSpeed.value = Math.random() * 0.2 + 1;
-            }
+            // if (distToCenter > 0.8 && Math.random() < 0.15) {
+            //     material.uniforms.uWaveAmount.value = Math.random() * 0.1;
+            //     material.uniforms.uOffsetAmount.value = Math.random() * 0.1;
+            //     material.uniforms.uWaveSpeed.value = Math.random() * 0.2 + 1;
+            // }
 
 
             materials[i] = material;
