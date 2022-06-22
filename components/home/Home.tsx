@@ -16,11 +16,13 @@ import { getDeviceDependent, initMobileScroll } from '../utils/hooks';
 
 
 function Content() {
-    const enableControl = getDeviceDependent(false, true);
+    const enableOrbitControl = getDeviceDependent(false, true); // disable vertical scroll on mobile
     const textRadius = getMainBallRadius() + 0.1;
 
     useEffect(() => {
         initMobileScroll();
+        console.log(`enabled: ${enableOrbitControl}`);
+        
     });
 
     return (
@@ -51,10 +53,14 @@ function Content() {
             <Lights />
 
             <OrbitControls
-                enabled={enableControl}
+                enabled={true}
                 enablePan={false}
                 enableZoom={false}
-                enableRotate={true}
+                enableRotate={enableOrbitControl}
+                autoRotate={!enableOrbitControl}
+                autoRotateSpeed={1.0}
+                // minPolarAngle={polarAngle}
+                // maxPolarAngle={maxPolarAngle}
             />
 
             <EffectComposer multisampling={8}>
@@ -92,21 +98,6 @@ function Lights() {
                 shadow-camera-bottom={-10}
             />
 
-            {/* <pointLight
-                position={[0, 0, 0]}
-                color={0xffffff}
-                intensity={5}
-                castShadow
-                shadow-mapSize-height={512}
-                shadow-mapSize-width={512}
-                shadow-camera-near={0.1}
-                shadow-camera-far={20}
-                shadow-camera-left={-10}
-                shadow-camera-right={10}
-                shadow-camera-top={10}
-                shadow-camera-bottom={-10}
-            /> */}
-
             <ambientLight color={0xffffff} intensity={0.3} />
         </>
     );
@@ -119,7 +110,7 @@ export default function Home() {
     useEffect(() => {
         setPages(getNScrollPages())
     })
-    
+
     return (
         <>
             <MyCanvas>
