@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { DoubleSide, ShaderMaterial } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-import { useAltScroll } from '../utils/hooks';
+import { getDeviceDependent, useAltScroll } from '../utils/hooks';
 
 import text_fs from '../shaders/text_fs.glsl';
 import text_vs from '../shaders/text_vs.glsl';
@@ -15,9 +15,12 @@ export default function SurroundingText(props) {
 
     const characters = props.text.split('');
 
+    const fontSize = getDeviceDependent(0.6, 1.0)
+
     let [meshes, meshMaterials, offsets] = useMemo(() => computeMeshAndMaterial(
         characters,
         font,
+        fontSize,
         props.rotationZ
     ), [])
 
@@ -48,7 +51,7 @@ export default function SurroundingText(props) {
     return <group>{meshes}</group>;
 }
 
-function computeMeshAndMaterial(characters, font, rotationZ) {
+function computeMeshAndMaterial(characters, font, fontSize, rotationZ) {
     const spaceWidth = 0.5;
 
     const charMeshes = new Array(characters.length);
@@ -75,7 +78,7 @@ function computeMeshAndMaterial(characters, font, rotationZ) {
     for (const [i, char] of characters.entries()) {
         const geometry = new TextGeometry(char, {
             font: font,
-            size: 1,
+            size: fontSize,
             height: 0.1,
         });
 

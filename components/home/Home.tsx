@@ -21,8 +21,6 @@ function Content() {
 
     useEffect(() => {
         initMobileScroll();
-        console.log(`enabled: ${enableOrbitControl}`);
-        
     });
 
     return (

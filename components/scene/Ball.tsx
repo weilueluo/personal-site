@@ -22,6 +22,8 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
         '/models/ball/ball-transformed.glb'
     ) as GLTFResult;
 
+    const radius = getMainBallRadius();
+
     const [meshes, meshMaterials] = useMeshes(nodes);
 
     const maxAnimationDuration = useMaxAnimationDuration(animations);
@@ -40,28 +42,30 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
 
     useFrame((state) => {
         const time = state.clock.getElapsedTime();
+        const scrolled = altScroll > 0.15;
 
         if (mixer.current) {
             mixer.current.setTime(maxAnimationDuration * altScroll);
         }
-
+        // console.log(`scrolled: ${scrolled}`);
+        
         meshMaterials.forEach((mat) => {
             mat.uniforms.uTime.value = time;
             mat.uniforms.uScrolledAmount.value = altScroll;
+            mat.uniforms.uDoWave.value = !scrolled  // do not wave if scrolled
         });
     });
 
     useFrame((state) => {
         const scene = ballRef.current as Group;
+        const scrolled = altScroll > 0.1;
         if (scene) {
             scene.rotateOnAxis(
                 new Vector3(1, 1, 1).normalize(),
-                state.clock.getDelta() * 1.5
+                state.clock.getDelta() * (scrolled ? 0.0 : 1.5)  // do not rotate if scrolled
             );
         }
     });
-
-    const radius = getMainBallRadius();
 
     return (
         <group ref={ballRef} scale={radius} dispose={null} {...props}>
@@ -91,7 +95,9 @@ function useMeshes(nodes: Nodes) {
             uPosition: { value: new Vector3(0, 0, 0) },
             uOffsetAmount: { value: 0.0 },
             uWaveAmount: { value: 0.0 },
+            uWaveSpeed: { value: 0.0 },
             uScrolledAmount: { value: 0.0 },
+            uDoWave: { value: true },
         };
 
         const sharedMaterial = new ShaderMaterial({
@@ -121,10 +127,13 @@ function useMeshes(nodes: Nodes) {
             const distToCenter = new Vector3(...position).clone().length();
 
             material.uniforms.uPosition.value = position;
-            material.uniforms.uWaveAmount.value =
-                Math.random() * distToCenter * 0.0;
-            material.uniforms.uOffsetAmount.value =
-                Math.random() * distToCenter * 0;
+
+            if (distToCenter > 0.8 && Math.random() < 0.15) {
+                material.uniforms.uWaveAmount.value = Math.random() * 0.1;
+                material.uniforms.uOffsetAmount.value = Math.random() * 0.1;
+                material.uniforms.uWaveSpeed.value = Math.random() * 0.2 + 1;
+            }
+
 
             materials[i] = material;
             geometry.computeVertexNormals();

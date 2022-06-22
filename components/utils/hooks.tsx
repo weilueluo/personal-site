@@ -139,12 +139,11 @@ export function useAltScroll() {
     return altScroll;
 }
 
-export function checkIntersect(object, state) {
+export function checkIntersect(object, scene, raycaster, mouse, camera) {
     const objectId = object.id;
-    const raycaster = state.raycaster;
-    raycaster.setFromCamera(state.mouse, state.camera);
+    raycaster.setFromCamera(mouse, camera);
 
-    const intersects = raycaster.intersectObject(state.scene, true);
+    const intersects = raycaster.intersectObject(scene, true);
     return intersects.length > 0 && intersects[0].object.id == objectId;
 }
 
@@ -158,7 +157,7 @@ export function useMouseHover(objectRef) {
             return;
         }
 
-        setHover(checkIntersect(object, state));
+        setHover(checkIntersect(object, state.scene, state.raycaster, state.mouse, state.camera));
     });
 
     return hover;

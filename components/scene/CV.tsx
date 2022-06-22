@@ -23,6 +23,12 @@ export default function CV() {
 
     });
 
+    const openCVOnClick = () => {
+        if (meshHovered) {
+            window.open('/docs/weilue_cv.pdf', '_blank');
+        }
+    }
+
     return (
         <>
             <SurroundingText
@@ -59,8 +65,4 @@ export default function CV() {
             </mesh>
         </>
     );
-}
-
-function openCVOnClick() {
-    window.open('/docs/weilue_cv.pdf', '_blank');
 }
