@@ -37,6 +37,7 @@ export default function CV() {
                 rotationZ={0}
                 initOffset={0}
                 expandOnScrollSpeed={0}
+                fadeInOnScrollSpeed={1}
             />
             <SurroundingText
                 text={'CV'}
@@ -44,6 +45,7 @@ export default function CV() {
                 rotationZ={Math.PI / 4}
                 initOffset={Math.PI}
                 expandOnScrollSpeed={0}
+                fadeInOnScrollSpeed={1}
             />
             <SurroundingText
                 text={'CV'}
@@ -51,13 +53,14 @@ export default function CV() {
                 rotationZ={-Math.PI / 4}
                 initOffset={Math.PI / 2}
                 expandOnScrollSpeed={0}
+                fadeInOnScrollSpeed={1}
             />
             
-            <mesh ref={meshRef} castShadow receiveShadow onClick={openCVOnClick}>
+            <mesh ref={meshRef} castShadow receiveShadow onClick={openCVOnClick} rotation={[Math.PI/4, 0, 0]}>
                 <tetrahedronGeometry args={[2, 0]} />
                 <meshStandardMaterial
                     color={0xffffff}
-                    emissive={0x45a9c4}
+                    emissive={0x0d2f5c}
                     emissiveIntensity={1}
                     transparent={true}
                     opacity={1}

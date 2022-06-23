@@ -1,5 +1,7 @@
+import { useFrame } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
-import { Color, InstancedMesh, Object3D } from 'three';
+import { Color, InstancedMesh, Material, Object3D } from 'three';
+import { useAltScroll } from '../utils/hooks';
 import { polar2xyz, uniformSphereSample } from '../utils/utils';
 import { getVisibleRadius } from './global';
 
@@ -54,10 +56,20 @@ export default function Lines() {
         mesh.instanceColor.needsUpdate = true;
     }, []);
 
+    const matRef = useRef()
+
+    const scrollAmount = useAltScroll();
+    useFrame(() => {
+        const mat: Material = matRef.current;
+        if (mat) {
+            mat.opacity = 1 - scrollAmount;
+        }
+    })
+
     return (
         <instancedMesh ref={meshRef} args={[null, null, amount]}>
             <cylinderBufferGeometry args={[lineRadius, lineRadius, 16, 32]} />
-            <meshBasicMaterial />
+            <meshBasicMaterial ref={matRef} transparent={true}/>
         </instancedMesh>
     );
 }

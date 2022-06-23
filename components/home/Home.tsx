@@ -34,18 +34,21 @@ function Content() {
                 radius={textRadius}
                 rotationZ={0}
                 initOffset={Math.PI}
+                fadeInOnScrollSpeed={-1}
             />
             <SurroundingText
                 text={"Weilue's Place"}
                 radius={textRadius}
                 rotationZ={Math.PI / 4}
                 initOffset={Math.PI / 2}
+                fadeInOnScrollSpeed={-1}
             />
             <SurroundingText
                 text={"Weilue's Place"}
                 radius={textRadius}
                 rotationZ={-Math.PI / 4}
                 initOffset={-Math.PI / 2}
+                fadeInOnScrollSpeed={-1}
             />
             <GradientBackground />
             <Lights />

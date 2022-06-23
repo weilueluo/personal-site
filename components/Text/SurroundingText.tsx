@@ -21,12 +21,14 @@ export default function SurroundingText(props) {
         characters,
         font,
         fontSize,
-        props.rotationZ
+        props
     ), [])
+
+    const scrollAmount = useAltScroll()
 
     useFrame((state) => {
         const radius = props.radius + props.expandOnScrollSpeed * altScroll;
-        const opacity = 1 - (props.expandOnScrollSpeed == 0 ? 0 : altScroll);
+        // const opacity = 1 - (props.expandOnScrollSpeed == 0 ? 0 : altScroll);
         const time = state.clock.getElapsedTime();
 
         let phi = 0;
@@ -39,10 +41,10 @@ export default function SurroundingText(props) {
 
             mat.uniforms.uTime.value = time;
             mat.uniforms.uRadius.value = radius;
-            mat.uniforms.uOpacity.value = opacity;
             mat.uniforms.uPhi.value = phi;
             mat.uniforms.uTheta.value = theta;
             mat.uniforms.uCenterOffset.value = offset;
+            mat.uniforms.uScrollAmount.value = scrollAmount;
 
             theta +=  Math.atan2(offset, mat.uniforms.uRadius.value) + charSpacingAngle;
         }
@@ -51,7 +53,7 @@ export default function SurroundingText(props) {
     return <group>{meshes}</group>;
 }
 
-function computeMeshAndMaterial(characters, font, fontSize, rotationZ) {
+function computeMeshAndMaterial(characters, font, fontSize, props) {
     const spaceWidth = 0.5;
 
     const charMeshes = new Array(characters.length);
@@ -59,12 +61,13 @@ function computeMeshAndMaterial(characters, font, fontSize, rotationZ) {
     const offsets = new Array(characters.length);
 
     const uniforms = {
-        uOpacity: { value: 1.0 },
         uTime: { value: 1.0 },
         uRadius: { value: 0.0 },
         uCenterOffset: { value: 0.0 },
         uPhi: { value: 0.0 },
         uTheta: { value: 0.0 },
+        uScrollAmount: { value: 0.0 },
+        uFadeInOnScrollSpeed: { value: props.fadeInOnScrollSpeed },
     };
 
     const sharedMaterial = new ShaderMaterial({
@@ -86,16 +89,17 @@ function computeMeshAndMaterial(characters, font, fontSize, rotationZ) {
 
         offsets[i] = isFinite(geometry.boundingBox.max.x) // check if space character
             ? geometry.boundingBox.max.x - geometry.boundingBox.min.x
-            : spaceWidth;;
+            : spaceWidth;
 
         meshMaterials[i] = sharedMaterial.clone();
+        meshMaterials[i].transparent = true;
 
         charMeshes[i] = (
             <mesh
                 key={i}
                 geometry={geometry}
                 material={meshMaterials[i]}
-                rotation-z={rotationZ}
+                rotation-z={props.rotationZ}
             />
         );
     }
@@ -108,4 +112,5 @@ SurroundingText.defaultProps = {
     expandOnScrollSpeed: 30,
     rotationZ: 0,
     initOffset: 0,
+    fadeInOnScrollSpeed: 0
 };

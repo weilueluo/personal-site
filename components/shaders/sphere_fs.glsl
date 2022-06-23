@@ -57,6 +57,8 @@ vec3 applyFresnel(vec3 color) {
     return color * coef;
 }
 
+const vec3 black = vec3(0., 0., 0.);
+
 void main() {
     //gl_FragColor = vec4(texture2D(uColorMap, vUv).xyz, 1.0);
     //vec3 color = vNormal * 0.5 + 0.5;  // diff color for diff normal 
@@ -66,16 +68,16 @@ void main() {
     
     bool surface = isSurface();
 
-    vec2 tile_uv = tile(vUv, 10.0);
-    float lines = make_cross(tile_uv,0.03);
-    if (lines > 0.1 && surface) {
-        color = vec3(1.0,1.0,1.0);
-    }
+    // vec2 tile_uv = tile(vUv, 10.0);
+    // float lines = make_cross(tile_uv,0.03);
+    // if (lines > 0.1 && surface) {
+    //     color = vec3(1.0,1.0,1.0);
+    // }
 
     color = applyShadow(color);
     color = applyFresnel(color);
-    float opacity = 1.;
-    gl_FragColor = vec4(color, opacity);
+    color = mix(color, black, uScrolledAmount);
+    gl_FragColor = vec4(color, 1.0);
 
     //gl_FragColor = vec4(vNormal, 1.0);
 }
