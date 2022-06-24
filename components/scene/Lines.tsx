@@ -62,7 +62,7 @@ export default function Lines() {
     useFrame(() => {
         const mat: Material = matRef.current;
         if (mat) {
-            mat.opacity = 1 - scrollAmount;
+            mat.opacity = Math.max(0.1, 1 - scrollAmount);
         }
     })
 

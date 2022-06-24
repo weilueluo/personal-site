@@ -11,7 +11,7 @@ import text_vs from '../shaders/text_vs.glsl';
 export default function SurroundingText(props) {
     const altScroll = useAltScroll();
 
-    const font = useLoader(FontLoader, '/fonts/Montserrat Medium_Regular.json');
+    const font = useLoader(FontLoader, '/fonts/Rubik Moonrocks_Regular.json');
 
     const characters = props.text.split('');
 
@@ -33,7 +33,7 @@ export default function SurroundingText(props) {
 
         let phi = 0;
         let theta = props.initOffset;
-        const charSpacingAngle = Math.PI / 96;
+        const charSpacingAngle = 0.02;
 
         for (let i = 0; i < characters.length; i++) {
             const mat = meshMaterials[i];

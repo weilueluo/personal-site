@@ -128,27 +128,44 @@ export function useAltScroll() {
     if (altScroll > 1) {
         altScroll = 2 - altScroll;
     }
-    altScroll = clamp(altScroll, 0, 0.99); // avoid flashing animation at 100%
+    const maxScroll = 0.9999 // avoid flashing animation at 100%
+    altScroll = clamp(altScroll, 0, maxScroll); 
 
-    // make number stay at 0.99 longer
+    // make number stay at 0.9999 longer
     const stay_duration = 0.15;
     altScroll =
-        (Math.min(0.99, altScroll + stay_duration) - stay_duration) /
+        (Math.min(maxScroll, altScroll + stay_duration) - stay_duration) /
         (1 - stay_duration);
 
     return altScroll;
 }
 
-export function checkIntersect(object, scene, raycaster, mouse, camera) {
-    const objectId = object.id;
-    raycaster.setFromCamera(mouse, camera);
+const intersectResult = new Array()
 
-    const intersects = raycaster.intersectObject(scene, true);
-    return intersects.length > 0 && intersects[0].object.id == objectId;
+export function useCurrentMouseHover() {
+
+    const [intersect, setIntersect] = useState(null)
+
+    useFrame(state => {
+        const raycaster = state.raycaster
+        raycaster.setFromCamera(state.mouse, state.camera);
+    
+        intersectResult.length = 0;
+        raycaster.intersectObject(state.scene, true, intersectResult);
+    
+        if (intersectResult.length == 0) {
+            setIntersect(null);
+        } else {
+            setIntersect(intersectResult[0].object)
+        }
+    })
+
+    return intersect;
 }
 
 export function useMouseHover(objectRef) {
     const [hover, setHover] = useState(false);
+    const intersect = useCurrentMouseHover();
 
     useFrame((state) => {
         const object = objectRef.current;
@@ -157,7 +174,7 @@ export function useMouseHover(objectRef) {
             return;
         }
 
-        setHover(checkIntersect(object, state.scene, state.raycaster, state.mouse, state.camera));
+        setHover(intersect != null && intersect.id == object.id);
     });
 
     return hover;

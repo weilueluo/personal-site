@@ -64,7 +64,7 @@ void main() {
     //vec3 color = vNormal * 0.5 + 0.5;  // diff color for diff normal 
     
     vec3 color = normalize(uPosition) * 0.5 + 0.5;  // diff color for diff mesh
-    color = vec3(color.xy, abs(sin(uTime * 0.2)));
+    color = vec3(color.xz, abs(sin(uTime)));
     
     bool surface = isSurface();
 

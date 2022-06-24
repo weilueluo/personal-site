@@ -124,7 +124,7 @@ function useMeshes(nodes: Nodes) {
                 // material.depthWrite = false;
             }
 
-            const distToCenter = new Vector3(...position).clone().length();
+            // const distToCenter = new Vector3(...position).clone().length();
 
             material.uniforms.uPosition.value = position;
 
