@@ -64,7 +64,7 @@ void main() {
     //vec3 color = vNormal * 0.5 + 0.5;  // diff color for diff normal 
     
     vec3 color = normalize(uPosition) * 0.5 + 0.5;  // diff color for diff mesh
-    color = vec3(color.xz, abs(sin(uTime)));
+    color = vec3(color.xz, abs(sin(uTime * 0.5)));
     
     bool surface = isSurface();
 
@@ -76,8 +76,8 @@ void main() {
 
     color = applyShadow(color);
     color = applyFresnel(color);
-    color = mix(color, black, uScrolledAmount);
-    gl_FragColor = vec4(color, 1.0);
+    color = mix(color, color * .01, uScrolledAmount);
+    gl_FragColor = vec4(color, 1.);
 
     //gl_FragColor = vec4(vNormal, 1.0);
 }
