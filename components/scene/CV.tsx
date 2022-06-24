@@ -1,7 +1,7 @@
 import { useFrame } from '@react-three/fiber';
 import { useRef, useState } from 'react';
 import SurroundingText from '../Text/SurroundingText';
-import { checkIntersect, useMouseHover } from '../utils/hooks';
+import { useMouseHover } from '../utils/hooks';
 
 export default function CV() {
     const meshRef = useRef();
