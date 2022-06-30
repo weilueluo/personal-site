@@ -180,6 +180,6 @@ export function useMouseHover(objectRef) {
     return hover;
 }
 
-export function getDeviceDependent(mobileValue, DesktopValue) {
-    return isMobileOrTablet() ? mobileValue : DesktopValue;
+export function getDeviceDependent(mobileValue, desktopValue) {
+    return isMobileOrTablet() ? mobileValue : desktopValue;
 }

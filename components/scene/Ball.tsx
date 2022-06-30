@@ -134,7 +134,6 @@ function useMeshes(nodes: Nodes) {
             //     material.uniforms.uWaveSpeed.value = Math.random() * 0.2 + 1;
             // }
 
-
             materials[i] = material;
             geometry.computeVertexNormals();
             meshes[i] = (

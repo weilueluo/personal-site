@@ -3,6 +3,7 @@ import { Canvas, useThree } from '@react-three/fiber';
 import { EffectComposer, SMAA } from '@react-three/postprocessing';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ACESFilmicToneMapping, sRGBEncoding } from 'three';
+import About from '../scene/About';
 import Ball from '../scene/Ball';
 import CV from '../scene/CV';
 import { getNScrollPages, getMainBallRadius } from '../scene/global';
@@ -27,6 +28,7 @@ function Content() {
         <>
             <Ball />
             <CV />
+            <About />
             <Lines />
             <Stars />
             <SurroundingText

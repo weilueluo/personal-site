@@ -1,6 +1,6 @@
 import { useFrame, useLoader } from '@react-three/fiber';
 import { useMemo, useState } from 'react';
-import { DoubleSide, ShaderMaterial } from 'three';
+import { DoubleSide, ShaderMaterial, Vector3 } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { getDeviceDependent, useAltScroll } from '../utils/hooks';
@@ -15,7 +15,7 @@ export default function SurroundingText(props) {
 
     const characters = props.text.split('');
 
-    const fontSize = getDeviceDependent(0.6, 1.0)
+    const fontSize = getDeviceDependent(props.fontSize * 0.6, props.fontSize)
 
     let [meshes, meshMaterials, offsets] = useMemo(() => computeMeshAndMaterial(
         characters,
@@ -50,7 +50,7 @@ export default function SurroundingText(props) {
         }
     });
 
-    return <group>{meshes}</group>;
+    return <group position={props.position}>{meshes}</group>;
 }
 
 function computeMeshAndMaterial(characters, font, fontSize, props) {
@@ -112,5 +112,7 @@ SurroundingText.defaultProps = {
     expandOnScrollSpeed: 30,
     rotationZ: 0,
     initOffset: 0,
-    fadeInOnScrollSpeed: 0
+    fadeInOnScrollSpeed: 0,
+    position: new Vector3(0,0,0),
+    fontSize: 1.0
 };
