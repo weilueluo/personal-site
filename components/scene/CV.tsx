@@ -1,5 +1,5 @@
 import { useFrame } from '@react-three/fiber';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import ThreeSurroundingText from '../Text/ThreeSurroundingText';
 import { useMouseHover } from '../utils/hooks';
 
@@ -7,22 +7,12 @@ export default function CV() {
     const meshRef = useRef();
 
     const meshHovered = useMouseHover(meshRef);
+    useEffect(() => {
+        document.body.style.cursor = meshHovered ? 'pointer' : 'default';
+    }, [meshHovered])
 
-    useFrame((state) => {
-        const mesh = meshRef.current;
-        if (!mesh) {
-            return;
-        }
-
-        if (meshHovered) {
-            document.body.style.cursor = 'pointer';
-        } else {
-            document.body.style.cursor = 'default';
-        }
-    });
-
-    const openCVOnClick = () => {
-        if (meshHovered) {
+    const onClick = () => {
+        if (meshHovered) {  // ensure it is not a pass-through click
             window.open(
                 'https://github.com/Redcxx/cv/blob/master/resume.pdf',
                 '_blank'
@@ -45,7 +35,7 @@ export default function CV() {
                 ref={meshRef}
                 castShadow
                 receiveShadow
-                onClick={openCVOnClick}
+                onClick={onClick}
                 rotation={[Math.PI / 4, 0, 0]}
             >
                 <tetrahedronGeometry args={[2, 0]} />

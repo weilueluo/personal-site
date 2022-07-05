@@ -1,5 +1,5 @@
 import { useFrame } from '@react-three/fiber';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Group, Mesh, Vector3 } from 'three';
 import ThreeSurroundingText from '../Text/ThreeSurroundingText';
 import { getDeviceDependent, useAltScroll, useMouseHover } from '../utils/hooks';
@@ -13,27 +13,13 @@ export default function About() {
     const meshRef = useRef();
 
     const meshHovered = useMouseHover(meshRef);
-
-    useFrame((state) => {
-        const mesh = meshRef.current as Mesh;
-        if (!mesh) {
-            return;
-        }
-
-        if (meshHovered) {
-            document.body.style.cursor = 'pointer';
-        } else {
-            document.body.style.cursor = 'default';
-        }
-    });
+    useEffect(() => {
+        document.body.style.cursor = meshHovered ? 'pointer' : 'default';
+    }, [meshHovered])
 
     const onClick = () => {
         if (meshHovered) {
             window.alert("Not Ready Yet");
-            // window.open(
-            //     'https://github.com/Redcxx/cv/blob/master/resume.pdf',
-            //     '_blank'
-            // );
         }
     };
 

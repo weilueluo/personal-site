@@ -167,7 +167,7 @@ export function useMouseHover(objectRef) {
     const [hover, setHover] = useState(false);
     const intersect = useCurrentMouseHover();
 
-    useFrame((state) => {
+    useFrame(() => {
         const object = objectRef.current;
         if (!object) {
             setHover(false);
