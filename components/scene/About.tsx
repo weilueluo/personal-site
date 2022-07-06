@@ -19,7 +19,8 @@ export default function About() {
 
     const onClick = () => {
         if (meshHovered) {
-            window.alert("Not Ready Yet");
+            // window.alert("Not Ready Yet");
+            window.open('/about');
         }
     };
 

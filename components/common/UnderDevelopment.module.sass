@@ -1,0 +1,32 @@
+
+$banner-height: 50px
+$button-height-percent: 65
+$button-width: 50px
+
+.under-development-banner
+    position: relative
+    height: $banner-height
+    width: 100%
+    background-color: #8a7529
+    color: #fff
+    text-transform: uppercase
+
+    display: flex
+    align-items: center
+    justify-content: center
+
+.under-development-button
+    position: absolute
+    top: calc($banner-height / 100 * (100 - $button-height-percent) / 2)
+    right: calc($banner-height / 2)
+    height: calc($banner-height / 100 * $button-height-percent)
+    width: $button-width
+    background-color: #ccc
+    color: #000
+    border: none
+    border-radius: 5px
+
+    &:hover
+        background-color: #333
+        cursor: pointer
+        color: #ccc
