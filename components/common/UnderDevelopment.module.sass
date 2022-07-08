@@ -18,9 +18,9 @@ $button-width: 50px
 .under-development-button
     position: absolute
     top: calc($banner-height / 100 * (100 - $button-height-percent) / 2)
-    right: calc($banner-height / 2)
+    right: min(calc($banner-height / 2), 3%)
     height: calc($banner-height / 100 * $button-height-percent)
-    width: $button-width
+    width: min($button-width, 7vw)
     background-color: #ccc
     color: #000
     border: none

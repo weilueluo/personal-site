@@ -95,6 +95,8 @@ export function isDevelopmentEnv() {
     return process && process.env.NODE_ENV === 'development';
 }
 
+const buildTime = preval`module.exports = new Date().toLocaleString();`
+
 export function getBuildTime() {
-    return preval`module.exports = new Date().toLocaleString();`
+    return buildTime;
 }

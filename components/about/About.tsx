@@ -50,7 +50,7 @@ export default function About() {
             <div className={styles['container']}>
                 <UnderDevelopment />
 
-                <Title>About Page</Title>
+                <Title>About</Title>
 
                 <SubTitle>built with</SubTitle>
                 <List>
@@ -78,17 +78,18 @@ export default function About() {
 
             </div>
 
-            <BuildTime/>
+            {/* Note this cause render content between server and client to differ */}
+            <BuildTime />
         </>
     )
 }
 
 // export async function getStaticProps() {
-//    const dateTimeStamp = 
+//    const buildTime = 
 
 //     return {
 //       props: {
-//         dateTimeStamp,
+//         buildTime,
 //       },
 //     }
 //   }
