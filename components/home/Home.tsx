@@ -142,19 +142,16 @@ function MyCanvas(props) {
 
     const { children, ...otherProps } = props;
     
-    let onDesktop = true
-    // const [loaded, setLoaded] = useState(false)
+    let onDesktop = false
+    const [loaded, setLoaded] = useState(false)
 
-    // useEffect(() => {
-    //     onDesktop = getDeviceDependent(false, true)
-    //     setLoaded(true)
-    // })
-
-    // console.log(`${loaded} ${onDesktop}`);
-    
+    useEffect(() => {
+        onDesktop = getDeviceDependent(false, true)
+        setLoaded(true)
+    })
 
     return (
-        <Canvas
+        loaded && <Canvas
             style={{
                 height: '100vh',
                 width: '100vw',
