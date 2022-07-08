@@ -2,7 +2,12 @@ import { useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Group, Mesh, Vector3 } from 'three';
 import ThreeSurroundingText from '../Text/ThreeSurroundingText';
-import { getDeviceDependent, useAltScroll, useMouseHover } from '../utils/hooks';
+import {
+    getDeviceDependent,
+    useAltScroll,
+    useMouseHover,
+} from '../utils/hooks';
+import { isDevelopmentEnv } from '../utils/utils';
 
 const tempVector = new Vector3(0, 0, 0);
 const zeroVector = new Vector3(0, 0, 0);
@@ -15,24 +20,30 @@ export default function About() {
     const meshHovered = useMouseHover(meshRef);
     useEffect(() => {
         document.body.style.cursor = meshHovered ? 'pointer' : 'default';
-    }, [meshHovered])
+    }, [meshHovered]);
 
     const onClick = () => {
         if (meshHovered) {
-            // window.alert("Not Ready Yet");
-            window.open('/about.html');
+            if (isDevelopmentEnv()) {
+                window.open('/about');
+            } else {
+                window.open('/about.html');
+            }
         }
     };
 
     const scrollAmount = useAltScroll();
     const groupRef = useRef();
-    const finalPosition = useMemo(() => getDeviceDependent(mobilePosition, desktopPosition), [])
+    const finalPosition = useMemo(
+        () => getDeviceDependent(mobilePosition, desktopPosition),
+        []
+    );
     useFrame((state) => {
-        const group = groupRef.current as Group
+        const group = groupRef.current as Group;
         if (!group) return;
 
         tempVector.lerpVectors(zeroVector, finalPosition, scrollAmount);
-        group.position.set(tempVector.x, tempVector.y, tempVector.z)
+        group.position.set(tempVector.x, tempVector.y, tempVector.z);
     });
 
     return (
@@ -53,7 +64,7 @@ export default function About() {
                 onClick={onClick}
                 rotation={[Math.PI / 4, 0, 0]}
             >
-                <dodecahedronGeometry args={[2, 0]}/>
+                <dodecahedronGeometry args={[2, 0]} />
                 <meshStandardMaterial
                     color={0xffffff}
                     emissive={0x0d2f5c}

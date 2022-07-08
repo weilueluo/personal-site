@@ -1,0 +1,56 @@
+
+.container
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+
+.title
+    text-transform: uppercase
+    text-align: center
+    padding: 5px 30px
+    transition: 0.3s
+    &:hover
+        background-color: #888
+        color: white
+        cursor: default
+
+.sub-title
+    text-transform: uppercase
+    padding: 5px 15px
+
+    transition: 0.3s
+
+    &:hover
+        background-color: #888
+        color: white
+        transform: skew(15deg)
+        cursor: default
+
+
+.list
+    list-style: none
+    padding-left: 0
+    
+.list-item
+    display: inline-block
+    margin: 0 10px
+    transition: 0.5s
+
+    &:hover
+        transform: rotateZ(360deg)
+        
+    a
+        display: flex
+        align-items: center
+        flex-direction: column
+
+.build-time
+    margin-top: 50px
+    width: 100vw
+
+    display: flex
+    align-items: center
+    justify-content: center
+
+    font-style: italic

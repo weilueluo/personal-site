@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { LoopOnce, LoopRepeat } from 'three';
+import preval from 'preval.macro'
+
 
 export function playAnimation(action, duration = 1) {
     action.reset();
@@ -87,4 +89,12 @@ export function useMaxAnimationDuration(animations) {
 
 export function deg2rad(deg) {
     return deg * (Math.PI / 180)
+}
+
+export function isDevelopmentEnv() {
+    return process && process.env.NODE_ENV === 'development';
+}
+
+export function getBuildTime() {
+    return preval`module.exports = new Date().toLocaleString();`
 }
