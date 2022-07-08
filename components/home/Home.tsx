@@ -18,11 +18,19 @@ import { getDeviceDependent, initMobileScroll } from '../utils/hooks';
 
 function Content() {
     const enableOrbitControl = getDeviceDependent(false, true); // disable vertical scroll on mobile
+    const enablePostProcessing = getDeviceDependent(false, true);
     const textRadius = getMainBallRadius() + 0.1;
 
     useEffect(() => {
         initMobileScroll();
     });
+
+    const postprocessing = (
+        <EffectComposer multisampling={8}>
+            {/* https://docs.pmnd.rs/react-postprocessing */}
+            <SMAA />
+        </EffectComposer>    
+    )
 
     return (
         <>
@@ -66,10 +74,7 @@ function Content() {
                 // maxPolarAngle={maxPolarAngle}
             />
 
-            <EffectComposer multisampling={8}>
-                {/* https://docs.pmnd.rs/react-postprocessing */}
-                <SMAA />
-            </EffectComposer>
+            {enablePostProcessing && postprocessing}
 
             <Stats showPanel={0} className={styles.panel1} />
             <Stats showPanel={1} className={styles.panel2} />
@@ -136,6 +141,17 @@ function MyCanvas(props) {
     );
 
     const { children, ...otherProps } = props;
+    
+    let onDesktop = true
+    // const [loaded, setLoaded] = useState(false)
+
+    // useEffect(() => {
+    //     onDesktop = getDeviceDependent(false, true)
+    //     setLoaded(true)
+    // })
+
+    // console.log(`${loaded} ${onDesktop}`);
+    
 
     return (
         <Canvas
@@ -155,10 +171,10 @@ function MyCanvas(props) {
                 far: 100,
             }}
             gl={{
-                antialias: true,
+                antialias: onDesktop,
                 outputEncoding: sRGBEncoding,
                 toneMapping: ACESFilmicToneMapping,
-                physicallyCorrectLights: true,
+                physicallyCorrectLights: onDesktop,
             }}
             raycaster={{}}
             shadowMap={true}

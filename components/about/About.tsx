@@ -75,7 +75,6 @@ export default function About() {
                 <List>
                     <IconListItem src="/icons/tech/gmail.svg" url="mailto:luoweilue@gmail.com" caption="luoweilue@gmail.com"/>
                 </List>
-
             </div>
 
             {/* Note this cause render content between server and client to differ */}
