@@ -38,7 +38,7 @@ export default function CV() {
                 onClick={onClick}
                 rotation={[Math.PI / 4, 0, 0]}
             >
-                <tetrahedronGeometry args={[2, 0]} />
+                <sphereBufferGeometry args={[2, 12, 6]} />
                 <meshStandardMaterial
                     color={0xffffff}
                     emissive={0x0d2f5c}

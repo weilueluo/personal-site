@@ -10,6 +10,7 @@ import { getNScrollPages, getMainBallRadius } from '../scene/global';
 import GradientBackground from '../scene/GradientBackground';
 import Lines from '../scene/Lines';
 import LoaderProgress from '../scene/LoaderProgress';
+import RSS from '../scene/RSS';
 import Stars from '../scene/Stars';
 import styles from '../styles/StatsPanel.module.sass';
 import SurroundingText from '../Text/SurroundingText';
@@ -36,6 +37,7 @@ function Content() {
         <>
             <Ball />
             <CV />
+            <RSS />
             <About />
             <Lines />
             <Stars />
@@ -142,7 +144,8 @@ function MyCanvas(props) {
 
     const { children, ...otherProps } = props;
     
-    let onDesktop = false
+
+    let onDesktop = false  // need to set this before create canvas
     const [loaded, setLoaded] = useState(false)
 
     useEffect(() => {

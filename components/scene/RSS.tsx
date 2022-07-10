@@ -1,6 +1,6 @@
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Group, Mesh, SphereBufferGeometry, SphereGeometry, Vector3 } from 'three';
+import { Group, Mesh, Vector3 } from 'three';
 import ThreeSurroundingText from '../Text/ThreeSurroundingText';
 import {
     getDeviceDependent,
@@ -11,10 +11,10 @@ import { isDevelopmentEnv } from '../utils/utils';
 
 const tempVector = new Vector3(0, 0, 0);
 const zeroVector = new Vector3(0, 0, 0);
-const mobilePosition = new Vector3(3, 3, 3);
-const desktopPosition = new Vector3(5, 5, 5);
+const mobilePosition = new Vector3(-3, -3, -3);
+const desktopPosition = new Vector3(-5, -5, -5);
 
-export default function About() {
+export default function RSS() {
     const meshRef = useRef();
 
     const meshHovered = useMouseHover(meshRef);
@@ -25,9 +25,9 @@ export default function About() {
     const onClick = () => {
         if (meshHovered) {
             if (isDevelopmentEnv()) {
-                window.open('/about');
+                window.open('/rss');
             } else {
-                window.open('/about.html');
+                window.open('/rss.html');
             }
         }
     };
@@ -49,10 +49,10 @@ export default function About() {
     return (
         <group ref={groupRef}>
             <ThreeSurroundingText
-                text={'About'}
+                text={'RSS'}
                 radius={3.5}
                 rotationZ={Math.PI / 2}
-                initOffset={Math.PI / 4}
+                initOffset={-Math.PI / 3}
                 expandOnScrollSpeed={0}
                 fadeInOnScrollSpeed={1}
             />
