@@ -125,6 +125,7 @@ function ErrorFeed({ opt, error }) {
     return (
         <li key={opt.url} className={styles['feed-li']}>
             <h3 className={styles['feed-li-title']}>{error.toString()}</h3>
+            <p className={styles['feed-li-description']}>{error.stack}</p>
         </li>
     );
 }
