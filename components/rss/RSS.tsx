@@ -57,7 +57,7 @@ function createDefaultFeeds(): JsxFeeds {
     return new Array(rssOptions.length)
         .fill(0)
         .map((_, i) =>
-            new Array(1).fill(<LoadingFeed opt={rssOptions[i]} />)
+            new Array(1).fill(<LoadingFeed i={i} />)
         ) as unknown as JsxFeeds;
 }
 
@@ -125,13 +125,13 @@ function ErrorFeed({ opt, error }) {
     return (
         <li key={opt.url} className={styles['feed-li']}>
             <h3 className={styles['feed-li-title']}>{error.toString()}</h3>
-            <p className={styles['feed-li-description']}>{error.stack}</p>
+            <p className={styles['feed-li-description']}>{error.stack || <Alert>n/a</Alert>}</p>
         </li>
     );
 }
 
-function LoadingFeed({ opt }) {
-    return <li key={opt.url} className={styles['feed-li-loading']}></li>;
+function LoadingFeed({ i }) {
+    return <li key={i} className={styles['feed-li-loading']}></li>;
 }
 
 function feed2jsx(feed: Parser.Output<OptionalOutput>, limit) {
