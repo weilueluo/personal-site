@@ -119,7 +119,7 @@ export default function Home() {
 
     useEffect(() => {
         setPages(getNScrollPages())
-    })
+    }, [])
 
     return (
         <>
@@ -145,11 +145,11 @@ function MyCanvas(props) {
     const { children, ...otherProps } = props;
     
 
-    let onDesktop = false  // need to set this before create canvas
+    const onDesktopRef = useRef(false)  // need to set this before create canvas
     const [loaded, setLoaded] = useState(false)
 
     useEffect(() => {
-        onDesktop = getDeviceDependent(false, true)
+        onDesktopRef.current = getDeviceDependent(false, true)
         setLoaded(true)
     })
 
@@ -171,10 +171,10 @@ function MyCanvas(props) {
                 far: 100,
             }}
             gl={{
-                antialias: onDesktop,
+                antialias: onDesktopRef.current,
                 outputEncoding: sRGBEncoding,
                 toneMapping: ACESFilmicToneMapping,
-                physicallyCorrectLights: onDesktop,
+                physicallyCorrectLights: onDesktopRef.current,
             }}
             raycaster={{}}
             shadowMap={true}

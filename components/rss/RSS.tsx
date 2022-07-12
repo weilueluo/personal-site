@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useReducer, useState } from 'react'
 import { useEffectOnce } from 'react-use'
 import styles from './RSS.module.sass'
 import RSSLoader from './RSSLoader'
@@ -11,7 +11,11 @@ declare type RSSOption = {
     limit?: number
 }[]
 
-const rss_options: RSSOption = [
+declare type JsxFeeds = {
+    feeds: any[]
+}[] | RSSOption
+
+const rssOptions: RSSOption = [
     {
         title: 'Github',
         url: 'https://github.com/Redcxx.private.atom?token=AJNW6TLPB4JTBWMC7SLIJ6WA3EMWI',
@@ -22,34 +26,48 @@ const rss_options: RSSOption = [
     }
 ]
 
-export default function RSS() {
-    
-    const jsxFeedOptions = rss_options.map(config => {
-        const [jsxFeeds, setJsxFeeds] = useState([])
-        return {
-            jsxFeeds: jsxFeeds,
-            setJsxFeeds: setJsxFeeds,
-            ...config
+function stateModifier(jsxFeeds: JsxFeeds, action) {
+    return jsxFeeds.map((jsxFeed, i) => {
+        if (i == action.i) {
+            return {
+                feeds: [...(jsxFeed.feeds || []), action.feed],
+                ...rssOptions[i]
+            }
+        } else {
+            return jsxFeed
         }
     })
+}
 
-    useEffectOnce(() => {
-        Promise.allSettled(jsxFeedOptions.map(async (opt) => {
+export default function RSS() {
+    const emptyArray = new Array(rssOptions.length).fill(0).map(() => new Array(0).fill(0)) as unknown as JsxFeeds
+    const [jsxFeeds, setJsxFeeds] = useState<JsxFeeds>(emptyArray)
+
+    useEffect(() => {
+
+        let newJsxFeeds = emptyArray
+        
+        Promise.allSettled(rssOptions.map(async (opt, i) => {
             const limit = opt.limit || 5
             return RSSLoader.loadURL(opt.url)
                 .then(feed => {
                     console.log("loaded feed");
                     console.log(feed);
-                    opt.setJsxFeeds([...opt.jsxFeeds, feed2jsx(feed, limit)])
+                    newJsxFeeds = stateModifier(newJsxFeeds, {
+                        i: i,
+                        feed: feed2jsx(feed, limit)
+                    })
+                    setJsxFeeds(newJsxFeeds)
+                    // opt.setJsxFeeds([...opt.jsxFeeds, ])
                 })
                 .catch(error => console.log(`RSSLoader error: ${error}`))
         }))
-    })
+    }, [])
 
-    const content = jsxFeedOptions.map((opt, i) => (
+    const content = jsxFeeds.map((feedsOpt, i) => (
         <div className={styles['feed-section']} key={i}>
-            <h1 className={styles['feed-section-title']}>{opt.title}</h1>
-            <ul className={styles['feed-section-ul']}>{opt.jsxFeeds}</ul>
+            <h1 className={styles['feed-section-title']} onClick={() => sectionTitleOnClick(feedsOpt)}>{feedsOpt.title}</h1>
+            <ul className={styles['feed-section-ul']}>{feedsOpt.feeds}</ul>
         </div>
     ))
 
@@ -107,4 +125,8 @@ function onMouseLeave(item: Parser.Item) {
 
 function onClick(item: Parser.Item) {
     item.link && window.open(item.link, '_blank')
+}
+
+function sectionTitleOnClick(opt) {
+    opt.url && window.open(opt.url, '_blank')
 }
