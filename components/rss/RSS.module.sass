@@ -55,3 +55,30 @@
     transition: 0.5s
 
 .feed-li-alert
+
+
+
+$loading-size: 50px
+
+.feed-li-loading
+    position: relative
+    height: $loading-size
+
+.feed-li-loading::before
+    content: ""
+    display: inline-block
+    position: absolute
+    width: $loading-size
+    height: $loading-size
+    background-color: black
+
+    animation-name: loading-animation
+    animation-duration: 1s
+    animation-iteration-count: infinite
+    animation-direction: alternate
+
+@keyframes loading-animation
+    0%
+        left: 0
+    100%
+        left: calc( 100% - $loading-size )
