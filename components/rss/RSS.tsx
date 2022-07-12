@@ -11,6 +11,7 @@ declare type RSSOption = {
     limit?: number;
 }[];
 
+
 declare type JsxFeeds = any[];
 
 const rssOptions: RSSOption = [
