@@ -96,16 +96,14 @@ export function feed2flatFeeds(feed: Parser.Output<{}>, extras: Function, limit 
 }
 
 
+// https://stackoverflow.com/a/11526569
+const MIN_DATE = new Date(-8640000000000000);
 
 export function sortFlatFeedsDesc(flatfeeds: FlatFeed[]) {
     flatfeeds.sort((a, b) => {
-        const aDate = a.jsDate
-        const bDate = b.jsDate
-        if (aDate == null) {
-            return 1
-        } else if (bDate == null) {
-            return 0
-        } else if (bDate > aDate) {
+        const aDate = a.jsDate || MIN_DATE
+        const bDate = b.jsDate || MIN_DATE
+        if (bDate > aDate) {
             return 1
         } else if (aDate > bDate) {
             return -1

@@ -72,9 +72,6 @@ const rssOptions: RSSOptions = new Map([
     ],
 ]);
 
-// https://stackoverflow.com/a/11526569
-const MIN_DATE = new Date(-8640000000000000);
-
 export default function RSS() {
     const [loadedFeeds, setTotalFeeds] = useState(0);
 
