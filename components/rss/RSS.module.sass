@@ -1,60 +1,88 @@
 
-.feed-container
-    display: flex
-    justify-content: space-around
-    flex-wrap: wrap
-    padding: 30px
-    
-.feed-section
-    height: 500px
-    width: 400px 
-    overflow: hidden
-    margin: 10px
-    border-radius: 5px
-
+.feeds-container
     display: flex
     flex-direction: column
-
-.feed-section-title
-    display: flex
     align-items: center
-    justify-content: center
+    flex-wrap: wrap
+    padding: 0
+    width: 100%
+    
+// .feed-section
+//     height: 500px
+//     width: 400px 
+//     overflow: hidden
+//     margin: 10px
+//     border-radius: 5px
 
-.feed-section-ul
-    overflow-y: scroll
+//     display: flex
+//     flex-direction: column
+
+// .feed-section-title
+//     display: flex
+//     align-items: center
+//     justify-content: center
+
+// .feed-section-ul
+//     overflow-y: scroll
+//     list-style: none
+//     padding-left: 0
+//     background-color: #888
+//     border-radius: 5px
+
+
+.feed
+    margin: 10px
+    padding: 10px
+    border-radius: 5px
+    width: calc( 100% - 10px*4 )
+    max-width: 600px
+
     list-style: none
-    padding-left: 0
-    background-color: #888
-    border-radius: 5px
-
-
-.feed-li
-    margin: 10px 20px
-    padding: 5px 10px
-    border-radius: 5px
 
     background-color: #ccc
 
-    &:hover
-        .feed-li-description
-            max-height: 150px
+    display: flex
+    flex-direction: column
+    gap: 10px
 
-.feed-li-title
+.feed-meta
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+    
+.feed-span
+    padding: 3px 6px
+    border-radius: 5px
+    background-color: white
 
-.feed-li-date
-    max-height: 0
-    overflow: hidden
+.feed-type
+    @extend .feed-span
 
-.feed-li-author
-    max-height: 0
-    overflow: hidden
+.feed-date
+    @extend .feed-span
 
-.feed-li-description
+.feed-author
+    @extend .feed-span
+
+.feed-title
+    @extend .feed-span
+
+.feed:hover
+    .feed-description
+        // display: inline-block
+        max-height: 150px
+        @extend .feed-span
+
+.feed-description
+    grid-area: desc
     max-height: 0px
-    overflow: hidden
+    overflow-y: scroll
     transition: 0.5s
+    margin: 0
+    
+    // display: none
 
-.feed-li-alert
+.feed-alert
 
 
 

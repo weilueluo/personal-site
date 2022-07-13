@@ -1,131 +1,135 @@
 import { useEffect, useReducer, useState } from 'react';
 import { useEffectOnce } from 'react-use';
 import styles from './RSS.module.sass';
-import RSSLoader from './RSSLoader';
 import UnderDevelopment from '../common/UnderDevelopment';
 import Parser from 'rss-parser';
+import { FeedsMap, FlatFeed, RSSOptions } from './RSS.d';
+import RSSManager, { feed2flatFeeds, sortFlatFeedsDesc } from './RSSManager';
+import { timeSince } from '../utils/utils';
 
-declare type RSSOption = {
-    title: string;
-    url: string;
-    limit?: number;
-}[];
+const rssOptions: RSSOptions = new Map([
+    [
+        'Github',
+        {
+            url: 'https://github.com/Redcxx.private.atom?token=AJNW6TLPB4JTBWMC7SLIJ6WA3EMWI',
+        },
+    ],
 
+    [
+        'Hacker News',
+        {
+            url: 'https://rsshub.app/hackernews',
+        },
+    ],
 
-declare type JsxFeeds = any[];
+    [
+        'Pixiv Weekly',
+        {
+            url: 'https://rsshub.app/pixiv/ranking/week',
+        },
+    ],
 
-const rssOptions: RSSOption = [
-    {
-        title: 'Github',
-        url: 'https://github.com/Redcxx.private.atom?token=AJNW6TLPB4JTBWMC7SLIJ6WA3EMWI',
-    },
-    {
-        title: 'Hacker News',
-        url: 'https://rsshub.app/hackernews',
-    },
-    {
-        title: 'Pixiv Weekly',
-        url: 'https://rsshub.app/pixiv/ranking/week',
-    },
-    {
-        title: 'Steam News',
-        url: 'https://store.steampowered.com/feeds/news/?l=english',
-    },
-    {
-        title: 'Token Insight',
-        url: ' https://tokeninsight.com/rss',
-    },
-    {
-        title: 'World Economic Forum',
-        url: 'https://rsshub.app/weforum/report',
-    },
-    {
-        title: 'hanime.tv',
-        url: 'https://rsshub.app/hanime/video',
-    },
-    {
-        title: 'Wired',
-        url: 'https://www.wired.com/feed',
-    },
-    {
-        title: 'BBC',
-        url: 'https://rsshub.app/abc',
-    },
-];
+    [
+        'Steam News',
+        {
+            url: 'https://store.steampowered.com/feeds/news/?l=english',
+        },
+    ],
 
-function createDefaultFeeds(): JsxFeeds {
-    return new Array(rssOptions.length)
-        .fill(0)
-        .map((_, i) =>
-            new Array(1).fill(<LoadingFeed i={i} />)
-        ) as unknown as JsxFeeds;
-}
+    [
+        'Token Insight',
+        {
+            url: ' https://tokeninsight.com/rss',
+        },
+    ],
+
+    [
+        'World Economic Forum',
+        {
+            url: 'https://rsshub.app/weforum/report',
+        },
+    ],
+
+    [
+        'hanime.tv',
+        {
+            url: 'https://rsshub.app/hanime/video',
+        },
+    ],
+
+    [
+        'Wired',
+        {
+            url: 'https://www.wired.com/feed',
+        },
+    ],
+
+    [
+        'BBC',
+        {
+            url: 'https://rsshub.app/bbc',
+        },
+    ],
+]);
+
+// https://stackoverflow.com/a/11526569
+const MIN_DATE = new Date(-8640000000000000);
 
 export default function RSS() {
-    const emptyArray = createDefaultFeeds();
-    const [jsxFeeds, setJsxFeeds] = useState<JsxFeeds>(emptyArray);
+    const [loadedFeeds, setTotalFeeds] = useState(0);
+
+    const [feeds, setFeeds] = useState<FeedsMap>(new Map());
+    const rssManager = new RSSManager(setFeeds);
+    rssManager.setOptions(rssOptions);
+
+    const [content, setContent] = useState([]);
+    useEffect(() => {
+
+        // convert feeds from each url into single array
+        const flatFeeds = [];
+        const limit = 10;
+        feeds.forEach((feed, name) => {
+            const extras = flatFeed => {
+                const date = flatFeed.pubDate || flatFeed.isodate
+                return {
+                    name: name,
+                    jsDate: date ? new Date(date) : null
+                }
+            };
+            flatFeeds.push(...feed2flatFeeds(feed, extras, limit));
+        });
+        
+        console.log(flatFeeds);
+        sortFlatFeedsDesc(flatFeeds)
+
+        const newContent = flatFeeds.map((flatFeed, i) =>
+            flatFeed2jsx(flatFeed, i)
+        );
+        setContent(newContent);
+        setTotalFeeds(newContent.length);
+    }, [feeds]);
 
     useEffect(() => {
-        let newJsxFeeds = createDefaultFeeds();
-
-        Promise.allSettled(
-            rssOptions.map(async (opt, i) => {
-                const limit = opt.limit || 5;
-                return RSSLoader.loadURL(opt.url)
-                    .then((feed) => {
-                        console.log(`loaded feed ${i}: ${opt.title}`);
-                        console.log(feed);
-                        const newFeeds = feed2jsx(feed, limit);
-                        newJsxFeeds = newJsxFeeds.map((oldFeeds, j) => {
-                            return i == j ? newFeeds : oldFeeds;
-                        });
-                        setJsxFeeds(newJsxFeeds);
-                    })
-                    .catch((error) => {
-                        console.log(`RSSLoader error: ${error}`);
-                        newJsxFeeds = newJsxFeeds.map((oldFeeds, j) => {
-                            return i == j ? (
-                                <ErrorFeed opt={opt} error={error} />
-                            ) : (
-                                oldFeeds
-                            );
-                        });
-                        setJsxFeeds(newJsxFeeds);
-                    });
-            })
-        );
+        rssManager.reload();
     }, []);
-
-    const content = jsxFeeds.map((feeds, i) => (
-        <div className={styles['feed-section']} key={i}>
-            <h1
-                className={styles['feed-section-title']}
-                onClick={() => sectionTitleOnClick(rssOptions[i])}
-            >
-                {rssOptions[i].title}
-            </h1>
-            <ul className={styles['feed-section-ul']}>{feeds}</ul>
-        </div>
-    ));
 
     return (
         <>
             <UnderDevelopment />
-            <div className={styles['feed-container']}>{content}</div>
+            <button onClick={() => rssManager.reload()}>Refresh</button>
+            <span>Loaded Feeds: {loadedFeeds}</span>
+            <div className={styles['feeds-container']}>{content}</div>
         </>
     );
 }
-
-declare type OptionalOutput = {
-    id?: string;
-    author?: string;
-};
 
 function ErrorFeed({ opt, error }) {
     return (
         <li key={opt.url} className={styles['feed-li']}>
             <h3 className={styles['feed-li-title']}>{error.toString()}</h3>
-            <p className={styles['feed-li-description']}>{error.stack || <Alert>n/a</Alert>}</p>
+            <p className={styles['feed-li-description']}>
+                {error.stack || <Alert>n/a</Alert>}
+            </p>
         </li>
     );
 }
@@ -134,36 +138,40 @@ function LoadingFeed({ i }) {
     return <li key={i} className={styles['feed-li-loading']}></li>;
 }
 
-function feed2jsx(feed: Parser.Output<OptionalOutput>, limit) {
-    return feed.items.slice(0, limit).map((item, i) => {
-        const title = item.title;
-        const author = item.creator || item.author || <Alert>n/a</Alert>;
-        const publishDate = item.pubDate || <Alert>n/a</Alert>;
-        const description = item.summary ||
-            item.contentSnippet ||
-            item.content || <Alert>n/a</Alert>;
-        const key = item.guid || item.id || item.title || i;
+function flatFeed2jsx(flatFeed: FlatFeed, i: number) {
+    const feedName = flatFeed.name;
+    const title = flatFeed.title;
+    const author = flatFeed.creator || flatFeed.author || <Alert>n/a</Alert>;
+    const description =
+        flatFeed.summary ||
+        flatFeed.contentSnippet ||
+        flatFeed.content ||
+        'n/a';
+    const key = flatFeed.guid || flatFeed.id || flatFeed.title || i;
 
-        return (
-            <li
-                key={key}
-                className={styles['feed-li']}
-                onClick={() => onClick(item)}
-                onMouseEnter={() => onMouseEnter(item)}
-                onMouseLeave={() => onMouseLeave(item)}
-            >
-                <h3 className={styles['feed-li-title']}>{title}</h3>
-                <span className={styles['feed-li-date']}>
-                    date: {publishDate}
-                </span>
-                <br />
-                <span className={styles['feed-li-author']}>
-                    author: {author}
-                </span>
-                <p className={styles['feed-li-description']}>{description}</p>
-            </li>
-        );
-    });
+    let displayTime = "n/a"
+    if (flatFeed.jsDate) {
+        displayTime = timeSince(new Date(), flatFeed.jsDate) + ' ago'
+    }
+
+    return (
+        <li
+            key={key}
+            className={styles['feed']}
+            onClick={() => onClick(flatFeed)}
+            onMouseEnter={() => onMouseEnter(flatFeed)}
+            onMouseLeave={() => onMouseLeave(flatFeed)}
+        >
+            <div className={styles['feed-meta']}>
+                <span className={styles['feed-type']}>{feedName}</span>
+                <span className={styles['feed-date']}>{displayTime}</span>
+            </div>
+
+            {/* <span className={styles['feed-author']}>{author}</span> */}
+            <span className={styles['feed-title']}>{title}</span>
+            <p className={styles['feed-description']}>{description}</p>
+        </li>
+    );
 }
 
 function Alert(props) {

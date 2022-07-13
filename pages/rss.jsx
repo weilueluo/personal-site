@@ -3,7 +3,7 @@ import RSS from "../components/rss/RSS"
 
 export default function AboutPage() {
     return (
-        <div>
+        <>
             <Head>
                 <title>Weilue&apos;s RSS Feed</title>
                 <meta name="description" content="Weilue Luo&apos;s RSS Feed."/>
@@ -11,6 +11,6 @@ export default function AboutPage() {
             </Head>
 
             <RSS />
-        </div>
+        </>
     )
 }
