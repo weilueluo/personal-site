@@ -1,7 +1,5 @@
-import { useState } from 'react';
-import { FlatFeed, RSSOptions } from './RSS.d';
-import Parser from 'rss-parser'
-
+import Parser from 'rss-parser';
+import { FlatFeed, RSSRequestError, RSSOptions } from './RSS.d';
 
 enum State {
     NOT_INITIALIZED,
@@ -14,9 +12,9 @@ export default class RSSManager {
     _state: State;
     _rssOptions: RSSOptions;
 
-    _on_loading: Function;
-    _on_complete: Function;
-    _on_error: Function;
+    on_loading: Function;
+    on_complete: Function;
+    on_error: Function;
 
     constructor(setFeed) {
         this._setFeeds = setFeed;
@@ -25,8 +23,8 @@ export default class RSSManager {
 
     _setState(state: State) {
         this._state = state;
-        state == State.LOADING && this._on_loading && this._on_loading();
-        state == State.COMPLETE && this._on_complete && this._on_complete();
+        state == State.LOADING && this.on_loading && this.on_loading();
+        state == State.COMPLETE && this.on_complete && this.on_complete();
     }
 
     setOptions(newRSSOptions: RSSOptions) {
@@ -42,8 +40,8 @@ export default class RSSManager {
         this._setFeeds(newFeeds);
 
         // clone options, ensure it will not change halfway
-        const rssOptions = new Map(this._rssOptions)
-        const errors = [];
+        const rssOptions = new Map(this._rssOptions);
+        const errors: RSSRequestError[] = [];
 
         const rssPromises = [];
         rssOptions.forEach((opt, feedName) => {
@@ -57,139 +55,165 @@ export default class RSSManager {
 
                     // set feed to new feed
                     this._setFeeds(newFeeds);
+                    
+                    // refresh error anyway, in case previously there is error
+                    // but not this time, and it is not updated
+                    this.on_error && this.on_error(errors);
                 })
                 .catch((error) => {
                     console.log(`RSSLoader error: ${error}`);
+                    error.url = opt.url
                     errors.push(error);
-                    this._on_error && this._on_error(errors);
+                    this.on_error && this.on_error(errors);
                 });
 
             rssPromises.push(rssPromise);
         });
 
-        Promise.allSettled(rssPromises)
-            .then(() => this._setState(State.COMPLETE));
+        Promise.allSettled(rssPromises).then(() => {
+            this._setState(State.COMPLETE)
+            this.on_error && this.on_error(errors);
+        });
     }
-
 }
-
 
 // --- Parser
 // https://github.com/rbren/rss-parser
 const RSSURLParser = new Parser();
 
-const corsProxyEndpoint = 'https://se06wfpxq7.execute-api.eu-west-2.amazonaws.com/dev?url='
+const corsProxyEndpoint =
+    'https://se06wfpxq7.execute-api.eu-west-2.amazonaws.com/dev?url=';
 
 async function loadRSSFeed(url) {
-    return await RSSURLParser.parseURL(corsProxyEndpoint + url)
+    return await RSSURLParser.parseURL(corsProxyEndpoint + url);
 }
-
 
 // --- expand feed.items
 // for each item in items: move attribute to top level
-export function feed2flatFeeds(feed: Parser.Output<{}>, extras: Function, limit = 5) {
+export function feed2flatFeeds(
+    feed: Parser.Output<{}>,
+    extras: Function,
+    limit = 5
+) {
     const feedWithoutItems = structuredClone(feed);
     delete feedWithoutItems.items;
-    return feed.items.slice(0, limit).map(feedItem => {
-        const flatFeed = Object.assign(structuredClone(feedWithoutItems), feedItem)
-        return Object.assign(flatFeed, extras(flatFeed))
+    return feed.items.slice(0, limit).map((feedItem) => {
+        const flatFeed = Object.assign(
+            structuredClone(feedWithoutItems),
+            feedItem
+        );
+        return Object.assign(flatFeed, extras(flatFeed));
     });
 }
-
 
 // https://stackoverflow.com/a/11526569
 const MIN_DATE = new Date(-8640000000000000);
 
 export function sortFlatFeedsDesc(flatfeeds: FlatFeed[]) {
     flatfeeds.sort((a, b) => {
-        const aDate = a.jsDate || MIN_DATE
-        const bDate = b.jsDate || MIN_DATE
+        const aDate = a.jsDate || MIN_DATE;
+        const bDate = b.jsDate || MIN_DATE;
         if (bDate > aDate) {
-            return 1
+            return 1;
         } else if (aDate > bDate) {
-            return -1
+            return -1;
         } else {
-            return 0
+            return 0;
         }
-    })
+    });
 }
-
 
 // searching stuff
 
-const nonAlphanumeric = /\W/gim
-function extractTokensFromString(text: string, filterEmpty=false, addEmpty=false) {
+const nonAlphanumeric = /\W/gim;
+function extractTokensFromString(
+    text: string,
+    filterEmpty = false,
+    addEmpty = false
+) {
     const tokens = new Set(
-        text.split(nonAlphanumeric)
-            .map(token => token.trim().toLowerCase())
-            .filter(token => filterEmpty ? token.length > 0 : true)
-    )
-    
+        text
+            .split(nonAlphanumeric)
+            .map((token) => token.trim().toLowerCase())
+            .filter((token) => (filterEmpty ? token.length > 0 : true))
+    );
+
     // match everything if user input empty string
     if (addEmpty) {
-        tokens.add('')
+        tokens.add('');
     }
-    
-    return tokens
+
+    return tokens;
 }
 
 function extractTokensFromFlatFeed(flatFeed: FlatFeed) {
-    return extractTokensFromString(JSON.stringify(flatFeed), true, true)
+    return extractTokensFromString(JSON.stringify(flatFeed), true, true);
 }
 
-
-const INVERSE_INDEX = new Map<string, FlatFeed>()
-const UNIQUE_KEY2FLAT_FEED = new Map()
+// map token to feed
+const INVERSE_INDEX = new Map<string, Set<FlatFeed>>();
+const UNIQUE_KEY2FLAT_FEED = new Map();
 
 function populateInverseIndex(flatFeeds: FlatFeed[]) {
-    flatFeeds.forEach(feed => {
+    flatFeeds.forEach((feed) => {
         if (UNIQUE_KEY2FLAT_FEED.has(feed.uniqueKey)) {
             // already processed and added to inverse index
             return;
         } else {
-            extractTokensFromFlatFeed(feed).forEach(token => {
+            extractTokensFromFlatFeed(feed).forEach((token) => {
                 if (!INVERSE_INDEX.has(token)) {
-                    INVERSE_INDEX.set(token, new Set())
+                    INVERSE_INDEX.set(token, new Set());
                 }
                 // map token to feed
-                INVERSE_INDEX.get(token).add(feed)
-            })
-            UNIQUE_KEY2FLAT_FEED.set(feed.uniqueKey, feed)
+                INVERSE_INDEX.get(token).add(feed);
+            });
+            UNIQUE_KEY2FLAT_FEED.set(feed.uniqueKey, feed);
         }
-    })
+    });
 }
 
 export function searchFlatFeeds(searchString: string, flatFeeds: FlatFeed[]) {
-    populateInverseIndex(flatFeeds)
-    const searchTokens = extractTokensFromString(searchString, false, false)
+    populateInverseIndex(flatFeeds);
+    const searchTokens = extractTokensFromString(searchString, false, false);
 
-    const key2MatchedTokens = new Map()
-    searchTokens.forEach(token => {
+    const key2MatchedTokens = new Map();
+    searchTokens.forEach((token) => {
         if (INVERSE_INDEX.has(token)) {
-            INVERSE_INDEX.get(token).forEach(feed => {
+            INVERSE_INDEX.get(token).forEach((feed) => {
                 if (!key2MatchedTokens.has(feed.uniqueKey)) {
-                    key2MatchedTokens.set(feed.uniqueKey, new Set())
+                    key2MatchedTokens.set(feed.uniqueKey, new Set());
                 }
-                key2MatchedTokens.get(feed.uniqueKey).add(token)
-            })
+                key2MatchedTokens.get(feed.uniqueKey).add(token);
+            });
         }
-    })
+    });
 
     // console.log('key2MatchedTokens');
     // console.log(key2MatchedTokens);
-    
-    const matchedSortedFeeds = [...key2MatchedTokens.keys()].sort((keyA, keyB) => {
-        // sort by number of matched tokens
-        return key2MatchedTokens.get(keyB).size - key2MatchedTokens.get(keyA).size
-    })
+
+    // const matchedSortedFeeds = [...key2MatchedTokens.keys()].sort(
+    //     (keyA, keyB) => {
+    //         // sort by number of matched tokens
+    //         return (
+    //             key2MatchedTokens.get(keyB).size -
+    //             key2MatchedTokens.get(keyA).size
+    //         );
+    //     }
+    // );
 
     // console.log('matchedSortedFeeds');
     // console.log(matchedSortedFeeds);
-    
-    return matchedSortedFeeds.map(key => UNIQUE_KEY2FLAT_FEED.get(key));
+
+    return [...key2MatchedTokens.keys()].map((key) => UNIQUE_KEY2FLAT_FEED.get(key));
 }
 
 // compute global unique id from flat feed
 export function computeGUID(feed: FlatFeed) {
-    return String(feed.guid) + String(feed.title) + String(feed.name) + String(feed.isoDate) + String(feed.pubDate)
+    return (
+        String(feed.guid) +
+        String(feed.title) +
+        String(feed.name) +
+        String(feed.isoDate) +
+        String(feed.pubDate)
+    );
 }

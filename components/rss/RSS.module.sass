@@ -1,9 +1,40 @@
 
+.content-container
+    width: 600px
+    max-width: 100%
+    list-style: none
+
+
+.total-errors
+    &:hover
+        cursor: pointer
+        text-decoration: underline
+
+.errors-container
+    @extend .content-container
+    display: flex
+    align-items: center
+    width: 100%
+
+    flex-direction: column
+
+    padding-left: 0
+    gap: 1rem
+
+.filter-text
+
+    &:hover
+        cursor: pointer
+        text-decoration: underline
+
+
 // contains all feeds
 .feeds-container
+    @extend .content-container
     display: flex
     flex-direction: column
     align-items: center
+   
     width: 100%
     gap: 1rem
     padding: 0
@@ -11,21 +42,13 @@
 
 // contain search box, refresh, stats, etc...
 .feeds-header
-    width: 600px
-    max-width: 100%
+    @extend .content-container
     margin: 0 auto
     padding: 5px 10px
 
-    display: flex
-    flex-direction: column
-    align-items: center
-
 // contains title, info and description
 .feed
-    width: 600px
-    max-width: 100%
-
-    list-style: none
+    @extend .content-container
 
     // border: 1px solid red
 
@@ -55,9 +78,11 @@
 // contains type and date
 .feed-info
     order: 2
-    color: gray
     font-size: 0.9rem
-    font-style: italic
+    width: 100%
+
+    display: flex
+    flex-direction: row
     
 
 .feed-type
@@ -65,12 +90,25 @@
         content: "\2022"
         margin: 0px 5px
 
-.feed-date
+.feed-type, .feed-date
+    color: gray
+    font-style: italic
+
+.feed-expand
+    order: 2
+    text-decoration: underline
+    color: gray
+    margin-left: auto
+
+    &:hover
+        cursor: pointer
+        color: black
+
     
 .feed-description
     order: 1
-    max-height: 2rem
-    max-width: 85%
+    max-height: 1.5rem
+    // max-width: 85%
     overflow-y: scroll
     transition: 0.5s
     margin: 3px 0
@@ -90,16 +128,6 @@
     -webkit-line-clamp: 10
     line-clamp: 10
     max-height: 15rem
-
-.feed-description-more
-    order: 2
-    text-decoration: underline
-    color: gray
-    margin-left: 6px
-
-    &:hover
-        cursor: pointer
-        color: black
 
 .feed-alert
 

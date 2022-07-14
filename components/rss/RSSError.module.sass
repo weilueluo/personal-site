@@ -1,0 +1,44 @@
+
+.error
+    width: 600px
+    max-width: 100%
+    
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+
+    gap: 0.5rem
+    padding: 5px 10px
+
+    background-color: #ffc2c2
+
+    border-radius: 5px
+
+    & > *
+        max-width: 100%
+        align-self: flex-start
+        
+.url
+    font-size: 1.2rem
+    font-weight: bold
+
+    &:hover
+        cursor: pointer
+        text-decoration: underline
+
+.message
+    font-style: italic
+    color: black
+
+
+$max-line: 10
+.stack
+    // clip max height stuff
+    max-height: calc( $max-line * 1.5 )rem
+    overflow: hidden
+    text-overflow: ellipsis
+    display: -webkit-box
+    -webkit-line-clamp: $max-line
+    line-clamp: $max-line
+    -webkit-box-orient: vertical

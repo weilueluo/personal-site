@@ -1,12 +1,13 @@
-import { BaseSyntheticEvent, useEffect, useReducer, useState } from 'react';
-import { useEffectOnce } from 'react-use';
-import styles from './RSS.module.sass';
+import { useEffect, useState } from 'react';
 import UnderDevelopment from '../common/UnderDevelopment';
-import Parser from 'rss-parser';
-import { FeedsMap, FlatFeed, RSSOptions } from './RSS.d';
-import RSSManager, { computeGUID, feed2flatFeeds, sortFlatFeedsDesc, searchFlatFeeds } from './RSSManager';
-import { timeSince } from '../utils/utils';
 import Feed from './Feed';
+import { FeedsMap, FlatFeed, RSSOptions, RSSRequestError } from './RSS.d';
+import styles from './RSS.module.sass';
+import RSSError from './RSSError';
+import RSSManager, {
+    computeGUID,
+    feed2flatFeeds, searchFlatFeeds, sortFlatFeedsDesc
+} from './RSSManager';
 
 const rssOptions: RSSOptions = new Map([
     [
@@ -45,13 +46,6 @@ const rssOptions: RSSOptions = new Map([
     ],
 
     [
-        'World Economic Forum',
-        {
-            url: 'https://rsshub.app/weforum/report',
-        },
-    ],
-
-    [
         'hanime.tv',
         {
             url: 'https://rsshub.app/hanime/video',
@@ -76,70 +70,101 @@ const rssOptions: RSSOptions = new Map([
 export default function RSS() {
     const [loadedFeeds, setTotalFeeds] = useState(0);
 
+    // setup RSS manager
     const [feeds, setFeeds] = useState<FeedsMap>(new Map());
     const rssManager = new RSSManager(setFeeds);
     rssManager.setOptions(rssOptions);
 
     // convert feeds to flat feeds (expand items in each rss url response)
-    const [flatFeeds, setFlatFeeds] = useState([])
+    const [flatFeeds, setFlatFeeds] = useState([]);
     useEffect(() => {
-
         // convert feeds from each url into single array
         const flatFeeds = [];
-        const limit = 10;
+        const limit = 5;  // TODO: feeds limit from each source
         feeds.forEach((feed, name) => {
             const extras = (flatFeed: FlatFeed) => {
-                const date = flatFeed.pubDate || flatFeed.isodate
+                const date = flatFeed.pubDate || flatFeed.isoDate;
                 return {
                     name: name,
                     jsDate: date ? new Date(date) : null,
-                    uniqueKey: computeGUID(flatFeed)
-                }
+                    uniqueKey: computeGUID(flatFeed),
+                };
             };
             flatFeeds.push(...feed2flatFeeds(feed, extras, limit));
         });
 
-        setFlatFeeds(flatFeeds)
+        setFlatFeeds(flatFeeds);
     }, [feeds]);
 
-    // convert flat feeds to JSX elements, elements are refered as content
+    // convert flat feeds to JSX elements, elements are referred as content
     const [content, setContent] = useState([]);
     useEffect(() => {
         // console.log('flat feeds')
         // console.log(flatFeeds);
-        sortFlatFeedsDesc(flatFeeds)  // directly modify state, maybe dangerous?
+        sortFlatFeedsDesc(flatFeeds); // directly modify state, maybe dangerous? but it works! yolo!
 
-        const newContent = flatFeeds.map((flatFeed, i) => <Feed key={flatFeed.uniqueKey} flatFeed={flatFeed} i={i} />);
+        const newContent = flatFeeds.map((flatFeed, i) => (
+            <Feed key={flatFeed.uniqueKey} flatFeed={flatFeed} i={i} />
+        ));
         setContent(newContent);
-        setTotalFeeds(newContent.length);
-    }, [flatFeeds])
+    }, [flatFeeds]);
+    useEffect(() => {
+        setTotalFeeds(content.length);
+    }, [content])
 
-    // search click stuff
-    const [searchString, setSearchString] = useState("")
-    const searchButtonClicked = () => {
-        const searchInput = document.getElementById('search-input') as HTMLInputElement
-        setSearchString(searchInput.value)
+    // on error
+    const [errorJsxs, setErrorJsxs] = useState([])
+    const [totalErrors, setTotalErrors] = useState(0)
+    rssManager.on_error = (errors: RSSRequestError[]) => {
+        const errorJsxs = errors.map(error => <RSSError key={error.url} error={error}/>)
+        setErrorJsxs(errorJsxs)
     }
     useEffect(() => {
-        console.log(`Search Received: ${searchString}`);
-        setFlatFeeds(searchFlatFeeds(searchString, flatFeeds))
-    }, [searchString])
+        setTotalErrors(errorJsxs.length)
+    }, [errorJsxs])
+    const [showErrorActive, setShowErrorActive] = useState(false)
+    const totalErrorsOnClick = () => setShowErrorActive(!showErrorActive)
 
+    // search click stuff
+    const [searchString, setSearchString] = useState('');
+    const searchButtonClicked = () => {
+        const searchInput = document.getElementById(
+            'search-input'
+        ) as HTMLInputElement;
+        setSearchString(searchInput.value);
+    };
+    useEffect(() => {
+        console.log(`Search Received: ${searchString}`);
+        setFlatFeeds(searchFlatFeeds(searchString, flatFeeds));
+    }, [searchString]);
 
     useEffect(() => {
         rssManager.reload();
     }, []);
 
+    // filter by type
+    const [filterActive, setFilterActive] = useState(false)
+    const filterTextOnClick = () => setFilterActive(!filterActive)
+
+
     return (
         <>
             <UnderDevelopment />
             <div className={styles['feeds-header']}>
-                <input id='search-input' type="text" className={styles['feeds-search-box']} />
+                <input
+                    id='search-input'
+                    type='text'
+                    className={styles['feeds-search-box']}
+                />
                 <button onClick={() => searchButtonClicked()}>Search</button>
                 <button onClick={() => rssManager.reload()}>Refresh</button>
-                <span>Loaded Feeds: {loadedFeeds}</span>
+                <span>Loaded Feeds: {loadedFeeds}.</span>
+                <span className={styles['total-errors']} onClick={() => totalErrorsOnClick()}>Total Errors: {totalErrors}.</span>
+                <span className={styles['filter-text']} onClick={() => filterTextOnClick()}>Filter</span>
             </div>
             
+            {filterActive && <div>{"Filter Section (temp)"}</div>}
+            {showErrorActive && <ul className={styles['errors-container']}>{errorJsxs}</ul>}
             <ul className={styles['feeds-container']}>{content}</ul>
         </>
     );
