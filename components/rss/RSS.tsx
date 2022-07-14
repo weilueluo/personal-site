@@ -86,7 +86,7 @@ export default function RSS() {
         const flatFeeds = [];
         const limit = 10;
         feeds.forEach((feed, name) => {
-            const extras = flatFeed => {
+            const extras = (flatFeed: FlatFeed) => {
                 const date = flatFeed.pubDate || flatFeed.isodate
                 return {
                     name: name,
@@ -96,7 +96,7 @@ export default function RSS() {
             flatFeeds.push(...feed2flatFeeds(feed, extras, limit));
         });
         
-        console.log(flatFeeds);
+        // console.log(flatFeeds);
         sortFlatFeedsDesc(flatFeeds)
 
         const newContent = flatFeeds.map((flatFeed, i) =>

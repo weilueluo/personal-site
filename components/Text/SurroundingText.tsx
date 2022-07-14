@@ -11,7 +11,7 @@ import text_vs from '../shaders/text_vs.glsl';
 export default function SurroundingText(props) {
     const altScroll = useAltScroll();
 
-    const font = useLoader(FontLoader, '/fonts/Rubik Moonrocks_Regular.json');
+    const font = useLoader(FontLoader, '/fonts/Roboto_Bold.json');
 
     const characters = props.text.split('');
 

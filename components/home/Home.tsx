@@ -145,16 +145,10 @@ function MyCanvas(props) {
     const { children, ...otherProps } = props;
     
 
-    const onDesktopRef = useRef(false)  // need to set this before create canvas
-    const [loaded, setLoaded] = useState(false)
 
-    useEffect(() => {
-        onDesktopRef.current = getDeviceDependent(false, true)
-        setLoaded(true)
-    })
 
     return (
-        loaded && <Canvas
+        <Canvas
             style={{
                 height: '100vh',
                 width: '100vw',
@@ -171,10 +165,10 @@ function MyCanvas(props) {
                 far: 100,
             }}
             gl={{
-                antialias: onDesktopRef.current,
+                antialias: true,
                 outputEncoding: sRGBEncoding,
                 toneMapping: ACESFilmicToneMapping,
-                physicallyCorrectLights: onDesktopRef.current,
+                physicallyCorrectLights: true,
             }}
             raycaster={{}}
             shadowMap={true}
