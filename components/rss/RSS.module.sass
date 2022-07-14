@@ -1,86 +1,104 @@
 
+// contains all feeds
 .feeds-container
     display: flex
     flex-direction: column
     align-items: center
-    flex-wrap: wrap
-    padding: 0
     width: 100%
-    
-// .feed-section
-//     height: 500px
-//     width: 400px 
-//     overflow: hidden
-//     margin: 10px
-//     border-radius: 5px
-
-//     display: flex
-//     flex-direction: column
-
-// .feed-section-title
-//     display: flex
-//     align-items: center
-//     justify-content: center
-
-// .feed-section-ul
-//     overflow-y: scroll
-//     list-style: none
-//     padding-left: 0
-//     background-color: #888
-//     border-radius: 5px
+    gap: 1rem
 
 
-.feed
-    margin: 10px
-    padding: 10px
-    border-radius: 5px
-    width: calc( 100% - 10px*4 )
-    max-width: 600px
-
-    list-style: none
-
-    background-color: #ccc
+// contain search box, refresh, stats, etc...
+.feeds-header
+    width: 600px
+    max-width: 100%
+    margin: 0 auto
+    padding: 5px 10px
 
     display: flex
     flex-direction: column
-    gap: 10px
+    align-items: center
 
-.feed-meta
+// contains title, info and description
+.feed
+    width: 600px
+    max-width: 100%
+
+    list-style: none
+
+    // border: 1px solid red
+
     display: flex
-    flex-direction: row
-    justify-content: space-between
-    
-.feed-span
-    padding: 3px 6px
-    border-radius: 5px
-    background-color: white
+    flex-direction: column
+    justify-content: flex-start
 
-.feed-type
-    @extend .feed-span
+    padding: 5px 10px
 
-.feed-date
-    @extend .feed-span
-
-.feed-author
-    @extend .feed-span
 
 .feed-title
-    @extend .feed-span
+    order: 1
+    font-size: 1.1rem
+    font-weight: bold
+    min-width: 300px
 
-.feed:hover
-    .feed-description
-        // display: inline-block
-        max-height: 150px
-        @extend .feed-span
+    &:hover
+        text-decoration: underline
+        cursor: pointer
 
+.feed-more
+    order: 3
+    display: flex
+    flex-direction: row
+    margin-top: 4px
+
+// contains type and date
+.feed-info
+    order: 2
+    color: gray
+    font-size: 0.9rem
+    font-style: italic
+    
+
+.feed-type
+    &::after
+        content: "\2022"
+        margin: 0px 5px
+
+.feed-date
+    
 .feed-description
-    grid-area: desc
-    max-height: 0px
+    order: 1
+    max-height: 2rem
+    max-width: 85%
     overflow-y: scroll
     transition: 0.5s
-    margin: 0
-    
-    // display: none
+    margin: 3px 0
+
+    color: darken(gray, 30%)
+
+    // set line limit
+    // https://stackoverflow.com/questions/3922739/limit-text-length-to-n-lines-using-css
+    overflow: hidden
+    text-overflow: ellipsis
+    display: -webkit-box
+    -webkit-line-clamp: 1
+    line-clamp: 1
+    -webkit-box-orient: vertical
+
+.expand-active > .feed-description
+    -webkit-line-clamp: 10
+    line-clamp: 10
+    max-height: 15rem
+
+.feed-description-more
+    order: 2
+    text-decoration: underline
+    color: gray
+    margin-left: 6px
+
+    &:hover
+        cursor: pointer
+        color: black
 
 .feed-alert
 

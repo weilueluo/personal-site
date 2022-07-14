@@ -1,11 +1,12 @@
-import { useEffect, useReducer, useState } from 'react';
+import { BaseSyntheticEvent, useEffect, useReducer, useState } from 'react';
 import { useEffectOnce } from 'react-use';
 import styles from './RSS.module.sass';
 import UnderDevelopment from '../common/UnderDevelopment';
 import Parser from 'rss-parser';
 import { FeedsMap, FlatFeed, RSSOptions } from './RSS.d';
-import RSSManager, { feed2flatFeeds, sortFlatFeedsDesc } from './RSSManager';
+import RSSManager, { computeGUID, feed2flatFeeds, sortFlatFeedsDesc, searchFlatFeeds } from './RSSManager';
 import { timeSince } from '../utils/utils';
+import Feed from './Feed';
 
 const rssOptions: RSSOptions = new Map([
     [
@@ -79,7 +80,8 @@ export default function RSS() {
     const rssManager = new RSSManager(setFeeds);
     rssManager.setOptions(rssOptions);
 
-    const [content, setContent] = useState([]);
+    // convert feeds to flat feeds (expand items in each rss url response)
+    const [flatFeeds, setFlatFeeds] = useState([])
     useEffect(() => {
 
         // convert feeds from each url into single array
@@ -90,21 +92,39 @@ export default function RSS() {
                 const date = flatFeed.pubDate || flatFeed.isodate
                 return {
                     name: name,
-                    jsDate: date ? new Date(date) : null
+                    jsDate: date ? new Date(date) : null,
+                    uniqueKey: computeGUID(flatFeed)
                 }
             };
             flatFeeds.push(...feed2flatFeeds(feed, extras, limit));
         });
-        
-        // console.log(flatFeeds);
-        sortFlatFeedsDesc(flatFeeds)
 
-        const newContent = flatFeeds.map((flatFeed, i) =>
-            flatFeed2jsx(flatFeed, i)
-        );
+        setFlatFeeds(flatFeeds)
+    }, [feeds]);
+
+    // convert flat feeds to JSX elements, elements are refered as content
+    const [content, setContent] = useState([]);
+    useEffect(() => {
+        // console.log('flat feeds')
+        // console.log(flatFeeds);
+        sortFlatFeedsDesc(flatFeeds)  // directly modify state, maybe dangerous?
+
+        const newContent = flatFeeds.map((flatFeed, i) => <Feed key={flatFeed.uniqueKey} flatFeed={flatFeed} i={i} />);
         setContent(newContent);
         setTotalFeeds(newContent.length);
-    }, [feeds]);
+    }, [flatFeeds])
+
+    // search click stuff
+    const [searchString, setSearchString] = useState("")
+    const searchButtonClicked = () => {
+        const searchInput = document.getElementById('search-input') as HTMLInputElement
+        setSearchString(searchInput.value)
+    }
+    useEffect(() => {
+        console.log(`Search Received: ${searchString}`);
+        setFlatFeeds(searchFlatFeeds(searchString, flatFeeds))
+    }, [searchString])
+
 
     useEffect(() => {
         rssManager.reload();
@@ -113,80 +133,18 @@ export default function RSS() {
     return (
         <>
             <UnderDevelopment />
-            <button onClick={() => rssManager.reload()}>Refresh</button>
-            <span>Loaded Feeds: {loadedFeeds}</span>
-            <div className={styles['feeds-container']}>{content}</div>
+            <div className={styles['feeds-header']}>
+                <input id='search-input' type="text" className={styles['feeds-search-box']} />
+                <button onClick={() => searchButtonClicked()}>Search</button>
+                <button onClick={() => rssManager.reload()}>Refresh</button>
+                <span>Loaded Feeds: {loadedFeeds}</span>
+            </div>
+            
+            <ul className={styles['feeds-container']}>{content}</ul>
         </>
-    );
-}
-
-function ErrorFeed({ opt, error }) {
-    return (
-        <li key={opt.url} className={styles['feed-li']}>
-            <h3 className={styles['feed-li-title']}>{error.toString()}</h3>
-            <p className={styles['feed-li-description']}>
-                {error.stack || <Alert>n/a</Alert>}
-            </p>
-        </li>
     );
 }
 
 function LoadingFeed({ i }) {
     return <li key={i} className={styles['feed-li-loading']}></li>;
-}
-
-function flatFeed2jsx(flatFeed: FlatFeed, i: number) {
-    const feedName = flatFeed.name;
-    const title = flatFeed.title;
-    const author = flatFeed.creator || flatFeed.author || <Alert>n/a</Alert>;
-    const description =
-        flatFeed.summary ||
-        flatFeed.contentSnippet ||
-        flatFeed.content ||
-        'n/a';
-    const key = flatFeed.guid || flatFeed.id || flatFeed.title || i;
-
-    let displayTime = "n/a"
-    if (flatFeed.jsDate) {
-        displayTime = timeSince(new Date(), flatFeed.jsDate) + ' ago'
-    }
-
-    return (
-        <li
-            key={key}
-            className={styles['feed']}
-            onClick={() => onClick(flatFeed)}
-            onMouseEnter={() => onMouseEnter(flatFeed)}
-            onMouseLeave={() => onMouseLeave(flatFeed)}
-        >
-            <div className={styles['feed-meta']}>
-                <span className={styles['feed-type']}>{feedName}</span>
-                <span className={styles['feed-date']}>{displayTime}</span>
-            </div>
-
-            {/* <span className={styles['feed-author']}>{author}</span> */}
-            <span className={styles['feed-title']}>{title}</span>
-            <p className={styles['feed-description']}>{description}</p>
-        </li>
-    );
-}
-
-function Alert(props) {
-    return <span className={styles['feed-alert']}>{props.children}</span>;
-}
-
-function onMouseEnter(item: Parser.Item) {
-    item.link && (document.body.style.cursor = 'pointer');
-}
-
-function onMouseLeave(item: Parser.Item) {
-    item.link && (document.body.style.cursor = 'default');
-}
-
-function onClick(item: Parser.Item) {
-    item.link && window.open(item.link, '_blank');
-}
-
-function sectionTitleOnClick(opt) {
-    opt.url && window.open(opt.url, '_blank');
 }

@@ -70,6 +70,7 @@ export default class RSSManager {
         Promise.allSettled(rssPromises)
             .then(() => this._setState(State.COMPLETE));
     }
+
 }
 
 
@@ -111,4 +112,84 @@ export function sortFlatFeedsDesc(flatfeeds: FlatFeed[]) {
             return 0
         }
     })
+}
+
+
+// searching stuff
+
+const nonAlphanumeric = /\W/gim
+function extractTokensFromString(text: string, filterEmpty=false, addEmpty=false) {
+    const tokens = new Set(
+        text.split(nonAlphanumeric)
+            .map(token => token.trim().toLowerCase())
+            .filter(token => filterEmpty ? token.length > 0 : true)
+    )
+    
+    // match everything if user input empty string
+    if (addEmpty) {
+        tokens.add('')
+    }
+    
+    return tokens
+}
+
+function extractTokensFromFlatFeed(flatFeed: FlatFeed) {
+    return extractTokensFromString(JSON.stringify(flatFeed), true, true)
+}
+
+
+const INVERSE_INDEX = new Map<string, FlatFeed>()
+const UNIQUE_KEY2FLAT_FEED = new Map()
+
+function populateInverseIndex(flatFeeds: FlatFeed[]) {
+    flatFeeds.forEach(feed => {
+        if (UNIQUE_KEY2FLAT_FEED.has(feed.uniqueKey)) {
+            // already processed and added to inverse index
+            return;
+        } else {
+            extractTokensFromFlatFeed(feed).forEach(token => {
+                if (!INVERSE_INDEX.has(token)) {
+                    INVERSE_INDEX.set(token, new Set())
+                }
+                // map token to feed
+                INVERSE_INDEX.get(token).add(feed)
+            })
+            UNIQUE_KEY2FLAT_FEED.set(feed.uniqueKey, feed)
+        }
+    })
+}
+
+export function searchFlatFeeds(searchString: string, flatFeeds: FlatFeed[]) {
+    populateInverseIndex(flatFeeds)
+    const searchTokens = extractTokensFromString(searchString, false, false)
+
+    const key2MatchedTokens = new Map()
+    searchTokens.forEach(token => {
+        if (INVERSE_INDEX.has(token)) {
+            INVERSE_INDEX.get(token).forEach(feed => {
+                if (!key2MatchedTokens.has(feed.uniqueKey)) {
+                    key2MatchedTokens.set(feed.uniqueKey, new Set())
+                }
+                key2MatchedTokens.get(feed.uniqueKey).add(token)
+            })
+        }
+    })
+
+    // console.log('key2MatchedTokens');
+    // console.log(key2MatchedTokens);
+    
+    const matchedSortedFeeds = [...key2MatchedTokens.keys()].sort((keyA, keyB) => {
+        // sort by number of matched tokens
+        return key2MatchedTokens.get(keyB).size - key2MatchedTokens.get(keyA).size
+    })
+
+    // console.log('matchedSortedFeeds');
+    // console.log(matchedSortedFeeds);
+    
+    return matchedSortedFeeds.map(key => UNIQUE_KEY2FLAT_FEED.get(key));
+}
+
+// compute global unique id from flat feed
+export function computeGUID(feed: FlatFeed) {
+    return String(feed.guid) + String(feed.title) + String(feed.name) + String(feed.isoDate) + String(feed.pubDate)
 }
