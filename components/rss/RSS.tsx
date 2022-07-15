@@ -51,7 +51,7 @@ export default function RSS() {
     rssLoader.on_error = (errors: RSSRequestError[]) => {
 
         if (errors.length == 0) {
-            setErrorJsxs([<RSSNoError />])
+            setErrorJsxs([<RSSNoError key={'no-error'} />])
         } else {
             const errorJsxs = errors.map((error) => (
                 <RSSError key={error.url} error={error} />
