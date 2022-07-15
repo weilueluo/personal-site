@@ -1,9 +1,5 @@
 
-.content-container
-    width: 600px
-    max-width: 100%
-    list-style: none
-
+$content-width: 600px
 
 .total-errors
     &:hover
@@ -11,10 +7,11 @@
         text-decoration: underline
 
 .errors-container
-    @extend .content-container
     display: flex
     align-items: center
     width: 100%
+    max-width: 100%
+    list-style: none
 
     flex-direction: column
 
@@ -30,11 +27,13 @@
 
 // contains all feeds
 .feeds-container
-    @extend .content-container
+    width: 100%
+    max-width: 100%
+    list-style: none
     display: flex
     flex-direction: column
     align-items: center
-   
+
     width: 100%
     gap: 1rem
     padding: 0
@@ -42,95 +41,19 @@
 
 // contain search box, refresh, stats, etc...
 .feeds-header
-    @extend .content-container
+    width: $content-width
+    max-width: 100%
     margin: 0 auto
     padding: 5px 10px
 
-// contains title, info and description
-.feed
-    @extend .content-container
-
-    // border: 1px solid red
-
     display: flex
     flex-direction: column
-    justify-content: flex-start
+    align-items: center
 
-    padding: 5px 10px
-
-
-.feed-title
-    order: 1
-    font-size: 1.1rem
-    font-weight: bold
-    min-width: 300px
-
-    &:hover
-        text-decoration: underline
-        cursor: pointer
-
-.feed-more
-    order: 3
-    display: flex
-    flex-direction: row
-    margin-top: 4px
-
-// contains type and date
-.feed-info
-    order: 2
-    font-size: 0.9rem
-    width: 100%
-
-    display: flex
-    flex-direction: row
+.feeds-header-top
     
-
-.feed-type
-    &::after
-        content: "\2022"
-        margin: 0px 5px
-
-.feed-type, .feed-date
-    color: gray
-    font-style: italic
-
-.feed-expand
-    order: 2
-    text-decoration: underline
-    color: gray
-    margin-left: auto
-
-    &:hover
-        cursor: pointer
-        color: black
-
-    
-.feed-description
-    order: 1
-    max-height: 1.5rem
-    // max-width: 85%
-    overflow-y: scroll
-    transition: 0.5s
-    margin: 3px 0
-
-    color: darken(gray, 30%)
-
-    // set line limit
-    // https://stackoverflow.com/questions/3922739/limit-text-length-to-n-lines-using-css
-    overflow: hidden
-    text-overflow: ellipsis
-    display: -webkit-box
-    -webkit-line-clamp: 1
-    line-clamp: 1
-    -webkit-box-orient: vertical
-
-.expand-active > .feed-description
-    -webkit-line-clamp: 10
-    line-clamp: 10
-    max-height: 15rem
 
 .feed-alert
-
 
 
 $loading-size: 50px

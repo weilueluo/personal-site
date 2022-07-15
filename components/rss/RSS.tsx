@@ -1,131 +1,71 @@
 import { useEffect, useState } from 'react';
 import UnderDevelopment from '../common/UnderDevelopment';
+import { DATABASE, updateDatabase } from './Database';
+import RSSError, { RSSNoError } from './Error';
 import Feed from './Feed';
-import { FeedsMap, FlatFeed, RSSOptions, RSSRequestError } from './RSS.d';
+import Filter from './Filter';
+import { DEFAULT_FILTER_SECTIONS } from './FilterManager';
+import RSSLoader from './Loader';
+import { RSS_OPTIONS } from './Options';
+import { FeedsMap, RSSRequestError } from './RSS.d';
 import styles from './RSS.module.sass';
-import RSSError from './RSSError';
-import RSSManager, {
-    computeGUID,
-    feed2flatFeeds, searchFlatFeeds, sortFlatFeedsDesc
-} from './RSSManager';
 
-const rssOptions: RSSOptions = new Map([
-    [
-        'Github',
-        {
-            url: 'https://github.com/Redcxx.private.atom?token=AJNW6TLPB4JTBWMC7SLIJ6WA3EMWI',
-        },
-    ],
-
-    [
-        'Hacker News',
-        {
-            url: 'https://rsshub.app/hackernews',
-        },
-    ],
-
-    [
-        'Pixiv Weekly',
-        {
-            url: 'https://rsshub.app/pixiv/ranking/week',
-        },
-    ],
-
-    [
-        'Steam News',
-        {
-            url: 'https://store.steampowered.com/feeds/news/?l=english',
-        },
-    ],
-
-    [
-        'Token Insight',
-        {
-            url: ' https://tokeninsight.com/rss',
-        },
-    ],
-
-    [
-        'hanime.tv',
-        {
-            url: 'https://rsshub.app/hanime/video',
-        },
-    ],
-
-    [
-        'Wired',
-        {
-            url: 'https://www.wired.com/feed',
-        },
-    ],
-
-    [
-        'BBC',
-        {
-            url: 'https://rsshub.app/bbc',
-        },
-    ],
-]);
+import { searchFlatFeeds } from './Searcher';
+import { feeds2flatFeeds, sortFlatFeedsDesc as sortFlatFeedsDateDesc } from './Utils';
 
 export default function RSS() {
-    const [loadedFeeds, setTotalFeeds] = useState(0);
 
-    // setup RSS manager
-    const [feeds, setFeeds] = useState<FeedsMap>(new Map());
-    const rssManager = new RSSManager(setFeeds);
-    rssManager.setOptions(rssOptions);
+    // setup RSS loader
+    const [rawFeeds, setFeeds] = useState<FeedsMap>(new Map());
+    const rssLoader = new RSSLoader(setFeeds);
+    rssLoader.setOptions(RSS_OPTIONS);
 
+    // when rawfeeds are updated: 
     // convert feeds to flat feeds (expand items in each rss url response)
     const [flatFeeds, setFlatFeeds] = useState([]);
     useEffect(() => {
-        // convert feeds from each url into single array
-        const flatFeeds = [];
-        const limit = 5;  // TODO: feeds limit from each source
-        feeds.forEach((feed, name) => {
-            const extras = (flatFeed: FlatFeed) => {
-                const date = flatFeed.pubDate || flatFeed.isoDate;
-                return {
-                    name: name,
-                    jsDate: date ? new Date(date) : null,
-                    uniqueKey: computeGUID(flatFeed),
-                };
-            };
-            flatFeeds.push(...feed2flatFeeds(feed, extras, limit));
-        });
-
+        const defaultLimit = null;
+        const flatFeeds = feeds2flatFeeds(rawFeeds, defaultLimit);
         setFlatFeeds(flatFeeds);
-    }, [feeds]);
+        updateDatabase(flatFeeds)
+    }, [rawFeeds]);
 
+    // when flat feeds are updated:
     // convert flat feeds to JSX elements, elements are referred as content
-    const [content, setContent] = useState([]);
+    const [feedJsxs, setFeedJsxs] = useState([]);
     useEffect(() => {
         // console.log('flat feeds')
         // console.log(flatFeeds);
-        sortFlatFeedsDesc(flatFeeds); // directly modify state, maybe dangerous? but it works! yolo!
+        sortFlatFeedsDateDesc(flatFeeds); // directly modify state, maybe dangerous? but it works, yolo!
 
-        const newContent = flatFeeds.map((flatFeed, i) => (
+        // map flat feed to jsx element
+        const feedJsxs = flatFeeds.map((flatFeed, i) => (
             <Feed key={flatFeed.uniqueKey} flatFeed={flatFeed} i={i} />
         ));
-        setContent(newContent);
+        setFeedJsxs(feedJsxs);
     }, [flatFeeds]);
-    useEffect(() => {
-        setTotalFeeds(content.length);
-    }, [content])
 
     // on error
-    const [errorJsxs, setErrorJsxs] = useState([])
+    const [errorJsxs, setErrorJsxs] = useState([]);
     const [totalErrors, setTotalErrors] = useState(0)
-    rssManager.on_error = (errors: RSSRequestError[]) => {
-        const errorJsxs = errors.map(error => <RSSError key={error.url} error={error}/>)
-        setErrorJsxs(errorJsxs)
-    }
-    useEffect(() => {
-        setTotalErrors(errorJsxs.length)
-    }, [errorJsxs])
-    const [showErrorActive, setShowErrorActive] = useState(false)
-    const totalErrorsOnClick = () => setShowErrorActive(!showErrorActive)
+    rssLoader.on_error = (errors: RSSRequestError[]) => {
 
-    // search click stuff
+        if (errors.length == 0) {
+            setErrorJsxs([<RSSNoError />])
+        } else {
+            const errorJsxs = errors.map((error) => (
+                <RSSError key={error.url} error={error} />
+            ));
+            setErrorJsxs(errorJsxs);
+        }
+
+        setTotalErrors(errors.length)
+    };
+    // whether to show errors
+    const [errorActive, setErrorActive] = useState(false);
+    const totalErrorsOnClick = () => setErrorActive(!errorActive);
+
+    // searching
     const [searchString, setSearchString] = useState('');
     const searchButtonClicked = () => {
         const searchInput = document.getElementById(
@@ -138,34 +78,56 @@ export default function RSS() {
         setFlatFeeds(searchFlatFeeds(searchString, flatFeeds));
     }, [searchString]);
 
+    // filtering
+    // whether to show filter
+    const [filterActive, setFilterActive] = useState(false);
+    const filterTextOnClick = () => setFilterActive(!filterActive);
+    const [filterSections, setFilterSections] = useState(DEFAULT_FILTER_SECTIONS)
+
+    // reset
+    const resetOnClick = () => {
+        setFilterSections(DEFAULT_FILTER_SECTIONS)
+        setFlatFeeds([...DATABASE.values()])
+    }
+
+    // initialize rssloader
     useEffect(() => {
-        rssManager.reload();
+        rssLoader.reload();
     }, []);
-
-    // filter by type
-    const [filterActive, setFilterActive] = useState(false)
-    const filterTextOnClick = () => setFilterActive(!filterActive)
-
 
     return (
         <>
             <UnderDevelopment />
             <div className={styles['feeds-header']}>
-                <input
-                    id='search-input'
-                    type='text'
-                    className={styles['feeds-search-box']}
-                />
-                <button onClick={() => searchButtonClicked()}>Search</button>
-                <button onClick={() => rssManager.reload()}>Refresh</button>
-                <span>Loaded Feeds: {loadedFeeds}.</span>
-                <span className={styles['total-errors']} onClick={() => totalErrorsOnClick()}>Total Errors: {totalErrors}.</span>
-                <span className={styles['filter-text']} onClick={() => filterTextOnClick()}>Filter</span>
+                <div className={styles['feeds-header-top']}>
+                    <input
+                        id='search-input'
+                        type='text'
+                        className={styles['feeds-search-box']}
+                    />
+                    <button onClick={() => searchButtonClicked()}>Search</button>
+                    <button onClick={() => resetOnClick()}>Reset</button>
+                    <button onClick={() => rssLoader.reload()}>Refresh</button>
+                </div>
+                
+                <span>Loaded Feeds {feedJsxs.length}</span>
+                <button
+                    className={styles['total-errors']}
+                    onClick={() => totalErrorsOnClick()}
+                >
+                    Total Errors {totalErrors}
+                </button>
+                <button
+                    className={styles['filter-text']}
+                    onClick={() => filterTextOnClick()}
+                >
+                    Filter
+                </button>
             </div>
-            
-            {filterActive && <div>{"Filter Section (temp)"}</div>}
-            {showErrorActive && <ul className={styles['errors-container']}>{errorJsxs}</ul>}
-            <ul className={styles['feeds-container']}>{content}</ul>
+
+            {filterActive && <Filter sections={filterSections} setSections={setFilterSections} flatFeeds={flatFeeds} setFlatFeeds={setFlatFeeds} />}
+            {errorActive && <ul className={styles['errors-container']}>{errorJsxs}</ul>}
+            <ul className={styles['feeds-container']}>{feedJsxs}</ul>
         </>
     );
 }
