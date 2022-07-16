@@ -68,7 +68,7 @@ export default function RSSHeader(props) {
             <div className={styles['feeds-header-middle']}>
                 <button className={styles['header-button']} onClick={resetOnClick}>Reset</button>
                 <button className={styles['header-button']} onClick={refreshOnClick}>Refresh</button>
-                <button className={styles['header-button']} onClick={filterTextOnClick}>Filter</button>
+                <button className={`${styles['header-button']} ${filterActive ? styles['filter-active'] : ''}`} onClick={filterTextOnClick}>Filter</button>
             </div>
 
             {/* BOTTOM SECTION */}
