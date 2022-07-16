@@ -30,9 +30,12 @@ function extractTokensFromString(
 }
 
 function extractTokensFromFlatFeed(flatFeed: FlatFeed) {
-    return extractTokensFromString(JSON.stringify(flatFeed), true, true);
+    const releventContent = (flatFeed.title || "") 
+                            + (flatFeed.contentSnippet || flatFeed.content || "")
+                            + (flatFeed.name || "")
+                            + (flatFeed.jsDate && flatFeed.jsDate.toDateString() || "")
+    return extractTokensFromString(releventContent, true, true);
 }
-
 
 function populateInverseIndex(flatFeeds: FlatFeed[]) {
     flatFeeds.forEach((feed) => {

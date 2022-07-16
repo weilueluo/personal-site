@@ -1,18 +1,44 @@
+@use 'common' as common
+    
 .panels-container
-    width: 100%
-    max-width: 100%
-
+    @include common.content-container
+    
     display: flex
     flex-direction: column
     align-items: center
 
-.panel, .footer 
-    width: 600px
-    max-width: 100%
+.panel
+    @include common.content
+
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+
+
+.title
+    width: 200px
+    border-radius: 0px
     
+    text-align: center
+
+
+
 .filter
-    background-color: gray
+    list-style: none
 
     &.active
-        background-color: green
+        .filter-button
+            background-color: common.$locked-color
 
+.filters
+    padding-left: 0
+    display: flex
+    flex-direction: row
+    gap: 1rem
+    flex-wrap: wrap
+    justify-content: center
+
+.filter-button
+    @include common.rss-button
+    

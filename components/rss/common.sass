@@ -1,0 +1,46 @@
+$content-width: 580px
+
+$active-color: #7ff1af
+$locked-color: #84e2f3
+$inactive-color: lighten(gray, 40%)
+$error-color: #ffc2c2
+    
+
+@mixin content-container
+    width: 100%
+    max-width: 100%
+
+@mixin content
+    width: $content-width
+    max-width: 100%
+
+@mixin hover-pointer-underline
+    &:hover
+        cursor: pointer
+        text-decoration: underline
+
+
+@mixin rss-button
+    background-color: transparent
+    width: 100px
+    padding: 3px 6px
+    background-color: $inactive-color
+    border-radius: 5px
+    border: 0
+
+    &:hover
+        cursor: pointer
+        background-color: $active-color
+
+
+@mixin separator
+    @include content
+
+    max-width: 90%
+    
+    border-bottom: 1px solid $inactive-color
+    height: 0px
+    margin: 0 auto
+
+    padding-bottom: 30px
+    margin-bottom: 30px

@@ -1,9 +1,8 @@
-$content-width: 600px
+@use './common' as common
     
 // contains title, info and description
 .feed
-    width: $content-width
-    max-width: 100%
+    @include common.content
 
     // border-radius: 5px
     // border-left: 1px solid gray
@@ -12,9 +11,6 @@ $content-width: 600px
     display: flex
     flex-direction: column
     justify-content: flex-start
-
-    padding: 5px 10px
-
 
 .feed-title
     order: 1
@@ -58,7 +54,6 @@ $content-width: 600px
 .feed-description
     order: 1
     max-height: 1.5rem
-    // max-width: 85%
     overflow-y: scroll
     transition: 0.5s
     margin: 3px 0

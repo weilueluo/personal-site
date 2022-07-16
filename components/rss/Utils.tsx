@@ -5,14 +5,16 @@ import { FeedsMap as Name2FeedMap, FlatFeed } from "./RSS.d";
 
 
 // --- compute global unique id from flat feed
+
 export function computeGUID(feed: FlatFeed) {
-    return (
-        String(feed.guid) +
-        String(feed.id) +
-        String(feed.title) +
-        String(feed.isoDate) +
-        String(feed.pubDate)
+    const key = (
+            (feed.guid || "") +
+            (feed.name || "") +
+            (feed.title || "") +
+            (feed.link || "")
     );
+    
+    return key
 }
 
 // --- expand feed.items
@@ -34,7 +36,7 @@ export function feed2flatFeeds(
     delete feedWithoutItems.items;
     limit = limit || feed.items.length
     return feed.items.slice(0, limit).map((feedItem) => {
-        const flatFeed = Object.assign(
+        let flatFeed = Object.assign(
             structuredClone(feedWithoutItems),
             feedItem
         ) as FlatFeed;
@@ -42,12 +44,16 @@ export function feed2flatFeeds(
         const date = flatFeed.pubDate || flatFeed.isoDate;
 
         const extras = {
-                name: name,
-                jsDate: date ? new Date(date) : null,
-                uniqueKey: computeGUID(flatFeed),
-            };
+            name: name,
+            jsDate: date ? new Date(date) : null
+        };
 
-        return Object.assign(flatFeed, extras);
+        flatFeed = Object.assign(flatFeed, extras);
+
+        // compute uniqueKey when we have everything else
+        flatFeed.uniqueKey = computeGUID(flatFeed)
+
+        return flatFeed
     });
 }
 
@@ -57,7 +63,7 @@ export function feed2flatFeeds(
 export const MIN_DATE = new Date(-8640000000000000);
 
 export function sortFlatFeedsDesc(flatfeeds: FlatFeed[]) {
-    flatfeeds.sort((a, b) => {
+    return flatfeeds.slice().sort((a, b) => {
         const aDate = a.jsDate || MIN_DATE;
         const bDate = b.jsDate || MIN_DATE;
         if (bDate > aDate) {

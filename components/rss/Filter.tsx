@@ -1,24 +1,20 @@
-import { DATABASE } from './Database';
 import styles from './Filter.module.sass';
 import { DEFAULT_FILTER_SECTIONS, filter } from './FilterManager';
 import { Filter as Filter_t, FilterSection } from './RSS.d';
 
-export default function Filter({
-    sections,
-    setSections,
-    flatFeeds,
-    setFlatFeeds,
-}) {
+export default function Filter(props) {
+    const [filterSections, setFilterSections] = props.filterSectionsState;
+    const [flatFeeds, setFlatFeeds] = props.flatFeedsState;
 
-    const panels = sections.map((section, s_idx) => {
+    const panels = filterSections.map((section, s_idx) => {
         const sectionName = section.displayName;
 
         const filters = section.filters.map((filter: Filter_t, f_idx) => {
             const onClick = () => {
-                const newSections = setActive(sections, s_idx, f_idx);
+                const newSections = setActive(filterSections, s_idx, f_idx);
                 // console.log('section copy');
                 // console.log(sectionsCopy);
-                setSections(newSections);
+                setFilterSections(newSections);
             };
             return (
                 <li
@@ -28,7 +24,7 @@ export default function Filter({
                     }`}
                     onClick={() => onClick()}
                 >
-                    {filter.displayName}
+                    <button className={styles['filter-button']}>{filter.displayName}</button>
                 </li>
             );
         });
@@ -41,21 +37,35 @@ export default function Filter({
         );
     });
 
-    const filterOnClick = () => setFlatFeeds(filter(flatFeeds, sections))
+    const filterOnClick = () => setFlatFeeds(filter(flatFeeds, filterSections));
     const clearOnClick = () => {
-        setSections(DEFAULT_FILTER_SECTIONS)
-        filterOnClick()  // update
-    }
+        const clearSections = structuredClone(DEFAULT_FILTER_SECTIONS)
+        // set everything inactive
+        clearSections.forEach(section => {
+            section.filters.forEach(filter => filter.active = false)
+        })
+        setFilterSections(clearSections);
+        filterOnClick(); // update
+    };
 
     return (
         <div className={styles['panels-container']}>
             {panels}
-            <div className={styles['footer']}>
-                <button className={styles['filter-button']} onClick={() => filterOnClick()}>{'filter'}</button>
-                <button className={styles['clear-button']} onClick={() => clearOnClick()}>{'clear'}</button>
+
+            <div className={styles['panel']}>
+                <span className={styles['title']}>Controls</span>
+                <ul className={styles['filters']}>
+                    <button className={styles['filter-button']} onClick={filterOnClick}>
+                        Apply
+                    </button>
+
+                    <button className={styles['filter-button']} onClick={clearOnClick}>
+                        Clear
+                    </button>    
+                </ul>
             </div>
         </div>
-    )
+    );
 }
 
 function setActive(sections: FilterSection[], s_idx: number, f_idx: number) {

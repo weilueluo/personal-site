@@ -1,135 +1,89 @@
 import { useEffect, useState } from 'react';
 import UnderDevelopment from '../common/UnderDevelopment';
-import { DATABASE, updateDatabase } from './Database';
-import RSSError, { RSSNoError } from './Error';
-import Feed from './Feed';
+import RSSErrors from './Error';
+import Feeds from './Feeds';
 import Filter from './Filter';
 import { DEFAULT_FILTER_SECTIONS } from './FilterManager';
+import RSSHeader from './Header';
+import { useRawFeed2FlatFeed } from './hooks';
 import RSSLoader from './Loader';
 import { RSS_OPTIONS } from './Options';
 import { FeedsMap, RSSRequestError } from './RSS.d';
 import styles from './RSS.module.sass';
 
-import { searchFlatFeeds } from './Searcher';
-import { feeds2flatFeeds, sortFlatFeedsDesc as sortFlatFeedsDateDesc } from './Utils';
-
 export default function RSS() {
-
     // setup RSS loader
     const [rawFeeds, setFeeds] = useState<FeedsMap>(new Map());
     const rssLoader = new RSSLoader(setFeeds);
     rssLoader.setOptions(RSS_OPTIONS);
 
-    // when rawfeeds are updated: 
-    // convert feeds to flat feeds (expand items in each rss url response)
+    // rawfeeds to flatFeeds
     const [flatFeeds, setFlatFeeds] = useState([]);
-    useEffect(() => {
-        const defaultLimit = null;
-        const flatFeeds = feeds2flatFeeds(rawFeeds, defaultLimit);
-        setFlatFeeds(flatFeeds);
-        updateDatabase(flatFeeds)
-    }, [rawFeeds]);
-
-    // when flat feeds are updated:
-    // convert flat feeds to JSX elements, elements are referred as content
-    const [feedJsxs, setFeedJsxs] = useState([]);
-    useEffect(() => {
-        // console.log('flat feeds')
-        // console.log(flatFeeds);
-        sortFlatFeedsDateDesc(flatFeeds); // directly modify state, maybe dangerous? but it works, yolo!
-
-        // map flat feed to jsx element
-        const feedJsxs = flatFeeds.map((flatFeed, i) => (
-            <Feed key={flatFeed.uniqueKey} flatFeed={flatFeed} i={i} />
-        ));
-        setFeedJsxs(feedJsxs);
-    }, [flatFeeds]);
+    useRawFeed2FlatFeed(rawFeeds, setFlatFeeds);
 
     // on error
-    const [errorJsxs, setErrorJsxs] = useState([]);
-    const [totalErrors, setTotalErrors] = useState(0)
-    rssLoader.on_error = (errors: RSSRequestError[]) => {
+    const [errors, setErrors] = useState([]);
+    rssLoader.on_error = (errors: RSSRequestError[]) => setErrors(errors);
 
-        if (errors.length == 0) {
-            setErrorJsxs([<RSSNoError key={'no-error'} />])
-        } else {
-            const errorJsxs = errors.map((error) => (
-                <RSSError key={error.url} error={error} />
-            ));
-            setErrorJsxs(errorJsxs);
-        }
-
-        setTotalErrors(errors.length)
-    };
     // whether to show errors
     const [errorActive, setErrorActive] = useState(false);
-    const totalErrorsOnClick = () => setErrorActive(!errorActive);
 
-    // searching
-    const [searchString, setSearchString] = useState('');
-    const searchButtonClicked = () => {
-        const searchInput = document.getElementById(
-            'search-input'
-        ) as HTMLInputElement;
-        setSearchString(searchInput.value);
-    };
-    useEffect(() => {
-        console.log(`Search Received: ${searchString}`);
-        setFlatFeeds(searchFlatFeeds(searchString, flatFeeds));
-    }, [searchString]);
-
-    // filtering
-    // whether to show filter
+    // filter
     const [filterActive, setFilterActive] = useState(false);
-    const filterTextOnClick = () => setFilterActive(!filterActive);
-    const [filterSections, setFilterSections] = useState(DEFAULT_FILTER_SECTIONS)
+    // filter sections completely represents the state of the filter, used by filtering function and rendering
+    const [filterSections, setFilterSections] = useState(
+        DEFAULT_FILTER_SECTIONS
+    );
 
-    // reset
-    const resetOnClick = () => {
-        setFilterSections(DEFAULT_FILTER_SECTIONS)
-        setFlatFeeds([...DATABASE.values()])
-    }
-
-    // initialize rssloader
-    useEffect(() => {
-        rssLoader.reload();
-    }, []);
+    // initialize rssloader to load feeds
+    // feeds = rawFeeds will get converted to flatFeeds by hooks listening on rawFeeds, and rendered by <Feeds />
+    useEffect(() => rssLoader.reload(), []);
 
     return (
         <>
             <UnderDevelopment />
-            <div className={styles['feeds-header']}>
-                <div className={styles['feeds-header-top']}>
-                    <input
-                        id='search-input'
-                        type='text'
-                        className={styles['feeds-search-box']}
-                    />
-                    <button onClick={() => searchButtonClicked()}>Search</button>
-                    <button onClick={() => resetOnClick()}>Reset</button>
-                    <button onClick={() => rssLoader.reload()}>Refresh</button>
-                </div>
-                
-                <span>Loaded Feeds {feedJsxs.length}</span>
-                <button
-                    className={styles['total-errors']}
-                    onClick={() => totalErrorsOnClick()}
-                >
-                    Total Errors {totalErrors}
-                </button>
-                <button
-                    className={styles['filter-text']}
-                    onClick={() => filterTextOnClick()}
-                >
-                    Filter
-                </button>
-            </div>
 
-            {filterActive && <Filter sections={filterSections} setSections={setFilterSections} flatFeeds={flatFeeds} setFlatFeeds={setFlatFeeds} />}
-            {errorActive && <ul className={styles['errors-container']}>{errorJsxs}</ul>}
-            <ul className={styles['feeds-container']}>{feedJsxs}</ul>
+            <h1 className={styles['feeds-title']}>Weilue&apos;s RSS Feeds</h1>
+
+            <RSSHeader
+                flatFeedsState={[flatFeeds, setFlatFeeds]}
+                filterActiveState={[filterActive, setFilterActive]}
+                filterSectionsState={[filterSections, setFilterSections]}
+                errorActiveState={[errorActive, setErrorActive]}
+                rssLoader={rssLoader}
+                errors={errors}
+            />
+
+            <div className={styles['separator']}></div>
+
+           <RSSContent 
+                filterSectionsState={[filterSections, setFilterSections]}
+                flatFeedsState={[flatFeeds, setFlatFeeds]}
+                filterActive={filterActive}
+                errorActive={errorActive}
+                errors={errors}
+           />
         </>
     );
+}
+
+function RSSContent(props) {
+    return (
+        <div className={styles['content']}>
+            {props.errorActive && <RSSErrors errors={props.errors} />}
+
+            {props.filterActive && (
+                <Filter
+                    filterSectionsState={props.filterSectionsState}
+                    flatFeedsState={props.flatFeedsState}
+                />
+            )}
+
+
+            {(props.errorActive || props.filterActive) && <div className={styles['separator']}></div>}
+            <Feeds flatFeeds={props.flatFeedsState[0]} />
+        </div>
+    )
 }
 
 function LoadingFeed({ i }) {

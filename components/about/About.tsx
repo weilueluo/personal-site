@@ -48,7 +48,7 @@ export default function About() {
     return (
         <>
             <div className={styles['container']}>
-                <UnderDevelopment />
+                {/* <UnderDevelopment /> */}
 
                 <Title>About</Title>
 

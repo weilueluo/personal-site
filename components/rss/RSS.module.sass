@@ -1,82 +1,43 @@
+@use './common' as common
 
-$content-width: 600px
+.total-errors, .filter-text
+    @include common.hover-pointer-underline
 
-.total-errors
-    &:hover
-        cursor: pointer
-        text-decoration: underline
+// .feed-alert
 
-.errors-container
-    display: flex
-    align-items: center
-    width: 100%
-    max-width: 100%
-    list-style: none
-
-    flex-direction: column
-
-    padding-left: 0
-    gap: 1rem
-
-.filter-text
-
-    &:hover
-        cursor: pointer
-        text-decoration: underline
-
-
-// contains all feeds
-.feeds-container
-    width: 100%
-    max-width: 100%
-    list-style: none
-    display: flex
-    flex-direction: column
-    align-items: center
-
-    width: 100%
-    gap: 1rem
-    padding: 0
-
-
-// contain search box, refresh, stats, etc...
-.feeds-header
-    width: $content-width
-    max-width: 100%
-    margin: 0 auto
-    padding: 5px 10px
-
-    display: flex
-    flex-direction: column
-    align-items: center
-
-.feeds-header-top
+.separator
+    @include common.separator
     
+.feeds-title
+    @include common.content
 
-.feed-alert
+    padding: 5px 10px
+    margin: 10px auto
 
+    height: fit-content
+    text-align: center
 
-$loading-size: 50px
+// $loading-size: 50px
 
-.feed-li-loading
-    position: relative
-    height: $loading-size
+// .feed-li-loading
+//     position: relative
+//     height: $loading-size
 
-.feed-li-loading::before
-    content: ""
-    display: inline-block
-    position: absolute
-    width: $loading-size
-    height: $loading-size
-    background-color: black
+// .feed-li-loading::before
+//     content: ""
+//     display: inline-block
+//     position: absolute
+//     width: $loading-size
+//     height: $loading-size
+//     background-color: black
 
-    animation-name: loading-animation
-    animation-duration: 1s
-    animation-iteration-count: infinite
-    animation-direction: alternate
+//     animation-name: loading-animation
+//     animation-duration: 1s
+//     animation-iteration-count: infinite
+//     animation-direction: alternate
 
-@keyframes loading-animation
-    0%
-        left: 0
-    100%
-        left: calc( 100% - $loading-size )
+// @keyframes loading-animation
+//     0%
+//         left: 0
+//     100%
+//         left: calc( 100% - $loading-size )

@@ -1,0 +1,59 @@
+@use './common' as common
+    
+$header-width: 350px
+
+// contain search box, refresh, stats, etc...
+.feeds-header
+    @include common.content
+    
+    width: $header-width
+
+    margin: 0 auto
+    padding: 5px 10px
+
+    display: flex
+    flex-direction: column
+    align-items: center
+
+    gap: 0.5rem
+
+    // outline: 1px solid red
+
+    // border-bottom: 1px solid gray
+
+    *
+        margin: 3px 6px
+        height: 1.6rem
+
+.header-button
+    @include common.rss-button
+    
+            
+.feeds-search-box
+    width: 300px
+    max-width: 90%
+    border-radius: 5px
+    border: 1px solid black
+
+.header-button.search-button
+    width: 50px
+    display: flex
+    align-items: center
+    justify-content: center
+
+.search-button-img
+    height: 16px
+    width: 16px
+
+.feeds-header-top, .feeds-header-middle, .feeds-header-bottom
+    display: flex
+    flex-direction: row
+    align-items: center
+    width: 100%
+
+.feeds-header-bottom
+    justify-content: space-around
+
+.header-button.loaded-feeds:hover
+    background-color: common.$inactive-color
+    cursor: default

@@ -22,7 +22,7 @@ export const RSS_OPTIONS: RSSOption[] = [
     },
 
     {
-        name: 'hanime.tv',
+        name: 'Hanime TV',
         url: 'https://rsshub.app/hanime/video',
     },
 
