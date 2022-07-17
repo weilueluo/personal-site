@@ -96,3 +96,43 @@ export function filterFlatFeeds(flatFeeds: FlatFeed[], filterSections: FilterSec
     
     return flatFeeds
 }
+
+
+export function setAllFilters(value: boolean, oldSections: FilterSection[]) {
+    return setAllFiltersInplace(value, structuredClone(oldSections))
+}
+
+export function setAllFiltersInplace(value: boolean, sections: FilterSection[]) {
+    sections.forEach(section => {
+        section.filters.forEach(filter => filter.active = value)
+    })
+    return sections
+}
+
+export function isAllFilters(value: boolean, sections: FilterSection[]) {
+    for (const section of sections) {
+        for (const filter of section.filters) {
+            if (filter.active !== value) {
+                return false
+            }
+        }
+    }
+    return true
+}
+
+// check if all filters in the section has the same boolean active value
+// not all same => null
+// all same => boolean indicate which same value they have
+export function isAllFiltersSame(section: FilterSection) {
+
+    let firstFoundActive: boolean = null;
+
+    for (const filter of section.filters) {
+        if (firstFoundActive === null) {
+            firstFoundActive = filter.active
+        } else if (firstFoundActive != filter.active) {
+            return null
+        }
+    }
+    return firstFoundActive
+}

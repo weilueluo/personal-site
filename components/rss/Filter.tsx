@@ -1,11 +1,19 @@
 import { DATABASE } from './Database';
 import styles from './Filter.module.sass';
-import { DEFAULT_FILTER_SECTIONS, filterFlatFeeds } from './FilterManager';
+import { DEFAULT_FILTER_SECTIONS, filterFlatFeeds, isAllFiltersSame, setAllFilters, setAllFiltersInplace } from './FilterManager';
 import { Filter as Filter_t, FilterSection } from './RSS.d';
 
 export default function Filter(props) {
     const [filterSections, setFilterSections] = props.filterSectionsState;
     const [flatFeeds, setFlatFeeds] = props.flatFeedsState;
+
+    const setAndApplyNewSections = (newSections: FilterSection[]) => {
+        setFilterSections(newSections);
+        // currently it filters from the database, not the current displayed feeds, 
+        // if desired, use flatFeeds instead of [...DATABASE.values()]
+        setFlatFeeds(filterFlatFeeds([...DATABASE.values()], newSections))
+    }
+
 
     const panels = filterSections.map((section, s_idx) => {
         const sectionName = section.displayName;
@@ -15,7 +23,9 @@ export default function Filter(props) {
                 const newSections = setActive(filterSections, s_idx, f_idx);
                 // console.log('section copy');
                 // console.log(sectionsCopy);
-                setFilterSections(newSections);
+                
+                
+                setAndApplyNewSections(newSections)
             };
             return (
                 <li
@@ -30,47 +40,43 @@ export default function Filter(props) {
             );
         });
 
+        const sectionTitleOnClick = () => {
+            const filterSectionsCopy = structuredClone(filterSections)
+            const sameValue = isAllFiltersSame(filterSectionsCopy[s_idx])
+
+            // if values are not same, make everything inactive
+            // else set it to opposite value
+            const setValue = sameValue == null ? false : !sameValue
+            setAllFiltersInplace(setValue, [filterSectionsCopy[s_idx]])
+            setAndApplyNewSections(filterSectionsCopy)
+        }
+
         return (
             <div key={section.name} className={styles['panel']}>
-                <span className={styles['title']}>{sectionName}</span>
+                <span className={`${styles['title']}`} onClick={sectionTitleOnClick}>{sectionName}</span>
                 <ul className={styles['filters']}>{filters}</ul>
             </div>
         );
     });
 
-    // currently it filters from the database, not the current displayed feeds, 
-    // if desired, use flatFeeds instead of [...DATABASE.values()]
-    const filterOnClick = () => {
-        console.log([...DATABASE.values()]);
-        
-        setFlatFeeds(filterFlatFeeds([...DATABASE.values()], filterSections))
-    };
-    const clearOnClick = () => {
-        const clearSections = structuredClone(DEFAULT_FILTER_SECTIONS)
-        // set everything inactive
-        clearSections.forEach(section => {
-            section.filters.forEach(filter => filter.active = false)
-        })
-        setFilterSections(clearSections);
-        filterOnClick(); // update
-    };
+    // const clearOnClick = () => {
+    //     const clearedSections = setAllFilters(false, DEFAULT_FILTER_SECTIONS)
+    //     setAndApplyNewSections(clearedSections)
+    // };
 
     return (
         <div className={styles['panels-container']}>
             {panels}
 
-            <div className={styles['panel']}>
+            {/* Enable this when there is too many panels, for clearing everything */}
+            {/* <div className={styles['panel']}>
                 <span className={styles['title']}>Controls</span>
                 <ul className={styles['filters']}>
-                    <button className={styles['filter-button']} onClick={filterOnClick}>
-                        Apply
-                    </button>
-
                     <button className={styles['filter-button']} onClick={clearOnClick}>
                         Clear
                     </button>    
                 </ul>
-            </div>
+            </div> */}
         </div>
     );
 }
