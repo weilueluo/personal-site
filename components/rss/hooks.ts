@@ -6,8 +6,7 @@ import { feeds2flatFeeds } from "./Utils";
 
 export function useRawFeed2FlatFeed(rawFeeds, setFlatFeeds) {
     useEffect(() => {
-        const defaultLimit = 10;
-        const flatFeeds = feeds2flatFeeds(rawFeeds, defaultLimit);
+        const flatFeeds = feeds2flatFeeds(rawFeeds);
         setFlatFeeds(flatFeeds);
         updateDatabase(flatFeeds)
     }, [rawFeeds]);

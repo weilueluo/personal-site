@@ -19,10 +19,10 @@ export function computeGUID(feed: FlatFeed) {
 
 // --- expand feed.items
 // for each item in rss feed items: move attribute to top level
-export function feeds2flatFeeds(rawFeeds: Name2FeedMap, defaultLimit: number) {
+export function feeds2flatFeeds(rawFeeds: Name2FeedMap) {
     const flatFeeds = []
     rawFeeds.forEach((feed, name) => {
-        flatFeeds.push(...feed2flatFeeds(feed, name, defaultLimit));
+        flatFeeds.push(...feed2flatFeeds(feed, name));
     });
     return flatFeeds
 }
@@ -30,12 +30,10 @@ export function feeds2flatFeeds(rawFeeds: Name2FeedMap, defaultLimit: number) {
 export function feed2flatFeeds(
     feed: Parser.Output<{}>,
     name: string,
-    limit: number = null
 ) {
     const feedWithoutItems = structuredClone(feed);
     delete feedWithoutItems.items;
-    limit = limit || feed.items.length
-    return feed.items.slice(0, limit).map((feedItem) => {
+    return feed.items.map((feedItem) => {
         let flatFeed = Object.assign(
             structuredClone(feedWithoutItems),
             feedItem

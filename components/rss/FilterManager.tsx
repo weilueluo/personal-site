@@ -23,7 +23,7 @@ class FilterDate {
 const SOURCE_FILTERS = RSS_OPTIONS.map(opt => ({
     displayName: opt.name,
     name: opt.name,
-    active: true
+    active: false
 }))
 
 const DATE_FILTERS = Object.keys(FilterDate).map(date => ({

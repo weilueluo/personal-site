@@ -15,3 +15,7 @@ export function updateDatabase(flatFeeds: FlatFeed[]) {
         }
     })
 }
+
+export function clearDatabase() {
+    DATABASE.clear();
+}

@@ -28,7 +28,9 @@ export default function RSSHeader(props) {
     };
     useEffect(() => {
         console.log(`Search Received: ${searchString}`);
-        setFlatFeeds(searchFlatFeeds(searchString, flatFeeds));
+        // currently it searches from the database, not the current displayed feeds, 
+        // if desired, use flatFeeds instead of [...DATABASE.values()]
+        setFlatFeeds(searchFlatFeeds(searchString, [...DATABASE.values()]));
     }, [searchString]);
 
     // filtering
@@ -44,7 +46,10 @@ export default function RSSHeader(props) {
     };
 
     // refresh
-    const refreshOnClick = () => rssLoader.reload()
+    const refreshOnClick = () => {
+        DATABASE.clear()
+        rssLoader.reload()
+    }
 
     return (
         <div className={styles['feeds-header']}>
