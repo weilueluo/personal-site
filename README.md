@@ -7,6 +7,6 @@
 ### Milestones
 - [x] main page https://weilueluo.com
 - [x] about page https://weilueluo.com/about.html
-- [ ] rss page https://weilueluo.com/rss.html
-- [ ] waifu page
+- [x] rss page https://weilueluo.com/rss.html
+- [ ] waifu page (planning...)
 - [ ] ...
