@@ -52,7 +52,12 @@ export const DEFAULT_FILTER_SECTIONS: FilterSection[] = [
 ]
 
 function filterSource(flatFeeds: FlatFeed[], opt: FilterSection): FlatFeed[] {
-    const nameWanted = new Set(opt.filters.filter(opt => opt.active).map(opt => opt.name))
+    const activeFilters = opt.filters.filter(opt => opt.active)
+    if (activeFilters.length == 0) {
+        // if none of the filter is selected, do not filter
+        return flatFeeds
+    }
+    const nameWanted = new Set(activeFilters.map(opt => opt.name))
     const filtered = flatFeeds.filter(feed => feed.name && nameWanted.has(feed.name))
     // console.log('filtered source');
     // console.log(filtered);
@@ -65,11 +70,13 @@ function filterDate(flatFeeds: FlatFeed[], opt: FilterSection): FlatFeed[] {
     // console.log(activeDateFilters);
     
     if (activeDateFilters.length == 0) {
+        // if none of the filter is selected, do not filter
         return flatFeeds
     }
+
     for (const filter of activeDateFilters) {
         const startDate = FilterDate[filter.name].getStartDate()
-        console.log(startDate.toDateString());
+        // console.log(startDate.toDateString());
         
         flatFeeds = flatFeeds.filter(feed => feed.jsDate && feed.jsDate.getTime() - startDate.getTime() >= 0)
     }
@@ -79,7 +86,7 @@ function filterDate(flatFeeds: FlatFeed[], opt: FilterSection): FlatFeed[] {
     return flatFeeds
 }
 
-export function filter(flatFeeds: FlatFeed[], filterSections: FilterSection[]) {
+export function filterFlatFeeds(flatFeeds: FlatFeed[], filterSections: FilterSection[]) {
 
     for (const filterSection of filterSections) {
         flatFeeds = NAME2FILTER_FUNCTION[filterSection.name](flatFeeds, filterSection)

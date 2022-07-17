@@ -1,6 +1,6 @@
 import { DATABASE } from './Database';
 import styles from './Filter.module.sass';
-import { DEFAULT_FILTER_SECTIONS, filter } from './FilterManager';
+import { DEFAULT_FILTER_SECTIONS, filterFlatFeeds } from './FilterManager';
 import { Filter as Filter_t, FilterSection } from './RSS.d';
 
 export default function Filter(props) {
@@ -40,7 +40,11 @@ export default function Filter(props) {
 
     // currently it filters from the database, not the current displayed feeds, 
     // if desired, use flatFeeds instead of [...DATABASE.values()]
-    const filterOnClick = () => setFlatFeeds(filter([...DATABASE.values()], filterSections));
+    const filterOnClick = () => {
+        console.log([...DATABASE.values()]);
+        
+        setFlatFeeds(filterFlatFeeds([...DATABASE.values()], filterSections))
+    };
     const clearOnClick = () => {
         const clearSections = structuredClone(DEFAULT_FILTER_SECTIONS)
         // set everything inactive
