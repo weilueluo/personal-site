@@ -169,15 +169,15 @@ function computeMeshes(nodes: any[]) {
             // material.depthWrite = false;
         }
 
-        // const distToCenter = new Vector3(...position).clone().length();
+        const distToCenter = position.clone().length();
 
         material.uniforms.uPosition.value = position;
 
-        // if (distToCenter > 0.8 && Math.random() < 0.15) {
-        //     material.uniforms.uWaveAmount.value = Math.random() * 0.1;
-        //     material.uniforms.uOffsetAmount.value = Math.random() * 0.1;
-        //     material.uniforms.uWaveSpeed.value = Math.random() * 0.2 + 1;
-        // }
+        if (distToCenter > 0.8 && Math.random() < 0.15) {
+            material.uniforms.uWaveAmount.value = Math.random() * 0.1;
+            material.uniforms.uOffsetAmount.value = Math.random() * 0.1;
+            material.uniforms.uWaveSpeed.value = Math.random() * 0.2 + 1;
+        }
 
         materials[i] = material;
         geometry.computeVertexNormals();
