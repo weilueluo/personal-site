@@ -30,16 +30,21 @@ function LoadMore({ flatFeeds, feedLimitState }) {
     const [feedLimit, setFeedLimit] = feedLimitState
 
     const remaining = flatFeeds.length - feedLimit
+    const loaded = Math.min(flatFeeds.length, feedLimit)
 
     const loadMoreOnClick = () => setFeedLimit(feedLimit + INCREMENT)
 
     if (remaining <= 0) {
         return (
-            <span className={styles['no-more-feeds']}>end of all feeds</span>
+            <span className={styles['no-more-feeds']}>~end of all feeds~</span>
         )
     } else {
         return (
-            <span className={styles['load-more-feeds']} onClick={loadMoreOnClick}>load {INCREMENT} more ({remaining} remains)</span>
+            <div className={styles['load-more-feeds']}>
+                <button className={styles['load-more-button']} onClick={loadMoreOnClick}>{INCREMENT} more</button>
+                <br />
+                <span className={styles['load-more-info']}>~Loaded {loaded}/{flatFeeds.length}~</span>
+            </div>
         )
     }
 }

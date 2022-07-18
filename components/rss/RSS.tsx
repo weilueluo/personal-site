@@ -24,6 +24,15 @@ export default function RSS() {
     // on error
     const [errors, setErrors] = useState([]);
     rssLoader.on_error = (errors: RSSRequestError[]) => setErrors(errors);
+    // on loading
+    const [loading, setLoading] = useState(false)
+    rssLoader.on_loading = () => {
+        setLoading(true)
+        setCompleted(false)
+    };
+    // on completed
+    const [completed, setCompleted] = useState(false)
+    rssLoader.on_complete = () => setCompleted(true)
 
     // whether to show errors
     const [errorActive, setErrorActive] = useState(false);
@@ -52,6 +61,8 @@ export default function RSS() {
                 errorActiveState={[errorActive, setErrorActive]}
                 rssLoader={rssLoader}
                 errors={errors}
+                loading={loading}
+                completed={completed}
             />
 
             <div className={styles['separator']}></div>

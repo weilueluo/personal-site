@@ -27,9 +27,10 @@
     display: flex
     flex-direction: row
     margin-top: 4px
+    justify-content: space-between
 
-    &:hover
-        cursor: pointer
+.overflown:hover
+    cursor: pointer
 
 
 // contains type and date
@@ -48,17 +49,15 @@
         margin: 0px 5px
 
 .feed-type, .feed-date
-    color: gray
+    color: common.$noninteract-color
     font-style: italic
 
 .feed-description
     order: 1
-    max-height: 1.5rem
     overflow-y: scroll
-    transition: 0.5s
-    margin: 3px 0
+    transition: 0.15s
 
-    color: darken(gray, 30%)
+    color: common.$text-color
 
     // set line limit
     // https://stackoverflow.com/questions/3922739/limit-text-length-to-n-lines-using-css
@@ -68,6 +67,20 @@
     -webkit-line-clamp: 1
     line-clamp: 1
     -webkit-box-orient: vertical
+
+.feed-expand
+    order: 2
+    color: common.$noninteract-color
+    font-style: italic
+    align-self: flex-end
+
+.feed-expand-img
+    height: 16px
+    width: 16px
+
+.feed-description, .feed-expand
+    max-height: 1.5rem
+    margin: 3px 0px
 
 .expand-active > .feed-description
     -webkit-line-clamp: 10

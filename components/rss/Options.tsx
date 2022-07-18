@@ -21,10 +21,11 @@ export const RSS_OPTIONS: RSSOption[] = [
         url: 'https://store.steampowered.com/feeds/news/?l=english',
     },
 
-    // {
-    //     name: 'Hanime TV',
-    //     url: 'https://rsshub.app/hanime/video',
-    // },
+    {
+        name: 'Hanime TV',
+        url: 'https://rsshub.app/hanime/video',
+    },
+
     // {
     //     name: '饭否',
     //     url: 'https://rsshub.app/fanfou/trends'
@@ -80,10 +81,11 @@ export const RSS_OPTIONS: RSSOption[] = [
         url: 'https://rsshub.app/juejin/category/backend'
     },
 
-    {
-        name: '开源中国',
-        url: 'https://rsshub.app/oschina/news/industry'
-    },
+    // 日期是错的
+    // {
+    //     name: '开源中国',
+    //     url: 'https://rsshub.app/oschina/news/industry'
+    // },
 
     {
         name: '政采云前端技术',

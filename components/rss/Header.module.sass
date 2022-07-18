@@ -22,7 +22,6 @@ $header-width: 350px
     // border-bottom: 1px solid gray
 
     *
-        margin: 3px 6px
         height: 1.6rem
 
 .header-button
@@ -47,15 +46,85 @@ $header-width: 350px
     height: 16px
     width: 16px
 
-.feeds-header-top, .feeds-header-middle, .feeds-header-bottom
+.feeds-header-top
     display: flex
     flex-direction: row
     align-items: center
     width: 100%
+    gap: 1rem
+
+.feeds-header-middle
+    width: 100%
+    display: grid
+    grid-template-areas: "reset refresh filter"
+    grid-template-columns: 1fr 1fr 1fr
+    gap: 1rem
+
+    .header-button
+        width: 100%
+
+.reset-button
+    grid-area: "reset"
+
+.refresh-button
+    grid-area: "refresh"
+
+.filter-button
+    grid-area: "filter"
 
 .feeds-header-bottom
-    justify-content: space-around
+    width: 100%
+    display: grid
+
+    grid-template-areas: "totalFeeds totalFeeds totalErros"
+    grid-template-columns: 1fr 1fr 1fr
+
+    gap: 1rem
 
 .header-button.loaded-feeds:hover
     background-color: common.$inactive-color
     cursor: default
+
+.loaded-feeds
+    grid-area: totalFeeds
+    justify-self: start
+    width: 100%
+
+    display: flex
+    flex-direction: row
+    justify-content: center
+    align-items: center
+
+.total-errors
+    grid-area: 'totalErrors'
+    width: 100%
+    
+.completed-img, .loading-img
+    margin-left: 10px
+
+.completed-img
+    max-width: 65%
+    max-height: 65%
+
+    color: pink
+    background-color: transparent
+
+.loading-img
+
+    max-width: 100%
+    max-height: 100%
+
+    animation-name: rotate
+    animation-duration: 1s
+    animation-iteration-count: infinite
+    animation-fill-mode: forwards
+    animation-timing-function: linear
+
+    color: black
+    background-color: transparent
+
+@keyframes rotate
+    from
+        transform: rotateZ(0deg)
+    to
+        transform: rotateZ(360deg)

@@ -11,6 +11,8 @@ export default function RSSHeader(props) {
     const [errorActive, setErrorActive] = props.errorActiveState;
     const errors = props.errors;
     const rssLoader = props.rssLoader;
+    const loading = props.loading;
+    const completed = props.completed
 
     // const nonChinese = /[^\p{Script=Han}]/gim
     // console.log(nonChinese);
@@ -56,6 +58,16 @@ export default function RSSHeader(props) {
         rssLoader.reload()
     }
 
+    // display status
+    const [status, setStatus] = useState(<></>)
+    useEffect(() => {
+        if (completed) {
+            setStatus(<img className={styles['completed-img']} src='/icons/misc/check-mark.svg' />)
+        } else if (loading) {
+            setStatus(<img className={styles['loading-img']} src='/icons/misc/progress.svg' />)
+        }
+    }, [loading, completed])
+
     return (
         <div className={styles['feeds-header']}>
 
@@ -69,26 +81,26 @@ export default function RSSHeader(props) {
                     tabIndex={0}
                 />
                 <button className={`${styles['header-button']} ${styles['search-button']}`} onClick={searchButtonClicked}>
-                    <img className={styles['search-button-img']} src="/icons/font-awesome/magnifying-glass-solid.svg" alt="search-icon" />
+                    <img className={styles['search-button-img']} src="/icons/misc/magnifying-glass-solid.svg" alt="search-icon" />
                 </button>
                 
             </div>
 
             {/* MIDDLE SECTION */}
             <div className={styles['feeds-header-middle']}>
-                <button className={styles['header-button']} onClick={resetOnClick}>Reset</button>
-                <button className={styles['header-button']} onClick={refreshOnClick}>Refresh</button>
-                <button className={`${styles['header-button']} ${filterActive ? styles['filter-active'] : ''}`} onClick={filterTextOnClick}>Filter</button>
+                <button className={`${styles['header-button']} ${styles['reset-button']}`} onClick={resetOnClick}>Reset</button>
+                <button className={`${styles['header-button']} ${styles['refresh-button']}`} onClick={refreshOnClick}>Refresh</button>
+                <button className={`${styles['header-button']} ${styles['filter-button']} ${filterActive ? styles['filter-active'] : ''}`} onClick={filterTextOnClick}>Filter</button>
             </div>
 
             {/* BOTTOM SECTION */}
             <div className={styles['feeds-header-bottom']}>
-                <button className={`${styles['loaded-feeds']} ${styles['header-button']}`}>Feeds {flatFeeds.length}</button>
+                <button className={`${styles['loaded-feeds']} ${styles['header-button']}`}>{flatFeeds.length} Feeds {status}</button>
                 <button
                     className={`${styles['total-errors']} ${styles['header-button']}`}
                     onClick={totalErrorsOnClick}
                 >
-                    Errors {errors.length}
+                    Error {errors.length}
                 </button>
             </div>
         </div>
