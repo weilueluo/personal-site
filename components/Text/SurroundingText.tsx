@@ -1,5 +1,5 @@
 import { useFrame, useLoader } from '@react-three/fiber';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { DoubleSide, ShaderMaterial, Vector3 } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
@@ -11,18 +11,30 @@ import text_vs from '../shaders/text_vs.glsl';
 export default function SurroundingText(props) {
     const altScroll = useAltScroll();
 
-    const font = useLoader(FontLoader, '/fonts/Roboto_Bold.json');
+
+    const [meshes, setMeshes] = useState([])
+    const [meshMaterials, setMeshMaterials] = useState([])
+    const [offsets, setOffsets] = useState([])
+
+    const fontLoader = new FontLoader();
+    useEffect(() => {
+        fontLoader.load('/fonts/Roboto_Bold.json', font => {
+            const [meshes_, meshMaterals_, offsets_] = computeMeshAndMaterial(
+                characters,
+                font,
+                fontSize,
+                props
+            )
+            setMeshes(meshes_)
+            setMeshMaterials(meshMaterals_)
+            setOffsets(offsets_)
+        })
+    }, [])
 
     const characters = props.text.split('');
 
     const fontSize = getDeviceDependent(props.fontSize * 0.6, props.fontSize)
 
-    let [meshes, meshMaterials, offsets] = useMemo(() => computeMeshAndMaterial(
-        characters,
-        font,
-        fontSize,
-        props
-    ), [])
 
     const scrollAmount = useAltScroll()
 
@@ -34,8 +46,10 @@ export default function SurroundingText(props) {
         let phi = 0;
         let theta = props.initOffset;
         const charSpacingAngle = 0.02;
-
-        for (let i = 0; i < characters.length; i++) {
+        // console.log(meshMaterials);
+        // console.log(offsets);
+        
+        for (let i = 0; i < meshMaterials.length; i++) {
             const mat = meshMaterials[i];
             const offset = offsets[i];
 
@@ -54,6 +68,7 @@ export default function SurroundingText(props) {
 }
 
 function computeMeshAndMaterial(characters, font, fontSize, props) {
+
     const spaceWidth = 0.5;
 
     const charMeshes = new Array(characters.length);

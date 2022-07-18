@@ -1,6 +1,9 @@
 import { DATABASE } from './Database';
 import styles from './Filter.module.sass';
-import { DEFAULT_FILTER_SECTIONS, filterFlatFeeds, isAllFiltersSame, setAllFilters, setAllFiltersInplace } from './FilterManager';
+import {
+    filterFlatFeeds,
+    isAllFiltersSame, setAllFiltersInplace
+} from './FilterManager';
 import { Filter as Filter_t, FilterSection } from './RSS.d';
 
 export default function Filter(props) {
@@ -9,11 +12,10 @@ export default function Filter(props) {
 
     const setAndApplyNewSections = (newSections: FilterSection[]) => {
         setFilterSections(newSections);
-        // currently it filters from the database, not the current displayed feeds, 
+        // currently it filters from the database, not the current displayed feeds,
         // if desired, use flatFeeds instead of [...DATABASE.values()]
-        setFlatFeeds(filterFlatFeeds([...DATABASE.values()], newSections))
-    }
-
+        setFlatFeeds(filterFlatFeeds([...DATABASE.values()], newSections));
+    };
 
     const panels = filterSections.map((section, s_idx) => {
         const sectionName = section.displayName;
@@ -23,9 +25,7 @@ export default function Filter(props) {
                 const newSections = setActive(filterSections, s_idx, f_idx);
                 // console.log('section copy');
                 // console.log(sectionsCopy);
-                
-                
-                setAndApplyNewSections(newSections)
+                setAndApplyNewSections(newSections);
             };
             return (
                 <li
@@ -35,25 +35,32 @@ export default function Filter(props) {
                     }`}
                     onClick={() => onClick()}
                 >
-                    <button className={styles['filter-button']}>{filter.displayName}</button>
+                    <button className={styles['filter-button']}>
+                        {filter.displayName}
+                    </button>
                 </li>
             );
         });
 
         const sectionTitleOnClick = () => {
-            const filterSectionsCopy = structuredClone(filterSections)
-            const sameValue = isAllFiltersSame(filterSectionsCopy[s_idx])
+            const filterSectionsCopy = structuredClone(filterSections);
+            const sameValue = isAllFiltersSame(filterSectionsCopy[s_idx]);
 
             // if values are not same, make everything inactive
             // else set it to opposite value
-            const setValue = sameValue == null ? false : !sameValue
-            setAllFiltersInplace(setValue, [filterSectionsCopy[s_idx]])
-            setAndApplyNewSections(filterSectionsCopy)
-        }
+            const setValue = sameValue == null ? false : !sameValue;
+            setAllFiltersInplace(setValue, [filterSectionsCopy[s_idx]]);
+            setAndApplyNewSections(filterSectionsCopy);
+        };
 
         return (
             <div key={section.name} className={styles['panel']}>
-                <span className={`${styles['title']}`} onClick={sectionTitleOnClick}>{sectionName}</span>
+                <span
+                    className={`${styles['title']}`}
+                    onClick={sectionTitleOnClick}
+                >
+                    {sectionName}
+                </span>
                 <ul className={styles['filters']}>{filters}</ul>
             </div>
         );

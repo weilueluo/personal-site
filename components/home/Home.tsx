@@ -1,12 +1,11 @@
 import { OrbitControls, Stats } from '@react-three/drei';
-import { Canvas, useThree } from '@react-three/fiber';
-import { EffectComposer, SMAA } from '@react-three/postprocessing';
+import { Canvas } from '@react-three/fiber';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ACESFilmicToneMapping, sRGBEncoding } from 'three';
 import About from '../scene/About';
 import Ball from '../scene/Ball';
 import CV from '../scene/CV';
-import { getNScrollPages, getMainBallRadius } from '../scene/global';
+import { getMainBallRadius, getNScrollPages } from '../scene/global';
 import GradientBackground from '../scene/GradientBackground';
 import Lines from '../scene/Lines';
 import LoaderProgress from '../scene/LoaderProgress';
@@ -19,19 +18,11 @@ import { getDeviceDependent, initMobileScroll } from '../utils/hooks';
 
 function Content() {
     const enableOrbitControl = getDeviceDependent(false, true); // disable vertical scroll on mobile
-    const enablePostProcessing = getDeviceDependent(false, true);
     const textRadius = getMainBallRadius() + 0.1;
 
     useEffect(() => {
         initMobileScroll();
     });
-
-    const postprocessing = (
-        <EffectComposer multisampling={8}>
-            {/* https://docs.pmnd.rs/react-postprocessing */}
-            <SMAA />
-        </EffectComposer>    
-    )
 
     return (
         <>
@@ -75,8 +66,6 @@ function Content() {
                 // minPolarAngle={polarAngle}
                 // maxPolarAngle={maxPolarAngle}
             />
-
-            {enablePostProcessing && postprocessing}
 
             <Stats showPanel={0} className={styles.panel1} />
             <Stats showPanel={1} className={styles.panel2} />
@@ -144,9 +133,6 @@ function MyCanvas(props) {
 
     const { children, ...otherProps } = props;
     
-
-
-
     return (
         <Canvas
             style={{

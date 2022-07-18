@@ -12,12 +12,17 @@ export default function RSSHeader(props) {
     const errors = props.errors;
     const rssLoader = props.rssLoader;
 
+    // const nonChinese = /[^\p{Script=Han}]/gim
+    // console.log(nonChinese);
+    
+
     // searching
     const [searchString, setSearchString] = useState('');
     const searchButtonClicked = () => {
         const searchInput = document.getElementById(
             'search-input'
         ) as HTMLInputElement;
+        
         setSearchString(searchInput.value);
     };
     const searchButtonKeyDown = (event) => {

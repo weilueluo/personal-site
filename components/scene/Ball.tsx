@@ -1,30 +1,69 @@
-import { useGLTF } from '@react-three/drei';
-import { useEffect, useMemo, useRef } from 'react';
+import { useFrame } from '@react-three/fiber';
+import { useEffect, useRef, useState } from 'react';
 import {
     AnimationMixer,
     Group,
     LoopPingPong,
+    Mesh,
     ShaderMaterial,
-    Vector3,
+    Vector3
 } from 'three';
-import type { GLTFResult, Nodes } from '../types/ball';
-import { meshNameToPosition } from './ballMeshData';
 import sphere_fs from '../shaders/sphere_fs.glsl';
 import sphere_vs from '../shaders/sphere_vs.glsl';
 import { useAltScroll } from '../utils/hooks';
 import { useMaxAnimationDuration } from '../utils/utils';
-import { useFrame } from '@react-three/fiber';
+import { meshNameToPosition } from './ballMeshData';
 import { getMainBallRadius } from './global';
 
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+
+const rotateVector = new Vector3(1, 1, 1).normalize();
+
+// gltf loader
+const loader = new GLTFLoader();
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderConfig({ type: 'js' });
+dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
+dracoLoader.preload()
+
 export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
+    const [nodes, setNodes] = useState([]);
+    const [animations, setAnimations] = useState([]);
+
+    useEffect(() => {
+        loader.setDRACOLoader(dracoLoader);
+        loader.load(
+            '/models/ball/ball-transformed.glb',
+            function (gltf) {
+                // console.log('loaded gltf');
+                // console.log(gltf);
+                
+                setNodes(gltf.scene.children);
+                setAnimations(gltf.animations);
+            },
+            undefined,
+            function (error) {
+                console.log('gltf load error');
+                console.error(error);
+            }
+        );
+    }, []);
+
+    ///////////////////
+
     const ballRef = useRef();
-    const { nodes, animations } = useGLTF(
-        '/models/ball/ball-transformed.glb'
-    ) as GLTFResult;
 
     const radius = getMainBallRadius();
 
-    const [meshes, meshMaterials] = useMeshes(nodes);
+    const [meshes, setMeshes] = useState([]);
+    const [meshMaterials, setMeshMaterials] = useState([]);
+
+    useEffect(() => {
+        const [meshes_, meshMaterials_] = computeMeshes(nodes);
+        setMeshes(meshes_);
+        setMeshMaterials(meshMaterials_);
+    }, [nodes]);
 
     const maxAnimationDuration = useMaxAnimationDuration(animations);
 
@@ -48,11 +87,11 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
             mixer.current.setTime(maxAnimationDuration * altScroll);
         }
         // console.log(`scrolled: ${scrolled}`);
-        
+
         meshMaterials.forEach((mat) => {
             mat.uniforms.uTime.value = time;
             mat.uniforms.uScrolledAmount.value = altScroll;
-            mat.uniforms.uDoWave.value = !scrolled  // do not wave if scrolled
+            mat.uniforms.uDoWave.value = !scrolled; // do not wave if scrolled
         });
     });
 
@@ -61,8 +100,8 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
         const scrolled = altScroll > 0.1;
         if (scene) {
             scene.rotateOnAxis(
-                new Vector3(1, 1, 1).normalize(),
-                state.clock.getDelta() * (scrolled ? 0.0 : 1.5)  // do not rotate if scrolled
+                rotateVector,
+                state.clock.getDelta() * (scrolled ? 0.0 : 1.5) // do not rotate if scrolled
             );
         }
     });
@@ -88,70 +127,66 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
     );
 }
 
-function useMeshes(nodes: Nodes) {
-    const [meshes, materials] = useMemo(() => {
-        const uniforms = {
-            uTime: { value: 0.5 },
-            uPosition: { value: new Vector3(0, 0, 0) },
-            uOffsetAmount: { value: 0.0 },
-            uWaveAmount: { value: 0.0 },
-            uWaveSpeed: { value: 0.0 },
-            uScrolledAmount: { value: 0.0 },
-            uDoWave: { value: true },
-        };
+function computeMeshes(nodes: any[]) {
+    const uniforms = {
+        uTime: { value: 0.5 },
+        uPosition: { value: new Vector3(0, 0, 0) },
+        uOffsetAmount: { value: 0.0 },
+        uWaveAmount: { value: 0.0 },
+        uWaveSpeed: { value: 0.0 },
+        uScrolledAmount: { value: 0.0 },
+        uDoWave: { value: true },
+    };
 
-        const sharedMaterial = new ShaderMaterial({
-            uniforms: uniforms,
-            vertexShader: sphere_vs,
-            fragmentShader: sphere_fs,
-            transparent: true,
-            depthWrite: true,
-        });
+    const sharedMaterial = new ShaderMaterial({
+        uniforms: uniforms,
+        vertexShader: sphere_vs,
+        fragmentShader: sphere_fs,
+        transparent: true,
+        depthWrite: true,
+    });
 
-        const meshNodes = Object.entries(nodes).filter(
-            (entry) => entry[1].type == 'Mesh'
+    const meshNodes = nodes.filter(
+        (node) => node.type == 'Mesh'
+    ) as unknown as Mesh[];
+
+    const meshes = Array(meshNodes.length);
+    const materials = Array(meshNodes.length);
+    meshNodes.forEach((mesh, i) => {
+        const geometry = mesh.geometry;
+        const material = sharedMaterial.clone();
+        const position = meshNameToPosition[mesh.name];
+
+        if (Math.random() < 0.15) {
+            material.wireframe = true;
+            // material.depthWrite = false;
+        }
+
+        // const distToCenter = new Vector3(...position).clone().length();
+
+        material.uniforms.uPosition.value = position;
+
+        // if (distToCenter > 0.8 && Math.random() < 0.15) {
+        //     material.uniforms.uWaveAmount.value = Math.random() * 0.1;
+        //     material.uniforms.uOffsetAmount.value = Math.random() * 0.1;
+        //     material.uniforms.uWaveSpeed.value = Math.random() * 0.2 + 1;
+        // }
+
+        materials[i] = material;
+        geometry.computeVertexNormals();
+        meshes[i] = (
+            <mesh
+                // ref={meshRefs[i]}
+                key={mesh.uuid}
+                name={mesh.name}
+                castShadow
+                receiveShadow
+                geometry={geometry}
+                material={material}
+                position={position}
+            />
         );
-
-        const meshes = Array(meshNodes.length);
-        const materials = Array(meshNodes.length);
-        meshNodes.forEach((entry, i) => {
-            const geometry = nodes[entry[0]].geometry;
-            const material = sharedMaterial.clone();
-            const position = meshNameToPosition[entry[0]];
-
-            if (Math.random() < 0.15) {
-                material.wireframe = true;
-                // material.depthWrite = false;
-            }
-
-            // const distToCenter = new Vector3(...position).clone().length();
-
-            material.uniforms.uPosition.value = position;
-
-            // if (distToCenter > 0.8 && Math.random() < 0.15) {
-            //     material.uniforms.uWaveAmount.value = Math.random() * 0.1;
-            //     material.uniforms.uOffsetAmount.value = Math.random() * 0.1;
-            //     material.uniforms.uWaveSpeed.value = Math.random() * 0.2 + 1;
-            // }
-
-            materials[i] = material;
-            geometry.computeVertexNormals();
-            meshes[i] = (
-                <mesh
-                    // ref={meshRefs[i]}
-                    key={entry[0]}
-                    name={entry[0]}
-                    castShadow
-                    receiveShadow
-                    geometry={geometry}
-                    material={material}
-                    position={position}
-                />
-            );
-        });
-
-        return [meshes, materials];
-    }, []);
+    });
 
     // meshRefs.forEach((meshRef) => {
     //       useHelper(meshRef, VertexNormalsHelper)
@@ -159,5 +194,3 @@ function useMeshes(nodes: Nodes) {
 
     return [meshes, materials];
 }
-
-useGLTF.preload('/models/ball/ball-transformed.glb');
