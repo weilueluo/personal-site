@@ -46,11 +46,14 @@ export default function About() {
         group.position.set(tempVector.x, tempVector.y, tempVector.z);
     });
 
+    const textRadius = getDeviceDependent(2.5, 3)
+    const ballDetails = getDeviceDependent(16, 32)
+
     return (
         <group ref={groupRef}>
             <ThreeSurroundingText
                 text={'About'}
-                radius={3.5}
+                radius={textRadius}
                 rotationZ={Math.PI / 2}
                 initOffset={Math.PI / 4}
                 expandOnScrollSpeed={0}
@@ -64,9 +67,9 @@ export default function About() {
                 onClick={onClick}
                 rotation={[Math.PI / 4, 0, 0]}
             >
-                <sphereBufferGeometry args={[2, 12, 6]} />
+                <sphereBufferGeometry args={[2, ballDetails, ballDetails]} />
                 <meshStandardMaterial
-                    color={0xffffff}
+                    color={0x9f34eb}
                     emissive={0x0d2f5c}
                     emissiveIntensity={1}
                     transparent={true}

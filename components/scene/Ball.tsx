@@ -5,6 +5,7 @@ import {
     Group,
     LoopPingPong,
     Mesh,
+    Object3D,
     ShaderMaterial,
     Vector3
 } from 'three';
@@ -58,11 +59,13 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
 
     const [meshes, setMeshes] = useState([]);
     const [meshMaterials, setMeshMaterials] = useState([]);
+    const [otherNodes, setOtherNodes] = useState([]);
 
     useEffect(() => {
-        const [meshes_, meshMaterials_] = computeMeshes(nodes);
+        const [meshes_, meshMaterials_, otherNodes_] = computeMeshes(nodes);
         setMeshes(meshes_);
         setMeshMaterials(meshMaterials_);
+        setOtherNodes(otherNodes_.map(node => <group key={node.name} name={node.name} position={node.position}/>))
     }, [nodes]);
 
     const maxAnimationDuration = useMaxAnimationDuration(animations);
@@ -106,21 +109,13 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
         }
     });
 
+    // console.log(otherNodes);
+    
+
     return (
         <group ref={ballRef} scale={radius} dispose={null} {...props}>
             <group name='Scene'>
-                <group
-                    name='Ball_cell198_cell006'
-                    position={[-0.27, -0.81, -0.02]}
-                />
-                <group
-                    name='Ball_cell196_cell001'
-                    position={[0.32, -0.75, -0.27]}
-                />
-                <group
-                    name='Ball_cell186_cell005'
-                    position={[-0.7, -0.34, 0.36]}
-                />
+                {otherNodes}
                 {meshes}
             </group>
         </group>
@@ -146,16 +141,21 @@ function computeMeshes(nodes: any[]) {
         depthWrite: true,
     });
 
-    const meshNodes = nodes.filter(
-        (node) => node.type == 'Mesh'
-    ) as unknown as Mesh[];
-
+    const meshNodes: Mesh[] = []
+    const otherNodes: Object3D[] = []
+    
+    nodes.forEach(node => {
+        if (node.type == 'Mesh') meshNodes.push(node)
+        else otherNodes.push(node)
+    })
+        
+        
     const meshes = Array(meshNodes.length);
     const materials = Array(meshNodes.length);
     meshNodes.forEach((mesh, i) => {
         const geometry = mesh.geometry;
         const material = sharedMaterial.clone();
-        const position = meshNameToPosition[mesh.name];
+        const position = mesh.position //meshNameToPosition[mesh.name];
 
         if (Math.random() < 0.15) {
             material.wireframe = true;
@@ -192,5 +192,5 @@ function computeMeshes(nodes: any[]) {
     //       useHelper(meshRef, VertexNormalsHelper)
     // })
 
-    return [meshes, materials];
+    return [meshes, materials, otherNodes];
 }

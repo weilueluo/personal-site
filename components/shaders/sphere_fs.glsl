@@ -21,10 +21,10 @@ vec3 applyShadow(in vec3 color) {
     float angle = acos(dot(normalize(uPosition), normalize(vNormal)));
     for (int i = 1; i <= 8; i++) {
         if (angle < PI / float(i)) {
-            color *= 0.9;
+            color *= 0.99;
         }
         if (angle < PI / (float(i)+0.5)) {
-            color *= 0.9;
+            color *= 0.99;
         }
     }
 
@@ -48,7 +48,7 @@ float make_cross(vec2 uv, float width) {
 }
 
 
-const float RF_COEF = .75;
+const float RF_COEF = .55;
 vec3 applyFresnel(vec3 color) {
     vec3 camNormal = normalize(cameraPosition);
     float cosTheta = dot(camNormal, vNormal);
@@ -66,7 +66,7 @@ void main() {
     vec3 color = normalize(uPosition) * 0.5 + 0.5;  // diff color for diff mesh
     color = vec3(color.xz, abs(sin(uTime * 0.5)));
     
-    bool surface = isSurface();
+    // bool surface = isSurface();
 
     // vec2 tile_uv = tile(vUv, 10.0);
     // float lines = make_cross(tile_uv,0.03);

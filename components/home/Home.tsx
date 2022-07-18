@@ -22,7 +22,7 @@ function Content() {
 
     useEffect(() => {
         initMobileScroll();
-    });
+    }, []);
 
     return (
         <>
@@ -81,7 +81,7 @@ function Lights() {
 
     return (
         <>
-            {/* <directionalLight
+            <directionalLight
                 ref={lightRef}
                 position={[100, 100, 0]}
                 color={0xffffff}
@@ -95,9 +95,9 @@ function Lights() {
                 shadow-camera-right={10}
                 shadow-camera-top={10}
                 shadow-camera-bottom={-10}
-            /> */}
+            />
 
-            <ambientLight color={0xffffff} intensity={0.3} />
+            <ambientLight color={0xffffff} intensity={1.0} />
         </>
     );
 }

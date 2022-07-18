@@ -1,7 +1,7 @@
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 import ThreeSurroundingText from '../Text/ThreeSurroundingText';
-import { useMouseHover } from '../utils/hooks';
+import { getDeviceDependent, useMouseHover } from '../utils/hooks';
 
 export default function CV() {
     const meshRef = useRef();
@@ -20,11 +20,14 @@ export default function CV() {
         }
     };
 
+    const textRadius = getDeviceDependent(2.5, 3)
+    const ballDetails = getDeviceDependent(16, 32)
+
     return (
         <>
             <ThreeSurroundingText
                 text={'CV'}
-                radius={2.5}
+                radius={textRadius}
                 rotationZ={0}
                 initOffset={0}
                 expandOnScrollSpeed={0}
@@ -38,9 +41,9 @@ export default function CV() {
                 onClick={onClick}
                 rotation={[Math.PI / 4, 0, 0]}
             >
-                <sphereBufferGeometry args={[2, 12, 6]} />
+                <sphereBufferGeometry args={[2, ballDetails, ballDetails]} />
                 <meshStandardMaterial
-                    color={0xffffff}
+                    color={0x34d3eb}
                     emissive={0x0d2f5c}
                     emissiveIntensity={1}
                     transparent={true}
