@@ -2,6 +2,7 @@ import { useFrame } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
 import {
     AnimationMixer,
+    Box3,
     Group,
     LoopPingPong,
     Mesh,
@@ -20,17 +21,17 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 const rotateVector = new Vector3(1, 1, 1).normalize();
+const centerOffsetVector = new Vector3(0, 0, 0)
 
 // gltf loader
 const loader = new GLTFLoader();
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderConfig({ type: 'js' });
-dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
+dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.3/');
 dracoLoader.preload()
 
 export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
-    const [nodes, setNodes] = useState([]);
-    const [animations, setAnimations] = useState([]);
+    const [gltf, setgltf] = useState(null);
 
     useEffect(() => {
         loader.setDRACOLoader(dracoLoader);
@@ -39,9 +40,7 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
             function (gltf) {
                 // console.log('loaded gltf');
                 // console.log(gltf);
-                
-                setNodes(gltf.scene.children);
-                setAnimations(gltf.animations);
+                setgltf(gltf)
             },
             undefined,
             function (error) {
@@ -60,13 +59,24 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
     const [meshes, setMeshes] = useState([]);
     const [meshMaterials, setMeshMaterials] = useState([]);
     const [otherNodes, setOtherNodes] = useState([]);
+    const [animations, setAnimations] = useState([])
+    const [centerOffset, setCenterOffset] = useState(new Vector3(0,0,0))
 
     useEffect(() => {
-        const [meshes_, meshMaterials_, otherNodes_] = computeMeshes(nodes);
-        setMeshes(meshes_);
-        setMeshMaterials(meshMaterials_);
-        setOtherNodes(otherNodes_.map(node => <group key={node.name} name={node.name} position={node.position}/>))
-    }, [nodes]);
+        if( gltf) {
+            const [meshes_, meshMaterials_, otherNodes_] = computeMeshes(gltf.scene.children);
+            setMeshes(meshes_);
+            setMeshMaterials(meshMaterials_);
+            setOtherNodes(otherNodes_.map(node => <group key={node.name} name={node.name} position={node.position}/>))
+            setAnimations(gltf.animations)
+            
+            // set the center offset vector
+            // this ensure the ball is at the center
+            const box = new Box3().setFromObject( gltf.scene );
+            const center = box.getCenter( new Vector3() );
+            setCenterOffset(center.multiplyScalar(-1))
+        }
+    }, [gltf]);
 
     const maxAnimationDuration = useMaxAnimationDuration(animations);
 
@@ -78,7 +88,7 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
             action.setLoop(LoopPingPong, Infinity);
             action.play();
         }
-    }, [animations, maxAnimationDuration]);
+    }, [gltf, maxAnimationDuration]);
 
     const altScroll = useAltScroll();
 
@@ -109,12 +119,9 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
         }
     });
 
-    // console.log(otherNodes);
-    
-
     return (
         <group ref={ballRef} scale={radius} dispose={null} {...props}>
-            <group name='Scene'>
+            <group name='Scene' position={centerOffset}>
                 {otherNodes}
                 {meshes}
             </group>

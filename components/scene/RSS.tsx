@@ -46,7 +46,8 @@ export default function RSS() {
         group.position.set(tempVector.x, tempVector.y, tempVector.z);
     });
 
-    const textRadius = getDeviceDependent(2.5, 3)
+    const sphereRadius = getDeviceDependent(1.5, 2)
+    const textRadius = getDeviceDependent(2, 3)
     const ballDetails = getDeviceDependent(16, 32)
 
     return (
@@ -67,7 +68,7 @@ export default function RSS() {
                 onClick={onClick}
                 rotation={[Math.PI / 4, 0, 0]}
             >
-                <sphereBufferGeometry args={[2, ballDetails, ballDetails]} />
+                <sphereBufferGeometry args={[sphereRadius, ballDetails, ballDetails]} />
                 <meshStandardMaterial
                     color={0xeb4034}
                     emissive={0x0d2f5c}
