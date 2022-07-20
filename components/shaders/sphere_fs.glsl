@@ -21,10 +21,10 @@ vec3 applyShadow(in vec3 color) {
     float angle = acos(dot(normalize(uPosition), normalize(vNormal)));
     for (int i = 1; i <= 8; i++) {
         if (angle < PI / float(i)) {
-            color *= 0.99;
+            color *= 1.01;
         }
         if (angle < PI / (float(i)+0.5)) {
-            color *= 0.99;
+            color *= 1.01;
         }
     }
 
@@ -48,7 +48,7 @@ float make_cross(vec2 uv, float width) {
 }
 
 
-const float RF_COEF = .55;
+const float RF_COEF = .75;
 vec3 applyFresnel(vec3 color) {
     vec3 camNormal = normalize(cameraPosition);
     float cosTheta = dot(camNormal, vNormal);
@@ -57,7 +57,8 @@ vec3 applyFresnel(vec3 color) {
     return color * coef;
 }
 
-const vec3 black = vec3(0., 0., 0.);
+// const vec3 black = vec3(0., 0., 0.);
+// const vec3 one = vec3(1., 1., 1.);
 
 void main() {
     //gl_FragColor = vec4(texture2D(uColorMap, vUv).xyz, 1.0);

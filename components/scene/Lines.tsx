@@ -1,9 +1,11 @@
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
-import { Color, InstancedMesh, Material, Object3D } from 'three';
+import { Color, InstancedMesh, Material, Object3D, ShaderMaterial } from 'three';
 import { useAltScroll } from '../utils/hooks';
 import { polar2xyz, uniformSphereSample } from '../utils/utils';
 import { getVisibleRadius } from './global';
+// import line_fs from '../shaders/line_fs.glsl'
+// import line_vs from '../shaders/line_vs.glsl'
 
 const tempObject = new Object3D();
 const tempColor = new Color();
@@ -65,6 +67,16 @@ export default function Lines() {
             mat.opacity = Math.max(0.1, 1 - scrollAmount);
         }
     })
+
+    // shaders
+    // const uniforms = {
+    //     uScrolledAmount: { value: 0 }
+    // }
+    // const material = new ShaderMaterial({
+    //     uniforms: uniforms,
+    //     vertexShader: line_vs,
+    //     fragmentShader: line_fs
+    // })
 
     return (
         <instancedMesh ref={meshRef} args={[null, null, amount]}>

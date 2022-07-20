@@ -14,21 +14,20 @@ import sphere_fs from '../shaders/sphere_fs.glsl';
 import sphere_vs from '../shaders/sphere_vs.glsl';
 import { useAltScroll } from '../utils/hooks';
 import { useMaxAnimationDuration } from '../utils/utils';
-import { meshNameToPosition } from './ballMeshData';
 import { getMainBallRadius } from './global';
 
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 const rotateVector = new Vector3(1, 1, 1).normalize();
-const centerOffsetVector = new Vector3(0, 0, 0)
 
 // gltf loader
 const loader = new GLTFLoader();
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderConfig({ type: 'js' });
-dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.3/');
-dracoLoader.preload()
+dracoLoader.setDecoderPath(
+    'https://www.gstatic.com/draco/versioned/decoders/1.5.3/'
+);
 
 export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
     const [gltf, setgltf] = useState(null);
@@ -40,7 +39,7 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
             function (gltf) {
                 // console.log('loaded gltf');
                 // console.log(gltf);
-                setgltf(gltf)
+                setgltf(gltf);
             },
             undefined,
             function (error) {
@@ -59,22 +58,32 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
     const [meshes, setMeshes] = useState([]);
     const [meshMaterials, setMeshMaterials] = useState([]);
     const [otherNodes, setOtherNodes] = useState([]);
-    const [animations, setAnimations] = useState([])
-    const [centerOffset, setCenterOffset] = useState(new Vector3(0,0,0))
+    const [animations, setAnimations] = useState([]);
+    const [centerOffset, setCenterOffset] = useState(new Vector3(0, 0, 0));
 
     useEffect(() => {
-        if( gltf) {
-            const [meshes_, meshMaterials_, otherNodes_] = computeMeshes(gltf.scene.children);
+        if (gltf) {
+            const [meshes_, meshMaterials_, otherNodes_] = computeMeshes(
+                gltf.scene.children
+            );
             setMeshes(meshes_);
             setMeshMaterials(meshMaterials_);
-            setOtherNodes(otherNodes_.map(node => <group key={node.name} name={node.name} position={node.position}/>))
-            setAnimations(gltf.animations)
-            
+            setOtherNodes(
+                otherNodes_.map((node) => (
+                    <group
+                        key={node.name}
+                        name={node.name}
+                        position={node.position}
+                    />
+                ))
+            );
+            setAnimations(gltf.animations);
+
             // set the center offset vector
             // this ensure the ball is at the center
-            const box = new Box3().setFromObject( gltf.scene );
-            const center = box.getCenter( new Vector3() );
-            setCenterOffset(center.multiplyScalar(-1))
+            const box = new Box3().setFromObject(gltf.scene);
+            const center = box.getCenter(new Vector3());
+            setCenterOffset(center.multiplyScalar(-1));
         }
     }, [gltf]);
 
@@ -148,21 +157,20 @@ function computeMeshes(nodes: any[]) {
         depthWrite: true,
     });
 
-    const meshNodes: Mesh[] = []
-    const otherNodes: Object3D[] = []
-    
-    nodes.forEach(node => {
-        if (node.type == 'Mesh') meshNodes.push(node)
-        else otherNodes.push(node)
-    })
-        
-        
+    const meshNodes: Mesh[] = [];
+    const otherNodes: Object3D[] = [];
+
+    nodes.forEach((node) => {
+        if (node.type == 'Mesh') meshNodes.push(node);
+        else otherNodes.push(node);
+    });
+
     const meshes = Array(meshNodes.length);
     const materials = Array(meshNodes.length);
     meshNodes.forEach((mesh, i) => {
         const geometry = mesh.geometry;
         const material = sharedMaterial.clone();
-        const position = mesh.position //meshNameToPosition[mesh.name];
+        const position = mesh.position; //meshNameToPosition[mesh.name];
 
         if (Math.random() < 0.15) {
             material.wireframe = true;
@@ -174,8 +182,8 @@ function computeMeshes(nodes: any[]) {
         material.uniforms.uPosition.value = position;
 
         if (distToCenter > 0.8 && Math.random() < 0.15) {
-            material.uniforms.uWaveAmount.value = Math.random() * 0.1;
-            material.uniforms.uOffsetAmount.value = Math.random() * 0.1;
+            material.uniforms.uWaveAmount.value = Math.random() * 0.05;
+            material.uniforms.uOffsetAmount.value = Math.random() * 0.05;
             material.uniforms.uWaveSpeed.value = Math.random() * 0.2 + 1;
         }
 

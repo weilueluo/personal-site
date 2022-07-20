@@ -12,7 +12,7 @@ export default function GradientBackground() {
     const uniforms = {
         uColorA: { value: new Color(0x1e3966) },
         uColorB: { value: new Color(0x661e49) },
-        uScrolledAmount: { value: scroll }
+        uScrolledAmount: { value: 0 }
     }
 
     const material = new ShaderMaterial({
