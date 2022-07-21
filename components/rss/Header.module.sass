@@ -1,4 +1,4 @@
-@use './common' as common
+@use '../common/common'
     
 $header-width: 350px
 
@@ -25,7 +25,7 @@ $header-width: 350px
         height: 1.6rem
 
 .header-button
-    @include common.rss-button
+    @include common.button
 
 .header-button.filter-active
     background-color: common.$locked-color

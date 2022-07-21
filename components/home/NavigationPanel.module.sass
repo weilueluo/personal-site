@@ -1,0 +1,42 @@
+@use '../common/common'
+
+.nav-panel
+
+    position: fixed
+    top: 10px
+    right: 10px
+
+    background-color: #ffffff7f
+
+    padding: 0px 5px
+    border-radius: 5px
+
+    display: flex
+    align-items: center
+    flex-direction: column
+    width: 100px
+
+    // transition: 0.5s
+
+    z-index: 99
+
+    &::after
+        content: ''
+
+.nav-icon
+    height: 32px
+    width: 32px
+    color: white
+
+
+.nav-item
+    @include common.button
+    margin: 6px 0px
+    width: 90%
+
+.nav-item-name
+
+
+// .nav-active
+//     .nav-icon
+//         width: 100px

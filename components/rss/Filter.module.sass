@@ -1,4 +1,4 @@
-@use 'common' as common
+@use '../common/common'
     
 .panels-container
     @include common.content-container
@@ -17,7 +17,7 @@
 
 
 .title
-    @include common.rss-button
+    @include common.button
     background-color: transparent
     
     text-align: center
@@ -40,5 +40,5 @@
     justify-content: center
 
 .filter-button
-    @include common.rss-button
+    @include common.button
     

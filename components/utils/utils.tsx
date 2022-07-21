@@ -91,7 +91,7 @@ export function deg2rad(deg) {
     return deg * (Math.PI / 180)
 }
 
-export function isDevelopmentEnv() {
+export function isDevEnv() {
     return process && process.env.NODE_ENV === 'development';
 }
 

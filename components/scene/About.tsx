@@ -7,7 +7,7 @@ import {
     useAltScroll,
     useMouseHover,
 } from '../utils/hooks';
-import { isDevelopmentEnv } from '../utils/utils';
+import { isDevEnv } from '../utils/utils';
 
 const tempVector = new Vector3(0, 0, 0);
 const zeroVector = new Vector3(0, 0, 0);
@@ -24,7 +24,7 @@ export default function About() {
 
     const onClick = () => {
         if (meshHovered) {
-            if (isDevelopmentEnv()) {
+            if (isDevEnv()) {
                 window.open('/about');
             } else {
                 window.open('/about.html');
