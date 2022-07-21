@@ -67,7 +67,7 @@ export default function NavigationPanel() {
 function PanelItem(props: NavItem) {
 
     let link = props.link || '';
-    if (isDevEnv() && link.startsWith('/')) {
+    if (!isDevEnv() && link.startsWith('/')) {
         link = link + '.html'
     }
 
