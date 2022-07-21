@@ -1,7 +1,7 @@
 import { OrbitControls, Stats } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { ACESFilmicToneMapping, sRGBEncoding } from 'three';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { ACESFilmicToneMapping, sRGBEncoding, Vector, Vector3 } from 'three';
 import About from '../scene/About';
 import Ball from '../scene/Ball';
 import CV from '../scene/CV';
@@ -13,6 +13,7 @@ import RSS from '../scene/RSS';
 import Stars from '../scene/Stars';
 import styles from '../styles/StatsPanel.module.sass';
 import SurroundingText from '../Text/SurroundingText';
+import { lightPositionContext } from '../utils/context';
 import { getDeviceDependent, initMobileScroll } from '../utils/hooks';
 
 
@@ -78,12 +79,13 @@ function Lights() {
     const lightRef = useRef();
 
     const mapSize = getDeviceDependent(128, 512);
+    const position = useContext(lightPositionContext)
 
     return (
         <>
             <directionalLight
                 ref={lightRef}
-                position={[100, 100, 0]}
+                position={position}
                 color={0xffffff}
                 intensity={5}
                 castShadow
@@ -98,6 +100,22 @@ function Lights() {
             />
 
             <ambientLight color={0xffffff} intensity={1.0} />
+
+            <mesh
+                castShadow
+                receiveShadow
+                // rotation={[Math.PI / 4, 0, 0]}
+                position={position}
+            >
+                <sphereBufferGeometry args={[1, 16, 16]} />
+                <meshStandardMaterial
+                    color={0x34d3eb}
+                    emissive={0x0d2f5c}
+                    emissiveIntensity={1}
+                    transparent={true}
+                    opacity={1}
+                />
+            </mesh>
         </>
     );
 }

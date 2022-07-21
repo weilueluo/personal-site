@@ -1,5 +1,5 @@
 import { useFrame } from '@react-three/fiber';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import {
     AnimationMixer,
     Box3,
@@ -18,6 +18,10 @@ import { getMainBallRadius } from './global';
 
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { lightPositionContext } from '../utils/context';
+
+
+const FLOAT_BALL = false;
 
 const rotateVector = new Vector3(1, 1, 1).normalize();
 
@@ -61,10 +65,13 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
     const [animations, setAnimations] = useState([]);
     const [centerOffset, setCenterOffset] = useState(new Vector3(0, 0, 0));
 
+    const lightPosition = useContext(lightPositionContext);
+    
     useEffect(() => {
         if (gltf) {
             const [meshes_, meshMaterials_, otherNodes_] = computeMeshes(
-                gltf.scene.children
+                gltf.scene.children,
+                lightPosition
             );
             setMeshes(meshes_);
             setMeshMaterials(meshMaterials_);
@@ -138,7 +145,7 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
     );
 }
 
-function computeMeshes(nodes: any[]) {
+function computeMeshes(nodes: any[], lightPosition: Vector3) {
     const uniforms = {
         uTime: { value: 0.5 },
         uPosition: { value: new Vector3(0, 0, 0) },
@@ -147,6 +154,7 @@ function computeMeshes(nodes: any[]) {
         uWaveSpeed: { value: 0.0 },
         uScrolledAmount: { value: 0.0 },
         uDoWave: { value: true },
+        uLightPosition: { value: lightPosition }
     };
 
     const sharedMaterial = new ShaderMaterial({
@@ -177,14 +185,16 @@ function computeMeshes(nodes: any[]) {
             // material.depthWrite = false;
         }
 
-        const distToCenter = position.clone().length();
 
         material.uniforms.uPosition.value = position;
-
-        if (distToCenter > 0.8 && Math.random() < 0.15) {
-            material.uniforms.uWaveAmount.value = Math.random() * 0.05;
-            material.uniforms.uOffsetAmount.value = Math.random() * 0.05;
-            material.uniforms.uWaveSpeed.value = Math.random() * 0.2 + 1;
+        
+        if (FLOAT_BALL) {
+            const distToCenter = position.clone().length();
+            if (distToCenter > 0.8 && Math.random() < 0.15) {
+                material.uniforms.uWaveAmount.value = Math.random() * 0.05;
+                material.uniforms.uOffsetAmount.value = Math.random() * 0.05;
+                material.uniforms.uWaveSpeed.value = Math.random() * 0.2 + 1;
+            }
         }
 
         materials[i] = material;

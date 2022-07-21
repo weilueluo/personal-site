@@ -7,6 +7,7 @@ precision mediump float;
 uniform float uTime;
 uniform vec3 uPosition;
 uniform float uScrolledAmount;
+uniform vec3 uLightPosition;
 
 varying vec3 vNormal;
 varying vec2 vUv;
@@ -18,17 +19,8 @@ bool isSurface() {
 }
 
 vec3 applyShadow(in vec3 color) {
-    float angle = acos(dot(normalize(uPosition), normalize(vNormal)));
-    for (int i = 1; i <= 8; i++) {
-        if (angle < PI / float(i)) {
-            color *= 1.01;
-        }
-        if (angle < PI / (float(i)+0.5)) {
-            color *= 1.01;
-        }
-    }
-
-    return color;
+    float angle = dot(normalize(uLightPosition), normalize(vNormal));
+    return color * angle;
 }
 
 vec2 tile(vec2 uv, float _zoom){
@@ -48,13 +40,21 @@ float make_cross(vec2 uv, float width) {
 }
 
 
-const float RF_COEF = .75;
+const float n1 = 1.0; //air refractive index
+const float n2 = 1.333; //some refractive index
+const vec3 FRESNEL_COLOR = vec3(1., 1., 1.);
 vec3 applyFresnel(vec3 color) {
     vec3 camNormal = normalize(cameraPosition);
     float cosTheta = dot(camNormal, vNormal);
-    float coef = RF_COEF + (1.0 - RF_COEF) * pow(1.0 - cosTheta, 5.0);
 
-    return color * coef;
+    // float fresnel = clamp(1.0 - cosTheta, 0.0, 1.0);
+
+    // return color + FRESNEL_COLOR * fresnel;
+
+    float R0 = pow((n1 - n2) / (n1 + n2), 2.0);
+    float coef = R0 + (1.0 - R0) * pow(1.0 - cosTheta, 5.0);
+
+    return color + FRESNEL_COLOR * coef;
 }
 
 // const vec3 black = vec3(0., 0., 0.);
@@ -74,10 +74,10 @@ void main() {
     // if (lines > 0.1 && surface) {
     //     color = vec3(1.0,1.0,1.0);
     // }
-
+    // color = applyFresnel(color);
     color = applyShadow(color);
-    color = applyFresnel(color);
     color = mix(color, color * .01, uScrolledAmount);
+    color = clamp(color, 0.0, 1.0);
     gl_FragColor = vec4(color, 1.);
 
     //gl_FragColor = vec4(vNormal, 1.0);
