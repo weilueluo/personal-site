@@ -24,6 +24,7 @@ import { lightPositionContext } from '../utils/context';
 const FLOAT_BALL = false;
 
 const rotateVector = new Vector3(1, 1, 1).normalize();
+const tempVector = new Vector3(0,0,0);
 
 // gltf loader
 const loader = new GLTFLoader();
@@ -112,27 +113,29 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
         const time = state.clock.getElapsedTime();
         const scrolled = altScroll > 0.15;
 
+        // set animation state
         if (mixer.current) {
             mixer.current.setTime(maxAnimationDuration * altScroll);
         }
-        // console.log(`scrolled: ${scrolled}`);
 
+        // set ball rotate state
+        // const scene = ballRef.current as Group;
+        // if (scene) {
+        //     scene.rotateOnAxis(
+        //         rotateVector,
+        //         state.clock.getDelta() * (scrolled ? 0.0 : 5) // do not rotate if scrolled
+        //     );
+        // }
+        // console.log(`scrolled: ${scrolled}`);
+        // tempVector.set(scene.rotation.x, scene.rotation.y, scene.rotation.z)
+        // console.log(tempVector);
+        
         meshMaterials.forEach((mat) => {
             mat.uniforms.uTime.value = time;
             mat.uniforms.uScrolledAmount.value = altScroll;
             mat.uniforms.uDoWave.value = !scrolled; // do not wave if scrolled
+            // mat.uniforms.uBallRotation.value = tempVector;
         });
-    });
-
-    useFrame((state) => {
-        const scene = ballRef.current as Group;
-        const scrolled = altScroll > 0.1;
-        if (scene) {
-            scene.rotateOnAxis(
-                rotateVector,
-                state.clock.getDelta() * (scrolled ? 0.0 : 1.5) // do not rotate if scrolled
-            );
-        }
     });
 
     return (
@@ -154,7 +157,8 @@ function computeMeshes(nodes: any[], lightPosition: Vector3) {
         uWaveSpeed: { value: 0.0 },
         uScrolledAmount: { value: 0.0 },
         uDoWave: { value: true },
-        uLightPosition: { value: lightPosition }
+        uLightPosition: { value: lightPosition },
+        uBallRotation: { value: 0 },
     };
 
     const sharedMaterial = new ShaderMaterial({
@@ -184,7 +188,6 @@ function computeMeshes(nodes: any[], lightPosition: Vector3) {
             material.wireframe = true;
             // material.depthWrite = false;
         }
-
 
         material.uniforms.uPosition.value = position;
         

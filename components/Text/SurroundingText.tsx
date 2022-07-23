@@ -1,5 +1,5 @@
-import { useFrame, useLoader } from '@react-three/fiber';
-import { useEffect, useMemo, useState } from 'react';
+import { useFrame } from '@react-three/fiber';
+import { useContext, useEffect, useState } from 'react';
 import { DoubleSide, ShaderMaterial, Vector3 } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
@@ -7,14 +7,16 @@ import { getDeviceDependent, useAltScroll } from '../utils/hooks';
 
 import text_fs from '../shaders/text_fs.glsl';
 import text_vs from '../shaders/text_vs.glsl';
+import { lightPositionContext } from '../utils/context';
 
 export default function SurroundingText(props) {
     const altScroll = useAltScroll();
 
-
     const [meshes, setMeshes] = useState([])
     const [meshMaterials, setMeshMaterials] = useState([])
     const [offsets, setOffsets] = useState([])
+
+    const lightPosition = useContext(lightPositionContext)
 
     const fontLoader = new FontLoader();
     useEffect(() => {
@@ -23,6 +25,7 @@ export default function SurroundingText(props) {
                 characters,
                 font,
                 fontSize,
+                lightPosition,
                 props
             )
             setMeshes(meshes_)
@@ -34,7 +37,6 @@ export default function SurroundingText(props) {
     const characters = props.text.split('');
 
     const fontSize = getDeviceDependent(props.fontSize * 0.6, props.fontSize)
-
 
     const scrollAmount = useAltScroll()
 
@@ -60,14 +62,14 @@ export default function SurroundingText(props) {
             mat.uniforms.uCenterOffset.value = offset;
             mat.uniforms.uScrollAmount.value = scrollAmount;
 
-            theta +=  Math.atan2(offset, mat.uniforms.uRadius.value) + charSpacingAngle;
+            theta += Math.atan2(offset, mat.uniforms.uRadius.value) + charSpacingAngle;
         }
     });
 
     return <group position={props.position}>{meshes}</group>;
 }
 
-function computeMeshAndMaterial(characters, font, fontSize, props) {
+function computeMeshAndMaterial(characters, font, fontSize, lightPosition, props) {
 
     const spaceWidth = 0.5;
 
@@ -83,6 +85,7 @@ function computeMeshAndMaterial(characters, font, fontSize, props) {
         uTheta: { value: 0.0 },
         uScrollAmount: { value: 0.0 },
         uFadeInOnScrollSpeed: { value: props.fadeInOnScrollSpeed },
+        uLightPosition: { value: lightPosition }
     };
 
     const sharedMaterial = new ShaderMaterial({

@@ -83,7 +83,7 @@ function Lights() {
 
     return (
         <>
-            <directionalLight
+            <spotLight
                 ref={lightRef}
                 position={position}
                 color={0xffffff}

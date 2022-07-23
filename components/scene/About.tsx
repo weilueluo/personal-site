@@ -14,7 +14,8 @@ const zeroVector = new Vector3(0, 0, 0);
 const mobilePosition = new Vector3(3, 3, 3);
 const desktopPosition = new Vector3(5, 5, 5);
 
-export default function About() {
+export default function About(props) {
+    const lightPosition = props.lightPosition;
     const meshRef = useRef();
 
     const meshHovered = useMouseHover(meshRef);

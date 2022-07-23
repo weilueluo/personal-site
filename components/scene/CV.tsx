@@ -3,7 +3,9 @@ import { useEffect, useRef } from 'react';
 import ThreeSurroundingText from '../Text/ThreeSurroundingText';
 import { getDeviceDependent, useMouseHover } from '../utils/hooks';
 
-export default function CV() {
+export default function CV(props) {
+    const lightPosition = props.lightPosition;
+    
     const meshRef = useRef();
 
     const meshHovered = useMouseHover(meshRef);

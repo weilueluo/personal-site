@@ -4,14 +4,10 @@ precision mediump float;
 
 #define PI 3.1415926538
 
-uniform float uOpacity;
 uniform float uTime;
 uniform float uRadius;
-uniform float uCenterOffset;
 uniform float uPhi;
 uniform float uTheta;
-
-varying vec3 vNormal;
 
 #pragma glslify: make_translation = require('./partials/translation.glsl')
 #pragma glslify: make_local_rotation = require('./partials/local_rotation.glsl')
@@ -32,8 +28,6 @@ void main() {
     vec3 offset = polar2xyz(uRadius, phi, theta);
     mat4 translate_mat = make_translation(offset);
     mat4 rotation_mat = make_local_rotation(vec3(0, 1, 0), -theta);
-
-    vNormal = (translate_mat * rotation_mat * vec4(normal, 1.0)).xyz;
 
     gl_Position = projectionMatrix * modelViewMatrix * translate_mat * rotation_mat * vec4(position, 1.0);
 }

@@ -72,7 +72,7 @@ function PanelItem(props: NavItem) {
     }
 
     const onClick = () => {
-        window.open(link, '_blank');
+        window.open(link);
     }
 
     return (

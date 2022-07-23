@@ -8,9 +8,12 @@ uniform float uTime;
 uniform vec3 uPosition;
 uniform float uScrolledAmount;
 uniform vec3 uLightPosition;
+// uniform vec3 uBallRotation;
 
 varying vec3 vNormal;
 varying vec2 vUv;
+
+#pragma glslify: euler2rotation = require('./partials/euler2rotation.glsl')
 
 
 bool isSurface() {
@@ -18,8 +21,9 @@ bool isSurface() {
     return angle < PI / 8.0;
 }
 
-vec3 applyShadow(in vec3 color) {
-    float angle = dot(normalize(uLightPosition), normalize(vNormal));
+vec3 applyShadow(in vec3 color, vec3 lightPosition) {
+
+    float angle = dot(normalize(lightPosition), normalize(vNormal));
     return color * angle;
 }
 
@@ -75,8 +79,14 @@ void main() {
     //     color = vec3(1.0,1.0,1.0);
     // }
     // color = applyFresnel(color);
-    color = applyShadow(color);
+
+    // mat3 rotation = euler2rotation(uBallRotation);
+    // vec3 lightPosition = uLightPosition * rotation;
+
+    color = applyShadow(color, uLightPosition);
     color = mix(color, color * .01, uScrolledAmount);
+
+
     color = clamp(color, 0.0, 1.0);
     gl_FragColor = vec4(color, 1.);
 
