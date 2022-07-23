@@ -8,7 +8,7 @@ uniform float uTime;
 uniform vec3 uPosition;
 uniform float uScrolledAmount;
 uniform vec3 uLightPosition;
-// uniform vec3 uBallRotation;
+uniform mat3 uBallRotation;
 
 varying vec3 vNormal;
 varying vec2 vUv;
@@ -80,12 +80,14 @@ void main() {
     // }
     // color = applyFresnel(color);
 
-    // mat3 rotation = euler2rotation(uBallRotation);
-    // vec3 lightPosition = uLightPosition * rotation;
+    // the ball is rotating, the rotation is applied on the sphere
+    // so each individual piece does not know this
+    // so the position of the piece is not updated
+    // so we apply the rotate to light as well to get the correct position
+    vec3 lightPosition = uLightPosition * uBallRotation;
 
-    color = applyShadow(color, uLightPosition);
+    color = applyShadow(color, lightPosition);
     color = mix(color, color * .01, uScrolledAmount);
-
 
     color = clamp(color, 0.0, 1.0);
     gl_FragColor = vec4(color, 1.);

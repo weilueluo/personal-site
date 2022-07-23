@@ -5,6 +5,8 @@ import {
     Box3,
     Group,
     LoopPingPong,
+    Matrix3,
+    Matrix4,
     Mesh,
     Object3D,
     ShaderMaterial,
@@ -20,11 +22,14 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { lightPositionContext } from '../utils/context';
 
+import Moon from '../scene/Moon';
+
 
 const FLOAT_BALL = false;
 
 const rotateVector = new Vector3(1, 1, 1).normalize();
-const tempVector = new Vector3(0,0,0);
+const tempMat3 = new Matrix3();
+const tempMat4 = new Matrix4();
 
 // gltf loader
 const loader = new GLTFLoader();
@@ -67,7 +72,7 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
     const [centerOffset, setCenterOffset] = useState(new Vector3(0, 0, 0));
 
     const lightPosition = useContext(lightPositionContext);
-    
+
     useEffect(() => {
         if (gltf) {
             const [meshes_, meshMaterials_, otherNodes_] = computeMeshes(
@@ -119,32 +124,39 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
         }
 
         // set ball rotate state
-        // const scene = ballRef.current as Group;
-        // if (scene) {
-        //     scene.rotateOnAxis(
-        //         rotateVector,
-        //         state.clock.getDelta() * (scrolled ? 0.0 : 5) // do not rotate if scrolled
-        //     );
-        // }
+        const scene = ballRef.current as Group;
+        if (scene) {
+            scene.rotation.z += (scrolled ? 0.0 : 0.002);
+            scene.rotation.y += (scrolled ? 0.0 : 0.001);
+            scene.rotation.x += (scrolled ? 0.0 : 0.003);
+            // scene.rotateOnAxis(
+            //     rotateVector,
+            //     state.clock.getDelta() *  (scrolled ? 0.0 : 0.5);// do not rotate if scrolled
+            // );
+        }
         // console.log(`scrolled: ${scrolled}`);
-        // tempVector.set(scene.rotation.x, scene.rotation.y, scene.rotation.z)
+        tempMat3.setFromMatrix4(tempMat4.makeRotationFromEuler(scene.rotation))
         // console.log(tempVector);
         
         meshMaterials.forEach((mat) => {
             mat.uniforms.uTime.value = time;
             mat.uniforms.uScrolledAmount.value = altScroll;
             mat.uniforms.uDoWave.value = !scrolled; // do not wave if scrolled
-            // mat.uniforms.uBallRotation.value = tempVector;
+            mat.uniforms.uBallRotation.value = tempMat3;
         });
     });
 
     return (
-        <group ref={ballRef} scale={radius} dispose={null} {...props}>
-            <group name='Scene' position={centerOffset}>
-                {otherNodes}
-                {meshes}
+        <>
+            <Moon />
+
+            <group ref={ballRef} scale={radius} dispose={null} {...props}>
+                <group name='Scene' position={centerOffset}>
+                    {otherNodes}
+                    {meshes}
+                </group>
             </group>
-        </group>
+        </>
     );
 }
 
@@ -158,7 +170,7 @@ function computeMeshes(nodes: any[], lightPosition: Vector3) {
         uScrolledAmount: { value: 0.0 },
         uDoWave: { value: true },
         uLightPosition: { value: lightPosition },
-        uBallRotation: { value: 0 },
+        uBallRotation: { value: tempMat3 },
     };
 
     const sharedMaterial = new ShaderMaterial({

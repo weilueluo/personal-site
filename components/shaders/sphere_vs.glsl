@@ -10,7 +10,7 @@ uniform float uOffsetAmount;
 uniform float uScrolledAmount;
 uniform float uWaveSpeed;
 uniform bool uDoWave;
-// uniform float uRotateTheta;
+// uniform vec3 uBallRotation;
 
 varying vec3 vNormal;
 varying vec2 vUv;
@@ -48,7 +48,8 @@ void main() {
     // mat4 rotation_mat = rotateX(uRotateTheta); //make_local_rotation(vec3(1., 0., 0.), uRotateTheta);
     // mat4 trans2_mat = make_translation(uPosition);
 
-    gl_Position = projectionMatrix * modelViewMatrix *  vec4(newPosition, 1.0);
+
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
     vNormal = normal;
     vUv = uv;
 }

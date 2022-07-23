@@ -34,7 +34,7 @@ export default function NavigationPanel() {
 
     useEffect(() => {
         const isMobile = getDeviceDependent(true, false);
-        console.log(isMobile);
+        // console.log(isMobile);
         
         setIsMobile(isMobile)
         setActive(!isMobile)

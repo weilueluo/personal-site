@@ -1,5 +1,5 @@
 import { OrbitControls, Stats } from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ACESFilmicToneMapping, sRGBEncoding, Vector, Vector3 } from 'three';
 import About from '../scene/About';
@@ -9,6 +9,7 @@ import { getMainBallRadius, getNScrollPages } from '../scene/global';
 import GradientBackground from '../scene/GradientBackground';
 import Lines from '../scene/Lines';
 import LoaderProgress from '../scene/LoaderProgress';
+import Moon from '../scene/Moon';
 import RSS from '../scene/RSS';
 import Stars from '../scene/Stars';
 import styles from '../styles/StatsPanel.module.sass';
@@ -101,7 +102,7 @@ function Lights() {
 
             <ambientLight color={0xffffff} intensity={1.0} />
 
-            <mesh
+            {/* <mesh
                 castShadow
                 receiveShadow
                 // rotation={[Math.PI / 4, 0, 0]}
@@ -114,12 +115,33 @@ function Lights() {
                     emissiveIntensity={1}
                     transparent={true}
                     opacity={1}
-                />
-            </mesh>
+                /> 
+            </mesh>*/}
         </>
     );
 }
 
+const tempVector = new Vector3(10,10,0)
+
+
+function ContentProvider() {
+
+    const [positionVector, setPositionVector] = useState(tempVector);
+
+    // setPositionVector(tempVector.set(10, 10, 0))
+
+    // useFrame((state) => {
+    //     setPositionVector(tempVector.set(tempVector.x + Math.sin(state.clock.elapsedTime), tempVector.y, tempVector.z))
+    //     // console.log(positionVector);
+    // }, [])
+
+    return (
+        // <Content />
+        // <lightPositionContext.Provider value={positionVector}>
+            <Content />
+        // </ lightPositionContext.Provider>
+    )
+}
 
 export default function Home() {
     const [pages, setPages] = useState(1)
@@ -131,7 +153,7 @@ export default function Home() {
     return (
         <>
             <MyCanvas>
-                <Content />
+                <ContentProvider />
             </MyCanvas>
             <LoaderProgress />
             <div>
