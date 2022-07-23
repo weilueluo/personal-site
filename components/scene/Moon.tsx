@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { lightPositionContext } from '../utils/context'
 import moon_fs from '../shaders/moon_fs.glsl'
 import moon_vs from '../shaders/moon_vs.glsl'
+import {ShaderMaterial} from 'three'
 
 export default function Moon(props) {
 
@@ -15,7 +16,7 @@ export default function Moon(props) {
     const material = new ShaderMaterial({
         uniforms: uniforms,
         vertexShader: moon_vs,
-        vertexShader: moon_fs,
+        fragmentShader: moon_fs,
     })
 
     return (
