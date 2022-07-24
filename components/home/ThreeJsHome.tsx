@@ -14,6 +14,7 @@ import RSS from '../scene/RSS';
 import Stars from '../scene/Stars';
 import styles from '../styles/StatsPanel.module.sass';
 import SurroundingText from '../Text/SurroundingText';
+import ThreeSurroundingText from '../Text/ThreeSurroundingText';
 import { lightPositionContext } from '../utils/context';
 import { getDeviceDependent, initMobileScroll } from '../utils/hooks';
 
@@ -28,13 +29,21 @@ function Content() {
 
     return (
         <>
+            <Moon />
             <Ball />
             <CV />
             <RSS />
             <About />
             <Lines />
             <Stars />
-            <SurroundingText
+            <ThreeSurroundingText
+                text={'Weilue\' Place'}
+                radius={textRadius}
+                rotationZ={0}
+                // initOffset={Math.PI}
+                fadeInOnScrollSpeed={-1}
+            />
+            {/* <SurroundingText
                 text={"Weilue's Place"}
                 radius={textRadius}
                 rotationZ={0}
@@ -54,7 +63,7 @@ function Content() {
                 rotationZ={-Math.PI / 4}
                 initOffset={-Math.PI / 2}
                 fadeInOnScrollSpeed={-1}
-            />
+            /> */}
             <GradientBackground />
             <Lights />
 

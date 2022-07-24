@@ -1,10 +1,19 @@
 import { useFrame } from '@react-three/fiber';
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
+import { Group, Matrix3, Matrix4, ShaderMaterial, Vector3 } from 'three';
 import ThreeSurroundingText from '../Text/ThreeSurroundingText';
+import { lightPositionContext } from '../utils/context';
 import { getDeviceDependent, useMouseHover } from '../utils/hooks';
+import inner_ball_vs from '../shaders/inner_ball_vs.glsl'
+import inner_ball_fs from '../shaders/inner_ball_fs.glsl'
+import { useInnerBallMaterial } from './hooks';
 
-export default function CV(props) {
-    const lightPosition = props.lightPosition;
+
+const tempMat3 = new Matrix3()
+const tempMat4 = new Matrix4()
+const tempVector = new Vector3(0, 0, 0);
+
+export default function CV() {
     
     const meshRef = useRef();
 
@@ -22,12 +31,16 @@ export default function CV(props) {
         }
     };
 
+    //shaders
+    const groupRef = useRef()
+    const material = useInnerBallMaterial(groupRef, meshRef, new Vector3(52, 211, 235).divideScalar(255.0))
+
     const sphereRadius = getDeviceDependent(1.5, 2)
     const textRadius = getDeviceDependent(2, 3)
     const ballDetails = getDeviceDependent(16, 32)
 
     return (
-        <>
+        <group ref={groupRef}>
             <ThreeSurroundingText
                 text={'CV'}
                 radius={textRadius}
@@ -43,16 +56,17 @@ export default function CV(props) {
                 receiveShadow
                 onClick={onClick}
                 rotation={[Math.PI / 4, 0, 0]}
+                material={material}
             >
                 <sphereBufferGeometry args={[sphereRadius, ballDetails, ballDetails]} />
-                <meshStandardMaterial
+                {/* <meshStandardMaterial
                     color={0x34d3eb}
                     emissive={0x0d2f5c}
                     emissiveIntensity={1}
                     transparent={true}
                     opacity={1}
-                />
+                /> */}
             </mesh>
-        </>
+        </group>
     );
 }

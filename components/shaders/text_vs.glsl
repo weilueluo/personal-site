@@ -33,7 +33,9 @@ void main() {
     mat4 translate_mat = make_translation(offset);
     mat4 rotation_mat = make_local_rotation(vec3(0, 1, 0), -theta);
 
+    vec3 newPosition = (translate_mat * rotation_mat * vec4(position, 1.0)).xyz;
+
     vNormal = (translate_mat * rotation_mat * vec4(normal, 1.0)).xyz;
 
-    gl_Position = projectionMatrix * modelViewMatrix * translate_mat * rotation_mat * vec4(position, 1.0);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
 }

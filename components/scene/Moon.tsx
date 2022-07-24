@@ -1,5 +1,5 @@
 
-import { useContext, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { lightPositionContext } from '../utils/context'
 import moon_fs from '../shaders/moon_fs.glsl'
 import moon_vs from '../shaders/moon_vs.glsl'
@@ -10,7 +10,7 @@ const tempVector = new Vector3()
 const tempMat3 = new Matrix3()
 const tempMat4 = new Matrix4()
 
-export default function Moon(props) {
+export default function Moon() {
 
     const position = useContext(lightPositionContext)
 
@@ -32,19 +32,25 @@ export default function Moon(props) {
 
     //         const axis = tempVector.set(1,0,0)
     //         const radians = 0.01
-// 
+
             // tempMat4.makeRotationAxis(axis, radians);
             // mesh.matrix.multiplyMatrices(tempMat4, mesh.matrix); // r56
             // tempMat4.extractRotation(mesh.matrix);
             // mesh.rotation.setFromRotationMatrix(tempMat4, mesh.rotation.order ); 
             // console.log(state.clock.elapsedTime);
 
-            // // save current position
+            // save current position
             
-            // if(state.clock.elapsedTime > 1) {
+            // if(state.clock.elapsedTime > 0.01) { // not sure why
             //     mesh.position.setFromMatrixPosition( mesh.matrix );
             // }
-        // }
+    //     }
+    // })
+    // useEffect(() => {
+    //     if(meshRef.current) {
+    //         console.log(meshRef.current.position);
+            
+    //     }
     // })
 
     return (

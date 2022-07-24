@@ -6,11 +6,13 @@ precision mediump float;
 uniform float uFadeInOnScrollSpeed;
 uniform float uScrollAmount;
 uniform vec3 uLightPosition;
+uniform vec3 uPosition;
 
 varying vec3 vNormal;
 
+
 vec3 applyShadow(vec3 color) {
-    float angle = dot(normalize(vNormal), normalize(uLightPosition));
+    float angle = dot(normalize(vNormal), normalize(uLightPosition - uPosition));
 
     return angle * color;
 }

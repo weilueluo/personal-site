@@ -148,8 +148,6 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
 
     return (
         <>
-            <Moon />
-
             <group ref={ballRef} scale={radius} dispose={null} {...props}>
                 <group name='Scene' position={centerOffset}>
                     {otherNodes}

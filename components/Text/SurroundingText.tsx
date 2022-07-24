@@ -9,6 +9,9 @@ import text_fs from '../shaders/text_fs.glsl';
 import text_vs from '../shaders/text_vs.glsl';
 import { lightPositionContext } from '../utils/context';
 
+
+const tempVector = new Vector3(0, 0, 0)
+
 export default function SurroundingText(props) {
     const altScroll = useAltScroll();
 
@@ -54,6 +57,7 @@ export default function SurroundingText(props) {
         for (let i = 0; i < meshMaterials.length; i++) {
             const mat = meshMaterials[i];
             const offset = offsets[i];
+            const geometry = meshes[i].props.geometry;
 
             mat.uniforms.uTime.value = time;
             mat.uniforms.uRadius.value = radius;
@@ -61,6 +65,7 @@ export default function SurroundingText(props) {
             mat.uniforms.uTheta.value = theta;
             mat.uniforms.uCenterOffset.value = offset;
             mat.uniforms.uScrollAmount.value = scrollAmount;
+            mat.uniforms.uPosition.value = geometry.boundingBox.getCenter(tempVector)
 
             theta += Math.atan2(offset, mat.uniforms.uRadius.value) + charSpacingAngle;
         }
@@ -85,7 +90,8 @@ function computeMeshAndMaterial(characters, font, fontSize, lightPosition, props
         uTheta: { value: 0.0 },
         uScrollAmount: { value: 0.0 },
         uFadeInOnScrollSpeed: { value: props.fadeInOnScrollSpeed },
-        uLightPosition: { value: lightPosition }
+        uLightPosition: { value: lightPosition },
+        uPosition: { value: tempVector}
     };
 
     const sharedMaterial = new ShaderMaterial({

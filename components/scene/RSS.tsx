@@ -1,21 +1,23 @@
 import { useFrame } from '@react-three/fiber';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Group, Mesh, Vector3 } from 'three';
+import { useEffect, useMemo, useRef } from 'react';
+import { Group, Matrix3, Matrix4, Vector3 } from 'three';
 import ThreeSurroundingText from '../Text/ThreeSurroundingText';
 import {
     getDeviceDependent,
     useAltScroll,
-    useMouseHover,
+    useMouseHover
 } from '../utils/hooks';
 import { isDevEnv } from '../utils/utils';
+import { useInnerBallMaterial } from './hooks';
+
 
 const tempVector = new Vector3(0, 0, 0);
 const zeroVector = new Vector3(0, 0, 0);
 const mobilePosition = new Vector3(-3, -3, -3);
 const desktopPosition = new Vector3(-5, -5, -5);
 
-export default function RSS(props) {
-    const lightPosition = props.lightPosition;
+
+export default function RSS() {
     
     const meshRef = useRef();
 
@@ -48,6 +50,9 @@ export default function RSS(props) {
         group.position.set(tempVector.x, tempVector.y, tempVector.z);
     });
 
+     //shaders
+     const material = useInnerBallMaterial(groupRef, meshRef, new Vector3(235, 64, 52).divideScalar(255.0))
+
     const sphereRadius = getDeviceDependent(1.5, 2)
     const textRadius = getDeviceDependent(2, 3)
     const ballDetails = getDeviceDependent(16, 32)
@@ -69,15 +74,16 @@ export default function RSS(props) {
                 receiveShadow
                 onClick={onClick}
                 rotation={[Math.PI / 4, 0, 0]}
+                material={material}
             >
                 <sphereBufferGeometry args={[sphereRadius, ballDetails, ballDetails]} />
-                <meshStandardMaterial
+                {/* <meshStandardMaterial
                     color={0xeb4034}
                     emissive={0x0d2f5c}
                     emissiveIntensity={1}
                     transparent={true}
                     opacity={1}
-                />
+                /> */}
             </mesh>
         </group>
     );
