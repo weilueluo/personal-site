@@ -25,7 +25,7 @@ export default function CV() {
     const onClick = () => {
         if (meshHovered) {  // ensure it is not a pass-through click
             window.open(
-                'https://github.com/Redcxx/cv/blob/master/resume.pdf',
+                'https://github.com/Redcxx/cv',
                 '_blank'
             );
         }
