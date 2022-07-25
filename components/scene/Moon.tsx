@@ -5,6 +5,7 @@ import moon_fs from '../shaders/moon_fs.glsl'
 import moon_vs from '../shaders/moon_vs.glsl'
 import { ShaderMaterial, Vector3, Matrix3 , Matrix4 } from 'three'
 import { useFrame } from '@react-three/fiber'
+import ThreeSurroundingText from '../Text/ThreeSurroundingText';
 
 const tempVector = new Vector3()
 const tempMat3 = new Matrix3()
@@ -53,23 +54,36 @@ export default function Moon() {
     //     }
     // })
 
+    const lightPosition = useContext(lightPositionContext)
+
     return (
-        <mesh
-            ref={meshRef}
-            castShadow
-            receiveShadow
-            // rotation={[Math.PI / 4, 0, 0]}
-            position={position}
-            material={material}
-        >
-            <sphereBufferGeometry args={[1, 16, 16]} />
-            {/* <meshStandardMaterial
-                color={0x34d3eb}
-                emissive={0x0d2f5c}
-                emissiveIntensity={1}
-                transparent={true}
-                opacity={1}
-            /> */}
-        </mesh>
+        <>
+            <ThreeSurroundingText 
+                position={lightPosition}
+                radius={0.6}
+                text='Sun'
+                rotationZ={0}
+                fontSize={0.3}
+                expandOnScrollSpeed={0}
+            />
+        
+            <mesh
+                ref={meshRef}
+                castShadow
+                receiveShadow
+                // rotation={[Math.PI / 4, 0, 0]}
+                position={position}
+                material={material}
+            >
+                <sphereBufferGeometry args={[0.5, 16, 16]} />
+                {/* <meshStandardMaterial
+                    color={0x34d3eb}
+                    emissive={0x0d2f5c}
+                    emissiveIntensity={1}
+                    transparent={true}
+                    opacity={1}
+                /> */}
+            </mesh>
+        </>
     )
 }

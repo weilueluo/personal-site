@@ -163,7 +163,7 @@ export function useCurrentMouseHover() {
     return intersect;
 }
 
-export function useMouseHover(objectRef) {
+export function use3MouseHover(objectRef) {
     const [hover, setHover] = useState(false);
     const intersect = useCurrentMouseHover();
 

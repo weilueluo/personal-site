@@ -3,7 +3,7 @@ import { useContext, useEffect, useRef } from 'react';
 import { Group, Matrix3, Matrix4, ShaderMaterial, Vector3 } from 'three';
 import ThreeSurroundingText from '../Text/ThreeSurroundingText';
 import { lightPositionContext } from '../utils/context';
-import { getDeviceDependent, useMouseHover } from '../utils/hooks';
+import { getDeviceDependent, use3MouseHover } from '../utils/hooks';
 import inner_ball_vs from '../shaders/inner_ball_vs.glsl'
 import inner_ball_fs from '../shaders/inner_ball_fs.glsl'
 import { useInnerBallMaterial } from './hooks';
@@ -17,7 +17,7 @@ export default function CV() {
     
     const meshRef = useRef();
 
-    const meshHovered = useMouseHover(meshRef);
+    const meshHovered = use3MouseHover(meshRef);
     useEffect(() => {
         document.body.style.cursor = meshHovered ? 'pointer' : 'default';
     }, [meshHovered])

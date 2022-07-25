@@ -5,7 +5,7 @@ import ThreeSurroundingText from '../Text/ThreeSurroundingText';
 import {
     getDeviceDependent,
     useAltScroll,
-    useMouseHover
+    use3MouseHover
 } from '../utils/hooks';
 import { isDevEnv } from '../utils/utils';
 import { useInnerBallMaterial } from './hooks';
@@ -21,7 +21,7 @@ export default function RSS() {
     
     const meshRef = useRef();
 
-    const meshHovered = useMouseHover(meshRef);
+    const meshHovered = use3MouseHover(meshRef);
     useEffect(() => {
         document.body.style.cursor = meshHovered ? 'pointer' : 'default';
     }, [meshHovered]);

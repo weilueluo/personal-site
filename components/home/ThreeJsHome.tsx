@@ -21,7 +21,6 @@ import { getDeviceDependent, initMobileScroll } from '../utils/hooks';
 
 function Content() {
     const enableOrbitControl = getDeviceDependent(false, true); // disable vertical scroll on mobile
-    const textRadius = getMainBallRadius() + 0.1;
 
     useEffect(() => {
         initMobileScroll();
@@ -36,13 +35,6 @@ function Content() {
             <About />
             <Lines />
             <Stars />
-            <ThreeSurroundingText
-                text={'Weilue\' Place'}
-                radius={textRadius}
-                rotationZ={0}
-                // initOffset={Math.PI}
-                fadeInOnScrollSpeed={-1}
-            />
             {/* <SurroundingText
                 text={"Weilue's Place"}
                 radius={textRadius}

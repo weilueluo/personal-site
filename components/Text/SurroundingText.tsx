@@ -22,6 +22,9 @@ export default function SurroundingText(props) {
     const lightPosition = useContext(lightPositionContext)
 
     const fontLoader = new FontLoader();
+    const fontSize = getDeviceDependent(props.fontSize * 0.6, props.fontSize)
+    
+
     useEffect(() => {
         fontLoader.load('/fonts/Roboto_Bold.json', font => {
             const [meshes_, meshMaterals_, offsets_] = computeMeshAndMaterial(
@@ -39,7 +42,6 @@ export default function SurroundingText(props) {
 
     const characters = props.text.split('');
 
-    const fontSize = getDeviceDependent(props.fontSize * 0.6, props.fontSize)
 
     const scrollAmount = useAltScroll()
 

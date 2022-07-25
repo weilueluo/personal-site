@@ -1,15 +1,16 @@
 import { useFrame } from '@react-three/fiber';
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { Color, InstancedMesh, Material, Object3D, ShaderMaterial } from 'three';
 import { useAltScroll } from '../utils/hooks';
 import { polar2xyz, uniformSphereSample } from '../utils/utils';
 import { getVisibleRadius } from './global';
-// import line_fs from '../shaders/line_fs.glsl'
-// import line_vs from '../shaders/line_vs.glsl'
+import line_fs from '../shaders/line_fs.glsl'
+import line_vs from '../shaders/line_vs.glsl'
+import { lightPositionContext } from '../utils/context';
 
 const tempObject = new Object3D();
 const tempColor = new Color();
-const amount = 25;
+const amount = 35;
 const lineRadius = 0.03;
 
 const radius = getVisibleRadius();
@@ -69,19 +70,21 @@ export default function Lines() {
     })
 
     // shaders
-    // const uniforms = {
-    //     uScrolledAmount: { value: 0 }
-    // }
-    // const material = new ShaderMaterial({
-    //     uniforms: uniforms,
-    //     vertexShader: line_vs,
-    //     fragmentShader: line_fs
-    // })
+    const lightPosition = useContext(lightPositionContext);
+    const uniforms = {
+        uScrolledAmount: { value: 0 },
+        uLightPosition: { value: lightPosition },
+    }
+    const material = new ShaderMaterial({
+        uniforms: uniforms,
+        vertexShader: line_vs,
+        fragmentShader: line_fs
+    })
 
     return (
-        <instancedMesh ref={meshRef} args={[null, null, amount]}>
+        <instancedMesh ref={meshRef} args={[null, null, amount]} material={material}>
             <cylinderBufferGeometry args={[lineRadius, lineRadius, 16, 32]} />
-            <meshBasicMaterial ref={matRef} transparent={true}/>
+            {/* <meshBasicMaterial ref={matRef} transparent={true}/> */}
         </instancedMesh>
     );
 }
