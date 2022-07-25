@@ -75,7 +75,7 @@ function useMeshes(gltf) {
 
     useEffect(() => {
         if (gltf) {
-            const [meshes_, meshMaterials_, otherNodes_] = useComputeMeshes(
+            const [meshes_, meshMaterials_, otherNodes_] = computeMeshes(
                 gltf.scene.children,
                 lightPosition
             );
@@ -184,7 +184,7 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
     );
 }
 
-function useComputeMeshes(nodes: any[], lightPosition: Vector3) {
+function computeMeshes(nodes: any[], lightPosition: Vector3) {
     const uniforms = {
         uTime: { value: 0.5 },
         uPosition: { value: new Vector3(0, 0, 0) },

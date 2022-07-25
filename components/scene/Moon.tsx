@@ -58,14 +58,14 @@ export default function Moon() {
 
     return (
         <>
-            <ThreeSurroundingText 
+            {/* <ThreeSurroundingText 
                 position={lightPosition}
                 radius={0.6}
                 text='Sun'
                 rotationZ={0}
                 fontSize={0.3}
                 expandOnScrollSpeed={0}
-            />
+            /> */}
         
             <mesh
                 ref={meshRef}
