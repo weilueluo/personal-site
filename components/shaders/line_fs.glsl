@@ -14,7 +14,8 @@ const vec3 darkColor = vec3(0., 0., 0.);
 void main() {
 
     float dist = distance(uLightPosition, vPosition);
-    vec3 color = mix(brightColor, darkColor, dist / 25.);
+    float darkness = dist / 25.;
+    vec3 color = mix(brightColor, darkColor, darkness);
 
-    gl_FragColor = vec4(color, 1.0 - uScrollAmount);
+    gl_FragColor = vec4(color, (1.0 - uScrollAmount) * (darkness));
 }

@@ -11,11 +11,6 @@ uniform vec3 uPosition;
 varying vec3 vNormal;
 
 
-vec3 applyShadow(vec3 color) {
-    float angle = dot(normalize(vNormal), normalize(uLightPosition - uPosition));
-
-    return angle * color;
-}
 
 void main() {
     float opacity = 1.0;
@@ -28,7 +23,9 @@ void main() {
 
     vec3 color = vec3(1., 1., 1.);
 
-    color = applyShadow(color);
+    // shadow 
+    float angle = dot(normalize(vNormal), normalize(uLightPosition - uPosition));
+    color = color * angle;
 
     gl_FragColor = vec4(color, opacity);
 }
