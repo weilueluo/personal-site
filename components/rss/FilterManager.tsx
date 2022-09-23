@@ -14,7 +14,7 @@ class FilterDate {
     }
 
     static TODAY = new FilterDate('Today', () => toStartOfTheDay(new Date()));
-    static YESTERDAY = new FilterDate('Yesterday', () => toYesterday(new Date()));
+    static YESTERDAY = new FilterDate('Two Days', () => toYesterday(new Date()));
     static THIS_WEEK = new FilterDate('This Week', () => toMonday(new Date()))
     static THIS_MONTH = new FilterDate('This Month', () => toStartOfMonth(new Date()))
     static THIS_YEAR = new FilterDate('This Year', () => toStartOfYear(new Date()))
