@@ -10,15 +10,23 @@ import { lightPositionContext } from '../utils/context';
 
 const tempObject = new Object3D();
 const tempColor = new Color();
-const amount = 35;
+const amount = 45;
+const aroundLightAmount = 20;
 const lineRadius = 0.03;
 
 const radius = getVisibleRadius();
+const aroundLightRadius = 1;
 
 const linePositions = new Array(amount * 3);
 
 for (let i = 0; i < linePositions.length; i += 3) {
-    const [theta, phi, r] = uniformSphereSample(radius);
+    let [theta, phi, r] = [0, 0, 0];
+    if (i < aroundLightAmount) {
+        [theta, phi, r] = uniformSphereSample(aroundLightRadius)
+    } else {
+        [theta, phi, r] = uniformSphereSample(radius);
+    }
+    
     const [x, y, z] = polar2xyz(theta, phi, r);
     linePositions[i] = x;
     linePositions[i + 1] = y;
@@ -28,19 +36,27 @@ for (let i = 0; i < linePositions.length; i += 3) {
 export default function Lines() {
     const meshRef = useRef();
 
+    const lightPosition = useContext(lightPositionContext);
     useEffect(() => {
         const mesh: InstancedMesh = meshRef.current;
         if (mesh == null) {
             return;
         }
+        
         // console.log(mesh);
 
         for (let i = 0; i < amount; i++) {
-            tempObject.position.set(
-                linePositions[i * 3],
-                linePositions[i * 3 + 1],
-                linePositions[i * 3 + 2]
-            );
+
+            let x = linePositions[i * 3];
+            let y = linePositions[i * 3 + 1];
+            let z = linePositions[i * 3 + 2];
+            if (i < aroundLightAmount) {
+                 x += lightPosition.x;
+                 y += lightPosition.y;
+                 z += lightPosition.z;
+            }
+
+            tempObject.position.set(x, y, z);
 
             tempObject.rotateX(Math.random() * Math.PI);
             tempObject.rotateY(Math.random() * Math.PI);
@@ -59,18 +75,10 @@ export default function Lines() {
         mesh.instanceColor.needsUpdate = true;
     }, []);
 
-    const matRef = useRef()
 
-    const scrollAmount = useAltScroll();
-    useFrame(() => {
-        const mat: Material = matRef.current;
-        if (mat) {
-            mat.opacity = Math.max(0.1, 1 - scrollAmount);
-        }
-    })
+   
 
     // shaders
-    const lightPosition = useContext(lightPositionContext);
     const uniforms = {
         uScrolledAmount: { value: 0 },
         uLightPosition: { value: lightPosition },
@@ -81,10 +89,14 @@ export default function Lines() {
         fragmentShader: line_fs
     })
 
+    const scrollAmount = useAltScroll();
+    useFrame(() => {
+        material.uniforms.uScrolledAmount.value = scrollAmount;
+    })
+
     return (
         <instancedMesh ref={meshRef} args={[null, null, amount]} material={material}>
             <cylinderBufferGeometry args={[lineRadius, lineRadius, 16, 32]} />
-            {/* <meshBasicMaterial ref={matRef} transparent={true}/> */}
         </instancedMesh>
     );
 }

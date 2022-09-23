@@ -25,7 +25,7 @@ void main() {
 
     // shadow 
     float angle = dot(normalize(vNormal), normalize(uLightPosition - uPosition));
-    color = color * angle;
+    color = color * abs(uScrollAmount - (1. - angle));
 
     gl_FragColor = vec4(color, opacity);
 }

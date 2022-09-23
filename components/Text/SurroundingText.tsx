@@ -46,6 +46,8 @@ export default function SurroundingText(props) {
     const scrollAmount = useAltScroll()
 
     useFrame((state) => {
+        console.log(scrollAmount);
+        
         const radius = props.radius + props.expandOnScrollSpeed * altScroll;
         // const opacity = 1 - (props.expandOnScrollSpeed == 0 ? 0 : altScroll);
         const time = state.clock.getElapsedTime();

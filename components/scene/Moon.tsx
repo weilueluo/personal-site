@@ -6,6 +6,7 @@ import moon_vs from '../shaders/moon_vs.glsl'
 import { ShaderMaterial, Vector3, Matrix3 , Matrix4 } from 'three'
 import { useFrame } from '@react-three/fiber'
 import ThreeSurroundingText from '../Text/ThreeSurroundingText';
+import { useAltScroll } from '../utils/hooks';
 
 const tempVector = new Vector3()
 const tempMat3 = new Matrix3()
@@ -16,7 +17,8 @@ export default function Moon() {
     const position = useContext(lightPositionContext)
 
     const uniforms = {
-        uRotation: { value: tempMat3 }
+        uRotation: { value: tempMat3 },
+        uScrollAmount: { value: 0.0 }
     }
 
     const material = new ShaderMaterial({
@@ -26,6 +28,11 @@ export default function Moon() {
     })
 
     const meshRef = useRef(null);
+
+    const scrollAmount = useAltScroll()
+    useFrame(() => {
+        uniforms.uScrollAmount.value = scrollAmount;
+    })
 
     // useFrame((state) => {
     //     if (meshRef.current) {
