@@ -201,8 +201,6 @@ function computeMeshes(nodes: any[], lightPosition: Vector3) {
         uniforms: uniforms,
         vertexShader: sphere_vs,
         fragmentShader: sphere_fs,
-        transparent: true,
-        depthWrite: true,
     });
 
     const meshNodes: Mesh[] = [];

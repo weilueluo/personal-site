@@ -46,8 +46,6 @@ export default function SurroundingText(props) {
     const scrollAmount = useAltScroll()
 
     useFrame((state) => {
-        console.log(scrollAmount);
-        
         const radius = props.radius + props.expandOnScrollSpeed * altScroll;
         // const opacity = 1 - (props.expandOnScrollSpeed == 0 ? 0 : altScroll);
         const time = state.clock.getElapsedTime();
@@ -102,8 +100,7 @@ function computeMeshAndMaterial(characters, font, fontSize, lightPosition, props
         uniforms: uniforms,
         vertexShader: text_vs,
         fragmentShader: text_fs,
-        transparent: true,
-        side: DoubleSide,
+        transparent: true
     });
 
     for (const [i, char] of characters.entries()) {
@@ -120,7 +117,6 @@ function computeMeshAndMaterial(characters, font, fontSize, lightPosition, props
             : spaceWidth;
 
         meshMaterials[i] = sharedMaterial.clone();
-        meshMaterials[i].transparent = true;
 
         charMeshes[i] = (
             <mesh

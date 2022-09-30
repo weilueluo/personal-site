@@ -87,7 +87,7 @@ void main() {
     vec3 lightPosition = uLightPosition * uBallRotation;
 
     color = applyShadow(color, lightPosition);
-    color = mix(color, color * .01, uScrolledAmount);
+    color = mix(color, color * .005, clamp(uScrolledAmount * 2.0, 0.0, 1.0));
 
     color = clamp(color, 0.0, 1.0);
     gl_FragColor = vec4(color, 1.);

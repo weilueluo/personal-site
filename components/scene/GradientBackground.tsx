@@ -18,7 +18,7 @@ export default function GradientBackground() {
     const material = new ShaderMaterial({
         uniforms: uniforms,
         vertexShader: background_vs,
-        fragmentShader: background_fs
+        fragmentShader: background_fs,
     })
 
     useFrame(() => {

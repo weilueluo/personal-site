@@ -20,7 +20,7 @@ export function useInnerBallMaterial(groupRef, meshRef, color) {
     const material = new ShaderMaterial({
         uniforms: uniforms,
         fragmentShader: inner_ball_fs,
-        vertexShader: inner_ball_vs
+        vertexShader: inner_ball_vs,
     })
     useFrame(state => {
         const group = groupRef.current as Group;
