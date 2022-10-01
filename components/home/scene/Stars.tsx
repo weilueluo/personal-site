@@ -1,16 +1,23 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useFrame } from '@react-three/fiber';
+import { useContext, useEffect, useMemo, useRef } from 'react';
 import {
     Color,
     InstancedMesh,
     Object3D,
+    ShaderMaterial,
+    Vector3,
 } from 'three';
-import { polar2xyz, uniformSphereSample } from '../utils/utils';
+import { lightPositionContext } from '../../utils/context';
+import { useAltScroll } from '../../utils/hooks';
+import { polar2xyz, uniformSphereSample } from '../../utils/utils';
 import { getMainBallRadius as getMainBallRadius, getVisibleRadius } from './global';
 
+import star_vs from './shaders/star_vs.glsl';
+import star_fs from './shaders/star_fs.glsl';
+
 const tempObject = new Object3D();
-const tempColor = new Color();
 const size = 0.1;
-const amount = 500;
+const amount = 1000;
 
 function getRandomPositions() {
 
@@ -31,6 +38,10 @@ function getRandomPositions() {
 
     return positions;
 }
+
+
+const whiteColor = new Vector3(255, 255, 255);
+const tempVector3 = new Vector3(0,0,0);
 
 export default function Stars() {
     const meshRef = useRef();
@@ -54,27 +65,40 @@ export default function Stars() {
 
             tempObject.updateMatrix();
 
-            tempColor.setRGB(
-                Math.random(),
-                Math.random(),
-                Math.random()
-            )
-
             mesh.setMatrixAt(i, tempObject.matrix);
-            mesh.setColorAt(i, tempColor)
         }
         mesh.instanceMatrix.needsUpdate = true;
-        mesh.instanceColor.needsUpdate = true
-    }, []);
+    }, [positions]);
+
+    // shader
+    const lightPosition = useContext(lightPositionContext);
+    const scrolledAmount = useAltScroll();
+    const uniforms = {
+        uLightPosition: { value: tempVector3 },
+        uScrolledAmount: { value: 0 },
+        uColor: { value: whiteColor },
+    }
+    const material  = new ShaderMaterial({
+        uniforms: uniforms,
+        vertexShader: star_vs,
+        fragmentShader: star_fs,
+        transparent: true
+    })
+
+    useFrame(() => {
+        material.uniforms.uLightPosition.value = lightPosition;
+        material.uniforms.uScrolledAmount.value = scrolledAmount;
+    })
 
     return (
-        <instancedMesh ref={meshRef} args={[null, null, amount]}>
-            <octahedronBufferGeometry args={[size, 0]} />
-            <meshStandardMaterial
+        <instancedMesh ref={meshRef} args={[null, null, amount]} material={material}>
+            <sphereBufferGeometry args={[0.05, 12, 12]} />
+            {/* <octahedronBufferGeometry args={[size, 0]} /> */}
+            {/* <meshStandardMaterial
                 color={0x4287f5}
                 emissive={0xffffff}
                 emissiveIntensity={1}
-            />
+            /> */}
         </instancedMesh>
     );
 }

@@ -1,12 +1,11 @@
 
-import { useContext, useEffect, useRef } from 'react';
-import { lightPositionContext } from '../utils/context'
-import moon_fs from '../shaders/moon_fs.glsl'
-import moon_vs from '../shaders/moon_vs.glsl'
-import { ShaderMaterial, Vector3, Matrix3 , Matrix4 } from 'three'
-import { useFrame } from '@react-three/fiber'
-import ThreeSurroundingText from '../Text/ThreeSurroundingText';
-import { useAltScroll } from '../utils/hooks';
+import { useFrame } from '@react-three/fiber';
+import { useContext, useRef } from 'react';
+import { Matrix3, Matrix4, ShaderMaterial, Vector3 } from 'three';
+import { lightPositionContext } from '../../utils/context';
+import { useAltScroll } from '../../utils/hooks';
+import moon_fs from './shaders/moon_fs.glsl';
+import moon_vs from './shaders/moon_vs.glsl';
 
 const tempVector = new Vector3()
 const tempMat3 = new Matrix3()

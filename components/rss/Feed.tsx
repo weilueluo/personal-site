@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { timeSince } from '../utils/utils';
 import { FlatFeed } from './RSS.d';
 
@@ -26,7 +26,7 @@ export default function Feed(props: { flatFeed: FlatFeed; i: number }) {
                 setDisplayTime(feed.jsDate.toLocaleString())
             }
         }
-    }, [displayAgoTime])
+    }, [displayAgoTime, feed.jsDate])
 
     // expand collapse description
     // https://stackoverflow.com/a/47224153
@@ -37,16 +37,16 @@ export default function Feed(props: { flatFeed: FlatFeed; i: number }) {
           - parseFloat(styles.paddingLeft)
           - parseFloat(styles.paddingRight)
       }
-    const isOverflown = (element, parent) => {
+    const isOverflown = useMemo(() => (element, parent) => {
         // + 16 because the collapse/expand icon is 16px
         return getContentWidth(parent) < (getContentWidth(element)+16);
-    }
+    }, [])
     const [overflown, setOverflown] = useState(false)
     useEffect(() => {
         const description = document.getElementById(`feed-description-${props.i}`)
         const container = document.getElementById(`feed-description-container-${props.i}`)
         setOverflown(isOverflown(description, container))
-    }, [])
+    }, [isOverflown, props.i])
     const [expandActive, setExpandActive] = useState(false);
     const expandOnClick = () => setExpandActive(!expandActive);
 

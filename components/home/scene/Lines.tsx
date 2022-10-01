@@ -1,12 +1,12 @@
 import { useFrame } from '@react-three/fiber';
 import { useContext, useEffect, useRef } from 'react';
-import { Color, InstancedMesh, Material, Matrix4, Object3D, ShaderMaterial, Vector3 } from 'three';
-import { useAltScroll } from '../utils/hooks';
-import { polar2xyz, uniformSphereSample } from '../utils/utils';
+import { Color, InstancedMesh, Matrix4, Object3D, ShaderMaterial, Vector3 } from 'three';
+import { lightPositionContext } from '../../utils/context';
+import { useAltScroll } from '../../utils/hooks';
+import { polar2xyz, uniformSphereSample } from '../../utils/utils';
 import { getMainBallRadius, getVisibleRadius } from './global';
-import line_fs from '../shaders/line_fs.glsl'
-import line_vs from '../shaders/line_vs.glsl'
-import { lightPositionContext } from '../utils/context';
+import line_fs from './shaders/line_fs.glsl';
+import line_vs from './shaders/line_vs.glsl';
 
 const zVector = new Vector3(0, 0, 1);
 const yVector = new Vector3(0, 1, 0);
@@ -48,8 +48,9 @@ for (let i = 0; i < aroundLightPositions.length; i += 3) {
 }
 
 // random world lines init
-const amount = 35;
+const amount = 70;
 const linePositions = new Array(amount * 3);
+const lineRotations = new Array(amount * 3);
 
 for (let i = 0; i < linePositions.length; i += 3) {
     let [theta, phi, r] = uniformSphereSample(radius);
@@ -57,6 +58,11 @@ for (let i = 0; i < linePositions.length; i += 3) {
     linePositions[i] = x;
     linePositions[i + 1] = y;
     linePositions[i + 2] = z;
+
+    // rotation for x, y, z
+    lineRotations[i] = Math.random() * Math.PI;
+    lineRotations[i + 1] = Math.random() * Math.PI;
+    lineRotations[i + 2] = Math.random() * Math.PI;
 }
 
 export default function Lines() {
@@ -69,27 +75,27 @@ export default function Lines() {
             return;
         }
         
-        for (let i = 0; i < aroundLightAmount; i++) {
+        // for (let i = 0; i < aroundLightAmount; i++) {
 
-            let x = aroundLightPositions[i * 3] + lightPosition.x;
-            let y = aroundLightPositions[i * 3 + 1] + lightPosition.y;
-            let z = aroundLightPositions[i * 3 + 2] + lightPosition.z;
+        //     let x = aroundLightPositions[i * 3] + lightPosition.x;
+        //     let y = aroundLightPositions[i * 3 + 1] + lightPosition.y;
+        //     let z = aroundLightPositions[i * 3 + 2] + lightPosition.z;
 
-            tempObject.position.set(x, y, z);
-            tempObject.rotation.set(0, 0, 0);
+        //     tempObject.position.set(x, y, z);
+        //     tempObject.rotation.set(0, 0, 0);
 
-            const [rotateVector, translateVector, rotateDeg] = aroundLightTransforms[i]
+        //     const [rotateVector, translateVector, rotateDeg] = aroundLightTransforms[i]
 
-            tempMat4.makeRotationAxis(rotateVector, rotateDeg);
-            tempObject.setRotationFromMatrix(tempMat4);
+        //     tempMat4.makeRotationAxis(rotateVector, rotateDeg);
+        //     tempObject.setRotationFromMatrix(tempMat4);
 
-            tempMat4.makeTranslation(translateVector.x, translateVector.y, translateVector.z);
-            tempObject.applyMatrix4(tempMat4);
+        //     tempMat4.makeTranslation(translateVector.x, translateVector.y, translateVector.z);
+        //     tempObject.applyMatrix4(tempMat4);
 
-            tempObject.scale.set(1, radius, 1);
-            tempObject.updateMatrix();
-            mesh.setMatrixAt(i, tempObject.matrix);
-        }
+        //     tempObject.scale.set(1, radius, 1);
+        //     tempObject.updateMatrix();
+        //     mesh.setMatrixAt(i, tempObject.matrix);
+        // }
 
         for (let i = 0; i < amount; i++) {
 
@@ -100,9 +106,9 @@ export default function Lines() {
             tempObject.position.set(x, y, z);
             tempObject.rotation.set(0, 0, 0);
 
-            tempObject.rotateX(Math.random() * Math.PI);
-            tempObject.rotateY(Math.random() * Math.PI);
-            tempObject.rotateZ(Math.random() * Math.PI);
+            tempObject.rotateX(lineRotations[i]);
+            tempObject.rotateY(lineRotations[i * 3 + 1]);
+            tempObject.rotateZ(lineRotations[i * 3 + 2]);
 
             tempObject.scale.set(1, radius, 1);
             tempObject.updateMatrix();

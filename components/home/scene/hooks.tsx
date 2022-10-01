@@ -1,9 +1,9 @@
 import { useFrame } from "@react-three/fiber";
 import { useContext } from "react";
 import { Group, Matrix3, Matrix4, Mesh, ShaderMaterial, Vector3 } from "three";
-import { lightPositionContext } from "../utils/context";
-import inner_ball_vs from '../shaders/inner_ball_vs.glsl'
-import inner_ball_fs from '../shaders/inner_ball_fs.glsl'
+import { lightPositionContext } from "../../utils/context";
+import inner_ball_vs from './shaders/inner_ball_vs.glsl'
+import inner_ball_fs from './shaders/inner_ball_fs.glsl'
 
 const tempVector = new Vector3(0, 0, 0);
 const tempMat3 = new Matrix3()

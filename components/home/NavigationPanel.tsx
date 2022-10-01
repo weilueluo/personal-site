@@ -58,7 +58,7 @@ export default function NavigationPanel() {
 
     return (
         <div className={`${styles['nav-panel']} ${active ? styles['nav-active']: ''}  ${isMobile ? styles['mobile']: ''}`} onClick={onClick}>
-            <img className={styles['nav-icon']} src={iconSrc}/>
+            <img className={styles['nav-icon']} src={iconSrc} alt={`${iconSrc} icon`}/>
             {active && panelItems}
         </div>
     )

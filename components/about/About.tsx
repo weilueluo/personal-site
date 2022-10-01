@@ -1,4 +1,3 @@
-import UnderDevelopment from "../common/UnderDevelopment";
 import { getBuildTime } from "../utils/utils";
 import styles from './About.module.sass'
 
@@ -7,12 +6,13 @@ const iconSize = 48;
 function IconListItem(props) {
     const caption = <span>{props.caption}</span>
     return (
-        <li className={styles['list-item']}>
-            <a href={props.url}>
-                <img src={props.src} height={iconSize} width={iconSize}/>
-                {props.caption && caption}
-            </a>
-        </li>
+        <a href={props.url} className={styles['list-item-link']}>
+            <li className={styles['list-item']}>
+                    <img src={props.src} height={iconSize} width={iconSize} alt={`${props.caption} icon`}/>
+            </li>
+            {props.caption && caption}
+        </a>
+
     )
 }
 
@@ -50,9 +50,9 @@ export default function About() {
             <div className={styles['container']}>
                 {/* <UnderDevelopment /> */}
 
-                <Title>About</Title>
+                {/* <Title>About</Title> */}
 
-                <SubTitle>built with</SubTitle>
+                <SubTitle>built</SubTitle>
                 <List>
                     <IconListItem src="/icons/tech/javascript.svg" url="https://www.javascript.com/"/>
                     <IconListItem src="/icons/tech/typescript.svg" url="https://www.typescriptlang.org/"/>
@@ -61,17 +61,17 @@ export default function About() {
                     <IconListItem src="/icons/tech/sass.svg" url="https://sass-lang.com/"/>
                 </List>
 
-                <SubTitle>deployed with</SubTitle>
+                <SubTitle>deployed</SubTitle>
                 <List>
                     <IconListItem src="/icons/tech/amazonaws.svg" url="https://aws.amazon.com/"/>
                 </List>
 
-                <SubTitle>open source on</SubTitle>
+                <SubTitle>open source</SubTitle>
                 <List>
                     <IconListItem src="/icons/tech/github.svg" url="https://github.com/Redcxx/personal-website"/>
                 </List>
 
-                <SubTitle>contact me</SubTitle>
+                <SubTitle>contact</SubTitle>
                 <List>
                     <IconListItem src="/icons/tech/gmail.svg" url="mailto:luoweilue@gmail.com" caption="luoweilue@gmail.com"/>
                 </List>

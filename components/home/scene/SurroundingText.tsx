@@ -1,13 +1,13 @@
 import { useFrame } from '@react-three/fiber';
-import { useContext, useEffect, useState } from 'react';
-import { DoubleSide, ShaderMaterial, Vector3 } from 'three';
+import { useContext, useEffect, useMemo, useState } from 'react';
+import { ShaderMaterial, Vector3 } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-import { getDeviceDependent, useAltScroll } from '../utils/hooks';
+import { getDeviceDependent, useAltScroll } from '../../utils/hooks';
 
-import text_fs from '../shaders/text_fs.glsl';
-import text_vs from '../shaders/text_vs.glsl';
-import { lightPositionContext } from '../utils/context';
+import { lightPositionContext } from '../../utils/context';
+import text_fs from './shaders/text_fs.glsl';
+import text_vs from './shaders/text_vs.glsl';
 
 
 const tempVector = new Vector3(0, 0, 0)
@@ -18,13 +18,17 @@ export default function SurroundingText(props) {
     const [meshes, setMeshes] = useState([])
     const [meshMaterials, setMeshMaterials] = useState([])
     const [offsets, setOffsets] = useState([])
+    const [characters, setCharacters] = useState([])
+    
+    useEffect(() => {
+        setCharacters(props.text.split(''));
+    }, [props.text])
 
     const lightPosition = useContext(lightPositionContext)
 
-    const fontLoader = new FontLoader();
+    const fontLoader = useMemo(() => new FontLoader(), []);
     const fontSize = getDeviceDependent(props.fontSize * 0.6, props.fontSize)
     
-
     useEffect(() => {
         fontLoader.load('/fonts/Roboto_Bold.json', font => {
             const [meshes_, meshMaterals_, offsets_] = computeMeshAndMaterial(
@@ -32,16 +36,14 @@ export default function SurroundingText(props) {
                 font,
                 fontSize,
                 lightPosition,
-                props
+                props.fadeInOnScrollSpeed, 
+                props.rotationZ
             )
             setMeshes(meshes_)
             setMeshMaterials(meshMaterals_)
             setOffsets(offsets_)
         })
-    }, [])
-
-    const characters = props.text.split('');
-
+    }, [characters, fontLoader, fontSize, lightPosition, props.fadeInOnScrollSpeed, props.rotationZ])
 
     const scrollAmount = useAltScroll()
 
@@ -75,7 +77,7 @@ export default function SurroundingText(props) {
     return <group position={props.position}>{meshes}</group>;
 }
 
-function computeMeshAndMaterial(characters, font, fontSize, lightPosition, props) {
+function computeMeshAndMaterial(characters, font, fontSize, lightPosition, fadeInOnScrollSpeed, rotationZ) {
 
     const spaceWidth = 0.5;
 
@@ -90,7 +92,7 @@ function computeMeshAndMaterial(characters, font, fontSize, lightPosition, props
         uPhi: { value: 0.0 },
         uTheta: { value: 0.0 },
         uScrollAmount: { value: 0.0 },
-        uFadeInOnScrollSpeed: { value: props.fadeInOnScrollSpeed },
+        uFadeInOnScrollSpeed: { value: fadeInOnScrollSpeed },
         uLightPosition: { value: lightPosition },
         uPosition: { value: tempVector}
     };
@@ -122,7 +124,7 @@ function computeMeshAndMaterial(characters, font, fontSize, lightPosition, props
                 key={i}
                 geometry={geometry}
                 material={meshMaterials[i]}
-                rotation-z={props.rotationZ}
+                rotation-z={rotationZ}
             />
         );
     }

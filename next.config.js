@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
+    images: {
+        unoptimized: true,  // not supported for exporting static page using "next export"
+    },
     webpack: (config, options) => {
 
         // for compling shaders

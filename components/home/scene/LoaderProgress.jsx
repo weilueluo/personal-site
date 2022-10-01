@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { DefaultLoadingManager } from "three";
-import styles from '../styles/LoaderProgress.module.sass'
+import styles from './LoaderProgress.module.sass';
 
 export default function LoaderProgress() {
     const [total, setTotal] = useState(0);

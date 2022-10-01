@@ -1,4 +1,4 @@
-import { getDeviceDependent } from "../utils/hooks";
+import { getDeviceDependent } from "../../utils/hooks";
 
 // https://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
 export function isMobileOrTablet() {

@@ -1,42 +1,41 @@
 import { OrbitControls, Stats } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { ACESFilmicToneMapping, SpotLight, sRGBEncoding, Vector, Vector3 } from 'three';
-import About from '../scene/About';
-import Ball from '../scene/Ball';
-import CV from '../scene/CV';
-import { getMainBallRadius, getNScrollPages } from '../scene/global';
-import GradientBackground from '../scene/GradientBackground';
-import Lines from '../scene/Lines';
-import LoaderProgress from '../scene/LoaderProgress';
-import Moon from '../scene/Moon';
-import RSS from '../scene/RSS';
-import Stars from '../scene/Stars';
+import { ACESFilmicToneMapping, sRGBEncoding, Vector3 } from 'three';
 import styles from '../styles/StatsPanel.module.sass';
-import SurroundingText from '../Text/SurroundingText';
-import ThreeSurroundingText from '../Text/ThreeSurroundingText';
 import { lightPositionContext } from '../utils/context';
 import { getDeviceDependent, initMobileScroll } from '../utils/hooks';
 import { polar2xyz } from '../utils/utils';
+import About from './scene/About';
+import Ball from './scene/Ball';
+import CV from './scene/CV';
+import { getNScrollPages } from './scene/global';
+import GradientBackground from './scene/GradientBackground';
+import Lines from './scene/Lines';
+import LoaderProgress from './scene/LoaderProgress';
+import Moon from './scene/Moon';
+import RSS from './scene/RSS';
+import Stars from './scene/Stars';
 
 
 const tempVector3 = new Vector3(10, 10, 0);
 
 function Content() {
-    const enableOrbitControl = getDeviceDependent(false, true); // disable vertical scroll on mobile
+    const enableOrbitControl = getDeviceDependent(false, true); // disable scroll on mobile, because it is used to play animation
 
     useEffect(() => {
         initMobileScroll();
     }, []);
 
     const [lightPosition, setLightPosition] = useState(tempVector3);
-    let phi = 0;
     let theta = 0;
-    const thetaSpeed = 0.03;
-    const phiSpeed = 0.05;
+    const thetaSpeed = 0.04;
+    let phi = 0.3;
+    const phiSpeed = 0.00;
     const moonRadius = getDeviceDependent(8, 10);
 
-    useFrame(state => {
+    // rotate light source around ball
+    useFrame(() => {
         theta += Math.atan2(thetaSpeed, moonRadius);
         phi += Math.atan2(phiSpeed, moonRadius);
         const [x, y, z] = polar2xyz(theta, phi, moonRadius);
@@ -84,7 +83,6 @@ function Lights() {
     const mapSize = getDeviceDependent(128, 512);
     const position = useContext(lightPositionContext);
 
-
     return (
         <>
             <spotLight
@@ -125,13 +123,6 @@ function Lights() {
 }
 
 
-function ContentProvider() {
-
-    return (
-            <Content />
-    )
-}
-
 export default function Home() {
     const [pages, setPages] = useState(1)
 
@@ -142,7 +133,7 @@ export default function Home() {
     return (
         <>
             <MyCanvas>
-                <ContentProvider />
+                <Content />
             </MyCanvas>
             <LoaderProgress />
             <div>
@@ -153,12 +144,9 @@ export default function Home() {
 }
 
 function MyCanvas(props) {
-    const onCreated = useMemo(
-        () => (state) => {
-            state.setDpr(window.devicePixelRatio);
-        },
-        []
-    );
+    const onCreated = useMemo(() => (state) => {
+        state.setDpr(window.devicePixelRatio);
+    }, []);
 
     const { children, ...otherProps } = props;
     

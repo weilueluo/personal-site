@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import UnderDevelopment from '../common/UnderDevelopment';
 import RSSErrors from './Error';
 import Feeds from './Feeds';
@@ -14,7 +14,7 @@ import styles from './RSS.module.sass';
 export default function RSS() {
     // setup RSS loader
     const [rawFeeds, setFeeds] = useState<FeedsMap>(new Map());
-    const rssLoader = new RSSLoader(setFeeds);
+    const rssLoader = useMemo(() => new RSSLoader(setFeeds), []);
     rssLoader.setOptions(RSS_OPTIONS);
 
     // rawfeeds to flatFeeds
@@ -46,7 +46,7 @@ export default function RSS() {
 
     // initialize rssloader to load feeds
     // feeds = rawFeeds will get converted to flatFeeds by hooks listening on rawFeeds, and rendered by <Feeds />
-    useEffect(() => rssLoader.reload(), []);
+    useEffect(() => rssLoader.reload(), [rssLoader]);
 
     return (
         <>

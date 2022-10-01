@@ -80,11 +80,9 @@ export default class RSSLoader {
     }
 }
 
-// --- Parser
 // https://github.com/rbren/rss-parser
 const RSSURLParser = new Parser();
 
-// --- cors proxy
 // https://github.com/Redcxx/cors-proxy
 const corsProxyEndpoint = 'https://hauww8y4w1.execute-api.eu-west-2.amazonaws.com';
 

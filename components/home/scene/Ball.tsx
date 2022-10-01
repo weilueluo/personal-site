@@ -13,18 +13,17 @@ import {
     ShaderMaterial,
     Vector3
 } from 'three';
-import sphere_fs from '../shaders/sphere_fs.glsl';
-import sphere_vs from '../shaders/sphere_vs.glsl';
-import { useAltScroll, use3MouseHover } from '../utils/hooks';
-import { useMaxAnimationDuration } from '../utils/utils';
+import { useAltScroll } from '../../utils/hooks';
+import { useMaxAnimationDuration } from '../../utils/utils';
 import { getMainBallRadius } from './global';
+import sphere_fs from './shaders/sphere_fs.glsl';
+import sphere_vs from './shaders/sphere_vs.glsl';
 
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { lightPositionContext } from '../utils/context';
+import { lightPositionContext } from '../../utils/context';
 
-import Moon from '../scene/Moon';
-import ThreeSurroundingText from '../Text/ThreeSurroundingText';
+import ThreeSurroundingText from './ThreeSurroundingText';
 
 
 const FLOAT_BALL = false;
@@ -49,8 +48,6 @@ function useGLTF(loadUrl) {
         loader.load(
             loadUrl,
             function (gltf) {
-                // console.log('loaded gltf');
-                // console.log(gltf);
                 setgltf(gltf);
             },
             undefined,
@@ -59,7 +56,7 @@ function useGLTF(loadUrl) {
                 console.error(error);
             }
         );
-    }, []);
+    }, [loadUrl]);
 
     return gltf
 }
@@ -98,7 +95,7 @@ function useMeshes(gltf) {
             const center = box.getCenter(new Vector3());
             setCenterOffset(center.multiplyScalar(-1));
         }
-    }, [gltf])
+    }, [gltf, lightPosition])
 
     return [meshes, meshMaterials, otherNodes, animations, centerOffset]
 }
@@ -116,7 +113,7 @@ function useAnimationOnScroll(gltf, ballRef, animations) {
             action.setLoop(LoopPingPong, Infinity);
             action.play();
         }
-    }, [gltf, maxAnimationDuration]);
+    }, [gltf, maxAnimationDuration, animations, ballRef]);
 
     useFrame(() => {
         // set animation state

@@ -9,5 +9,5 @@ export function useRawFeed2FlatFeed(rawFeeds, setFlatFeeds) {
         const flatFeeds = feeds2flatFeeds(rawFeeds);
         setFlatFeeds(flatFeeds);
         updateDatabase(flatFeeds)
-    }, [rawFeeds]);
+    }, [rawFeeds, setFlatFeeds]);
 }

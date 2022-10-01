@@ -1,7 +1,7 @@
 import { useFrame } from '@react-three/fiber';
 import assert from 'assert';
 import { useEffect, useState } from 'react';
-import { isMobileOrTablet } from '../scene/global';
+import { isMobileOrTablet } from '../home/scene/global';
 import { clamp, playAnimation, playAnimationReverse } from './utils';
 
 

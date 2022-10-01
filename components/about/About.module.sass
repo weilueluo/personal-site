@@ -5,6 +5,8 @@
     align-items: center
     justify-content: center
 
+    padding-top: 50px
+
 .title
     text-transform: uppercase
     text-align: center
@@ -19,31 +21,37 @@
     text-transform: uppercase
     padding: 5px 15px
 
-    transition: background-color 0s, color 0s, transform 0.2s
+    transition: background-color 0s, color 0s, transform 0.1s
 
     &:hover
-        background-color: #888
-        color: white
-        transform: skew(15deg)
+        outline: 1px dashed black
         cursor: default
 
 
 .list
     list-style: none
     padding-left: 0
+    margin-top: 0px
+    margin-bottom: 40px
     
+    display: flex
+    flex-direction: row
+    
+.list-item-link
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+
 .list-item
-    display: inline-block
-    margin: 0 10px
+    display: flex
+    margin: 0 15px
     transition: 0.5s
 
     &:hover
         transform: rotateZ(360deg)
         
-    a
-        display: flex
-        align-items: center
-        flex-direction: column
+
 
 .build-time
     margin-top: 50px

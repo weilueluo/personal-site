@@ -1,17 +1,9 @@
-import { useFrame } from '@react-three/fiber';
-import { useContext, useEffect, useRef } from 'react';
-import { Group, Matrix3, Matrix4, ShaderMaterial, Vector3 } from 'three';
-import ThreeSurroundingText from '../Text/ThreeSurroundingText';
-import { lightPositionContext } from '../utils/context';
-import { getDeviceDependent, use3MouseHover } from '../utils/hooks';
-import inner_ball_vs from '../shaders/inner_ball_vs.glsl'
-import inner_ball_fs from '../shaders/inner_ball_fs.glsl'
+import { useEffect, useRef } from 'react';
+import { Matrix3, Matrix4, Vector3 } from 'three';
+import { getDeviceDependent, use3MouseHover } from '../../utils/hooks';
 import { useInnerBallMaterial } from './hooks';
+import ThreeSurroundingText from './ThreeSurroundingText';
 
-
-const tempMat3 = new Matrix3()
-const tempMat4 = new Matrix4()
-const tempVector = new Vector3(0, 0, 0);
 
 export default function CV() {
     

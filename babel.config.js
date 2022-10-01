@@ -1,6 +1,6 @@
 const babelConfig = {
     "presets": ["next/babel"],
-    "plugins": ["preval", "macros"]
+    "plugins": ["preval", "macros"] // for pre-evaluate build time, to be shown in about page
 }
 
 

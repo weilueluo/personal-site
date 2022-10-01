@@ -38,7 +38,7 @@ export default function RSSHeader(props) {
         // currently it searches from the database, not the current displayed feeds, 
         // if desired, use flatFeeds instead of [...DATABASE.values()]
         setFlatFeeds(searchFlatFeeds(searchString, [...DATABASE.values()]));
-    }, [searchString]);
+    }, [searchString, setFlatFeeds]);
 
     // filtering
     const filterTextOnClick = () => setFilterActive(!filterActive);
@@ -62,9 +62,9 @@ export default function RSSHeader(props) {
     const [status, setStatus] = useState(<></>)
     useEffect(() => {
         if (completed) {
-            setStatus(<img className={styles['completed-img']} src='/icons/misc/check-mark.svg' />)
+            setStatus(<img className={styles['completed-img']} src='/icons/misc/check-mark.svg' alt=''/>)
         } else if (loading) {
-            setStatus(<img className={styles['loading-img']} src='/icons/misc/progress.svg' />)
+            setStatus(<img className={styles['loading-img']} src='/icons/misc/progress.svg' alt=''/>)
         }
     }, [loading, completed])
 

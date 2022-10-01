@@ -1,14 +1,12 @@
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef } from 'react';
-import { Group, Matrix3, Matrix4, Vector3 } from 'three';
-import ThreeSurroundingText from '../Text/ThreeSurroundingText';
+import { Group, Vector3 } from 'three';
 import {
-    getDeviceDependent,
-    useAltScroll,
-    use3MouseHover
-} from '../utils/hooks';
-import { isDevEnv } from '../utils/utils';
+    getDeviceDependent, use3MouseHover, useAltScroll
+} from '../../utils/hooks';
+import { isDevEnv } from '../../utils/utils';
 import { useInnerBallMaterial } from './hooks';
+import ThreeSurroundingText from './ThreeSurroundingText';
 
 
 const tempVector = new Vector3(0, 0, 0);
