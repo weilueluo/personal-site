@@ -1,6 +1,7 @@
 import Parser from 'rss-parser';
 import { RSSOption, RSSRequestError } from './RSS.d';
 import { DATABASE } from './Database';
+import { isDevEnv } from '../utils/utils';
 
 enum State {
     NOT_INITIALIZED,
@@ -85,9 +86,9 @@ const RSSURLParser = new Parser();
 
 // --- cors proxy
 // https://github.com/Redcxx/cors-proxy
-const corsProxyEndpoint =
-    'https://se06wfpxq7.execute-api.eu-west-2.amazonaws.com/dev?url=';
+const corsProxyEndpoint = 'https://hauww8y4w1.execute-api.eu-west-2.amazonaws.com';
 
 async function loadRSSFeed(url: string) {
-    return await RSSURLParser.parseURL(corsProxyEndpoint + url);
+    const corsURL = corsProxyEndpoint + (isDevEnv() ? '/dev?url=' : '/prod?url=') + url;
+    return await RSSURLParser.parseURL(corsURL);
 }

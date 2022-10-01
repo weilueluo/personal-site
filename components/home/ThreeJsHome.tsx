@@ -21,7 +21,6 @@ import { polar2xyz } from '../utils/utils';
 
 
 const tempVector3 = new Vector3(10, 10, 0);
-const moonRadius = 10
 
 function Content() {
     const enableOrbitControl = getDeviceDependent(false, true); // disable vertical scroll on mobile
@@ -35,6 +34,7 @@ function Content() {
     let theta = 0;
     const thetaSpeed = 0.03;
     const phiSpeed = 0.05;
+    const moonRadius = getDeviceDependent(8, 10);
 
     useFrame(state => {
         theta += Math.atan2(thetaSpeed, moonRadius);

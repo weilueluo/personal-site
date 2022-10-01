@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, MouseEvent } from "react";
 import { getDeviceDependent } from "../utils/hooks";
 import { isDevEnv } from "../utils/utils";
 
@@ -71,7 +71,7 @@ function PanelItem(props: NavItem) {
         link = link + '.html'
     }
 
-    const onClick = () => {
+    const onClick = (e: MouseEvent<HTMLButtonElement>) => {
         window.open(link);
     }
 
