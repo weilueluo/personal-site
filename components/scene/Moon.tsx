@@ -14,7 +14,7 @@ const tempMat4 = new Matrix4()
 
 export default function Moon() {
 
-    const position = useContext(lightPositionContext)
+    const lightPosition = useContext(lightPositionContext)
 
     const uniforms = {
         uRotation: { value: tempMat3 },
@@ -32,6 +32,12 @@ export default function Moon() {
     const scrollAmount = useAltScroll()
     useFrame(() => {
         uniforms.uScrollAmount.value = scrollAmount;
+    })
+
+    useFrame(() => {
+        if (meshRef.current) {
+            meshRef.current.position.copy(lightPosition);
+        }
     })
 
     // useFrame((state) => {
@@ -61,8 +67,6 @@ export default function Moon() {
     //     }
     // })
 
-    const lightPosition = useContext(lightPositionContext)
-
     return (
         <>
             {/* <ThreeSurroundingText 
@@ -79,7 +83,7 @@ export default function Moon() {
                 castShadow
                 receiveShadow
                 // rotation={[Math.PI / 4, 0, 0]}
-                position={position}
+                position={lightPosition}
                 material={material}
             >
                 <sphereBufferGeometry args={[0.5, 16, 16]} />

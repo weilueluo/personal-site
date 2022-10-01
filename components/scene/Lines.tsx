@@ -23,17 +23,18 @@ const radius = getVisibleRadius();
 
 // around light lines init
 const aroundLightTransforms: Array<[Vector3, Vector3, number]> = [
-    [zVector, upVector, Math.PI / 3],
-    [zVector, upVector, Math.PI / 3 * 2],
+    // --- UNCOMMENT TO USE ---
+    // [zVector, upVector, Math.PI / 3],
+    // [zVector, upVector, Math.PI / 3 * 2],
 
-    [zVector, downVector, Math.PI / 3],
-    [zVector, downVector, Math.PI / 3 * 2],
+    // [zVector, downVector, Math.PI / 3],
+    // [zVector, downVector, Math.PI / 3 * 2],
 
-    [xVector, upVector, Math.PI / 3],
-    [xVector, upVector, Math.PI / 3 * 2],
+    // [xVector, upVector, Math.PI / 3],
+    // [xVector, upVector, Math.PI / 3 * 2],
 
-    [xVector, downVector, Math.PI / 3],
-    [xVector, downVector, Math.PI / 3 * 2]
+    // [xVector, downVector, Math.PI / 3],
+    // [xVector, downVector, Math.PI / 3 * 2]
 ]
 const aroundLightAmount = aroundLightTransforms.length;
 
@@ -47,7 +48,7 @@ for (let i = 0; i < aroundLightPositions.length; i += 3) {
 }
 
 // random world lines init
-const amount = 25;
+const amount = 35;
 const linePositions = new Array(amount * 3);
 
 for (let i = 0; i < linePositions.length; i += 3) {
@@ -129,6 +130,7 @@ export default function Lines() {
     const scrollAmount = useAltScroll();
     useFrame(() => {
         material.uniforms.uScrolledAmount.value = scrollAmount;
+        material.uniforms.uLightPosition.value = lightPosition;
     })
 
     return (

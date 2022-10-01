@@ -29,7 +29,6 @@ void main() {
     float dist2surface = sphere_surface_dist(vPosition, uMainBallPosition, uMainBallRadius);
     if (dist2surface < 0.0) {
         opacity = mix(opacity, 0.0, clamp(abs(dist2surface) * 0.1, 0.0, 1.0));
-        // opacity = 0.0;
     }
     gl_FragColor = vec4(color, opacity);
 }

@@ -1,7 +1,7 @@
 import { OrbitControls, Stats } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { ACESFilmicToneMapping, sRGBEncoding, Vector, Vector3 } from 'three';
+import { ACESFilmicToneMapping, SpotLight, sRGBEncoding, Vector, Vector3 } from 'three';
 import About from '../scene/About';
 import Ball from '../scene/Ball';
 import CV from '../scene/CV';
@@ -17,7 +17,11 @@ import SurroundingText from '../Text/SurroundingText';
 import ThreeSurroundingText from '../Text/ThreeSurroundingText';
 import { lightPositionContext } from '../utils/context';
 import { getDeviceDependent, initMobileScroll } from '../utils/hooks';
+import { polar2xyz } from '../utils/utils';
 
+
+const tempVector3 = new Vector3(10, 10, 0);
+const moonRadius = 10
 
 function Content() {
     const enableOrbitControl = getDeviceDependent(false, true); // disable vertical scroll on mobile
@@ -26,39 +30,35 @@ function Content() {
         initMobileScroll();
     }, []);
 
+    const [lightPosition, setLightPosition] = useState(tempVector3);
+    let phi = 0;
+    let theta = 0;
+    const thetaSpeed = 0.03;
+    const phiSpeed = 0.05;
+
+    useFrame(state => {
+        theta += Math.atan2(thetaSpeed, moonRadius);
+        phi += Math.atan2(phiSpeed, moonRadius);
+        const [x, y, z] = polar2xyz(theta, phi, moonRadius);
+        tempVector3.set(x, y, z);
+        setLightPosition(tempVector3);
+    })
+
     return (
         <>
-            <Moon />
-            <Ball />
-            <CV />
-            <RSS />
-            <About />
-            <Lines />
-            <Stars />
-            {/* <SurroundingText
-                text={"Weilue's Place"}
-                radius={textRadius}
-                rotationZ={0}
-                initOffset={Math.PI}
-                fadeInOnScrollSpeed={-1}
-            />
-            <SurroundingText
-                text={"Weilue's Place"}
-                radius={textRadius}
-                rotationZ={Math.PI / 4}
-                initOffset={Math.PI / 2}
-                fadeInOnScrollSpeed={-1}
-            />
-            <SurroundingText
-                text={"Weilue's Place"}
-                radius={textRadius}
-                rotationZ={-Math.PI / 4}
-                initOffset={-Math.PI / 2}
-                fadeInOnScrollSpeed={-1}
-            /> */}
-            <GradientBackground />
-            <Lights />
-
+            <lightPositionContext.Provider value={lightPosition}>
+                <Moon />
+                <Ball />
+                <CV />
+                <RSS />
+                <About />
+                <Lines />
+                <Stars />
+        
+                <GradientBackground />
+                <Lights />
+            </lightPositionContext.Provider>
+            
             <OrbitControls
                 enabled={true}
                 enablePan={false}
@@ -77,11 +77,13 @@ function Content() {
     );
 }
 
+
 function Lights() {
     const lightRef = useRef();
 
     const mapSize = getDeviceDependent(128, 512);
-    const position = useContext(lightPositionContext)
+    const position = useContext(lightPositionContext);
+
 
     return (
         <>
@@ -122,25 +124,11 @@ function Lights() {
     );
 }
 
-const tempVector = new Vector3(10,10,0)
-
 
 function ContentProvider() {
 
-    const [positionVector, setPositionVector] = useState(tempVector);
-
-    // setPositionVector(tempVector.set(10, 10, 0))
-
-    // useFrame((state) => {
-    //     setPositionVector(tempVector.set(tempVector.x + Math.sin(state.clock.elapsedTime), tempVector.y, tempVector.z))
-    //     // console.log(positionVector);
-    // }, [])
-
     return (
-        // <Content />
-        // <lightPositionContext.Provider value={positionVector}>
             <Content />
-        // </ lightPositionContext.Provider>
     )
 }
 

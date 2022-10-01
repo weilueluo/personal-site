@@ -31,6 +31,7 @@ export function useInnerBallMaterial(groupRef, meshRef, color) {
         tempMat3.setFromMatrix4(tempMat4.makeRotationFromEuler(mesh.rotation))
         uniforms.uRotation.value = tempMat3;
         uniforms.uPosition.value = group.position;
+        uniforms.uLightPosition.value = lightPosition;
     })
 
     return material

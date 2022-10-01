@@ -23,7 +23,7 @@ bool isSurface() {
 
 vec3 applyShadow(in vec3 color, vec3 lightPosition) {
 
-    float angle = dot(normalize(lightPosition), normalize(vNormal));
+    float angle = dot(normalize(lightPosition), normalize(-vNormal)); // -normal so that light drop darkness instead of light
     return color * angle;
 }
 

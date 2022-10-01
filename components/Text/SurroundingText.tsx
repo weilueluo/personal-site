@@ -53,8 +53,6 @@ export default function SurroundingText(props) {
         let phi = 0;
         let theta = props.initOffset;
         const charSpacingAngle = 0.02;
-        // console.log(meshMaterials);
-        // console.log(offsets);
         
         for (let i = 0; i < meshMaterials.length; i++) {
             const mat = meshMaterials[i];
@@ -68,6 +66,7 @@ export default function SurroundingText(props) {
             mat.uniforms.uCenterOffset.value = offset;
             mat.uniforms.uScrollAmount.value = scrollAmount;
             mat.uniforms.uPosition.value = geometry.boundingBox.getCenter(tempVector)
+            mat.uniforms.uLightPosition.value = lightPosition;
 
             theta += Math.atan2(offset, mat.uniforms.uRadius.value) + charSpacingAngle;
         }

@@ -139,6 +139,7 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
     useAnimationOnScroll(gltf, ballRef, animations)
 
     const altScroll = useAltScroll();
+    const lightPosition = useContext(lightPositionContext)
 
     useFrame((state) => {
         const time = state.clock.getElapsedTime();
@@ -158,6 +159,7 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
             mat.uniforms.uScrolledAmount.value = altScroll;
             mat.uniforms.uDoWave.value = !scrolled; // do not wave if scrolled
             mat.uniforms.uBallRotation.value = tempMat3;
+            mat.uniforms.uLightPosition.value = lightPosition;
         });
     });
 

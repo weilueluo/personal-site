@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { isMobileOrTablet } from '../scene/global';
 import { clamp, playAnimation, playAnimationReverse } from './utils';
 
+
 function getDesktopScrollPercent() {
     let h = document.documentElement,
         b = document.body,
