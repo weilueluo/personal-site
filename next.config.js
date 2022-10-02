@@ -4,6 +4,9 @@ const nextConfig = {
     images: {
         unoptimized: true,  // not supported for exporting static page using "next export"
     },
+    publicRuntimeConfig: {
+        buildTime: new Date()
+    },
     webpack: (config, options) => {
 
         // for compling shaders

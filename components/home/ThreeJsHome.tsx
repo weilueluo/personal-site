@@ -1,5 +1,6 @@
 import { OrbitControls, Stats } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
+import React from 'react';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ACESFilmicToneMapping, sRGBEncoding, Vector3 } from 'three';
 import styles from '../styles/StatsPanel.module.sass';
@@ -127,6 +128,7 @@ export default function Home() {
     );
 }
 
+React.useLayoutEffect = React.useEffect;  // suppress useLayoutEffect warning, because we did not use it, dont know where it comes from
 function MyCanvas(props) {
     const onCreated = useMemo(() => (state) => {
         state.setDpr(window.devicePixelRatio);

@@ -1,4 +1,4 @@
-import { getBuildTime } from "../utils/utils";
+import { getBuildTime, timeSince } from "../utils/utils";
 import styles from './About.module.sass'
 
 const iconSize = 48;
@@ -35,8 +35,13 @@ function List(props) {
 }
 
 function BuildTime() {
+    const buildTime = new Date(getBuildTime());
+    
     return (
-        <span className={styles['build-time']}>last updated {getBuildTime()}</span>
+        <span className={styles['build-time']}>
+            This website is updated {timeSince(new Date(), buildTime)} ago.<br /> 
+            Build time: {buildTime.toLocaleString()}.
+        </span>
     )
 }
 
@@ -52,21 +57,22 @@ export default function About() {
 
                 {/* <Title>About</Title> */}
 
-                <SubTitle>built</SubTitle>
+                <SubTitle>tech stack</SubTitle>
                 <List>
                     <IconListItem src="/icons/tech/javascript.svg" url="https://www.javascript.com/"/>
                     <IconListItem src="/icons/tech/typescript.svg" url="https://www.typescriptlang.org/"/>
                     <IconListItem src="/icons/tech/react.svg" url="https://reactjs.org/"/>
+                    <IconListItem src="/icons/tech/threejs.svg" url="https://threejs.org/"/>
                     <IconListItem src="/icons/tech/nextdotjs.svg" url="https://nextjs.org/"/>
                     <IconListItem src="/icons/tech/sass.svg" url="https://sass-lang.com/"/>
                 </List>
 
-                <SubTitle>deployed</SubTitle>
+                <SubTitle>deployment</SubTitle>
                 <List>
                     <IconListItem src="/icons/tech/amazonaws.svg" url="https://aws.amazon.com/"/>
                 </List>
 
-                <SubTitle>open source</SubTitle>
+                <SubTitle>source code</SubTitle>
                 <List>
                     <IconListItem src="/icons/tech/github.svg" url="https://github.com/Redcxx/personal-website"/>
                 </List>

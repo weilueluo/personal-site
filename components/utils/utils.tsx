@@ -1,6 +1,7 @@
+import getConfig from 'next/config';
 import { useEffect, useState } from 'react';
 import { LoopOnce, LoopRepeat } from 'three';
-import preval from 'preval.macro'
+// import preval from 'preval.macro'
 
 
 export function playAnimation(action, duration = 1) {
@@ -95,10 +96,10 @@ export function isDevEnv() {
     return process && process.env.NODE_ENV === 'development';
 }
 
-const buildTime = preval`module.exports = new Date().toLocaleString();`
+const { _serverRuntimeConfig, publicRuntimeConfig } = getConfig()
 
 export function getBuildTime() {
-    return buildTime;
+    return publicRuntimeConfig.buildTime;
 }
 
 

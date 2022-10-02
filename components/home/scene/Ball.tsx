@@ -138,9 +138,20 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
     const altScroll = useAltScroll();
     const lightPosition = useContext(lightPositionContext)
 
+    let lastTime = 0;
+
     useFrame((state) => {
-        const time = state.clock.getElapsedTime();
         const scrolled = altScroll > 0.15;
+
+        let time: number;
+        if (scrolled) {
+            time = state.clock.getElapsedTime()
+            lastTime = time;
+        } else {
+            // freeze time (i.e. freeze color changes) if scrolled
+            // because color changes in darkness looks weird
+            time = lastTime;
+        }
 
         // set ball rotate state
         const scene = ballRef.current as Group;
@@ -173,7 +184,7 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
             </group>
 
             <ThreeSurroundingText
-                text={'Weilue\' Place'}
+                text={'Weilue\'s Place'}
                 radius={textRadius}
                 rotationZ={0}
                 // initOffset={Math.PI}
