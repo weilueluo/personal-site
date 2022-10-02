@@ -102,22 +102,6 @@ function Lights() {
             />
 
             <ambientLight color={0xffffff} intensity={1.0} />
-
-            {/* <mesh
-                castShadow
-                receiveShadow
-                // rotation={[Math.PI / 4, 0, 0]}
-                position={position}
-            >
-                <sphereBufferGeometry args={[1, 16, 16]} />
-                <meshStandardMaterial
-                    color={0x34d3eb}
-                    emissive={0x0d2f5c}
-                    emissiveIntensity={1}
-                    transparent={true}
-                    opacity={1}
-                /> 
-            </mesh>*/}
         </>
     );
 }

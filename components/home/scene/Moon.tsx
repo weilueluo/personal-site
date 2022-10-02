@@ -86,13 +86,6 @@ export default function Moon() {
                 material={material}
             >
                 <sphereBufferGeometry args={[0.5, 16, 16]} />
-                {/* <meshStandardMaterial
-                    color={0x34d3eb}
-                    emissive={0x0d2f5c}
-                    emissiveIntensity={1}
-                    transparent={true}
-                    opacity={1}
-                /> */}
             </mesh>
         </>
     )

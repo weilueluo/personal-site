@@ -82,7 +82,8 @@ export default function Stars() {
         uniforms: uniforms,
         vertexShader: star_vs,
         fragmentShader: star_fs,
-        transparent: true
+        transparent: true,
+        depthWrite: false
     })
 
     useFrame(() => {

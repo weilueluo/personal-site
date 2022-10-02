@@ -75,13 +75,6 @@ export default function RSS() {
                 material={material}
             >
                 <sphereBufferGeometry args={[sphereRadius, ballDetails, ballDetails]} />
-                {/* <meshStandardMaterial
-                    color={0xeb4034}
-                    emissive={0x0d2f5c}
-                    emissiveIntensity={1}
-                    transparent={true}
-                    opacity={1}
-                /> */}
             </mesh>
         </group>
     );

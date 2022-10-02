@@ -51,13 +51,6 @@ export default function CV() {
                 material={material}
             >
                 <sphereBufferGeometry args={[sphereRadius, ballDetails, ballDetails]} />
-                {/* <meshStandardMaterial
-                    color={0x34d3eb}
-                    emissive={0x0d2f5c}
-                    emissiveIntensity={1}
-                    transparent={true}
-                    opacity={1}
-                /> */}
             </mesh>
         </group>
     );

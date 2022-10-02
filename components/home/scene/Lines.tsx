@@ -130,7 +130,8 @@ export default function Lines() {
         uniforms: uniforms,
         vertexShader: line_vs,
         fragmentShader: line_fs,
-        transparent: true
+        transparent: true,
+        depthWrite: false
     })
 
     const scrollAmount = useAltScroll();

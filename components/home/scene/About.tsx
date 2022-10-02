@@ -73,13 +73,6 @@ export default function About() {
                 material={material}
             >
                 <sphereBufferGeometry args={[sphereRadius, ballDetails, ballDetails]} />
-                {/* <meshStandardMaterial
-                    color={0x9f34eb}
-                    emissive={0x0d2f5c}
-                    emissiveIntensity={1}
-                    transparent={true}
-                    opacity={1}
-                /> */}
             </mesh>
         </group>
     );
