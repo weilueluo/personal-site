@@ -48,7 +48,7 @@ for (let i = 0; i < aroundLightPositions.length; i += 3) {
 }
 
 // random world lines init
-const amount = 70;
+const amount = 45;
 const linePositions = new Array(amount * 3);
 const lineRotations = new Array(amount * 3);
 

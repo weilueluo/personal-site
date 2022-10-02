@@ -23,20 +23,11 @@ float near = 15.;
 void main() {
 
     float dist = distance(uLightPosition, vPosition);
-    float opacity = 1.0 - clamp(dist / near, 0., 1.);
-    // if (dist < near) {
-    //     opacity = (clamp(dist, max(near - fade, 0.), near) - (near - fade)) / fade;
-    // } else if (dist > far) {
-    //     opacity = (clamp(dist, far, far + fade) - far) / fade;
-    // }
-    // float darkness = abs((1. - uScrolledAmount) - clamp(dist / near, 0., 1.));
-    // vec3 color = mix(brightColor, darkColor, darkness);
-    // float opacity = (1.0 - darkness * 2.0);
+    float opacity = 1. - clamp(dist / near, 0., 1.);
+    // opacity = mix(2. * opacity, 1., uScrolledAmount) - opacity;
 
     float dist2surface = sphere_surface_dist(vPosition, uMainBallPosition, uMainBallRadius);
-    if (dist2surface < 0.0) {
-        opacity = mix(opacity, 0.0, clamp(abs(dist2surface) * 0.1, 0.0, 1.0));
-    }
+    opacity = mix(0.0, opacity, clamp(dist2surface / 35., 0.0, 1.0));
 
     vec3 color = mix(darkColor, brightColor, uScrolledAmount);
 

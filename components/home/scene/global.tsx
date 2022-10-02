@@ -16,6 +16,6 @@ export function getVisibleRadius() {
 }
 
 export function getNScrollPages() {
-    return getDeviceDependent(5.0, 25.0);
+    return getDeviceDependent(3.0, 15.0);
 }
 
