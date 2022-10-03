@@ -9,7 +9,9 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@aws-sdk/client-cognito-identity": "^3.181.0",
         "@aws-sdk/client-sns": "^3.181.0",
+        "@aws-sdk/credential-providers": "^3.181.0",
         "@react-spring/three": "^9.3.1",
         "@react-three/drei": "^8.20.2",
         "@react-three/fiber": "^7.0.29",

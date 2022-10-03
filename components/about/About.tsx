@@ -1,5 +1,8 @@
+import { useIsomorphicLayoutEffect } from "@react-spring/three";
+import { useEffect, useState } from "react";
 import { getBuildTime, timeSince } from "../utils/utils";
 import styles from './About.module.sass'
+import { MessageStatus, MessageStatusType, sendMessage, SEND_AGAIN_DELAY } from "./MessageHandler";
 
 const iconSize = 48;
 
@@ -49,6 +52,94 @@ IconListItem.defaultProps = {
     url: '#',
 }
 
+// drop a message
+function MessageResponse(props: {status: [[MessageStatusType, string], ([MessageStatusType, string]) => void]}) {
+    const statusCode = props.status[0][0];
+    const setStatus = props.status[1]
+
+    if (statusCode == 'IDLE') {
+        return (<></>);
+    }
+
+    const displayStatus = MessageStatus[statusCode];
+    const displayMessage = props.status[0][1].toString();
+
+    const closeOnClick = () => setStatus(['IDLE', ''])
+
+    return (
+        <div className={styles['message-response-container']}>
+            <h2 className={styles['message-status']}>{displayStatus}</h2>
+            <span className={styles['message-response']}>{displayMessage}</span>
+            <button className={styles['close-button']} onClick={closeOnClick}>Close</button>
+        </div>
+    )
+}
+
+function DropAMessage() {
+
+    const [userMessage, setUserMessage] = useState('');
+    const [userEmail, setUserEmail] = useState('')
+    const [userName, setUserName] = useState('')
+
+    const userMessageChanged = e => setUserMessage(e.target.value);
+    const userEmailChanged = e => setUserEmail(e.target.value);
+    const userNameChanged = e => setUserName(e.target.value)
+
+    const [sendStatus, setSendStatus] = useState<[MessageStatusType, string]>(['IDLE', '']);
+
+    const [sendButton, setSendButton] = useState(null);
+    useEffect(() => {
+        setSendButton(document.getElementById('send-button') as HTMLButtonElement)
+    })
+
+    const disableSendButton = () => sendButton && (sendButton.disabled = true);
+    const enableSendButton = () => sendButton && (sendButton.disabled = false);
+    const interval = 0.05; // update display interval, in seconds
+    const [countDownSeconds, setCountDownSeconds] = useState(0);
+    useEffect(() => {
+        if (countDownSeconds <= 0) {
+            enableSendButton();
+        } else {
+            const nextInterval = interval + Math.random() * 0.05 // add some randomness so that it looks more interesting
+            disableSendButton();
+            setTimeout(() => {
+                setCountDownSeconds(countDownSeconds - nextInterval)
+            }, nextInterval * 1000)
+        }
+    }, [countDownSeconds])
+
+    const sendMessageOnClick = async () => {
+        console.log(userName);
+        console.log(userEmail);
+        console.log(userMessage);
+
+        setSendStatus(['IN_PROGRESS', ''])
+        const [status, response] = await sendMessage(userName, userEmail, userMessage);
+        setSendStatus([status, response]);
+        
+        setCountDownSeconds(SEND_AGAIN_DELAY);
+    }
+
+    return (
+        <div className={styles['drop-a-message-container']}>
+            <textarea id="user-message" className={styles['message-textarea']} onChange={userMessageChanged}></textarea>
+                <div className={styles['name-area']}>
+                    <span className={styles['name-tag']}>Name</span>
+                    <input id="user-name" className={styles['name-input']} type="text" onChange={userNameChanged} />
+                </div>
+                <div className={styles['email-area']}>
+                    <span className={styles['email-tag']}>Email</span>
+                    <input id="user-email" className={styles['email-input']} type="text" onChange={userEmailChanged} />
+                </div>
+                <button id="send-button" className={styles['send-button']} onClick={sendMessageOnClick}>
+                    {(countDownSeconds <= 0) ? 'Send': countDownSeconds.toFixed(2)}
+                </button>
+            
+            <MessageResponse status={[sendStatus, setSendStatus]} />
+        </div>
+    )
+}
+
 export default function About() {
     return (
         <>
@@ -77,7 +168,10 @@ export default function About() {
                     <IconListItem src="/icons/tech/github.svg" url="https://github.com/Redcxx/personal-website"/>
                 </List>
 
-                <SubTitle>contact</SubTitle>
+                <SubTitle>message</SubTitle>
+                <DropAMessage />
+
+                <SubTitle>long message</SubTitle>
                 <List>
                     <IconListItem src="/icons/tech/gmail.svg" url="mailto:luoweilue@gmail.com" caption="luoweilue@gmail.com"/>
                 </List>
