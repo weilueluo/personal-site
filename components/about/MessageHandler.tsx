@@ -1,6 +1,7 @@
 import { PublishCommand, SNSClient } from '@aws-sdk/client-sns';
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
 import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
+import React, { ReactElement } from 'react';
 
 const REGION = 'eu-west-2'; // do not change unless you know what you doing
 
@@ -40,18 +41,23 @@ function isValidEmail(email: string) {
       );
 }
 
-export async function sendMessage(userName: string, userEmail: string, userMessage: string): Promise<[MessageStatusType, string]> {
+export async function sendMessage(userName: string, userEmail: string, userMessage: string): Promise<[MessageStatusType, ReactElement[]]> {
+    let errorMessage = [];
+    
+    if (isBlank(userMessage)) {
+        errorMessage.push(<span>Message is empty</span>)
+    }
     if (isBlank(userName)) {
-        return ['INVALID', 'Name is empty'];
+        errorMessage.push(<span>Name is empty</span>)
     }
     if (isBlank(userEmail)) {
-        return ['INVALID', 'Email is empty'];
+        errorMessage.push(<span>Email is empty</span>)
+    } else if (!isValidEmail(userEmail)) {
+        errorMessage.push(<span>Email is not well-formed</span>)
     }
-    if (isBlank(userMessage)) {
-        return ['INVALID', 'Message is empty'];
-    }
-    if (!isValidEmail(userEmail)) {
-        return ['INVALID', 'Email is not well-formed'];
+
+    if (errorMessage.length >= 1) {
+        return ['INVALID', errorMessage];
     }
 
     const message = `${userName}\n\n${userMessage}\n\n${userEmail}`
@@ -68,12 +74,12 @@ export async function sendMessage(userName: string, userEmail: string, userMessa
         if (data.$metadata.httpStatusCode == 200) {
             // TODO: if response succeed send a confirmation email to their email address
             // see: https://aws.amazon.com/getting-started/hands-on/send-an-email/
-            return ['SUCCESS', `Message ID: ${data.MessageId}`];
+            return ['SUCCESS', [<span>{`Message ID: ${data.MessageId}`}</span>]];
         } else {
-            return ['ERROR', `Message failed to send\nStatus Code: ${data.$metadata.httpStatusCode}`];
+            return ['ERROR', [<span>{`Message failed to send\nStatus Code: ${data.$metadata.httpStatusCode}`}</span>]];
         }
     } catch (error) {
         console.log(error);
-        return ['ERROR', `Internal Error: ${error}`];
+        return ['ERROR', [<span>{`Internal Error: ${error}`}</span>]];
     }
 }

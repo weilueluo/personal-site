@@ -1,5 +1,5 @@
 import { useIsomorphicLayoutEffect } from "@react-spring/three";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { getBuildTime, timeSince } from "../utils/utils";
 import styles from './About.module.sass'
 import { MessageStatus, MessageStatusType, sendMessage, SEND_AGAIN_DELAY } from "./MessageHandler";
@@ -53,7 +53,7 @@ IconListItem.defaultProps = {
 }
 
 // drop a message
-function MessageResponse(props: {status: [[MessageStatusType, string], ([MessageStatusType, string]) => void]}) {
+function MessageResponse(props: {status: [[MessageStatusType, ReactElement[]], ([MessageStatusType, any]) => void]}) {
     const statusCode = props.status[0][0];
     const setStatus = props.status[1]
 
@@ -62,9 +62,9 @@ function MessageResponse(props: {status: [[MessageStatusType, string], ([Message
     }
 
     const displayStatus = MessageStatus[statusCode];
-    const displayMessage = props.status[0][1].toString();
+    const displayMessage = props.status[0][1].map(ele => <div>{ele}<br /></div>);
 
-    const closeOnClick = () => setStatus(['IDLE', ''])
+    const closeOnClick = () => setStatus(['IDLE', [<></>]])
 
     return (
         <div className={styles['message-response-container']}>
@@ -85,7 +85,7 @@ function DropAMessage() {
     const userEmailChanged = e => setUserEmail(e.target.value);
     const userNameChanged = e => setUserName(e.target.value)
 
-    const [sendStatus, setSendStatus] = useState<[MessageStatusType, string]>(['IDLE', '']);
+    const [sendStatus, setSendStatus] = useState<[MessageStatusType, ReactElement[]]>(['IDLE', []]);
 
     const [sendButton, setSendButton] = useState(null);
     useEffect(() => {
@@ -113,7 +113,7 @@ function DropAMessage() {
         console.log(userEmail);
         console.log(userMessage);
 
-        setSendStatus(['IN_PROGRESS', ''])
+        setSendStatus(['IN_PROGRESS', []])
         const [status, response] = await sendMessage(userName, userEmail, userMessage);
         setSendStatus([status, response]);
         
@@ -168,13 +168,13 @@ export default function About() {
                     <IconListItem src="/icons/tech/github.svg" url="https://github.com/Redcxx/personal-website"/>
                 </List>
 
-                <SubTitle>message</SubTitle>
-                <DropAMessage />
-
-                <SubTitle>long message</SubTitle>
+                <SubTitle>email</SubTitle>
                 <List>
                     <IconListItem src="/icons/tech/gmail.svg" url="mailto:luoweilue@gmail.com" caption="luoweilue@gmail.com"/>
                 </List>
+
+                <SubTitle>message</SubTitle>
+                <DropAMessage />
             </div>
 
             {/* Note this cause render content between server and client to differ */}
