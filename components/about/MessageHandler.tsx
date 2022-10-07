@@ -41,19 +41,19 @@ function isValidEmail(email: string) {
       );
 }
 
-export async function sendMessage(userName: string, userEmail: string, userMessage: string): Promise<[MessageStatusType, ReactElement[]]> {
+export async function sendMessage(userName: string, userEmail: string, userMessage: string): Promise<[MessageStatusType, string[]]> {
     let errorMessage = [];
     
     if (isBlank(userMessage)) {
-        errorMessage.push(<span>Message is empty</span>)
+        errorMessage.push('Message is empty')
     }
     if (isBlank(userName)) {
-        errorMessage.push(<span>Name is empty</span>)
+        errorMessage.push('Name is empty')
     }
     if (isBlank(userEmail)) {
-        errorMessage.push(<span>Email is empty</span>)
+        errorMessage.push('Email is empty')
     } else if (!isValidEmail(userEmail)) {
-        errorMessage.push(<span>Email is not well-formed</span>)
+        errorMessage.push('Email is not well-formed')
     }
 
     if (errorMessage.length >= 1) {
@@ -74,12 +74,12 @@ export async function sendMessage(userName: string, userEmail: string, userMessa
         if (data.$metadata.httpStatusCode == 200) {
             // TODO: if response succeed send a confirmation email to their email address
             // see: https://aws.amazon.com/getting-started/hands-on/send-an-email/
-            return ['SUCCESS', [<span>{`Message ID: ${data.MessageId}`}</span>]];
+            return ['SUCCESS', [`Message ID: ${data.MessageId}`]];
         } else {
-            return ['ERROR', [<span>{`Message failed to send\nStatus Code: ${data.$metadata.httpStatusCode}`}</span>]];
+            return ['ERROR', [`Message failed to send\nStatus Code: ${data.$metadata.httpStatusCode}`]];
         }
     } catch (error) {
         console.log(error);
-        return ['ERROR', [<span>{`Internal Error: ${error}`}</span>]];
+        return ['ERROR', [`Internal Error: ${error}`]];
     }
 }

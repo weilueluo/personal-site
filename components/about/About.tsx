@@ -53,7 +53,7 @@ IconListItem.defaultProps = {
 }
 
 // drop a message
-function MessageResponse(props: {status: [[MessageStatusType, ReactElement[]], ([MessageStatusType, any]) => void]}) {
+function MessageResponse(props: {status: [[MessageStatusType, string[]], ([MessageStatusType, any]) => void]}) {
     const statusCode = props.status[0][0];
     const setStatus = props.status[1]
 
@@ -62,9 +62,9 @@ function MessageResponse(props: {status: [[MessageStatusType, ReactElement[]], (
     }
 
     const displayStatus = MessageStatus[statusCode];
-    const displayMessage = props.status[0][1].map(ele => <div>{ele}<br /></div>);
+    const displayMessage = props.status[0][1].map((ele, i) => <div key={i}>{ele}<br /></div>);
 
-    const closeOnClick = () => setStatus(['IDLE', [<></>]])
+    const closeOnClick = () => setStatus(['IDLE', []])
 
     return (
         <div className={styles['message-response-container']}>
@@ -85,18 +85,20 @@ function DropAMessage() {
     const userEmailChanged = e => setUserEmail(e.target.value);
     const userNameChanged = e => setUserName(e.target.value)
 
-    const [sendStatus, setSendStatus] = useState<[MessageStatusType, ReactElement[]]>(['IDLE', []]);
+    const [sendStatus, setSendStatus] = useState<[MessageStatusType, string[]]>(['IDLE', []]);
 
     const [sendButton, setSendButton] = useState(null);
     useEffect(() => {
         setSendButton(document.getElementById('send-button') as HTMLButtonElement)
-    })
+    }, [])
 
-    const disableSendButton = () => sendButton && (sendButton.disabled = true);
-    const enableSendButton = () => sendButton && (sendButton.disabled = false);
+    
     const interval = 0.05; // update display interval, in seconds
     const [countDownSeconds, setCountDownSeconds] = useState(0);
     useEffect(() => {
+        const disableSendButton = () => sendButton && (sendButton.disabled = true);
+        const enableSendButton = () => sendButton && (sendButton.disabled = false);
+
         if (countDownSeconds <= 0) {
             enableSendButton();
         } else {
@@ -106,7 +108,7 @@ function DropAMessage() {
                 setCountDownSeconds(countDownSeconds - nextInterval)
             }, nextInterval * 1000)
         }
-    }, [countDownSeconds])
+    }, [countDownSeconds, sendButton])
 
     const sendMessageOnClick = async () => {
         console.log(userName);
