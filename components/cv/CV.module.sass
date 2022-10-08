@@ -1,0 +1,166 @@
+@use '../common/common'
+    
+$compact-layout-width: 1100px
+    
+.cv
+    width: 50%
+    height: 100%
+    margin: 0px auto
+
+.cv > div
+        // border: 1px solid black
+        margin: 0px
+        padding: 5px 0px
+
+
+
+// misc for cv
+
+@mixin sectionHeader
+    font-size: larger
+    font-weight: bold
+
+@mixin sectionSubHeader
+    font-weight: bold
+
+@mixin contentText
+    color: gray
+
+// header
+.cv > p
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: space-around
+    @media (max-width:1000px)
+        flex-direction: column
+        gap: 15px
+
+    button
+        @include common.button
+        height: 30px
+    
+    span:nth-child(2)
+        font-size: xx-large
+        font-weight: bold
+
+.cv > div
+    position: relative
+    overflow: hidden
+
+    p
+        position: relative
+        display: flex
+        flex-direction: column
+
+        span:nth-child(3), span:nth-child(4)
+            position: absolute
+            right: 0
+            font-style: italic
+            @media (max-width:$compact-layout-width)
+                position: relative
+
+        span:nth-child(4)
+            top: 1rem
+            @media (max-width:$compact-layout-width)
+                top: 0px
+
+// header stuff
+.cv > div::before
+    @include sectionHeader
+    z-index: 1
+    background: white
+    padding-right: 15px
+
+// line separator stuff
+.cv > div::after
+    content: ''
+    position: absolute
+    background: black
+    width: 100%
+    height: 3px
+    top: 1.5rem
+    // left: 150px
+    z-index: -1
+
+// education
+.cv > div:nth-child(2)
+    &::before
+        content: 'Education'
+        @include sectionHeader
+
+    p
+        // college name first
+        span:nth-child(2)
+            order: -1
+            @include sectionSubHeader
+        
+
+// skills
+.cv > div:nth-child(3)
+    &::before
+        content: 'Skills'
+    >p
+        display: flex
+        flex-direction: row
+        @media (max-width:$compact-layout-width)
+            flex-direction: column
+
+        span:nth-child(1)
+            @include sectionSubHeader
+            width: 20%
+            @media (max-width:$compact-layout-width)
+                width: 100%
+
+        span:nth-child(2)
+            width: 80%
+            @include contentText
+            @media (max-width:$compact-layout-width)
+                width: 100%
+
+
+// experience
+.cv > div:nth-child(4)
+    &::before
+        content: 'Experience'
+
+    >p
+        span:nth-child(1)
+            @include sectionSubHeader
+
+    >div
+        padding: 0px 10px
+        >p
+            margin: 5px 0px
+            @include contentText
+            
+            ::before
+                content: '\2022  '
+                font-weight: bold
+                color: black
+
+
+// projects
+.cv > div:nth-child(5)
+    &::before
+        content: 'Selected Projects'
+
+    >p
+        span:nth-child(2)
+            order: -1
+            @include sectionSubHeader
+    
+    >div
+        padding: 0px 10px
+        >p
+            margin: 5px 0px
+            @include contentText
+            
+            >::before
+                content: '\2022  '
+                font-weight: bold
+                color: black
+
+
+
+

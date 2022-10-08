@@ -1,11 +1,7 @@
 import { PublishCommand, SNSClient } from '@aws-sdk/client-sns';
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
-import { CognitoIdentityClient } from "@aws-sdk/client-cognito-identity";
-import React, { ReactElement } from 'react';
 
 const REGION = 'eu-west-2'; // do not change unless you know what you doing
-
-const cognitoClient = new CognitoIdentityClient({ region: REGION });
 
 const snsClient = new SNSClient({
     region: REGION,

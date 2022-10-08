@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Matrix3, Matrix4, Vector3 } from 'three';
 import { getDeviceDependent, use3MouseHover } from '../../utils/hooks';
+import { isDevEnv } from '../../utils/utils';
 import { useInnerBallMaterial } from './hooks';
 import ThreeSurroundingText from './ThreeSurroundingText';
 
@@ -16,10 +17,16 @@ export default function CV() {
 
     const onClick = () => {
         if (meshHovered) {  // ensure it is not a pass-through click
-            window.open(
-                'https://github.com/Redcxx/cv',
-                '_blank'
-            );
+            // window.open(
+            //     'https://github.com/Redcxx/cv',
+            //     '_blank'
+            // );
+
+            if (isDevEnv()) {
+                window.open('/cv');
+            } else {
+                window.open('/cv.html');
+            }
         }
     };
 
