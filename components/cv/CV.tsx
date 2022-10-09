@@ -15,25 +15,36 @@ export default function CV(props) {
 
         const cv = document.querySelector('#cv');
 
-        // modify header
-        const header = cv.children[0];
-        header.children[0].remove()  // remove date
-        const title = header.children[0];
+        // create header
+        // create title
+        const title = document.createElement('span');
         title.textContent = 'Weilue Luo' // change 'Weilue Luo CV' to 'Weilue Luo'
-        // add view in github button
+        const titleLink: HTMLAnchorElement = document.createElement('a');
+        titleLink.href = window.location.protocol + "//" + window.location.host
+        titleLink.insertBefore(title, null);
+        // create view in github button
         const viewInGithubButton: HTMLButtonElement = document.createElement('button');
         viewInGithubButton.textContent = 'View In Github';
         const viewInGithubLink: HTMLAnchorElement = document.createElement('a');
         viewInGithubLink.href = 'https://github.com/Redcxx/cv/blob/master/resume.pdf'
         viewInGithubLink.insertBefore(viewInGithubButton, null);
-        title.parentNode.insertBefore(viewInGithubLink, title);
-        // add download button
+        // create download button
         const downloadButton: HTMLButtonElement = document.createElement('button');
         downloadButton.textContent = 'Download';
         const downloadLink: HTMLAnchorElement = document.createElement('a');
         downloadLink.insertBefore(downloadButton, null);
         downloadLink.href = 'https://github.com/Redcxx/cv/raw/master/resume.pdf'
-        title.parentNode.insertBefore(downloadLink, title.nextSibling);
+
+        // remove original header
+        cv.children[0].remove();
+
+        // add new header
+        const header = document.createElement('p');
+        header.insertBefore(viewInGithubLink, null);
+        header.insertBefore(titleLink, null);
+        header.insertBefore(downloadLink, null);
+        // insert header into cv
+        cv.insertBefore(header, cv.children[0]);
 
         // add contact info section
         const phoneSpan: HTMLSpanElement = document.createElement('span');
