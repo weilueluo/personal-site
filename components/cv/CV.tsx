@@ -1,15 +1,7 @@
 import styles from './CV.module.sass'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function CV(props) {
-
-    const viewInGithub = () => {
-        window.open('https://github.com/Redcxx/cv/blob/master/resume.pdf', '_self');
-    }
-
-    const download = () => {
-        window.open('https://github.com/Redcxx/cv/raw/master/resume.pdf', '_self');
-    }
 
     const [postprocessed, setPostProcessed] = useState(false);
 
@@ -31,33 +23,50 @@ export default function CV(props) {
         // add view in github button
         const viewInGithubButton: HTMLButtonElement = document.createElement('button');
         viewInGithubButton.textContent = 'View In Github';
-        viewInGithubButton.addEventListener('click', viewInGithub);
-        title.parentNode.insertBefore(viewInGithubButton, title);
+        const viewInGithubLink: HTMLAnchorElement = document.createElement('a');
+        viewInGithubLink.href = 'https://github.com/Redcxx/cv/blob/master/resume.pdf'
+        viewInGithubLink.insertBefore(viewInGithubButton, null);
+        title.parentNode.insertBefore(viewInGithubLink, title);
         // add download button
         const downloadButton: HTMLButtonElement = document.createElement('button');
         downloadButton.textContent = 'Download';
-        downloadButton.addEventListener('click', download);
-        title.parentNode.insertBefore(downloadButton, title.nextSibling);
+        const downloadLink: HTMLAnchorElement = document.createElement('a');
+        downloadLink.insertBefore(downloadButton, null);
+        downloadLink.href = 'https://github.com/Redcxx/cv/raw/master/resume.pdf'
+        title.parentNode.insertBefore(downloadLink, title.nextSibling);
 
         // add contact info section
         const phoneSpan: HTMLSpanElement = document.createElement('span');
         phoneSpan.textContent = '(+44) 07543295595'
+        const phoneLink: HTMLAnchorElement = document.createElement('a');
+        phoneLink.href = 'tel:+4407543295595'
+        phoneLink.insertBefore(phoneSpan, null);
+
 
         const emailSpan: HTMLSpanElement = document.createElement('span');
         emailSpan.textContent = 'work.luoweilue@gmail.com'
+        const emailLink: HTMLAnchorElement = document.createElement('a');
+        emailLink.href = 'mailto:work.luoweilue@gmail.com'
+        emailLink.insertBefore(emailSpan, null);
 
         const githubSpan: HTMLSpanElement = document.createElement('span');
         githubSpan.textContent = 'Redcxx'
+        const githubLink: HTMLAnchorElement = document.createElement('a');
+        githubLink.href = 'https://github.com/redcxx'
+        githubLink.insertBefore(githubSpan, null);
 
         const websiteSpan: HTMLSpanElement = document.createElement('span');
-        websiteSpan.textContent = 'https://weilueluo.com'
+        websiteSpan.textContent = 'weilueluo.com'
+        const websiteLink: HTMLAnchorElement = document.createElement('a');
+        websiteLink.href = 'https://weilueluo.com'
+        websiteLink.insertBefore(websiteSpan, null);
 
         const contactDiv: HTMLSpanElement = document.createElement('span');
         header.parentNode.insertBefore(contactDiv, header.nextSibling);
-        contactDiv.insertBefore(phoneSpan, null);
-        contactDiv.insertBefore(emailSpan, null);
-        contactDiv.insertBefore(githubSpan, null);
-        contactDiv.insertBefore(websiteSpan, null);
+        contactDiv.insertBefore(phoneLink, null);
+        contactDiv.insertBefore(emailLink, null);
+        contactDiv.insertBefore(githubLink, null);
+        contactDiv.insertBefore(websiteLink, null);
 
     }, [postprocessed])
 

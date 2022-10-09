@@ -37,12 +37,18 @@
     flex-direction: row
     align-items: center
     justify-content: space-around
-    margin-top: 50px
+    margin-top: 20px
 
-    @media (max-width:620px)
+    a
+        display: flex
+        align-items: center
+        justify-content: center
+
+    @media (max-width:550px)
         gap: 15px
         flex-wrap: wrap
-        button
+        a
+            flex-basis: 40%
             order: -1  // put button on top
 
     button
@@ -59,13 +65,17 @@
     flex-direction: row
     align-items: center
     justify-content: space-around
-    flex-wrap: wrap
+    @media (max-width:700px)
+        flex-direction: column
 
-    span
+    a
         position: relative
-        margin-left: 30px 
+        margin-left: 30px
 
-    span::before
+    a:hover
+        text-decoration: underline
+
+    a::before
         content: ''
         position: absolute
         height: 15px
@@ -75,16 +85,16 @@
         background-position: center
         background-repeat: no-repeat
     
-    span:nth-child(1)::before
+    a:nth-child(1)::before
         background-image: url('/icons/contact/phone-solid.svg')
     
-    span:nth-child(2)::before
+    a:nth-child(2)::before
         background-image: url('/icons/contact/envelope-solid.svg')
 
-    span:nth-child(3)::before
+    a:nth-child(3)::before
         background-image: url('/icons/contact/github.svg')
 
-    span:nth-child(4)::before
+    a:nth-child(4)::before
         background-image: url('/icons/contact/house-chimney-solid.svg')
 
 
