@@ -23,9 +23,9 @@ export default function CV() {
             // );
 
             if (isDevEnv()) {
-                window.open('/cv');
+                window.open('/cv', '_self');
             } else {
-                window.open('/cv.html');
+                window.open('/cv.html', '_self');
             }
         }
     };

@@ -5,11 +5,11 @@ import { useEffect, useState } from 'react'
 export default function CV(props) {
 
     const viewInGithub = () => {
-        window.open('https://github.com/Redcxx/cv/blob/master/resume.pdf');
+        window.open('https://github.com/Redcxx/cv/blob/master/resume.pdf', '_self');
     }
 
     const download = () => {
-        window.open('https://github.com/Redcxx/cv/raw/master/resume.pdf');
+        window.open('https://github.com/Redcxx/cv/raw/master/resume.pdf', '_self');
     }
 
     const [addedViewInGithubButton, setAddedViewInGithubButton] = useState(false);

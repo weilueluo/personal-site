@@ -25,9 +25,9 @@ export default function About() {
     const onClick = () => {
         if (meshHovered) {
             if (isDevEnv()) {
-                window.open('/about');
+                window.open('/about', '_self');
             } else {
-                window.open('/about.html');
+                window.open('/about.html', '_self');
             }
         }
     };

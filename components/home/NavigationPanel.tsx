@@ -73,7 +73,7 @@ function PanelItem(props: NavItem) {
     }
 
     const onClick = (e: MouseEvent<HTMLButtonElement>) => {
-        window.open(link);
+        window.open(link, '_self');
         e.stopPropagation();
     }
 
