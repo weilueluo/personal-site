@@ -13,7 +13,6 @@ type NavItem = {
 const navItems: NavItem[] = [
     {
         name: 'CV',
-        // link: 'https://github.com/Redcxx/cv'
         link: '/cv'
     },
     {

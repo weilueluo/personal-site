@@ -1,7 +1,5 @@
 @use '../common/common'
     
-$compact-layout-width: 1100px
-    
 .cv
     width: 700px
     max-width: 90%
@@ -16,7 +14,6 @@ $compact-layout-width: 1100px
 
 
 // misc for cv
-
 @mixin sectionHeader
     font-size: larger
     font-weight: bold
@@ -33,9 +30,11 @@ $compact-layout-width: 1100px
     flex-direction: row
     align-items: center
     justify-content: space-around
-    @media (max-width:1000px)
-        flex-direction: column
+    @media (max-width:620px)
         gap: 15px
+        flex-wrap: wrap
+        button
+            order: -1 // put button on top
 
     button
         @include common.button
@@ -58,12 +57,12 @@ $compact-layout-width: 1100px
             position: absolute
             right: 0
             font-style: italic
-            @media (max-width:$compact-layout-width)
+            @media (max-width:580px)
                 position: relative
 
         span:nth-child(4)
             top: 1rem
-            @media (max-width:$compact-layout-width)
+            @media (max-width:580px)
                 top: 0px
 
 // header stuff
@@ -104,19 +103,19 @@ $compact-layout-width: 1100px
     >p
         display: flex
         flex-direction: row
-        @media (max-width:$compact-layout-width)
+        @media (max-width:1100px)
             flex-direction: column
 
         span:nth-child(1)
             @include sectionSubHeader
             width: 20%
-            @media (max-width:$compact-layout-width)
+            @media (max-width:1100px)
                 width: 100%
 
         span:nth-child(2)
             width: 80%
             @include contentText
-            @media (max-width:$compact-layout-width)
+            @media (max-width:1100px)
                 width: 100%
 
 
