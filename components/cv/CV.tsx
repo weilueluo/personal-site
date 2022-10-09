@@ -38,7 +38,7 @@ export default function CV(props) {
         // remove original header
         cv.children[0].remove();
 
-        // add new header
+        // create new header
         const header = document.createElement('p');
         header.insertBefore(viewInGithubLink, null);
         header.insertBefore(titleLink, null);
@@ -52,7 +52,6 @@ export default function CV(props) {
         const phoneLink: HTMLAnchorElement = document.createElement('a');
         phoneLink.href = 'tel:+4407543295595'
         phoneLink.insertBefore(phoneSpan, null);
-
 
         const emailSpan: HTMLSpanElement = document.createElement('span');
         emailSpan.textContent = 'work.luoweilue@gmail.com'
