@@ -1,5 +1,21 @@
 @use '../common/common'
 
+// misc
+@mixin title
+    font-size: xx-large
+    font-weight: bold
+    
+@mixin sectionHeader
+    font-size: x-large
+    font-weight: bold
+
+@mixin sectionSubHeader
+    font-weight: bold
+
+@mixin contentText
+    color: gray
+
+// overall cv
 .cv
     width: 700px
     max-width: 90%
@@ -14,23 +30,6 @@
         margin: 0px
         padding: 0px
 
-.cv > div
-        // border: 1px solid black
-        margin: 0px
-        padding: 5px 0px
-
-
-
-// misc for cv
-@mixin sectionHeader
-    font-size: x-large
-    font-weight: bold
-
-@mixin sectionSubHeader
-    font-weight: bold
-
-@mixin contentText
-    color: gray
 
 // header
 .cv > p
@@ -44,16 +43,54 @@
         gap: 15px
         flex-wrap: wrap
         button
-            order: -1 // put button on top
+            order: -1  // put button on top
 
     button
         @include common.button
         height: 30px
-    
-    span:nth-child(2)
-        font-size: xx-large
-        font-weight: bold
 
+    // header text
+    span:nth-child(2)
+        @include title
+
+// contact
+.cv > span
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: space-around
+    flex-wrap: wrap
+
+    span
+        position: relative
+        margin-left: 30px 
+
+    span::before
+        content: ''
+        position: absolute
+        height: 15px
+        width: 15px
+        left: -20px
+        top: 4px
+        background-position: center
+        background-repeat: no-repeat
+    
+    span:nth-child(1)::before
+        background-image: url('/icons/contact/phone-solid.svg')
+    
+    span:nth-child(2)::before
+        background-image: url('/icons/contact/envelope-solid.svg')
+
+    span:nth-child(3)::before
+        background-image: url('/icons/contact/github.svg')
+
+    span:nth-child(4)::before
+        background-image: url('/icons/contact/house-chimney-solid.svg')
+
+
+        
+
+// education, skills, experience & projects
 .cv > div
     position: relative
     overflow: hidden
@@ -75,7 +112,7 @@
             @media (max-width:580px)
                 top: 0px
 
-// header stuff
+// section header
 .cv > div::before
     @include sectionHeader
     z-index: 1
@@ -83,7 +120,7 @@
     padding-right: 15px
     color: #0395de
 
-// line separator stuff
+// section header line
 .cv > div::after
     content: ''
     position: absolute
@@ -95,7 +132,7 @@
     z-index: -1
 
 // education
-.cv > div:nth-child(2)
+.cv > div:nth-child(3)
     &::before
         content: 'Education'
         @include sectionHeader
@@ -109,7 +146,7 @@
         
 
 // skills
-.cv > div:nth-child(3)
+.cv > div:nth-child(4)
     &::before
         content: 'Skills'
     >p
@@ -132,7 +169,7 @@
 
 
 // experience
-.cv > div:nth-child(4)
+.cv > div:nth-child(5)
     &::before
         content: 'Experience'
 
@@ -140,15 +177,14 @@
         span:nth-child(1)
             @include sectionSubHeader
 
-    
-
 
 // projects
-.cv > div:nth-child(5)
+.cv > div:nth-child(6)
     &::before
         content: 'Selected Projects'
 
-.cv > div:nth-child(4), .cv > div:nth-child(5)
+// experience & project
+.cv > div:nth-child(5), .cv > div:nth-child(6)
     >p
         span:nth-child(2)
             order: -1
