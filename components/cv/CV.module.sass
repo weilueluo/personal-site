@@ -1,10 +1,18 @@
 @use '../common/common'
-    
+
 .cv
     width: 700px
     max-width: 90%
     height: fit-content
     margin: 0px auto
+
+    display: flex
+    flex-direction: column
+    gap: 10px
+
+    *
+        margin: 0px
+        padding: 0px
 
 .cv > div
         // border: 1px solid black
@@ -15,7 +23,7 @@
 
 // misc for cv
 @mixin sectionHeader
-    font-size: larger
+    font-size: x-large
     font-weight: bold
 
 @mixin sectionSubHeader
@@ -30,6 +38,8 @@
     flex-direction: row
     align-items: center
     justify-content: space-around
+    margin-top: 50px
+
     @media (max-width:620px)
         gap: 15px
         flex-wrap: wrap
@@ -47,7 +57,7 @@
 .cv > div
     position: relative
     overflow: hidden
-    margin: 20px 0px
+    
     p
         position: relative
         display: flex
@@ -71,12 +81,13 @@
     z-index: 1
     background: white
     padding-right: 15px
+    color: #0395de
 
 // line separator stuff
 .cv > div::after
     content: ''
     position: absolute
-    background: black
+    background: #0395de
     width: 100%
     height: 3px
     top: 1.5rem
@@ -90,6 +101,7 @@
         @include sectionHeader
 
     p
+        margin: 5px 0px
         // college name first
         span:nth-child(2)
             order: -1
@@ -128,16 +140,7 @@
         span:nth-child(1)
             @include sectionSubHeader
 
-    >div
-        padding: 0px 10px
-        >p
-            margin: 5px 0px
-            @include contentText
-            
-            ::before
-                content: '\2022  '
-                font-weight: bold
-                color: black
+    
 
 
 // projects
@@ -145,6 +148,7 @@
     &::before
         content: 'Selected Projects'
 
+.cv > div:nth-child(4), .cv > div:nth-child(5)
     >p
         span:nth-child(2)
             order: -1
@@ -152,15 +156,19 @@
     
     >div
         padding: 0px 10px
+
         >p
-            margin: 5px 0px
+            margin: 5px auto
             @include contentText
+            position: relative
+            width: 650px
+            max-width: 100%
             
-            >::before
+            ::before
                 content: '\2022  '
                 font-weight: bold
                 color: black
-
-
-
+                position: absolute
+                left: -10px
+                top: 0
 
