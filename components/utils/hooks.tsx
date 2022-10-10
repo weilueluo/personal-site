@@ -1,6 +1,7 @@
 import { useFrame } from '@react-three/fiber';
 import assert from 'assert';
-import { useEffect, useState } from 'react';
+import { Ref, useEffect, useState } from 'react';
+import { Object3D } from 'three';
 import { isMobileOrTablet } from '../home/scene/global';
 import { clamp, playAnimation, playAnimationReverse } from './utils';
 
@@ -143,7 +144,7 @@ export function useAltScroll() {
 
 const intersectResult = new Array()
 
-export function useCurrentMouseHover() {
+export function useCurrent3DHover(): Object3D {
 
     const [intersect, setIntersect] = useState(null)
 
@@ -164,21 +165,55 @@ export function useCurrentMouseHover() {
     return intersect;
 }
 
-export function use3MouseHover(objectRef) {
+// check hovered, recursively checks children ---- too expensive
+// function getHoveredObject(object: Object3D | Object3D[], targetID: number): Object3D {
+//     if (!object) {
+//         return null;
+//     }
+//     if (Array.isArray(object)) {
+//         for (let i = 0 ; i < object.length; i++) {
+//             const hoveredObject = getHoveredObject(object[i], targetID);
+//             if (hoveredObject) {
+//                 return hoveredObject;
+//             }
+//         }
+//         return null;
+//     }
+
+//     if (object.id == targetID) {
+//         return object;
+//     }
+    
+//     // check if any children is hovered 
+//     return getHoveredObject(object.children, targetID);
+// }
+
+
+export function use3DHover(objectRef: {current: null | Object3D}) {
     const [hover, setHover] = useState(false);
-    const intersect = useCurrentMouseHover();
+    const [object, setObject] = useState(null);
+    const intersectedObject = useCurrent3DHover();
 
     useFrame(() => {
-        const object = objectRef.current;
-        if (!object) {
-            setHover(false);
-            return;
+        const objectToCheck = objectRef.current;
+        if (intersectedObject && objectToCheck) {
+            // recursively check parent as well
+            let parent = intersectedObject;
+            while (parent) {
+                if (objectToCheck.id == parent.id) {
+                    setHover(true);
+                    setObject(intersectedObject);
+                    return;
+                }
+                parent = parent.parent;
+            }
         }
 
-        setHover(intersect != null && intersect.id == object.id);
+        setHover(false);
+        setObject(null);
     });
 
-    return hover;
+    return [hover, object]
 }
 
 export function getDeviceDependent(mobileValue, desktopValue) {

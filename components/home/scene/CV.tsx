@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Matrix3, Matrix4, Vector3 } from 'three';
-import { getDeviceDependent, use3MouseHover } from '../../utils/hooks';
+import { getDeviceDependent, use3DHover } from '../../utils/hooks';
 import { isDevEnv } from '../../utils/utils';
 import { useInnerBallMaterial } from './hooks';
 import ThreeSurroundingText from './ThreeSurroundingText';
@@ -10,7 +10,7 @@ export default function CV() {
     
     const meshRef = useRef();
 
-    const meshHovered = use3MouseHover(meshRef);
+    const meshHovered = use3DHover(meshRef);
     useEffect(() => {
         document.body.style.cursor = meshHovered ? 'pointer' : 'default';
     }, [meshHovered])

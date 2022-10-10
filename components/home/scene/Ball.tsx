@@ -13,7 +13,7 @@ import {
     ShaderMaterial,
     Vector3
 } from 'three';
-import { useAltScroll } from '../../utils/hooks';
+import { use3DHover, useAltScroll, useCurrent3DHover } from '../../utils/hooks';
 import { useMaxAnimationDuration } from '../../utils/utils';
 import { getMainBallRadius } from './global';
 import sphere_fs from './shaders/sphere_fs.glsl';
@@ -61,43 +61,284 @@ function useGLTF(loadUrl) {
     return gltf
 }
 
-function useMeshes(gltf) {
-    const [meshes, setMeshes] = useState<Array<Mesh>>([]);
-    const [meshMaterials, setMeshMaterials] = useState<Array<Material>>([]);
-    const [otherNodes, setOtherNodes] = useState<Array<JSX.Element>>([]);
-    const [animations, setAnimations] = useState<any>([]);
-    const [centerOffset, setCenterOffset] = useState<Vector3>(new Vector3(0, 0, 0));
-
-    const lightPosition = useContext(lightPositionContext)
+function useMeshNodes(gltf) {
+    const [meshes, setMeshes] = useState([]);
+    const [others, setOthers] = useState([]);
 
     useEffect(() => {
-        if (gltf) {
-            const [meshes_, meshMaterials_, otherNodes_] = computeMeshes(
-                gltf.scene.children,
-                lightPosition
-            );
-            setMeshes(meshes_);
-            setMeshMaterials(meshMaterials_);
-            setOtherNodes(
-                otherNodes_.map((node) => (
-                    <group
-                        key={node.name}
-                        name={node.name}
-                        position={node.position}
-                    />
-                ))
-            );
-            setAnimations(gltf.animations);
-
-            // set the center offset vector
-            // this ensure the ball is at the center
-            const box = new Box3().setFromObject(gltf.scene);
-            const center = box.getCenter(new Vector3());
-            setCenterOffset(center.multiplyScalar(-1));
+        if (!gltf) {
+            return;
         }
-    }, [gltf, lightPosition])
+        const nodes = gltf.scene.children;
+        const meshes_ = [];
+        const others_ = [];
+        nodes.forEach((node) => {
+            if (node.type == 'Mesh') meshes_.push(node);
+            else others_.push(node);
+        });
+        setMeshes(meshes_);
+        setOthers(others_);
+    }, [gltf]);
 
-    return [meshes, meshMaterials, otherNodes, animations, centerOffset]
+    return [meshes, others];
+}
+
+function useAnimations(gltf) {
+
+    const [animations, setAnimations] = useState([]);
+
+    useEffect(() => {
+        if (!gltf) {
+            return;
+        }
+        setAnimations(gltf.animations);
+    }, [gltf]);
+
+    return animations
+}
+
+function useCenterOffset(gltf) {
+    const [centerOffset, setCenterOffset] = useState<Vector3>(new Vector3(0, 0, 0));
+    useEffect(() => {
+        if (!gltf) {
+            return;
+        }
+        const box = new Box3().setFromObject(gltf.scene);
+        const center = box.getCenter(new Vector3());
+        setCenterOffset(center.multiplyScalar(-1));
+    }, [gltf]);
+
+    return centerOffset;
+}
+
+function useJSXMeshes(meshNodes, materials) {
+    const [meshes, setMeshes] = useState<JSX.Element[]>([]);
+    
+    useEffect(() => {
+        const new_meshes = meshNodes.map((meshNode, i) => {
+            const geometry = meshNode.geometry;
+            geometry.computeVertexNormals();
+
+            return (
+                <mesh
+                    // ref={meshRef}
+                    key={meshNode.uuid}
+                    name={meshNode.name}
+                    castShadow
+                    receiveShadow
+                    geometry={meshNode.geometry}
+                    material={materials[i]}
+                    position={meshNode.position}
+                />
+            );
+        });
+
+        setMeshes(new_meshes);
+
+    }, [meshNodes, materials]);
+
+    return meshes;
+}
+
+function useJSXOthers(otherNodes) {
+    const [others, setOthers] = useState<JSX.Element[]>([]);
+    
+    useEffect(() => {
+        const new_others = otherNodes.map((node) => (
+            <group
+                key={node.name}
+                name={node.name}
+                position={node.position}
+            />
+        ));
+        setOthers(new_others);
+    }, [otherNodes]);
+
+    return others;
+}
+
+function MainBall(props) {
+    const gltf = props.gltf;
+
+    const lightPosition = useContext(lightPositionContext);
+
+    const [meshNodes, otherNodes] = useMeshNodes(gltf);
+    const materials = useMaterials(meshNodes, lightPosition);
+    const animations = useAnimations(gltf);
+    const centerOffset = useCenterOffset(gltf);
+
+    const jsxMeshes = useJSXMeshes(meshNodes, materials);
+    const jsxOthers = useJSXOthers(otherNodes);
+
+    const altScroll = useAltScroll();
+
+    const ballRef = useRef();
+
+    // update
+    let lastTime = 0;
+    useFrame((state) => {
+        const scrolled = altScroll > 0.15;
+
+        let time: number;
+        if (scrolled) {
+            time = state.clock.getElapsedTime()
+            lastTime = time;
+        } else {
+            // freeze time (i.e. freeze color changes) if scrolled
+            // because color changes in darkness looks weird
+            time = lastTime;
+        }
+
+        // set ball rotate state
+        const scene = ballRef.current as Group;
+        if (scene) {
+            scene.rotation.z += (scrolled ? 0.0 : 0.002);
+            scene.rotation.y += (scrolled ? 0.0 : 0.001);
+            scene.rotation.x += (scrolled ? 0.0 : 0.003);
+        }
+        tempMat3.setFromMatrix4(tempMat4.makeRotationFromEuler(scene.rotation))
+        
+        materials.forEach((mat) => {
+            mat.uniforms.uTime.value = time;
+            mat.uniforms.uScrolledAmount.value = altScroll;
+            mat.uniforms.uDoWave.value = !scrolled; // do not wave if scrolled
+            mat.uniforms.uBallRotation.value = tempMat3;
+            mat.uniforms.uLightPosition.value = lightPosition;
+        });
+    });
+    
+    useAnimationOnScroll(gltf, ballRef, animations)
+    const radius = getMainBallRadius();
+
+    const [hovered, hoveredObject] = use3DHover(ballRef);
+    // const currentHovered = useCurrent3DHover();
+    // const [meshIDs, setMeshIDs] = useState(new Set());
+    // const [meshID2ObjectMap, setMeshID2ObjectMap] = useState(new Map());
+    // useEffect(() => {
+    //     const newMeshIDs = new Set<Number>();
+    //     const newMeshID2ObjectMap = new Map<Number, Object3D>();
+
+    //     meshNodes.forEach(node => {
+    //         newMeshIDs.add(node.id);
+    //         newMeshID2ObjectMap[node.id] = node;
+    //     })
+
+    //     setMeshIDs(newMeshIDs);
+    //     setMeshID2ObjectMap(newMeshID2ObjectMap);
+    // }, [meshNodes])
+    useEffect(() => {
+        // console.log(`ball hovered: ${ballHovered}`);
+        // console.log(hoveredObject);
+        // console.log(currentHovered);
+        if (hovered && hoveredObject.isMesh) {
+            const hoveredMesh = hoveredObject as Mesh;
+            const material = hoveredMesh.material as ShaderMaterial;
+            material.uniforms.uHovered.value = true;
+            return () => { material.uniforms.uHovered.value = false };
+        }
+        
+        // if (currentHovered && currentHovered.isMesh) {
+            // console.log(currentHovered);
+            // console.log(`mesh hovered`);
+            
+            // if (meshIDs.has(currentHovered.id)) {
+            //     //  hovered mesh is ball's mesh
+            //     console.log(`ball mesh hovered`);
+            //     const hoveredMesh = meshID2ObjectMap[currentHovered.id] as Mesh;
+            //     const material = hoveredMesh.material as ShaderMaterial;
+            //     material.uniforms.uHovered.value = true;
+            //     return () => { material.uniforms.uHovered.value = false };
+            // }
+        // }
+        
+    })
+
+    return (
+        <group ref={ballRef} scale={radius} dispose={null}>
+            <group name='Scene' position={centerOffset}>
+                {jsxOthers}
+                {jsxMeshes}
+            </group>
+        </group>
+    )
+
+}
+
+function useMaterials(meshNodes, lightPosition) {
+
+    const uniforms = {
+        uTime: { value: 0.5 },
+        uPosition: { value: new Vector3(0, 0, 0) },
+        uOffsetAmount: { value: 0.0 },
+        uWaveAmount: { value: 0.0 },
+        uWaveSpeed: { value: 0.0 },
+        uScrolledAmount: { value: 0.0 },
+        uDoWave: { value: true },
+        uLightPosition: { value: lightPosition },
+        uBallRotation: { value: tempMat3 },
+        uHovered: { value: false }
+    };
+
+    const sharedMaterial = new ShaderMaterial({
+        uniforms: uniforms,
+        vertexShader: sphere_vs,
+        fragmentShader: sphere_fs,
+    });
+
+    const [materials, setMaterials] = useState([]);
+
+    useEffect(() => {
+        const new_materials = Array(meshNodes.length);
+        meshNodes.forEach((mesh, i) => {
+            const material = sharedMaterial.clone();
+            const position = mesh.position;
+    
+            if (Math.random() < 0.15) {
+                material.wireframe = true;
+            }
+    
+            material.uniforms.uPosition.value = position;
+            
+            if (FLOAT_BALL) {
+                const distToCenter = position.clone().length();
+                if (distToCenter > 0.8 && Math.random() < 0.15) {
+                    material.uniforms.uWaveAmount.value = Math.random() * 0.05;
+                    material.uniforms.uOffsetAmount.value = Math.random() * 0.05;
+                    material.uniforms.uWaveSpeed.value = Math.random() * 0.2 + 1;
+                }
+            }
+
+            new_materials[i] = material;
+    
+            // const meshRef = useRef()
+    
+            // const hovered = use3MouseHover(meshRef)
+            // useEffect(() => {
+            //     if (hovered) {
+            //         console.log(`mesh: ${mesh.uuid} hovered`);
+            //     }
+            // }, [hovered])
+    
+            // meshes[i] = (
+            //     <mesh
+            //         // ref={meshRef}
+            //         key={mesh.uuid}
+            //         name={mesh.name}
+            //         castShadow
+            //         receiveShadow
+            //         geometry={geometry}
+            //         material={material}
+            //         position={position}
+            //     />
+            // );
+    
+            
+        });
+
+        setMaterials(new_materials);
+    }, [meshNodes, sharedMaterial])
+
+    return materials;
 }
 
 function useAnimationOnScroll(gltf, ballRef, animations) {
@@ -125,63 +366,14 @@ function useAnimationOnScroll(gltf, ballRef, animations) {
     return 
 }
 
-export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
+export default function Ball() {
     
+    const gltf = useGLTF('/models/ball/ball-transformed.glb');
 
-    const gltf = useGLTF('/models/ball/ball-transformed.glb')
-
-    const [meshes, meshMaterials, otherNodes, animations, centerOffset] = useMeshes(gltf)
-
-    const ballRef = useRef();
-    useAnimationOnScroll(gltf, ballRef, animations)
-
-    const altScroll = useAltScroll();
-    const lightPosition = useContext(lightPositionContext)
-
-    let lastTime = 0;
-
-    useFrame((state) => {
-        const scrolled = altScroll > 0.15;
-
-        let time: number;
-        if (scrolled) {
-            time = state.clock.getElapsedTime()
-            lastTime = time;
-        } else {
-            // freeze time (i.e. freeze color changes) if scrolled
-            // because color changes in darkness looks weird
-            time = lastTime;
-        }
-
-        // set ball rotate state
-        const scene = ballRef.current as Group;
-        if (scene) {
-            scene.rotation.z += (scrolled ? 0.0 : 0.002);
-            scene.rotation.y += (scrolled ? 0.0 : 0.001);
-            scene.rotation.x += (scrolled ? 0.0 : 0.003);
-        }
-        tempMat3.setFromMatrix4(tempMat4.makeRotationFromEuler(scene.rotation))
-        
-        meshMaterials.forEach((mat) => {
-            mat.uniforms.uTime.value = time;
-            mat.uniforms.uScrolledAmount.value = altScroll;
-            mat.uniforms.uDoWave.value = !scrolled; // do not wave if scrolled
-            mat.uniforms.uBallRotation.value = tempMat3;
-            mat.uniforms.uLightPosition.value = lightPosition;
-        });
-    });
-
-    const radius = getMainBallRadius();
     const textRadius = getMainBallRadius() + 0.1;
     return (
         <>
-        
-            <group ref={ballRef} scale={radius} dispose={null} {...props}>
-                <group name='Scene' position={centerOffset}>
-                    {otherNodes}
-                    {meshes}
-                </group>
-            </group>
+            <MainBall gltf={gltf} />
 
             <ThreeSurroundingText
                 text={'Weilue\'s Place'}
@@ -192,90 +384,4 @@ export default function Ball({ ...props }: JSX.IntrinsicElements['group']) {
             />
         </>
     );
-}
-
-function computeMeshes(nodes: any[], lightPosition: Vector3) {
-    const uniforms = {
-        uTime: { value: 0.5 },
-        uPosition: { value: new Vector3(0, 0, 0) },
-        uOffsetAmount: { value: 0.0 },
-        uWaveAmount: { value: 0.0 },
-        uWaveSpeed: { value: 0.0 },
-        uScrolledAmount: { value: 0.0 },
-        uDoWave: { value: true },
-        uLightPosition: { value: lightPosition },
-        uBallRotation: { value: tempMat3 },
-    };
-
-    const sharedMaterial = new ShaderMaterial({
-        uniforms: uniforms,
-        vertexShader: sphere_vs,
-        fragmentShader: sphere_fs,
-    });
-
-    const meshNodes: Mesh[] = [];
-    const otherNodes: Object3D[] = [];
-
-    nodes.forEach((node) => {
-        if (node.type == 'Mesh') meshNodes.push(node);
-        else otherNodes.push(node);
-    });
-
-    const meshes = Array(meshNodes.length);
-    const materials = Array(meshNodes.length);
-    meshNodes.forEach((mesh, i) => {
-        const geometry = mesh.geometry;
-        const material = sharedMaterial.clone();
-        const position = mesh.position; //meshNameToPosition[mesh.name];
-
-        if (Math.random() < 0.15) {
-            material.wireframe = true;
-            // material.depthWrite = false;
-        }
-
-        material.uniforms.uPosition.value = position;
-        
-        if (FLOAT_BALL) {
-            const distToCenter = position.clone().length();
-            if (distToCenter > 0.8 && Math.random() < 0.15) {
-                material.uniforms.uWaveAmount.value = Math.random() * 0.05;
-                material.uniforms.uOffsetAmount.value = Math.random() * 0.05;
-                material.uniforms.uWaveSpeed.value = Math.random() * 0.2 + 1;
-            }
-        }
-
-        materials[i] = material;
-        geometry.computeVertexNormals();
-
-        // const meshRef = useRef()
-
-        // const hovered = use3MouseHover(meshRef)
-        // useEffect(() => {
-        //     if (hovered) {
-        //         console.log(`mesh: ${mesh.uuid} hovered`);
-                
-        //     }
-        // }, [hovered])
-
-        meshes[i] = (
-            <mesh
-                // ref={meshRef}
-                key={mesh.uuid}
-                name={mesh.name}
-                castShadow
-                receiveShadow
-                geometry={geometry}
-                material={material}
-                position={position}
-            />
-        );
-
-        
-    });
-
-    // meshRefs.forEach((meshRef) => {
-    //       useHelper(meshRef, VertexNormalsHelper)
-    // })
-
-    return [meshes, materials, otherNodes];
 }

@@ -2,7 +2,7 @@ import { useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef } from 'react';
 import { Group, Vector3 } from 'three';
 import {
-    getDeviceDependent, use3MouseHover, useAltScroll
+    getDeviceDependent, use3DHover, useAltScroll
 } from '../../utils/hooks';
 import { isDevEnv } from '../../utils/utils';
 import { useInnerBallMaterial } from './hooks';
@@ -19,7 +19,7 @@ export default function RSS() {
     
     const meshRef = useRef();
 
-    const meshHovered = use3MouseHover(meshRef);
+    const meshHovered = use3DHover(meshRef);
     useEffect(() => {
         document.body.style.cursor = meshHovered ? 'pointer' : 'default';
     }, [meshHovered]);

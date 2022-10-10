@@ -9,6 +9,7 @@ uniform vec3 uPosition;
 uniform float uScrolledAmount;
 uniform vec3 uLightPosition;
 uniform mat3 uBallRotation;
+uniform bool uHovered;
 
 varying vec3 vNormal;
 varying vec2 vUv;
@@ -90,6 +91,10 @@ void main() {
     color = mix(color, color * .005, clamp(uScrolledAmount * 2.0, 0.0, 1.0));
 
     color = clamp(color, 0.0, 1.0);
+
+    if (uHovered) {
+        color *= 5.0;
+    }
     gl_FragColor = vec4(color, 1.);
 
     //gl_FragColor = vec4(vNormal, 1.0);
