@@ -187,7 +187,7 @@ function MainBall(props) {
 
         // set ball rotate state
         const scene = ballRef.current as Group;
-        if (scene) {
+        if (scene && !hovered) {
             scene.rotation.z += (scrolled ? 0.0 : 0.002);
             scene.rotation.y += (scrolled ? 0.0 : 0.001);
             scene.rotation.x += (scrolled ? 0.0 : 0.003);
