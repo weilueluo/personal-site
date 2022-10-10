@@ -59,7 +59,7 @@ export default class RSSLoader {
                     // set feed to new feed
                     this._setFeeds(newFeeds);
 
-                    // refresh error anyway, in case previously there is error
+                    // refresh error as well, in case previously there is error
                     // but not this time, and it is not updated
                     this.on_error && this.on_error(errors);
                 })
@@ -88,5 +88,8 @@ const corsProxyEndpoint = 'https://hauww8y4w1.execute-api.eu-west-2.amazonaws.co
 
 async function loadRSSFeed(url: string) {
     const corsURL = corsProxyEndpoint + (isDevEnv() ? '/dev?url=' : '/prod?url=') + url;
+    console.log(corsURL);
+    console.log(window.location.host);
+    
     return await RSSURLParser.parseURL(corsURL);
 }
