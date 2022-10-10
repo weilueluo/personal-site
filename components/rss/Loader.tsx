@@ -65,6 +65,8 @@ export default class RSSLoader {
                 })
                 .catch((error) => {
                     console.log(`RSSLoader error: ${error}`);
+                    console.log(error);
+                    
                     error.url = opt.url;
                     errors.push(error);
                     this.on_error && this.on_error(errors);
