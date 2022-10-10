@@ -165,31 +165,19 @@ export function useCurrent3DHover(): Object3D {
     return intersect;
 }
 
-// check hovered, recursively checks children ---- too expensive
-// function getHoveredObject(object: Object3D | Object3D[], targetID: number): Object3D {
-//     if (!object) {
-//         return null;
-//     }
-//     if (Array.isArray(object)) {
-//         for (let i = 0 ; i < object.length; i++) {
-//             const hoveredObject = getHoveredObject(object[i], targetID);
-//             if (hoveredObject) {
-//                 return hoveredObject;
-//             }
-//         }
-//         return null;
-//     }
-
-//     if (object.id == targetID) {
-//         return object;
-//     }
-    
-//     // check if any children is hovered 
-//     return getHoveredObject(object.children, targetID);
-// }
-
-
 export function use3DHover(objectRef: {current: null | Object3D}) {
+    const [hover, setHover] = useState(false);
+    const intersectedObject = useCurrent3DHover();
+
+    useFrame(() => {
+        const objectToCheck = objectRef.current;
+        setHover(objectToCheck && intersectedObject && objectToCheck.id == intersectedObject.id);
+    });
+
+    return hover
+}
+
+export function use3DParentHover(objectRef: {current: null | Object3D}) {
     const [hover, setHover] = useState(false);
     const [object, setObject] = useState(null);
     const intersectedObject = useCurrent3DHover();

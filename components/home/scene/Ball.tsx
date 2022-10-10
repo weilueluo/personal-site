@@ -4,16 +4,12 @@ import {
     AnimationMixer,
     Box3,
     Group,
-    LoopPingPong,
-    Material,
-    Matrix3,
+    LoopPingPong, Matrix3,
     Matrix4,
-    Mesh,
-    Object3D,
-    ShaderMaterial,
+    Mesh, ShaderMaterial,
     Vector3
 } from 'three';
-import { use3DHover, useAltScroll, useCurrent3DHover } from '../../utils/hooks';
+import { use3DParentHover, useAltScroll } from '../../utils/hooks';
 import { useMaxAnimationDuration } from '../../utils/utils';
 import { getMainBallRadius } from './global';
 import sphere_fs from './shaders/sphere_fs.glsl';
@@ -28,7 +24,6 @@ import ThreeSurroundingText from './ThreeSurroundingText';
 
 const FLOAT_BALL = false;
 
-const rotateVector = new Vector3(1, 1, 1).normalize();
 const tempMat3 = new Matrix3();
 const tempMat4 = new Matrix4();
 
@@ -211,18 +206,15 @@ function MainBall(props) {
     useAnimationOnScroll(gltf, ballRef, animations)
     const radius = getMainBallRadius();
 
-    const [hovered, hoveredObject] = use3DHover(ballRef);
+    const [hovered, hoveredObject] = use3DParentHover(ballRef);
 
     useEffect(() => {
-
         if (hovered && hoveredObject.isMesh) {
             const hoveredMesh = hoveredObject as Mesh;
             const material = hoveredMesh.material as ShaderMaterial;
             material.uniforms.uHovered.value = true;
             return () => { material.uniforms.uHovered.value = false };
         }
-
-        
     })
 
     return (
