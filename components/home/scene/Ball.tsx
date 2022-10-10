@@ -163,6 +163,7 @@ function MainBall(props) {
     const lightPosition = useContext(lightPositionContext);
 
     const [meshNodes, otherNodes] = useMeshNodes(gltf);
+
     const materials = useMaterials(meshNodes, lightPosition);
     const animations = useAnimations(gltf);
     const centerOffset = useCenterOffset(gltf);
@@ -211,45 +212,16 @@ function MainBall(props) {
     const radius = getMainBallRadius();
 
     const [hovered, hoveredObject] = use3DHover(ballRef);
-    // const currentHovered = useCurrent3DHover();
-    // const [meshIDs, setMeshIDs] = useState(new Set());
-    // const [meshID2ObjectMap, setMeshID2ObjectMap] = useState(new Map());
-    // useEffect(() => {
-    //     const newMeshIDs = new Set<Number>();
-    //     const newMeshID2ObjectMap = new Map<Number, Object3D>();
 
-    //     meshNodes.forEach(node => {
-    //         newMeshIDs.add(node.id);
-    //         newMeshID2ObjectMap[node.id] = node;
-    //     })
-
-    //     setMeshIDs(newMeshIDs);
-    //     setMeshID2ObjectMap(newMeshID2ObjectMap);
-    // }, [meshNodes])
     useEffect(() => {
-        // console.log(`ball hovered: ${ballHovered}`);
-        // console.log(hoveredObject);
-        // console.log(currentHovered);
+
         if (hovered && hoveredObject.isMesh) {
             const hoveredMesh = hoveredObject as Mesh;
             const material = hoveredMesh.material as ShaderMaterial;
             material.uniforms.uHovered.value = true;
             return () => { material.uniforms.uHovered.value = false };
         }
-        
-        // if (currentHovered && currentHovered.isMesh) {
-            // console.log(currentHovered);
-            // console.log(`mesh hovered`);
-            
-            // if (meshIDs.has(currentHovered.id)) {
-            //     //  hovered mesh is ball's mesh
-            //     console.log(`ball mesh hovered`);
-            //     const hoveredMesh = meshID2ObjectMap[currentHovered.id] as Mesh;
-            //     const material = hoveredMesh.material as ShaderMaterial;
-            //     material.uniforms.uHovered.value = true;
-            //     return () => { material.uniforms.uHovered.value = false };
-            // }
-        // }
+
         
     })
 
@@ -279,15 +251,18 @@ function useMaterials(meshNodes, lightPosition) {
         uHovered: { value: false }
     };
 
-    const sharedMaterial = new ShaderMaterial({
-        uniforms: uniforms,
-        vertexShader: sphere_vs,
-        fragmentShader: sphere_fs,
-    });
+
 
     const [materials, setMaterials] = useState([]);
 
     useEffect(() => {
+
+        const sharedMaterial = new ShaderMaterial({
+            uniforms: uniforms,
+            vertexShader: sphere_vs,
+            fragmentShader: sphere_fs,
+        });
+
         const new_materials = Array(meshNodes.length);
         meshNodes.forEach((mesh, i) => {
             const material = sharedMaterial.clone();
@@ -310,33 +285,10 @@ function useMaterials(meshNodes, lightPosition) {
 
             new_materials[i] = material;
     
-            // const meshRef = useRef()
-    
-            // const hovered = use3MouseHover(meshRef)
-            // useEffect(() => {
-            //     if (hovered) {
-            //         console.log(`mesh: ${mesh.uuid} hovered`);
-            //     }
-            // }, [hovered])
-    
-            // meshes[i] = (
-            //     <mesh
-            //         // ref={meshRef}
-            //         key={mesh.uuid}
-            //         name={mesh.name}
-            //         castShadow
-            //         receiveShadow
-            //         geometry={geometry}
-            //         material={material}
-            //         position={position}
-            //     />
-            // );
-    
-            
         });
 
         setMaterials(new_materials);
-    }, [meshNodes, sharedMaterial])
+    }, [meshNodes])
 
     return materials;
 }
