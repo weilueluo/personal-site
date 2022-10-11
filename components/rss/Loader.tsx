@@ -90,8 +90,5 @@ const corsProxyEndpoint = 'https://hauww8y4w1.execute-api.eu-west-2.amazonaws.co
 
 async function loadRSSFeed(url: string) {
     const corsURL = corsProxyEndpoint + (isDevEnv() ? '/dev?url=' : '/prod?url=') + url;
-    console.log(corsURL);
-    console.log(window.location.host);
-    
     return await RSSURLParser.parseURL(corsURL);
 }
