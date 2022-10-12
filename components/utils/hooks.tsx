@@ -12,11 +12,14 @@ function getDesktopScrollPercent() {
         st = 'scrollTop',
         sh = 'scrollHeight';
 
-    return clamp(
-        ((h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight)) * 100,
-        0,
-        100
-    );
+    const availableScroll = ((h[sh] || b[sh]) - h.clientHeight);
+    const scrolled = h[st] || b[st];
+
+    if (availableScroll < 1e-6) {
+        return 0; // when there is no scroll available 
+    } else {
+        return clamp(scrolled / availableScroll * 100, 0, 100);
+    }
 }
 
 let consistentRealTarget = null;
@@ -126,6 +129,7 @@ export function useScrollPercent(from: number, to: number) {
 
 export function useAltScroll() {
     const scroll = useScrollPercent(0, 100);
+
     let altScroll = scroll * 2;
     if (altScroll > 1) {
         altScroll = 2 - altScroll;

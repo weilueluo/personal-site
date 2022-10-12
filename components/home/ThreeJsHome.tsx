@@ -21,7 +21,7 @@ import Stars from './scene/Stars';
 
 const tempVector3 = new Vector3(10, 10, 0);
 
-function Content() {
+export function MyContent() {
     const enableOrbitControl = getDeviceDependent(false, true); // disable scroll on mobile, because it is used to play animation
 
     useEffect(() => {
@@ -54,11 +54,10 @@ function Content() {
                 <About />
                 <Lines />
                 <Stars />
-        
-                <GradientBackground />
-                <Lights />
+                <MyLights />
             </lightPositionContext.Provider>
             
+            <GradientBackground />
             <OrbitControls
                 enabled={true}
                 enablePan={false}
@@ -78,7 +77,7 @@ function Content() {
 }
 
 
-function Lights() {
+export function MyLights() {
     const lightRef = useRef();
 
     const mapSize = getDeviceDependent(128, 512);
@@ -118,7 +117,7 @@ export default function Home() {
     return (
         <>
             <MyCanvas>
-                <Content />
+                <MyContent />
             </MyCanvas>
             <LoaderProgress />
             <div>
@@ -129,7 +128,7 @@ export default function Home() {
 }
 
 React.useLayoutEffect = React.useEffect;  // suppress useLayoutEffect warning, because we did not use it, dont know where it comes from
-function MyCanvas(props) {
+export function MyCanvas(props) {
     const onCreated = useMemo(() => (state) => {
         state.setDpr(window.devicePixelRatio);
     }, []);
