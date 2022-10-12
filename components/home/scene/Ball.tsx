@@ -250,8 +250,7 @@ function useMaterials(meshNodes, lightPosition) {
         const sharedMaterial = new ShaderMaterial({
             uniforms: uniforms,
             vertexShader: sphere_vs,
-            fragmentShader: sphere_fs,
-            transparent: true
+            fragmentShader: sphere_fs
         });
 
         const new_materials = Array(meshNodes.length);
