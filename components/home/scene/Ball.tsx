@@ -243,8 +243,6 @@ function useMaterials(meshNodes, lightPosition) {
         uHovered: { value: false }
     };
 
-
-
     const [materials, setMaterials] = useState([]);
 
     useEffect(() => {
@@ -253,6 +251,7 @@ function useMaterials(meshNodes, lightPosition) {
             uniforms: uniforms,
             vertexShader: sphere_vs,
             fragmentShader: sphere_fs,
+            transparent: true
         });
 
         const new_materials = Array(meshNodes.length);

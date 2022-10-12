@@ -1,9 +1,9 @@
 import { useFrame } from '@react-three/fiber';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ShaderMaterial, Vector3 } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-import { getDeviceDependent, useAltScroll } from '../../utils/hooks';
+import { getDeviceDependent, use3DParentHover, useAltScroll } from '../../utils/hooks';
 
 import { lightPositionContext } from '../../utils/context';
 import text_fs from './shaders/text_fs.glsl';

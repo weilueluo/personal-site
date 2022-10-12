@@ -12,6 +12,7 @@ uniform float uPhi;
 uniform float uTheta;
 
 varying vec3 vNormal;
+varying vec3 vvNormal;
 
 #pragma glslify: make_translation = require('./partials/translation.glsl')
 #pragma glslify: make_local_rotation = require('./partials/local_rotation.glsl')
@@ -36,6 +37,7 @@ void main() {
     vec3 newPosition = (translate_mat * rotation_mat * vec4(position, 1.0)).xyz;
 
     vNormal = (translate_mat * rotation_mat * vec4(normal, 1.0)).xyz;
+    vvNormal = normal;
 
     gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
 }
