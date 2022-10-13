@@ -1,6 +1,10 @@
 import { BufferGeometry, Line, LineBasicMaterial, Vector3 } from "three";
 
-import { ReactThreeFiber, extend } from '@react-three/fiber'
+import { ReactThreeFiber, extend, useFrame, RootState } from '@react-three/fiber'
+import { Ref, RefObject, useRef } from "react";
+import { clamp } from "../utils/utils";
+import { assert } from "console";
+import { LineAnimator } from "../animation/LineAnimator";
 
 
 // https://github.com/pmndrs/react-three-fiber/discussions/1387
@@ -8,7 +12,7 @@ extend({ Line_: Line })
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      line_: ReactThreeFiber.Object3DNode<THREE.Line, typeof Line>
+      line_: ReactThreeFiber.Object3DNode<Line, typeof Line>
     }
   }
 }
@@ -16,20 +20,33 @@ declare global {
 
 export default function ExperimentalContent() {
 
-    const points = [];
-    points.push(new Vector3(- 10, 0, 0));
-    points.push(new Vector3(0, 10, 0));
-    points.push(new Vector3(10, 0, 0));
-    points.push(new Vector3(- 10, 0, 0));
+  // destinations.push(new Vector3(10, 0, 0));
+  // destinations.push(new Vector3(- 10, 0, 0));
 
-    const geometry = new BufferGeometry().setFromPoints(points);
-    const material = new LineBasicMaterial({
-        color: 0x0000ff
-    })
+  const geometry = new BufferGeometry();
+  const material = new LineBasicMaterial({
+    color: 0xfffffff
+  });
 
-    return (
-        <>
-            <line_ geometry={geometry} material={material} />
-        </>
-    )
+  const lineRef = useRef<any>();
+  const points = [
+    new Vector3(- 10, 0, 0), 
+    new Vector3(0, 10, 0), 
+    new Vector3(10, 0, 0), 
+    new Vector3(- 10, 0, 0)
+  ];
+  const lineAnimator = new LineAnimator(points, 1);
+  useFrame(state => {
+    if (lineRef.current) {
+      const points = lineAnimator.animateFrame(state);
+      lineRef.current.geometry.setFromPoints(points);
+    }
+    
+  })
+
+  return (
+    <>
+      <line_ ref={lineRef} geometry={geometry} material={material} />
+    </>
+  )
 }
