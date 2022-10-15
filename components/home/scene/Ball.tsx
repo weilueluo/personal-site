@@ -215,7 +215,7 @@ function MainBall(props) {
             material.uniforms.uHovered.value = true;
             return () => { material.uniforms.uHovered.value = false };
         }
-    })
+    }, [hovered, hoveredObject])
 
     return (
         <group ref={ballRef} scale={radius} dispose={null}>

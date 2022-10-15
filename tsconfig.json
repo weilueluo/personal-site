@@ -34,4 +34,5 @@
     "components/types"
   ],
   "exportTrailingSlash": true,
+  "checkjs": true
 }

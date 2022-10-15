@@ -117,11 +117,6 @@ class SingleLineAnimation implements Animation {
 
       this.onFrame && this.onFrame();
 
-    //   console.log('he');
-    //   console.log(this.prevPoints);
-    //   console.log(this.prevPoints.at(-1));
-    //   console.log(this.destination);
-      
       this.animateVector.lerpVectors(this.prevPoints.at(-1), this.destination, clamp(timeElapsed / this.duration, 0, 1));
       
       // check finished

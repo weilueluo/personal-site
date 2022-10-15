@@ -5,6 +5,7 @@ import { Ref, RefObject, useRef } from "react";
 import { clamp } from "../utils/utils";
 import { assert } from "console";
 import { LineAnimator } from "../animation/LineAnimator";
+import Text from "../home/scene/Text";
 
 
 // https://github.com/pmndrs/react-three-fiber/discussions/1387
@@ -47,6 +48,7 @@ export default function ExperimentalContent() {
   return (
     <>
       <line_ ref={lineRef} geometry={geometry} material={material} />
+      <Text />
     </>
   )
 }

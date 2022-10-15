@@ -69,9 +69,10 @@ void main() {
     //gl_FragColor = vec4(texture2D(uColorMap, vUv).xyz, 1.0);
     //vec3 color = vNormal * 0.5 + 0.5;  // diff color for diff normal 
     
-    vec3 color = normalize(uPosition) * 0.5 + 0.5;  // diff color for diff mesh
-    color = vec3(color.xz, abs(sin(uTime * 0.5)));
-    
+    // vec3 color = normalize(uPosition) * 0.5 + 0.5;  // diff color for diff mesh
+    // vec3 color = vec3(color.xz, abs(sin(uTime * 0.5)));  // smooth color using normal
+
+    vec3 color = vec3(176./255., 40./255., 99./255.);
     // bool surface = isSurface();
 
     // vec2 tile_uv = tile(vUv, 10.0);
