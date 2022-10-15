@@ -48,7 +48,7 @@ export default function ExperimentalContent() {
   return (
     <>
       <line_ ref={lineRef} geometry={geometry} material={material} />
-      <Text />
+      <Text text={'Hello Text'} />
     </>
   )
 }

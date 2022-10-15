@@ -150,10 +150,19 @@ const intersectResult = new Array()
 
 export function useCurrent3DHover(): Object3D {
 
-    const [intersect, setIntersect] = useState(null)
+    const [intersect, setIntersect] = useState(null);
 
     useFrame(state => {
-        const raycaster = state.raycaster
+        if (!intersect && state.mouse.x == 0 && state.mouse.y == 0) {
+            // when user mouse is not in webpage when page loaded
+            // the mouse xy will default to (0,0) which is the center of the page
+            // but user mouse is not actually at the center of the page
+            // so we do not do any detection here
+            return;
+        }
+
+        const raycaster = state.raycaster;
+        
         raycaster.setFromCamera(state.mouse, state.camera);
     
         intersectResult.length = 0;
@@ -188,6 +197,7 @@ export function use3DParentHover(objectRef: {current: null | Object3D}) {
 
     useFrame(() => {
         const objectToCheck = objectRef.current;
+        
         if (intersectedObject && objectToCheck) {
             // recursively check parent as well
             let parent = intersectedObject;

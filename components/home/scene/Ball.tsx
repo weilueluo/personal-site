@@ -1,5 +1,5 @@
 import { useFrame } from '@react-three/fiber';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
     AnimationMixer,
     Box3,
@@ -38,7 +38,7 @@ dracoLoader.setDecoderPath(
 function useGLTF(loadUrl) {
     const [gltf, setgltf] = useState(null);
 
-    useEffect(() => {
+    useMemo(() => {
         loader.setDRACOLoader(dracoLoader);
         loader.load(
             loadUrl,
@@ -60,7 +60,7 @@ function useMeshNodes(gltf) {
     const [meshes, setMeshes] = useState([]);
     const [others, setOthers] = useState([]);
 
-    useEffect(() => {
+    useMemo(() => {
         if (!gltf) {
             return;
         }
@@ -82,7 +82,7 @@ function useAnimations(gltf) {
 
     const [animations, setAnimations] = useState([]);
 
-    useEffect(() => {
+    useMemo(() => {
         if (!gltf) {
             return;
         }
@@ -94,7 +94,7 @@ function useAnimations(gltf) {
 
 function useCenterOffset(gltf) {
     const [centerOffset, setCenterOffset] = useState<Vector3>(new Vector3(0, 0, 0));
-    useEffect(() => {
+    useMemo(() => {
         if (!gltf) {
             return;
         }
@@ -109,18 +109,17 @@ function useCenterOffset(gltf) {
 function useJSXMeshes(meshNodes, materials) {
     const [meshes, setMeshes] = useState<JSX.Element[]>([]);
     
-    useEffect(() => {
+    useMemo(() => {
+        if (!materials) {
+            return;
+        }
         const new_meshes = meshNodes.map((meshNode, i) => {
-            const geometry = meshNode.geometry;
-            geometry.computeVertexNormals();
+            meshNode.geometry.computeVertexNormals();
 
             return (
                 <mesh
-                    // ref={meshRef}
                     key={meshNode.uuid}
                     name={meshNode.name}
-                    castShadow
-                    receiveShadow
                     geometry={meshNode.geometry}
                     material={materials[i]}
                     position={meshNode.position}
@@ -138,7 +137,7 @@ function useJSXMeshes(meshNodes, materials) {
 function useJSXOthers(otherNodes) {
     const [others, setOthers] = useState<JSX.Element[]>([]);
     
-    useEffect(() => {
+    useMemo(() => {
         const new_others = otherNodes.map((node) => (
             <group
                 key={node.name}
@@ -209,6 +208,9 @@ function MainBall(props) {
     const [hovered, hoveredObject] = use3DParentHover(ballRef);
 
     useEffect(() => {
+        console.log(hovered);
+        console.log(hoveredObject);
+        
         if (hovered && hoveredObject.isMesh) {
             const hoveredMesh = hoveredObject as Mesh;
             const material = hoveredMesh.material as ShaderMaterial;
@@ -225,7 +227,6 @@ function MainBall(props) {
             </group>
         </group>
     )
-
 }
 
 function useMaterials(meshNodes, lightPosition) {
@@ -245,7 +246,7 @@ function useMaterials(meshNodes, lightPosition) {
 
     const [materials, setMaterials] = useState([]);
 
-    useEffect(() => {
+    useMemo(() => {
 
         const sharedMaterial = new ShaderMaterial({
             uniforms: uniforms,
