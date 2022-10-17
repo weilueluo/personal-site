@@ -1,5 +1,5 @@
 import { extend, ReactThreeFiber, useFrame, useThree } from '@react-three/fiber';
-import { RefObject, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
     AnimationMixer,
     Box3,
@@ -24,10 +24,10 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { lightPositionContext } from '../../utils/context';
 
-import ThreeSurroundingText from './ThreeSurroundingText';
 import { LineAnimator } from '../../animation/LineAnimator';
-import Text, { generateTextShape, useTextGeometry, useTextShape } from './Text';
 import { TextAnimator } from '../../animation/TextAnimation';
+import { generateTextShape } from './Text';
+import ThreeSurroundingText from './ThreeSurroundingText';
 
 
 const FLOAT_BALL = false;
