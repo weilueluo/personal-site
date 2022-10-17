@@ -158,6 +158,8 @@ export function useCurrent3DHover(): Object3D {
             // the mouse xy will default to (0,0) which is the center of the page
             // but user mouse is not actually at the center of the page
             // so we do not do any detection here
+            // NOTE: this can be problematic when user actually place its mouse at the center
+            // but thats... relatively minor issue
             return;
         }
 

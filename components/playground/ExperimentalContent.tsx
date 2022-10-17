@@ -29,12 +29,15 @@ export default function ExperimentalContent() {
     color: 0xfffffff
   });
 
+  const start = new Vector3(- 10, 0, 0);
+  const end = start.clone().add(new Vector3(1, 0, 0).multiplyScalar(10));
   const lineRef = useRef<any>();
   const points = [
-    new Vector3(- 10, 0, 0), 
-    new Vector3(0, 10, 0), 
-    new Vector3(10, 0, 0), 
-    new Vector3(- 10, 0, 0)
+    start, end
+    // new Vector3(- 10, 0, 0), 
+    // new Vector3(0, 10, 0), 
+    // new Vector3(10, 0, 0), 
+    // new Vector3(- 10, 0, 0)
   ];
   const lineAnimator = new LineAnimator(points, 1);
   useFrame(state => {
@@ -42,7 +45,6 @@ export default function ExperimentalContent() {
       const points = lineAnimator.animateFrame(state);
       lineRef.current.geometry.setFromPoints(points);
     }
-    
   })
 
   return (

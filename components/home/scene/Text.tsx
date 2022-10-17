@@ -1,51 +1,42 @@
-import { useEffect, useMemo, useState } from "react"
-import { DoubleSide, LineBasicMaterial, MeshBasicMaterial, ShapeGeometry, Vector3 } from "three";
+import { useThree } from "@react-three/fiber";
+import { useEffect, useMemo, useRef, useState } from "react"
+import { DoubleSide, LineBasicMaterial, Matrix4, Mesh, MeshBasicMaterial, ShapeGeometry, Vector3 } from "three";
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import { useRawFeed2FlatFeed } from "../../rss/hooks";
+import { deg2rad } from "../../utils/utils";
 
+const fontLoader = new FontLoader();
+let font = null;
+fontLoader.load('/fonts/Fira Mono_Regular.json', f => font = f)
 
 export function useTextShape(text: string, size: number) {
     const [textShape, setTextShape] = useState([]);
 
-    const fontLoader = useMemo(() => new FontLoader(), []);
-
     useEffect(() => {
-        fontLoader.load('/fonts/Fira Mono_Regular.json', font => {
+        if (font && text && size) {
             setTextShape(font.generateShapes(text, size));
-        })
-    }, [fontLoader])
+        }
+    }, [font, text, size])
 
-    return textShape;
+    return [textShape, setTextShape];
 }
 
-export default function Text(props) {
-    //https://github.com/mrdoob/three.js/blob/master/examples/webgl_geometry_text_shapes.html
+export function generateTextShape(text: string, size: number) {
+    if (font && text && size) {
+        return font.generateShapes(text, size);
+    }
+    return []
+}
 
-    
-    const [text, setText] = useState(<></>)
+export function useTextGeometry(textShape) {
 
-    const textShape = useTextShape(props.text, props.size);
-
-    const matDark = new LineBasicMaterial({
-        color: 0x006699,
-        side: DoubleSide
-    });
+    const [textGeometry, setTextGeometry] = useState(null);
 
     useEffect(() => {
-        const geometry = new ShapeGeometry(textShape);
-        setText(<mesh geometry={geometry} material={matDark} />)
+        if (textShape) {
+            setTextGeometry(new ShapeGeometry(textShape));
+        }
     }, [textShape])
 
-
-    // center
-    // geometry.computeBoundingBox();
-    // const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
-    // geometry.translate( xMid, 0, 0 );
-
-
-    return text
-}
-
-Text.defaultProps = {
-    text: 'Sample Text',
-    size: 1
+    return [textGeometry, setTextGeometry];
 }

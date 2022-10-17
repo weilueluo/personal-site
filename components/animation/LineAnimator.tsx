@@ -2,6 +2,7 @@ import { RootState } from "@react-three/fiber";
 import assert from "assert";
 import { Vector3 } from "three";
 import { clamp } from "../utils/utils";
+import { Animation } from "./Animation";
 
 export class LineAnimator {
     private prevPoints: Vector3[];
@@ -11,7 +12,11 @@ export class LineAnimator {
     private lengths: number[];
 
     private currentAnimation: SingleLineAnimation;
-    private finished;
+    private finished: boolean;
+
+    onStart: Function;
+    onFrame: Function;
+    onFinished: Function;
 
     constructor(points: Vector3[], duration: number) {
         assert(points.length >= 2);
@@ -43,25 +48,23 @@ export class LineAnimator {
         if (this.finished) {
             return this.prevPoints;
         }
+        if (this.currentAnimation == null) {
+          this.onStart && this.onStart();
+        }
         if (this.currentAnimation == null || this.currentAnimation.finished) {
             this.prevPoints.push(this.nextPoints.shift());  // prepare for next animation
             if (this.nextPoints.length == 0) {
                 this.finished = true;
+                this.onFinished && this.onFinished();
                 return this.prevPoints;
             }
             this.currentAnimation = new SingleLineAnimation(this.prevPoints, this.nextPoints[0], this.durations.shift());
         }
         
+        this.onFrame && this.onFrame();
         return this.currentAnimation.animateFrame(state);
     }
 
-}
-
-interface Animation {
-    animateFrame(state: RootState): void;
-    onStart: Function;
-    onFrame: Function;
-    onFinish: Function;
 }
 
 class SingleLineAnimation implements Animation {

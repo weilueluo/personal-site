@@ -1,6 +1,6 @@
 import getConfig from 'next/config';
 import { useEffect, useState } from 'react';
-import { LoopOnce, LoopRepeat } from 'three';
+import { LoopOnce, LoopRepeat, Mesh, Vector3 } from 'three';
 // import preval from 'preval.macro'
 
 
@@ -129,4 +129,19 @@ export function timeSince(from: Date, date: Date) {
       return Math.floor(interval) + " minutes";
     }
     return Math.floor(seconds) + " seconds";
+  }
+
+
+  export function getMeshCenter(mesh: Mesh) {
+    const middle = new Vector3();
+    const geometry = mesh.geometry
+
+    geometry.computeBoundingBox();
+
+    middle.x = (geometry.boundingBox.max.x + geometry.boundingBox.min.x) / 2;
+    middle.y = (geometry.boundingBox.max.y + geometry.boundingBox.min.y) / 2;
+    middle.z = (geometry.boundingBox.max.z + geometry.boundingBox.min.z) / 2;
+
+    mesh.localToWorld( middle );
+    return middle;
   }

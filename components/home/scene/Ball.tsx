@@ -1,16 +1,21 @@
-import { useFrame } from '@react-three/fiber';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { extend, ReactThreeFiber, useFrame, useThree } from '@react-three/fiber';
+import { RefObject, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
     AnimationMixer,
     Box3,
+    BufferGeometry,
+    DoubleSide,
     Group,
+    Line,
+    LineBasicMaterial,
     LoopPingPong, Matrix3,
     Matrix4,
     Mesh, ShaderMaterial,
+    ShapeGeometry,
     Vector3
 } from 'three';
 import { use3DParentHover, useAltScroll } from '../../utils/hooks';
-import { useMaxAnimationDuration } from '../../utils/utils';
+import { getMeshCenter, useMaxAnimationDuration } from '../../utils/utils';
 import { getMainBallRadius } from './global';
 import sphere_fs from './shaders/sphere_fs.glsl';
 import sphere_vs from './shaders/sphere_vs.glsl';
@@ -20,11 +25,14 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { lightPositionContext } from '../../utils/context';
 
 import ThreeSurroundingText from './ThreeSurroundingText';
+import { LineAnimator } from '../../animation/LineAnimator';
+import Text, { generateTextShape, useTextGeometry, useTextShape } from './Text';
+import { TextAnimator } from '../../animation/TextAnimation';
 
 
 const FLOAT_BALL = false;
 
-const tempMat3 = new Matrix3();
+const ballRotationMat = new Matrix3();
 const tempMat4 = new Matrix4();
 
 // gltf loader
@@ -51,7 +59,7 @@ function useGLTF(loadUrl) {
                 console.error(error);
             }
         );
-    }, [loadUrl]);
+    }, []);
 
     return gltf
 }
@@ -151,6 +159,17 @@ function useJSXOthers(otherNodes) {
     return others;
 }
 
+extend({ Line_: Line })
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      line_: ReactThreeFiber.Object3DNode<Line, typeof Line>
+    }
+  }
+}
+
+const tempVec3 = new Vector3();
+
 function MainBall(props) {
     const gltf = props.gltf;
 
@@ -169,7 +188,9 @@ function MainBall(props) {
 
     const ballRef = useRef();
 
-    // update
+    const state = useThree();
+
+    // update ball rotation
     let lastTime = 0;
     useFrame((state) => {
         const scrolled = altScroll > 0.15;
@@ -191,13 +212,13 @@ function MainBall(props) {
             scene.rotation.y += (scrolled ? 0.0 : 0.001);
             scene.rotation.x += (scrolled ? 0.0 : 0.003);
         }
-        tempMat3.setFromMatrix4(tempMat4.makeRotationFromEuler(scene.rotation))
+        ballRotationMat.setFromMatrix4(tempMat4.makeRotationFromEuler(scene.rotation))
         
         materials.forEach((mat) => {
             mat.uniforms.uTime.value = time;
             mat.uniforms.uScrolledAmount.value = altScroll;
             mat.uniforms.uDoWave.value = !scrolled; // do not wave if scrolled
-            mat.uniforms.uBallRotation.value = tempMat3;
+            mat.uniforms.uBallRotation.value = ballRotationMat;
             mat.uniforms.uLightPosition.value = lightPosition;
         });
     });
@@ -206,26 +227,103 @@ function MainBall(props) {
     const radius = getMainBallRadius();
 
     const [hovered, hoveredObject] = use3DParentHover(ballRef);
+    
+    const [lineAnimator, setLineAnimator] = useState<LineAnimator>(null);
+    const [textAnimator, setTextAnimator] = useState<TextAnimator>(null);
+
+    const [textConfig, setTextConfig] = useState<{text?: string, position?: Vector3}>({});
+    const [displayLeft, setDisplayLeft] = useState(false);
 
     useEffect(() => {
-        console.log(hovered);
-        console.log(hoveredObject);
-        
         if (hovered && hoveredObject.isMesh) {
             const hoveredMesh = hoveredObject as Mesh;
             const material = hoveredMesh.material as ShaderMaterial;
             material.uniforms.uHovered.value = true;
+
+            // line animation
+            const meshCenter = getMeshCenter(hoveredMesh);
+            const direction = meshCenter.clone().normalize();
+            const to = meshCenter.clone().add(direction.multiplyScalar(3));
+            setLineAnimator(new LineAnimator([meshCenter, to], 0.3));
+            
+            // text display side
+            const pt2cam = state.camera.position.clone().sub(to).normalize();
+            const camDir = state.camera.getWorldDirection(tempVec3);
+            setDisplayLeft(camDir.cross(pt2cam).y < 0);
+
+            // text
+            setTextConfig({
+                text: `Fragment ${hoveredMesh.id}`,
+                position: to
+            })
+
             return () => { material.uniforms.uHovered.value = false };
+        } else {
+            setTextConfig({})
         }
     }, [hovered, hoveredObject])
 
+
+    // line mesh
+    const lineRef = useRef<any>();
+    const lineGeometry = new BufferGeometry();
+    const lineMaterial = new LineBasicMaterial({
+        color: 0xfffffff
+    });
+    useFrame(state => {
+        const line = lineRef.current as Line;
+        if (line && lineAnimator) {
+            const points = lineAnimator.animateFrame(state);
+            line.geometry.setFromPoints(points);
+        }
+    })
+
+    // text mesh
+    const textRef = useRef<any>(null)
+    const [textGeometry, setTextGeometry] = useState(new ShapeGeometry([]));
+    
+    useEffect(() => {
+        setTextAnimator(new TextAnimator(textConfig.text || '', 0.5, displayLeft, 0.3));
+    }, [textConfig]);
+    useFrame(state => {
+        if (textAnimator) {
+            if (textAnimator.finished) {
+                return;
+            }
+            const text = textAnimator.animateFrame(state);
+            const shape = generateTextShape(text, 0.3);
+            setTextGeometry(new ShapeGeometry(shape));
+        }
+    });
+    const textMaterial = new LineBasicMaterial({
+        color: 0xffffff,
+        side: DoubleSide
+    });
+    useEffect(() => {
+        const text = textRef.current;
+        if (text) {
+            text.lookAt(state.camera.position);
+            if (displayLeft) {  // try not to display text into the ball
+                text.geometry.computeBoundingBox();
+                const width = text.geometry.boundingBox.max.x
+                text.geometry.applyMatrix4(tempMat4.makeTranslation(-width, 0, 0));
+            }
+        }
+    }, [textGeometry])
+    
+
     return (
-        <group ref={ballRef} scale={radius} dispose={null}>
+        <>
+            <line_ ref={lineRef} geometry={lineGeometry} material={lineMaterial} />
+            <mesh ref={textRef}  geometry={textGeometry} material={textMaterial} position={textConfig.position}/>
+            <group ref={ballRef} scale={radius} dispose={null}>
             <group name='Scene' position={centerOffset}>
                 {jsxOthers}
                 {jsxMeshes}
             </group>
         </group>
+        </>
+        
     )
 }
 
@@ -240,7 +338,7 @@ function useMaterials(meshNodes, lightPosition) {
         uScrolledAmount: { value: 0.0 },
         uDoWave: { value: true },
         uLightPosition: { value: lightPosition },
-        uBallRotation: { value: tempMat3 },
+        uBallRotation: { value: ballRotationMat },
         uHovered: { value: false }
     };
 
