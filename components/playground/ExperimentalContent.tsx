@@ -1,11 +1,8 @@
 import { BufferGeometry, Line, LineBasicMaterial, Vector3 } from "three";
 
-import { ReactThreeFiber, extend, useFrame, RootState } from '@react-three/fiber'
-import { Ref, RefObject, useRef } from "react";
-import { clamp } from "../utils/utils";
-import { assert } from "console";
+import { extend, ReactThreeFiber, useFrame } from '@react-three/fiber';
+import { useRef } from "react";
 import { LineAnimator } from "../animation/LineAnimator";
-import Text from "../home/scene/Text";
 
 
 // https://github.com/pmndrs/react-three-fiber/discussions/1387
@@ -50,7 +47,7 @@ export default function ExperimentalContent() {
   return (
     <>
       <line_ ref={lineRef} geometry={geometry} material={material} />
-      <Text text={'Hello Text'} />
+      {/* <Text text={'Hello Text'} /> */}
     </>
   )
 }

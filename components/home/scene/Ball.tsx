@@ -259,7 +259,8 @@ function MainBall(props) {
 
             return () => { material.uniforms.uHovered.value = false };
         } else {
-            setTextConfig({})
+            setTextConfig({});
+            setLineAnimator(null);
         }
     }, [hovered, hoveredObject])
 
@@ -275,6 +276,8 @@ function MainBall(props) {
         if (line && lineAnimator) {
             const points = lineAnimator.animateFrame(state);
             line.geometry.setFromPoints(points);
+        } else if (line) {
+            line.geometry.setFromPoints([]);
         }
     })
 
