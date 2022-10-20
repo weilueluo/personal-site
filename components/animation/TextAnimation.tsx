@@ -26,9 +26,11 @@ export class TextAnimator implements Animation {
     }
 
     animateFrame(state: RootState): string {
+        
         if (this.finished) {
             return this.text;
         }
+
         if (this.startTime == null) {
             this.startTime = state.clock.getElapsedTime();
             this.onStart && this.onStart();
