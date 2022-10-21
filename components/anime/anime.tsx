@@ -1,13 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { ANIME_IDS, getAnilistAnimeData } from "./data";
 
 import styles from './anime.module.sass';
 import Card from "./card";
-import { runWithRetries } from "../utils/utils";
-import { AnimeJsonType } from ".";
-import { AdaptiveDpr } from "@react-three/drei";
+import { getAllAnilistAnimeData } from "./data";
 
-const animeDatumDatabase = new Set();
+const animeDatumDatabase = new Map();
 
 export default function Anime() {
 
@@ -19,21 +16,25 @@ export default function Anime() {
   // const msg = useAnilistAnimeData(127230);
 
   const [animeCards, setAnimeCards] = useState([]);
-  const [animeDatum, setAnimeDatum] = useState([])
-  ANIME_IDS.forEach(id => runWithRetries(() => getAnilistAnimeData(id)
-    .then(animeData => {
-      animeDatumDatabase.add(animeData)
-      setAnimeDatum(Array.from(animeDatumDatabase));
-    })));
+  const [animeDatum, setAnimeDatum] = useState([]);
+
+  useMemo(() => {
+    getAllAnilistAnimeData()
+      .then(datum => {
+        Object.values(datum).forEach(data => animeDatumDatabase[data.id] = data);
+        setAnimeDatum(Object.values(animeDatumDatabase));
+      });
+  }, [])
 
   // set anime cards according to data                                                  
   useEffect(() => {
+    
     if (!animeDatum) {
       return;
     }
     const sortedAnimeDatum = animeDatum.slice().sort((a, b) => {
-      const aDate = a.startDate;
-      const bDate = b.startDate;
+      const aDate = a.startDate || {year: 0, month: 0, day: 0};
+      const bDate = b.startDate || {year: 0, month: 0, day: 0};
 
       // sort by date decending order
       if (aDate.year > bDate.year) {
@@ -90,7 +91,6 @@ export default function Anime() {
     <>
       <div className={styles['all-container']}>
         <div className={styles['anime-container']}>
-
           <div className={styles['anime-header']}>
             <span className={styles['anime-title']}>Liked Anime</span>
             <span className={styles['anime-list-toggle']} onClick={animeListToggle}>{toggleText}</span>

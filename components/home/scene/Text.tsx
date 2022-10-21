@@ -16,7 +16,7 @@ export function useTextShape(text: string, size: number) {
         if (font && text && size) {
             setTextShape(font.generateShapes(text, size));
         }
-    }, [font, text, size])
+    }, [text, size])
 
     return [textShape, setTextShape];
 }

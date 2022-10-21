@@ -147,21 +147,21 @@ export function timeSince(from: Date, date: Date) {
   }
 
 
-  export function runWithRetries(func: () => Promise<any>, maxRetries: number = 3, initValue: any = undefined) {
-    const [retries, setRetries] = useState(1);
-    const [result, setResult] = useState(initValue);
-    useEffect(() => {
-        if (retries > maxRetries) {
-            console.log('Too many retries');
-            return;
-        }
-        func()
-            .then(res => setResult(res))
-            .catch(error => {
-                console.log(`error=${error}, retries=${retries}`);
-                setTimeout(() => setRetries(retries + 1), 3000 + Math.random() * 3000)
-            })
-    }, [retries])
+//   export function useWithRetries(func: () => Promise<any>, maxRetries: number = 3, initValue: any = undefined) {
+//     const [retries, setRetries] = useState(1);
+//     const [result, setResult] = useState(initValue);
+//     useEffect(() => {
+//         if (retries > maxRetries) {
+//             console.log('Too many retries');
+//             return;
+//         }
+//         func()
+//             .then(res => setResult(res))
+//             .catch(error => {
+//                 console.log(`error=${error}, retries=${retries}`);
+//                 setTimeout(() => setRetries(retries + 1), 3000 + Math.random() * 3000)
+//             })
+//     }, [retries])
 
-    return result;
-  }
+//     return result;
+//   }

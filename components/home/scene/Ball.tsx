@@ -43,13 +43,13 @@ dracoLoader.setDecoderPath(
     'https://www.gstatic.com/draco/versioned/decoders/1.5.3/'
 );
 
-function useGLTF(loadUrl) {
+function useBallGLTF() {
     const [gltf, setgltf] = useState(null);
 
     useMemo(() => {
         loader.setDRACOLoader(dracoLoader);
         loader.load(
-            loadUrl,
+            '/models/ball/ball-transformed.glb',
             function (gltf) {
                 setgltf(gltf);
             },
@@ -262,7 +262,7 @@ function MainBall(props) {
             setTextConfig({});
             setLineAnimator(null);
         }
-    }, [hovered, hoveredObject])
+    }, [hovered, hoveredObject, state.camera])
 
 
     // line mesh
@@ -287,7 +287,7 @@ function MainBall(props) {
     
     useEffect(() => {
         setTextAnimator(new TextAnimator(textConfig.text || '', 0.5, displayLeft, 0.3));
-    }, [textConfig]);
+    }, [textConfig, displayLeft]);
     useFrame(state => {
         if (textAnimator) {
             if (textAnimator.finished) {
@@ -312,7 +312,7 @@ function MainBall(props) {
                 text.geometry.applyMatrix4(tempMat4.makeTranslation(-width, 0, 0));
             }
         }
-    }, [textGeometry])
+    }, [textGeometry, displayLeft, state.camera.position])
     
 
     return (
@@ -331,23 +331,23 @@ function MainBall(props) {
 }
 
 function useMaterials(meshNodes, lightPosition) {
-
-    const uniforms = {
-        uTime: { value: 0.5 },
-        uPosition: { value: new Vector3(0, 0, 0) },
-        uOffsetAmount: { value: 0.0 },
-        uWaveAmount: { value: 0.0 },
-        uWaveSpeed: { value: 0.0 },
-        uScrolledAmount: { value: 0.0 },
-        uDoWave: { value: true },
-        uLightPosition: { value: lightPosition },
-        uBallRotation: { value: ballRotationMat },
-        uHovered: { value: false }
-    };
-
+    
     const [materials, setMaterials] = useState([]);
 
     useMemo(() => {
+
+        const uniforms = {
+            uTime: { value: 0.5 },
+            uPosition: { value: new Vector3(0, 0, 0) },
+            uOffsetAmount: { value: 0.0 },
+            uWaveAmount: { value: 0.0 },
+            uWaveSpeed: { value: 0.0 },
+            uScrolledAmount: { value: 0.0 },
+            uDoWave: { value: true },
+            uLightPosition: { value: lightPosition },
+            uBallRotation: { value: ballRotationMat },
+            uHovered: { value: false }
+        };
 
         const sharedMaterial = new ShaderMaterial({
             uniforms: uniforms,
@@ -380,7 +380,7 @@ function useMaterials(meshNodes, lightPosition) {
         });
 
         setMaterials(new_materials);
-    }, [meshNodes])
+    }, [meshNodes, lightPosition])
 
     return materials;
 }
@@ -412,7 +412,7 @@ function useAnimationOnScroll(gltf, ballRef, animations) {
 
 export default function Ball() {
     
-    const gltf = useGLTF('/models/ball/ball-transformed.glb');
+    const gltf = useBallGLTF();
 
     const textRadius = getMainBallRadius() + 0.1;
     return (
