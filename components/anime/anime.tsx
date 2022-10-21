@@ -74,17 +74,17 @@ export default function Anime() {
   }, [expand])
 
   // 
-  const cardsPerRow = 4; // need to be consistent with values in css
-  const [cardRows, setCardRows] = useState(1);
-  useEffect(() => {
-    setCardRows(Math.ceil(animeDatum.length / cardsPerRow))
-  }, [animeDatum])
-  const cardHeight = 300; // need to be consistent with values in css
-  const cardMargin = 20; // need to be consistent with values in css
-  const [height, setHeight] = useState(0);
-  useEffect(() => {
-    setHeight(expand ? cardHeight * cardRows + cardMargin * (cardRows - 1) : cardHeight);
-  }, [expand, cardRows])
+  // const cardsPerRow = 4; // need to be consistent with values in css
+  // const [cardRows, setCardRows] = useState(1);
+  // useEffect(() => {
+  //   setCardRows(Math.ceil(animeDatum.length / cardsPerRow))
+  // }, [animeDatum])
+  // const cardHeight = 300; // need to be consistent with values in css
+  // const cardMargin = 20; // need to be consistent with values in css
+  // const [height, setHeight] = useState(0);
+  // useEffect(() => {
+  //   setHeight(expand ? cardHeight * cardRows + cardMargin * (cardRows - 1) : cardHeight);
+  // }, [expand, cardRows])
 
 
   return (
@@ -95,7 +95,7 @@ export default function Anime() {
             <span className={styles['anime-title']}>Liked Anime</span>
             <span className={styles['anime-list-toggle']} onClick={animeListToggle}>{toggleText}</span>
           </div>
-          <ul className={styles['anime-list']} style={{ height: `${height}px` }}>
+          <ul className={`${styles['anime-list']} ${expand ? '' : styles['collapse']}`}>
             {animeCards}
           </ul>
         </div>
