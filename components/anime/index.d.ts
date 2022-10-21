@@ -6,7 +6,7 @@ export enum AnimeMediaStatus {
     HIATUS
 }
 
-export type AnimeJsonType = {
+export type AnimeMedia = {
     id: number,
     title?: {
         romaji?: string,
@@ -41,4 +41,19 @@ export type AnimeJsonType = {
         medium?: string,
     },
     bannerImage?: string
+}
+
+export type UserFavouriteType = {
+    User: {
+        favourites: {
+            anime: {
+                nodes: AnimeMedia[]
+            }
+        }
+    }
+}
+
+export type SectionProps = {
+    fetchData: () => Promise<AnimeMedia[]>,
+    title: string
 }

@@ -1,77 +1,63 @@
-import { AnimeJsonType } from "."
+import { AnimeMedia, UserFavouriteType as UserFavourite } from "."
 
 // https://anilist.github.io/ApiV2-GraphQL-Docs/
-function getGraphQLQuery(query) {
-    return `query {${query}}`
+function query(query: string) {
+    return `query {
+        ${query}
+    }`
 }
 
-function getAnilistMediaQuery(alias: string, id: number) {
-    // their api has limit on return size
-    // try not to query too much items
-    return `${alias}: Media (id: ${id}) {
-        id
-        title {
-            romaji
-            english
-            native
+const MY_USER_ID = 6044692;
+
+function user(query: string, userID: number) {
+    return `User (id: ${userID}){
+        ${query}
+    }`
+}
+
+function favouriteAnime(query: string, FavPage: number = 1, animePage: number = 1) {
+    return `favourites(page: ${FavPage}){
+        anime(page: ${animePage}){
+            nodes{
+                ${query}
+            }
         }
-        startDate {
-            year
-            month
-            day
-        }
-        siteUrl
-        coverImage {
-            extraLarge
-            large
-            medium
-        }
+    }`
+}
+
+function media() {
+    return `id
+    title {
+      romaji
+      english
+      native
+      userPreferred
     }
-`
+    description
+    startDate {
+      year
+      month
+      day
+    }
+    endDate {
+      year
+      month
+      day
+    }
+    format
+    coverImage {
+      extraLarge
+      large
+      medium
+      color
+    }
+    bannerImage
+    genres
+    hashtag
+    isAdult
+    siteUrl
+    status`
 }
-
-
-// const animeGraphQLQuery = `
-// query ($id: Int) {
-//     Media (id: $id) {
-//       id
-//       title {
-//         romaji
-//         english
-//         native
-//       }
-//       status
-//       description
-//       startDate {
-//         year
-//         month
-//         day
-//       }
-//       endDate {
-//         year
-//         month
-//         day
-//       }
-//       hashtag
-//       updatedAt
-//       trailer {
-//         id
-//         site
-//         thumbnail
-//       }
-//       genres
-//       averageScore
-//       siteUrl
-//       coverImage {
-//         extraLarge
-//         large
-//         medium
-//       }
-//       bannerImage
-//     }
-// }
-// `
-
 
 // https://anilist.co/home
 // their api has limit on return size
@@ -88,7 +74,6 @@ export const ANIME_ID_MAP = {
     'Classroom_of_the_Elite': 98659,
     'Jobless_Reincarnation': 108465,
     'Jobless_Reincarnation_s2': 127720,
-    'tower_of_god': 115230,
     'beyond_the_boundary': 18153,
     'angels_of_death': 99629,
     'Kaguya_sama': 101921,
@@ -97,18 +82,9 @@ export const ANIME_ID_MAP = {
     'Grand_Blue_Dreaming': 100922
 }
 
-export const defaultQueryResult: AnimeJsonType = {
-    id: -1
-}
-
 const graphqlEndpoint = 'https://graphql.anilist.co'
 
-export function getAllAnilistAnimeData() {
-    let anilistQuery = ''
-    for (const [alias, id] of Object.entries(ANIME_ID_MAP)) {
-        anilistQuery += getAnilistMediaQuery(alias, id);
-    }
-    const graphQLQuery = getGraphQLQuery(anilistQuery);
+function fetchAnilistData(query: string): object {
     const options = {
         method: 'POST',
         headers: {
@@ -116,20 +92,54 @@ export function getAllAnilistAnimeData() {
             'Accept': 'application/json',
         },
         body: JSON.stringify({
-            query: graphQLQuery
+            query: query
         })
     }
 
-    // console.log(graphQLQuery);
-
     return fetch(graphqlEndpoint, options)
-            .then(res => res.json().then(json => json.data as Map<string, AnimeJsonType>)
+            .then(res => res.json().then(json => json.data)
             .then(animeData => {
                 console.log('loaded anime data');
                 console.log(animeData);
                 return animeData;
             }));
 }
+
+export function fetchFavouriteAnimeData(): Promise<AnimeMedia[]> {
+    const graphqlQuery = query(user(favouriteAnime(media()), MY_USER_ID));
+    return (fetchAnilistData(graphqlQuery) as Promise<UserFavourite>)
+                .then(data => data.User.favourites.anime.nodes);
+}
+
+
+
+// export function getAllAnilistAnimeData() {
+//     let anilistQuery = ''
+//     for (const [alias, id] of Object.entries(ANIME_ID_MAP)) {
+//         anilistQuery += getAnilistMediaQuery(alias, id);
+//     }
+//     const graphQLQuery = getGraphQLQuery(anilistQuery);
+//     const options = {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'Accept': 'application/json',
+//         },
+//         body: JSON.stringify({
+//             query: graphQLQuery
+//         })
+//     }
+
+//     // console.log(graphQLQuery);
+
+//     return fetch(graphqlEndpoint, options)
+//             .then(res => res.json().then(json => json.data as Map<string, AnimeJsonType>)
+//             .then(animeData => {
+//                 console.log('loaded anime data');
+//                 console.log(animeData);
+//                 return animeData;
+//             }));
+// }
 
 // export function getAnilistAnimeData(id: number): Promise<AnimeJsonType> {
 //     const variables = {

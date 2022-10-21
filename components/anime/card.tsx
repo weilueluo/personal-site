@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react"
-import { AnimeJsonType } from "."
-import styles from './card.module.sass'
+import { AnimeMedia } from "."
+import styles from './anime.module.sass'
 
 
 
-function useCoverImageURL(animeData: AnimeJsonType) {
+function useCoverImageURL(animeData: AnimeMedia) {
     const [coverImageURL, setCoverImageURL] = useState<string>('')
 
    
@@ -38,7 +38,7 @@ function useCoverImageURL(animeData: AnimeJsonType) {
     return coverImageURL;
 }
 
-function CoverImage(props: { coverImageURL: string, animeData: AnimeJsonType }) {
+function CoverImage(props: { coverImageURL: string, animeData: AnimeMedia }) {
     const coverImageURL = props.coverImageURL;
     const animeData = props.animeData;
 
@@ -52,7 +52,7 @@ function CoverImage(props: { coverImageURL: string, animeData: AnimeJsonType }) 
     )
 }
 
-function AnimeTitle(props: { animeData: AnimeJsonType }) {
+function AnimeTitle(props: { animeData: AnimeMedia }) {
     const animeData = props.animeData;
 
     const [title, setTitle] = useState<string>('title');
@@ -73,7 +73,7 @@ function AnimeTitle(props: { animeData: AnimeJsonType }) {
     return <span className={styles['card-title']} onClick={nextTitle}>{title}</span>
 }
 
-function AnimeCard(props: { data: AnimeJsonType }) {
+function AnimeCard(props: { data: AnimeMedia }) {
     const animeData = props.data;
 
     const coverImageURL = useCoverImageURL(animeData);
@@ -86,7 +86,7 @@ function AnimeCard(props: { data: AnimeJsonType }) {
     )
 }
 
-export default function Card(props: { animeData: AnimeJsonType }) {
+export default function Card(props: { animeData: AnimeMedia }) {
 
     return <AnimeCard data={props.animeData} />
 }
