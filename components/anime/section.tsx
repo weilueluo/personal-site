@@ -56,17 +56,26 @@ function AnimeCards(props: {animeDataList: AnimeMedia[], expand: boolean}) {
     )
 }
 
+function LoadingCards() {
+    return (
+        <span>loading ...</span>
+    )
+}
+
 export default function Section(props: SectionProps) {
 
     const [animeDataList, setAnimeDataList] = useState([]);
     const sortedAnimeDataList = useSortedAnimeDataList(animeDataList);
     const [displayAnimeDataList, setDisplayAnimeDataList] = useState([]);
 
+    const [loaded, setLoaded] = useState(false);
+
     // load data into database
     useMemo(() => {
         const animeDatabase = new Map();
         props.fetchData()
             .then(datas => {
+                setLoaded(true);
                 datas.forEach(data => animeDatabase[data.id] = data);
                 setAnimeDataList(Object.values(animeDatabase));
             });
@@ -92,7 +101,7 @@ export default function Section(props: SectionProps) {
                 <span className={styles['section-title']}>{props.title}</span>
                 <span className={styles['section-toggle']} onClick={animeListToggle}>{toggleText}</span>
             </div>
-            <AnimeCards animeDataList={displayAnimeDataList} expand={expand}/>
+            {loaded ? <AnimeCards animeDataList={displayAnimeDataList} expand={expand}/> : <LoadingCards />}
         </div>
     )
 

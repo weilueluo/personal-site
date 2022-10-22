@@ -14,11 +14,6 @@ function useCoverImageURL(animeData: AnimeMedia, clicked: boolean) {
 
         if (!animeData || !animeData.coverImage) {
             setCoverImageURL('');
-        } else if (clicked) {
-            if (animeData.bannerImage) {
-                fetchImage(animeData.bannerImage)
-                        .then(localimageUrl => setCoverImageURL(localimageUrl));
-            }
         } else {
             const fetchMediumImage = () => fetchImage(animeData.coverImage.medium)
                 .then(localimageUrl => setCoverImageURL(localimageUrl));
@@ -50,9 +45,9 @@ function CoverImage(props: { coverImageURL: string, animeData: AnimeMedia }) {
 
     return (
         <div className={styles['card-image-container']}>
-            {/* <a href={animeData.siteUrl}> */}
+            <a href={animeData.siteUrl}>
                 <img className={styles['card-image']} src={coverImageURL} alt={alt} />
-            {/* </a> */}
+            </a>
         </div>
     )
 }
