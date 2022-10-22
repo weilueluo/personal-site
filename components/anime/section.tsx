@@ -1,11 +1,8 @@
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimeMedia, SectionProps } from '.';
 import styles from './anime.module.sass';
 import Card from './card';
-
-const CARDS_PER_ROW = 4;
-const COLLAPSED_ROWS = 1
 
 function useSortedAnimeDataList(animeDataList: AnimeMedia[]) {
     const [sortedAnimeDataList, setSortedAnimeDataList] = useState([]);
@@ -50,9 +47,10 @@ function useSortedAnimeDataList(animeDataList: AnimeMedia[]) {
     return sortedAnimeDataList;
 }
 
-function AnimeCards(props: {animeDataList: AnimeMedia[]}) {
+function AnimeCards(props: {animeDataList: AnimeMedia[], expand: boolean}) {
+
     return (
-        <ul className={`${styles['anime-list']}`}>
+        <ul className={`${styles['anime-list']} ${props.expand ? '' : styles['collapse']}`}>
             {props.animeDataList.map(animeData => <Card key={animeData.id} animeData={animeData} />)}
         </ul>
     )
@@ -83,9 +81,10 @@ export default function Section(props: SectionProps) {
     }, [expand])
 
     useEffect(() => {
-        const displayAmount = expand ? sortedAnimeDataList.length : CARDS_PER_ROW * COLLAPSED_ROWS;
-        setDisplayAnimeDataList(sortedAnimeDataList.slice(0, displayAmount));
+        setDisplayAnimeDataList(sortedAnimeDataList.slice());
     }, [sortedAnimeDataList, expand])
+
+
 
     return (
         <div className={styles['section-container']}>
@@ -93,7 +92,7 @@ export default function Section(props: SectionProps) {
                 <span className={styles['section-title']}>{props.title}</span>
                 <span className={styles['section-toggle']} onClick={animeListToggle}>{toggleText}</span>
             </div>
-            <AnimeCards animeDataList={displayAnimeDataList} />
+            <AnimeCards animeDataList={displayAnimeDataList} expand={expand}/>
         </div>
     )
 

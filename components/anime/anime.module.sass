@@ -1,10 +1,4 @@
 
-$card-width: 180px
-$row-gap: 0px
-$col-gap: 40px
-$card-per-row: 4  // need consistent with anime.tsx variable
-
-
 .all-container
     width: 100%
     height: 100%
@@ -16,7 +10,7 @@ $card-per-row: 4  // need consistent with anime.tsx variable
 
 // Anime Section
 .section-container
-    width: calc($card-width*$card-per-row + $col-gap*($card-per-row - 1)) 
+    width: 950px
     max-width: 95%
     margin-top: 50px
 
@@ -44,38 +38,62 @@ $card-per-row: 4  // need consistent with anime.tsx variable
 
 .anime-list
     height: fit-content
+    
     width: 100%
 
     display: flex
     flex-direction: row
     align-items: center
-    justify-content: flex-start
+    justify-content: space-between
     flex-wrap: wrap
-
-    row-gap: $row-gap
-    column-gap: $col-gap
+    
+    column-gap: min(5%, 12px)
 
     padding: 0
 
-    overflow: hidden
+    transition: 0.5s
+
+    &.collapse
+        flex-wrap: nowrap
+        overflow-x: scroll
+        overflow-y: hidden
 
 // Anime Card
 .anime-card
     display: flex
     flex-direction: column
-
-    width: $card-width
+    width: 180px
     height: 300px
-
+    @media (max-width: 800px)
+        width: 140px
+        height: 260px
+    @media (max-width: 500px)
+        width: 100px
+        height: 180px
     align-items: center
     justify-content: flex-start
-    gap: 10px
+
+    flex: 0 0 auto
+    align-self: flex-start
 
     overflow: hidden
-    
+
+    transition: width 1s
+
+    // border: 1px solid black
+
+    &:hover .card-title
+        transition: 0.2s
+        color: #8800ff
+
+    &.clicked
+        width: 100%
+        max-width: 100%
+
 .card-image-container
     width: 100%
     height: 75%
+    flex: 1 1 auto
 
     &:hover
         cursor: pointer
@@ -84,17 +102,21 @@ $card-per-row: 4  // need consistent with anime.tsx variable
     width: 100%
     height: 100%
     object-fit: cover
-    object-position: top
+    object-position: center
 
     border-radius: 5px
 
 $card-title-rows: 3
-$card-title-line-height: 1.2rem
 
 .card-title
+
+    font-size: min(3vw, 1rem, 3vh)
+
+    line-height: 1em
+    flex: 0 0 3em
+
     width: 100%
-    height: calc( $card-title-rows * $card-title-line-height )
-    line-height: $card-title-line-height
+
     font-weight: bold
     overflow: hidden
     text-overflow: ellipsis
@@ -105,6 +127,11 @@ $card-title-line-height: 1.2rem
     -webkit-line-clamp: $card-title-rows
 
     text-align: left
+
+    color: black
+
+    margin-top: 5px
+    margin-bottom: 10px
+
     &:hover
-        text-decoration: underline
         cursor: default

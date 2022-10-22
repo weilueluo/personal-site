@@ -4,18 +4,22 @@ import styles from './anime.module.sass'
 
 
 
-function useCoverImageURL(animeData: AnimeMedia) {
-    const [coverImageURL, setCoverImageURL] = useState<string>('')
+function useCoverImageURL(animeData: AnimeMedia, clicked: boolean) {
+    const [coverImageURL, setCoverImageURL] = useState<string>('/icons/anime/Dual Ring-5s-200px.svg')
 
-   
     useMemo(() => {
-        if (!animeData || !animeData.coverImage) {
-            setCoverImageURL('');
-        } else {
-            const fetchImage = url => fetch(url)
+        const fetchImage = url => fetch(url)
                 .then(res => res.blob())
                 .then(imageBlob => URL.createObjectURL(imageBlob))
-    
+
+        if (!animeData || !animeData.coverImage) {
+            setCoverImageURL('');
+        } else if (clicked) {
+            if (animeData.bannerImage) {
+                fetchImage(animeData.bannerImage)
+                        .then(localimageUrl => setCoverImageURL(localimageUrl));
+            }
+        } else {
             const fetchMediumImage = () => fetchImage(animeData.coverImage.medium)
                 .then(localimageUrl => setCoverImageURL(localimageUrl));
         
@@ -33,7 +37,7 @@ function useCoverImageURL(animeData: AnimeMedia) {
                     console.log(`error while fetch large size image: ${error}`);
                 })
         }
-    }, [animeData]);
+    }, [animeData, clicked]);
 
     return coverImageURL;
 }
@@ -43,11 +47,12 @@ function CoverImage(props: { coverImageURL: string, animeData: AnimeMedia }) {
     const animeData = props.animeData;
 
     const alt = (animeData && animeData.title) ? `Cover Image for ${animeData.title.native}` : 'Cover Image';
-    const onClick = () => animeData && animeData.siteUrl && window.open(animeData.siteUrl, '_blank');
 
     return (
-        <div onClick={onClick} className={styles['card-image-container']}>
-            <img className={styles['card-image']} src={coverImageURL} alt={alt} />
+        <div className={styles['card-image-container']}>
+            {/* <a href={animeData.siteUrl}> */}
+                <img className={styles['card-image']} src={coverImageURL} alt={alt} />
+            {/* </a> */}
         </div>
     )
 }
@@ -76,11 +81,14 @@ function AnimeTitle(props: { animeData: AnimeMedia }) {
 function AnimeCard(props: { data: AnimeMedia }) {
     const animeData = props.data;
 
-    const coverImageURL = useCoverImageURL(animeData);
+    
+    const [clicked, setClicked] = useState(false);
+
+    const coverImageURL = useCoverImageURL(animeData, clicked);
 
     return (
-        <li className={styles['anime-card']}>
-            <CoverImage coverImageURL={coverImageURL} animeData={animeData} />
+        <li className={`${styles['anime-card']} ${clicked ? styles['clicked'] : ''}`} onClick={() => setClicked(!clicked)}>
+            <CoverImage coverImageURL={coverImageURL} animeData={animeData}/>
             <AnimeTitle animeData={animeData} />
         </li>
     )
