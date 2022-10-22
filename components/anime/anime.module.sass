@@ -1,3 +1,4 @@
+@use '../common/common'
 
 .all-container
     width: 100%
@@ -20,21 +21,49 @@
     flex-direction: row
     justify-content: space-between
 
-.section-title
-    font-size: x-large
-    font-weight: bolder
-    text-transform: uppercase
 
-.section-toggle
+.header-left
+    width: fit-content
+
+    .section-title
+        font-size: x-large
+        font-weight: bolder
+        text-transform: uppercase
+
+.header-right
+
+    display: flex
+    flex-direction: row
+    gap: 20px
+
+.section-load-more, .section-toggle
     text-transform: uppercase
     font-weight: bold
     color: gray
-    display: flex
-    align-items: center
-    justify-content: center
+    width: fit-content
+
+.section-load-more:not(.all-loaded), .section-toggle
+
+    @include common.button
+
+    // display: flex
+    // align-items: center
+    // justify-content: center
+
 
     &:hover
         cursor: pointer
+
+.section-load-more.all-loaded
+    border: 0px
+    background-color: transparent
+
+.section-footer
+    width: 100%
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: center
 
 .anime-list
     height: fit-content
@@ -46,9 +75,11 @@
     align-items: center
     justify-content: space-between
     flex-wrap: wrap
-    
+
     gap: 15px 12px
 
+    margin-top: 12px
+    margin-bottom: 0px
     padding: 0
 
     transition: 0.5s

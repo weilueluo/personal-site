@@ -1,4 +1,5 @@
 
+import { setDefaultResultOrder } from 'dns';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimeMedia, SectionProps } from '.';
 import styles from './anime.module.sass';
@@ -89,19 +90,47 @@ export default function Section(props: SectionProps) {
         setToggleText(expand ? 'collapse' : 'expand');
     }, [expand])
 
+    // set number of display anime
+    const INIT_DISPLAY_AMOUNT = 15;
+    const INCREMENT_AMOUNT = 20;
+    const [displayAmount, setDisplayAmount] = useState(INIT_DISPLAY_AMOUNT);
     useEffect(() => {
-        setDisplayAnimeDataList(sortedAnimeDataList.slice());
-    }, [sortedAnimeDataList, expand])
+        setDisplayAnimeDataList(sortedAnimeDataList.slice(0, displayAmount));
+    }, [displayAmount, sortedAnimeDataList]);
 
 
+    const loadMore = () => setDisplayAmount(displayAmount + INCREMENT_AMOUNT);
+
+    // section footer
+    const [loadMoreJsx, setLoadMoreJsx] = useState(<></>);
+    useEffect(() => {
+        if (displayAmount >= sortedAnimeDataList.length) {
+            setLoadMoreJsx(<button className={`${styles['section-load-more']} ${styles['all-loaded']}`}>all anime loaded</button>);
+        } else {
+            setLoadMoreJsx(<button className={styles['section-load-more']} onClick={loadMore}>load more</button>)
+        }
+    }, [expand, displayAmount, sortedAnimeDataList])
 
     return (
         <div className={styles['section-container']}>
+            {/* Header */}
             <div className={styles['section-header']}>
-                <span className={styles['section-title']}>{props.title}</span>
-                <span className={styles['section-toggle']} onClick={animeListToggle}>{toggleText}</span>
+                <div className={styles['header-left']}>
+                    <span className={styles['section-title']}>{props.title}</span>
+                </div>
+                <div className={styles['header-right']}>
+                    {loadMoreJsx}
+                    <button className={styles['section-toggle']} onClick={animeListToggle}>{toggleText}</button>
+                </div>
             </div>
+            
+            {/* Content */}
             {loaded ? <AnimeCards animeDataList={displayAnimeDataList} expand={expand}/> : <LoadingCards />}
+            
+            {/* Footer */}
+            <div className={styles['section-footer']}>
+                {expand ? loadMoreJsx : <></>}
+            </div>
         </div>
     )
 
