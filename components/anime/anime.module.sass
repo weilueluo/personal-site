@@ -1,5 +1,8 @@
 @use '../common/common'
 
+$small-screen: 768px
+$smaller-screen: 480px
+
 .all-container
     width: 100%
     height: 100%
@@ -13,43 +16,66 @@
 .section-container
     width: 950px
     max-width: 95%
-    margin-top: 50px
+    margin: 50px 0px
 
-.section-header
+.section-header, .section-footer
+    height: fit-content
     width: 100%
     display: flex
     flex-direction: row
+    flex-wrap: wrap
+    align-items: flex-end
+
+.section-header
     justify-content: space-between
 
+.section-footer
+    justify-content: flex-end
+
+.section-footer, .header-right
+    gap: 20px
 
 .header-left
     width: fit-content
+    
+.section-title
+    font-size: x-large
+    @media screen and (max-width: $small-screen)
+        font-size: large
+    @media screen and (max-width: $smaller-screen)
+        font-size: medium
 
-    .section-title
-        font-size: x-large
-        font-weight: bolder
-        text-transform: uppercase
+    margin-right: 20px
+    
+    font-weight: bolder
+    text-transform: uppercase
 
 .header-right
-
     display: flex
     flex-direction: row
-    gap: 20px
-
+    height: 100%
+    
 .section-load-more, .section-toggle
     text-transform: uppercase
     font-weight: bold
     color: gray
     width: fit-content
+    height: 30px
+    @media screen and (max-width: $small-screen)
+        height: 25px
+    @media screen and (max-width: $smaller-screen)
+        height: 20px
+
+
+.section-load-more:not(.all-loaded), .section-load-more, .section-toggle
+    @media screen and (max-width: $small-screen)
+        font-size: 0.8em
+    @media screen and (max-width: $smaller-screen)
+        font-size: 0.6em
 
 .section-load-more:not(.all-loaded), .section-toggle
 
     @include common.button
-
-    // display: flex
-    // align-items: center
-    // justify-content: center
-
 
     &:hover
         cursor: pointer
@@ -57,13 +83,6 @@
 .section-load-more.all-loaded
     border: 0px
     background-color: transparent
-
-.section-footer
-    width: 100%
-    display: flex
-    flex-direction: row
-    align-items: center
-    justify-content: center
 
 .anime-list
     height: fit-content
@@ -78,8 +97,7 @@
 
     gap: 15px 12px
 
-    margin-top: 12px
-    margin-bottom: 0px
+    margin: 12px 0px
     padding: 0
 
     transition: 0.5s
@@ -120,9 +138,9 @@
 
 .anime-card
     @include anime_card(180px)
-    @media screen and (max-width: 800px)
+    @media screen and (max-width: $small-screen)
         @include anime_card(120px)
-    @media screen and (max-width: 500px)
+    @media screen and (max-width: $smaller-screen)
         @include anime_card(100px)
 
 .card-image

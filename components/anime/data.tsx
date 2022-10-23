@@ -62,25 +62,25 @@ function media() {
 // https://anilist.co/home
 // their api has limit on return size
 // try not to query too many items
-export const ANIME_ID_MAP = {
-    'SPYxFAMILY': 140960,
-    'SPYxFAMILY_s2': 142838,
-    'JUJUTSU_KAISEN': 113415,
-    'One_Punch_Man': 21087,
-    'The_Promised_Neverland': 101759,
-    'Rascal_Does_Not_Dream_of_Bunny_Girl_Senpai': 101291,
-    'Dr_STONE': 105333,
-    'ODD_TAXI': 128547,
-    'Classroom_of_the_Elite': 98659,
-    'Jobless_Reincarnation': 108465,
-    'Jobless_Reincarnation_s2': 127720,
-    'beyond_the_boundary': 18153,
-    'angels_of_death': 99629,
-    'Kaguya_sama': 101921,
-    'Kaguya_sama_s2': 112641,
-    'Kaguya_sama_s3': 125367,
-    'Grand_Blue_Dreaming': 100922
-}
+// export const ANIME_ID_MAP = {
+//     'SPYxFAMILY': 140960,
+//     'SPYxFAMILY_s2': 142838,
+//     'JUJUTSU_KAISEN': 113415,
+//     'One_Punch_Man': 21087,
+//     'The_Promised_Neverland': 101759,
+//     'Rascal_Does_Not_Dream_of_Bunny_Girl_Senpai': 101291,
+//     'Dr_STONE': 105333,
+//     'ODD_TAXI': 128547,
+//     'Classroom_of_the_Elite': 98659,
+//     'Jobless_Reincarnation': 108465,
+//     'Jobless_Reincarnation_s2': 127720,
+//     'beyond_the_boundary': 18153,
+//     'angels_of_death': 99629,
+//     'Kaguya_sama': 101921,
+//     'Kaguya_sama_s2': 112641,
+//     'Kaguya_sama_s3': 125367,
+//     'Grand_Blue_Dreaming': 100922
+// }
 
 const graphqlEndpoint = 'https://graphql.anilist.co'
 
@@ -105,10 +105,16 @@ function fetchAnilistData(query: string): object {
             }));
 }
 
-export function fetchFavouriteAnimeData(): Promise<AnimeMedia[]> {
+export async function fetchFavouriteAnimeData(): Promise<AnimeMedia[]> {
     const graphqlQuery = query(user(favouriteAnime(media()), MY_USER_ID));
-    return (fetchAnilistData(graphqlQuery) as Promise<UserFavourite>)
-                .then(data => data.User.favourites.anime.nodes);
+    const data = await (fetchAnilistData(graphqlQuery) as Promise<UserFavourite>);
+    return data.User.favourites.anime.nodes;
+}
+
+export async function fetchAllAnimeData() {
+    const animeData = [];
+    fetchFavouriteAnimeData().then(data => animeData.push(data))
+    return animeData
 }
 
 
