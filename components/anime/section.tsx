@@ -1,7 +1,5 @@
 
-import { hasProps } from '@react-spring/core/dist/declarations/src/helpers';
-import { setDefaultResultOrder } from 'dns';
-import { ButtonHTMLAttributes, ClassAttributes, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AnimeMedia, SectionProps } from '.';
 import styles from './anime.module.sass';
 import Card from './card';
@@ -68,7 +66,7 @@ function useSortedAnimeDataList(animeDataList: AnimeMedia[]) {
     return sortedAnimeDataList;
 }
 
-function AnimeCards(props: {animeDataList: AnimeMedia[], expand: boolean, loaded: boolean}) {
+function AnimeCards(props: { animeDataList: AnimeMedia[], expand: boolean, loaded: boolean }) {
     if (!props.loaded) {
         return <span>loading ...</span>
     }
@@ -81,7 +79,7 @@ function AnimeCards(props: {animeDataList: AnimeMedia[], expand: boolean, loaded
 }
 
 function useToggleAmount(initAmount: number, increment: number, decrement: number, min?: number, max?: number): [number, () => void, () => void] {
-    
+
     const [displayAmount, setDisplayAmount] = useState(initAmount);
     const incrementFunction = () => {
         let newAmount = displayAmount + increment;
@@ -101,21 +99,19 @@ function useToggleAmount(initAmount: number, increment: number, decrement: numbe
     return [displayAmount, incrementFunction, decrementFunction]
 }
 
-function LoadMoreButton(props: {
-    displayAmount: number,
-    totalAmount: number,
-    [key: string | number | symbol]: any
-}) {
+function LoadMoreButton(props: any) {
+
+    const {displayAmount, totalAmount, ...rest} = props;
 
     const [allLoaded, setAllLoaded] = useState(false);
     useEffect(() => {
-        setAllLoaded(props.displayAmount >= props.totalAmount)
-    }, [props.displayAmount, props.totalAmount]);
+        setAllLoaded(displayAmount >= totalAmount)
+    }, [displayAmount, totalAmount]);
 
     if (allLoaded) {
-        return <button className={`${styles['section-load-more']} ${styles['all-loaded']}`} {...props}>all anime loaded</button>
+        return <button className={`${styles['section-load-more']} ${styles['all-loaded']}`} {...rest}>all loaded</button>
     } else {
-        return <button className={styles['section-load-more']} {...props}>load more</button>
+        return <button className={styles['section-load-more']} {...rest}>load more</button>
     }
 }
 
@@ -162,17 +158,18 @@ export default function Section(props: SectionProps) {
 
     const [animeDataList, setAnimeDataList] = useState([]);
     const [loaded, setLoaded] = useState(false);
+    const fetchData = props.fetchData;
 
     // load data into database once
     useMemo(() => {
         const animeDatabase = new Map();
-        props.fetchData()
+        fetchData()
             .then(datas => {
                 setLoaded(true);
                 datas.forEach(data => animeDatabase[data.id] = data);
                 setAnimeDataList(Object.values(animeDatabase));
             });
-    }, [])
+    }, [fetchData])
 
     // sort anime data once loaded
     const sortedAnimeDataList = useSortedAnimeDataList(animeDataList);
@@ -181,18 +178,18 @@ export default function Section(props: SectionProps) {
     const [displayAmount, toggleIncrease, _toggleDecrease] = useToggleAmount(INIT_DISPLAY_AMOUNT, INCREMENT_AMOUNT, 0)
     const displayAnimeDataList = useDisplayAnimeDataList(sortedAnimeDataList, displayAmount);
     // set display amount when user want to load more
-    const loadMoreButton = <LoadMoreButton displayAmount={displayAmount} totalAmount={sortedAnimeDataList.length} onClick={toggleIncrease}/>
+    const loadMoreButton = <LoadMoreButton displayAmount={displayAmount} totalAmount={sortedAnimeDataList.length} onClick={toggleIncrease} />
 
     // expand ui button
     const [expand, setExpand] = useState(false);
-    const toggleExpandButton = <ToggleExpandButton toggleFunc={() => setExpand(!expand)} expand={expand}/>
-    
+    const toggleExpandButton = <ToggleExpandButton toggleFunc={() => setExpand(!expand)} expand={expand} />
+
     return (
         <div className={styles['section-container']}>
             <Header title={props.title} loadMoreButton={loadMoreButton} toggleButton={toggleExpandButton} />
-            
-            <AnimeCards animeDataList={displayAnimeDataList} expand={expand} loaded={loaded}/>
-            
+
+            <AnimeCards animeDataList={displayAnimeDataList} expand={expand} loaded={loaded} />
+
             <Footer expand={expand} loadMoreButton={loadMoreButton} toggleButton={toggleExpandButton} />
         </div>
     )

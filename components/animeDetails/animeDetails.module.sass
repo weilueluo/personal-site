@@ -1,0 +1,75 @@
+
+
+
+
+.all-container
+    height: 100%
+    width: 100%
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+
+    gap: 20px
+
+
+.content-container
+    height: fit-content
+    width: 1200px
+
+    display: grid
+    grid-template-areas: "header header header" "side main main"
+    grid-template-columns: 1fr 2fr 2fr
+    grid-template-rows: 160px auto
+
+    gap: 40px
+
+    margin-top: 50px
+
+    overflow: hidden
+
+    // border: 1px solid black
+
+// Header
+.header
+    grid-area: header
+    height: 100%
+    width: 100%
+
+.banner-image-container
+    height: 100%
+    width: 100%
+
+.banner-image
+    height: 100%
+
+
+// Side Panel
+.side-panel
+    grid-area: side
+    width: 240px
+
+.side-image-container
+    width: 100%
+
+.side-image, .banner-image
+    width: 100%
+    object-fit: cover
+    object-position: center
+    border-radius: 5px
+
+
+// Main Panel
+.main-panel
+    grid-area: main
+    width: 100%
+
+.anime-title
+    font-size: x-large
+    font-weight: bolder
+
+    &:hover
+        cursor: pointer
+
+.anime-description
+    width: 100%

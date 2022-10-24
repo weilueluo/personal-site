@@ -43,7 +43,11 @@ export type AnimeMedia = {
     bannerImage?: string
 }
 
-export type UserFavouriteType = {
+export type AnimeMediaResponse = {
+    Media: AnimeMedia
+}
+
+export type UserFavouriteResponse = {
     User: {
         favourites: {
             anime: {

@@ -22,6 +22,10 @@ const navItems: NavItem[] = [
     {
         name: 'About',
         link: '/about'
+    },
+    {
+        name: 'Anime',
+        link: '/anime'
     }
 ]
 

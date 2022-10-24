@@ -1,4 +1,4 @@
-import { AnimeMedia, UserFavouriteType as UserFavourite } from "."
+import { AnimeMedia, AnimeMediaResponse, UserFavouriteResponse as UserFavourite } from "."
 
 // https://anilist.github.io/ApiV2-GraphQL-Docs/
 function query(query: string) {
@@ -25,7 +25,13 @@ function favouriteAnime(query: string, FavPage: number = 1, animePage: number = 
     }`
 }
 
-function media() {
+function media(query: string, id: number) {
+    return `Media(id: ${id}){
+        ${query}
+    }`;
+}
+
+function fields() {
     return `id
     title {
       romaji
@@ -106,15 +112,25 @@ function fetchAnilistData(query: string): object {
 }
 
 export async function fetchFavouriteAnimeData(): Promise<AnimeMedia[]> {
-    const graphqlQuery = query(user(favouriteAnime(media()), MY_USER_ID));
+    const graphqlQuery = query(user(favouriteAnime(fields()), MY_USER_ID));
     const data = await (fetchAnilistData(graphqlQuery) as Promise<UserFavourite>);
     return data.User.favourites.anime.nodes;
 }
 
+export async function fetchAnimeMedia(animeID: number) {
+    const graphqlQuery = query(media(fields(), animeID));
+    const data = await (fetchAnilistData(graphqlQuery) as Promise<AnimeMediaResponse>);
+    return data.Media;
+}
+
 export async function fetchAllAnimeData() {
-    const animeData = [];
-    fetchFavouriteAnimeData().then(data => animeData.push(data))
-    return animeData
+    return fetchFavouriteAnimeData()
+}
+
+export async function fetchImageAsLocalUrl(url: string) {
+    return fetch(url)
+        .then(res => res.blob())
+        .then(imageBlob => URL.createObjectURL(imageBlob))
 }
 
 

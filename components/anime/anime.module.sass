@@ -1,7 +1,27 @@
 @use '../common/common'
+@use 'sass:list'
+
+// min size
+$mobile-screen: 320px
+$tablet-screen: 481px
+$laptop-screen: 770px
+$desktop-screen: 1025px
 
 $small-screen: 768px
 $smaller-screen: 480px
+
+$n-screens: 5
+
+$min-screen-sizes: 0px, $mobile-screen, $tablet-screen, $laptop-screen, $desktop-screen
+$section-title-sizes: medium, medium, large, large, x-large
+$card-title-sizes: small, small, medium, medium, medium
+$card-widths: 100px, 120px, 140px, 160px, 180px
+$cover-heights: 200px, 220px, 240px, 280px, 280px
+
+$button-heights: 20px, 20px, 30px, 30px, 30px
+$button-font-sizes: 0.6em, 0.6em, 0.8em, 0.8em, 0.8em
+$button-widths: 80px, 80px, 100px, 100px, 100px
+    
 
 .all-container
     width: 100%
@@ -13,65 +33,47 @@ $smaller-screen: 480px
     font-family: Overpass,-apple-system,BlinkMacSystemFont,Segoe UI,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif
 
 // Anime Section
+// Header & Footer
 .section-container
     width: 950px
-    max-width: 95%
+    max-width: 90%
     margin: 50px 0px
 
 .section-header, .section-footer
-    height: fit-content
     width: 100%
     display: flex
     flex-direction: row
     flex-wrap: wrap
-    align-items: flex-end
+    align-items: center
 
 .section-header
     justify-content: space-between
+    gap: 8px
 
 .section-footer
     justify-content: flex-end
 
 .section-footer, .header-right
+    display: flex
+    flex-direction: row
     gap: 20px
 
-.header-left
-    width: fit-content
-    
-.section-title
-    font-size: x-large
-    @media screen and (max-width: $small-screen)
-        font-size: large
-    @media screen and (max-width: $smaller-screen)
-        font-size: medium
+.header-left, .header-right
+    display: flex
+    height: fit-content
+    align-items: flex-end
 
+.section-title
+    @for $i from 1 through $n-screens
+        @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
+            font-size: list.nth($section-title-sizes, $i)
+
+    margin-top: 10px
     margin-right: 20px
+    height: fit-content
     
     font-weight: bolder
     text-transform: uppercase
-
-.header-right
-    display: flex
-    flex-direction: row
-    height: 100%
-    
-.section-load-more, .section-toggle
-    text-transform: uppercase
-    font-weight: bold
-    color: gray
-    width: fit-content
-    height: 30px
-    @media screen and (max-width: $small-screen)
-        height: 25px
-    @media screen and (max-width: $smaller-screen)
-        height: 20px
-
-
-.section-load-more:not(.all-loaded), .section-load-more, .section-toggle
-    @media screen and (max-width: $small-screen)
-        font-size: 0.8em
-    @media screen and (max-width: $smaller-screen)
-        font-size: 0.6em
 
 .section-load-more:not(.all-loaded), .section-toggle
 
@@ -80,39 +82,56 @@ $smaller-screen: 480px
     &:hover
         cursor: pointer
 
+.section-load-more, .section-toggle, .section-load-more:not(.all-loaded)
+    @for $i from 1 through $n-screens
+        @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
+            font-size: list.nth($button-font-sizes, $i)
+            height: list.nth($button-heights, $i)
+            width: list.nth($button-widths, $i)
+   
+    text-transform: uppercase
+    font-weight: bold
+    color: gray
+    // width: 80px
+
+    // @media screen and (min-width: #{$tablet-screen})
+    //     width: 100px
+
 .section-load-more.all-loaded
     border: 0px
     background-color: transparent
 
+// Content
 .anime-list
     height: fit-content
-    
     width: 100%
 
-    display: flex
-    flex-direction: row
-    align-items: center
-    justify-content: space-between
-    flex-wrap: wrap
+    display: grid
+    @for $i from 1 through $n-screens
+        @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
+            grid-template-columns: repeat(auto-fit, minmax(list.nth($card-widths, $i), 1fr))
+    
+    margin: 16px 0
 
     gap: 15px 12px
 
-    margin: 12px 0px
     padding: 0
 
     transition: 0.5s
 
     &.collapse
-        flex-wrap: nowrap
         overflow-x: scroll
-        overflow-y: hidden
+        grid-template-columns: unset
+        grid-template-rows: unset
+        grid-auto-flow: column
+        grid-auto-columns: 180px
 
 // Anime Card
-@mixin anime_card($card-width)
+.anime-card
     display: flex
     flex-direction: column
-    width: $card-width
-    height: fit-content
+    width: 100%
+    height: 100%
     align-items: center
     justify-content: space-between
 
@@ -125,27 +144,18 @@ $smaller-screen: 480px
         transition: 0.1s
         color: #8800ff
 
-    // &.clicked
-    //     width: 100%
-    //     max-width: 100%
-
     .card-image-container
         width: 100%
-        height: $card-width * 1.5
-
         &:hover
             cursor: pointer
 
-.anime-card
-    @include anime_card(180px)
-    @media screen and (max-width: $small-screen)
-        @include anime_card(120px)
-    @media screen and (max-width: $smaller-screen)
-        @include anime_card(100px)
 
 .card-image
     width: 100%
-    height: 100%
+    @for $i from 1 through $n-screens
+        @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
+            height: list.nth($cover-heights, $i)
+    
     object-fit: cover
     object-position: center
 
@@ -154,8 +164,9 @@ $smaller-screen: 480px
 $card-title-rows: 3
 
 .card-title
-
-    font-size: min(3vw, 1rem, 3vh)
+    @for $i from 1 through $n-screens
+        @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
+            font-size: list.nth($card-title-sizes, $i)
 
     line-height: 1em
     height: 3em
