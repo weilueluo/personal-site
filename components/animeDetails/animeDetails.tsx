@@ -115,7 +115,7 @@ function VoiceActor(props: {characterData: AnimeCharacter}) {
 function CharacterCard(props: {characterData: AnimeCharacter}) {
     const charData = props.characterData;
     const charNode = charData.node;
-    
+
     const urls = charNode?.image ? [charData.node.image.medium, charData.node.image.large] : [];
     const url = useSequentiallyLoadedImageURL(urls);
     const alt = charNode?.name ? charNode?.name.full : 'Cahracter Image'
@@ -340,7 +340,7 @@ export default function AnimeDetails(props: { animeID: string }) {
                 <div className={styles["content-container"]}>
                     <Header />
                     <SidePanel />
-                    <MainPanel/>
+                    <MainPanel />
                 </div>
             </div>
         </AnimeDataContext.Provider>
