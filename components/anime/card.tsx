@@ -7,14 +7,18 @@ import { fetchImageAsLocalUrl } from "./data";
 const LOADING_IMAGE_PATH = '/icons/anime/Dual Ring-5s-200px.svg'
 export function useSequentiallyLoadedImageURL(urls: string[]) {
     const [imageURL, setImageURL] = useState(LOADING_IMAGE_PATH);
-
+    const [index, setIndex] = useState(0);
     useEffect(() => {
-        urls.forEach(
-            url => fetchImageAsLocalUrl(url)
-                    .then(localImagePath => setImageURL(localImagePath))
-                    .catch(error => console.log(`failed to load: ${url} error=${error}`))
-            )
-    }, [urls])
+        if (urls.length <= 0 || index >= urls.length) {
+            return;
+        }
+        fetchImageAsLocalUrl(urls[index])
+            .then(localImagePath => {
+                setImageURL(localImagePath);
+                setIndex(index+1);
+            })
+            .catch(error => console.log(`failed to load: ${urls[index]} error=${error}`))
+    }, [index, urls])
 
     return imageURL;
 }

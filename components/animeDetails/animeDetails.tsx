@@ -1,4 +1,3 @@
-import assert from "assert";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { AnimeCharacter, AnimeMedia, AnimeRelation } from "../anime";
 import { useSequentiallyLoadedImageURL } from "../anime/card";
@@ -141,7 +140,7 @@ function Characters() {
         <div>
             <h2 className={styles['character-section-title']}>Characters</h2>
             <div className={styles['character-container']}>
-                {animeData.characters.edges.map(charData => <CharacterCard key={charData.id.full} characterData={charData} />)}
+                {animeData.characters.edges.map(charData => <CharacterCard key={charData.id} characterData={charData} />)}
             </div>
         </div>
     )
