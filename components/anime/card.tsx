@@ -7,18 +7,14 @@ import { fetchImageAsLocalUrl } from "./data";
 const LOADING_IMAGE_PATH = '/icons/anime/Dual Ring-5s-200px.svg'
 export function useSequentiallyLoadedImageURL(urls: string[]) {
     const [imageURL, setImageURL] = useState(LOADING_IMAGE_PATH);
-    const [index, setIndex] = useState(0);
+
     useEffect(() => {
-        if (urls.length <= 0 || index >= urls.length) {
-            return;
+        for (const url of urls) {
+            fetchImageAsLocalUrl(url)
+                .then(localImagePath => setImageURL(localImagePath))
+                .catch(error => console.log(`failed to load: ${url} error=${error}`))
         }
-        fetchImageAsLocalUrl(urls[index])
-            .then(localImagePath => {
-                setImageURL(localImagePath);
-                setIndex(index+1);
-            })
-            .catch(error => console.log(`failed to load: ${urls[index]} error=${error}`))
-    }, [index, urls])
+    }, [urls])
 
     return imageURL;
 }
@@ -69,7 +65,7 @@ function useRotateString(strings: string[], defaultTitle: string = 'N/A'): [stri
     return [currString, nextString];
 }
 
-function CardImage(props: {
+export function CardImage(props: {
     urls: string[],
     alt?: string,
     href?: string
@@ -77,10 +73,17 @@ function CardImage(props: {
     
     const imageURL = useSequentiallyLoadedImageURL(props.urls);
     const alt = props.alt || 'Cover Image';
-
-    let img = <img className={styles['image']} src={imageURL} alt={alt} />
+    
     if (props.href) {
-        img = <a href={props.href}>{img}</a>
+        return (
+            <a href={props.href}>
+                <img className={styles['image']} src={imageURL} alt={alt} />
+            </a>
+        )
+    } else {
+        return (
+            <img className={styles['image']} src={imageURL} alt={alt} />
+        )
     }
 
     return img
@@ -93,7 +96,7 @@ function CardImage(props: {
     // )
 }
 
-function CardTitle(props: {
+export function CardTitle(props: {
     titles: string[],
 
 }) {

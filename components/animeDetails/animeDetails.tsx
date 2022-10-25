@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { AnimeCharacter, AnimeMedia, AnimeRelation } from "../anime";
-import { useSequentiallyLoadedImageURL } from "../anime/card";
+import { CardImage, useSequentiallyLoadedImageURL } from "../anime/card";
 import { fetchAnimeMedia, fetchImageAsLocalUrl } from "../anime/data";
 import UnderDevelopment from "../common/UnderDevelopment";
 import styles from './animeDetails.module.sass';
@@ -35,12 +35,16 @@ function BannerImage() {
 
 function CoverImage() {
 
-    const animeData = useContext(AnimeDataContext)
-    const coverImageURL = useSequentiallyLoadedImageURL([
-        animeData?.coverImage?.medium,
-        animeData?.coverImage?.large,
-    ]);
+    const animeData = useContext(AnimeDataContext);
+    const coverImageURL = useSequentiallyLoadedImageURL(animeData.coverImage ? [
+        animeData.coverImage.medium,
+        animeData.coverImage.large,
+    ]: []);
 
+    // console.log('cover image');
+    // console.log(animeData);
+    // console.log(animeData?.coverImage);
+    
     const alt = animeData?.title?.english || 'Cover Image';
 
     return (
@@ -111,17 +115,19 @@ function VoiceActor(props: {characterData: AnimeCharacter}) {
 function CharacterCard(props: {characterData: AnimeCharacter}) {
     const charData = props.characterData;
     const charNode = charData.node;
-    console.log('char image');
-    console.log(charData.node.image);
     
-    const url = useImageUrl(charData.node.image);
+    const urls = charNode?.image ? [charData.node.image.medium, charData.node.image.large] : [];
+    const url = useSequentiallyLoadedImageURL(urls);
+    const alt = charNode?.name ? charNode?.name.full : 'Cahracter Image'
     const [charName, nextCharName] = useRotateString([charNode.name.full, charNode.name.native, ...charNode.name.alternative])
     return (
         <div className={styles['character-card-container']}>
             <div className={styles['character-card-image-container']}>
                 <a href={charData.node.siteUrl}>
-                    <img className={styles['character-card-image']} src={url} alt={`${charNode.name.full} Character Card Image`} />
+                    <img className={styles['character-card-image']} src={url} alt={alt} />
                 </a>
+
+                {/* <CardImage urls={urls} alt={alt} href={charData.node.siteUrl}/> */}
             </div>
             <strong className={styles['character-role']}>{charData.role} </strong>
             <span className={styles['character-card-name']} onClick={nextCharName}>{charName}</span>
@@ -208,9 +214,20 @@ function Genres() {
 }
 
 function SidePanel() {
+
+    const animeData = useContext(AnimeDataContext);
+
+    const [urls, setUrls] = useState([]);
+    useEffect(() => {
+        animeData.coverImage && setUrls([animeData.coverImage.medium, animeData.coverImage.large])
+    }, [animeData.coverImage])
+    const alt = animeData.title ? animeData.title.english : 'Cover Image'
+
     return (
         <div className={styles['side-panel']}>
-            <CoverImage />
+            <div className={styles['side-image-container']}>
+                <CardImage urls={urls} alt={alt} href={animeData.siteUrl} />
+            </div>
             <Genres />
             <Hashtag />
             <Tags />
