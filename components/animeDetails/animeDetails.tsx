@@ -111,6 +111,9 @@ function VoiceActor(props: {characterData: AnimeCharacter}) {
 function CharacterCard(props: {characterData: AnimeCharacter}) {
     const charData = props.characterData;
     const charNode = charData.node;
+    console.log('char image');
+    console.log(charData.node.image);
+    
     const url = useImageUrl(charData.node.image);
     const [charName, nextCharName] = useRotateString([charNode.name.full, charNode.name.native, ...charNode.name.alternative])
     return (
