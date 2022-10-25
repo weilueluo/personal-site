@@ -92,14 +92,6 @@ export function CardImage(props: {
         )
     }
 
-    return img
-    // return (
-    //     <div className={styles['card-image-container']}>
-    //         <a href={`/anime/${pathName}`}>
-    //             <img className={styles['card-image']} src={coverImageURL} alt={alt} />
-    //         </a>
-    //     </div>
-    // )
 }
 
 export function CardTitle(props: {
