@@ -74,6 +74,10 @@ function CardImage(props: {
     alt?: string,
     href?: string
 }) {
+
+    console.log(props.alt);
+    console.log(props.urls);
+    
     const imageURL = useSequentiallyLoadedImageURL(props.urls);
     const alt = props.alt || 'Cover Image';
 
