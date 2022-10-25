@@ -205,8 +205,6 @@ function Genres() {
 }
 
 function SidePanel() {
-    const animeData = useContext(AnimeDataContext)
-
     return (
         <div className={styles['side-panel']}>
             <CoverImage />

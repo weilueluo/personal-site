@@ -159,7 +159,7 @@ export function Card(props: {
 export default function AnimeCard(props: { animeData: FavAnimeMedia }) {
     const animeData = props.animeData;
     const imageUrls = animeData.coverImage ? [animeData.coverImage.medium, animeData.coverImage.large] : [];
-    const href = `/anime/${animeData.id}${isDevEnv() ? '' : '.html'}`;
+    const href = animeData.id ? `/anime/${animeData.id}${isDevEnv() ? '' : '.html'}` : '#';
     const titles = animeData.title ? [animeData.title.english, animeData.title.romaji, animeData.title.native] : [];
     
     return <Card imageUrls={imageUrls} titles={titles} href={href} alt={animeData.title?.english} />
