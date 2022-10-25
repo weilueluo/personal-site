@@ -1,93 +1,162 @@
-import { useEffect, useMemo, useState } from "react"
-import { AnimeMedia } from "."
+import { useEffect, useState } from "react";
+import { FavAnimeMedia } from ".";
 import { isDevEnv } from "../utils/utils";
-import styles from './anime.module.sass'
+import styles from './card.module.sass';
 import { fetchImageAsLocalUrl } from "./data";
 
-export function useCoverImageURL(animeData: AnimeMedia) {
-    const [coverImageURL, setCoverImageURL] = useState<string>('/icons/anime/Dual Ring-5s-200px.svg')
+const LOADING_IMAGE_PATH = '/icons/anime/Dual Ring-5s-200px.svg'
+export function useSequentiallyLoadedImageURL(urls: string[]) {
+    const [imageURL, setImageURL] = useState(LOADING_IMAGE_PATH);
 
-    useMemo(() => {
-
-        if (!animeData || !animeData.coverImage) {
-            console.log('error: no coverimage available');
-            setCoverImageURL('#');
-        } else {
-            const fetchMediumImage = () => fetchImageAsLocalUrl(animeData.coverImage.medium)
-                .then(localimageUrl => setCoverImageURL(localimageUrl));
-        
-            const fetchLargeImage = () => fetchImageAsLocalUrl(animeData.coverImage.large)
-                .then(localimageUrl => setCoverImageURL(localimageUrl));
-
-            // fetch medium size image first then fetch large size image
-            // so that user can at least see something first
-            fetchMediumImage()
-                .catch(error => {
-                    console.log(`error while fetch medium size image: ${error}`);
-                })
-                .then(fetchLargeImage)
-                .catch(error => {
-                    console.log(`error while fetch large size image: ${error}`);
-                })
-        }
-    }, [animeData]);
-
-    return coverImageURL;
-}
-
-function CoverImage(props: { animeData: AnimeMedia }) {
-    
-    const animeData = props.animeData;
-    const coverImageURL = useCoverImageURL(animeData);
-
-    const alt = (animeData && animeData.title) ? `Cover Image for ${animeData.title.native}` : 'Cover Image';
-
-    const pathName = isDevEnv() ? animeData.id : `${animeData.id}.html`
-
-    return (
-        <div className={styles['card-image-container']}>
-            <a href={`/anime/${pathName}`}>
-                <img className={styles['card-image']} src={coverImageURL} alt={alt} />
-            </a>
-        </div>
-    )
-}
-
-function AnimeTitle(props: { animeData: AnimeMedia }) {
-    const animeData = props.animeData;
-
-    const [title, setTitle] = useState<string>('title');
-    const [index, setIndex] = useState<number>(0);
-    const nextTitle = () => setIndex(index + 1);
     useEffect(() => {
-        const titles: string[] = (animeData && animeData.title) ? [animeData.title.romaji, animeData.title.native, animeData.title.english]: [];
-        setTitle(titles[index % titles.length])
-    }, [index, animeData])
+        urls.forEach(
+            url => fetchImageAsLocalUrl(url)
+                    .then(localImagePath => setImageURL(localImagePath))
+                    .catch(error => console.log(`failed to load: ${url} error=${error}`))
+            )
+    }, [urls])
 
-    if (!animeData) {
-        return <span className={styles['card-title']}>anime data not available</span>
-    }
-    if (!animeData.title) {
-        return <span className={styles['card-title']}>title not available</span>
-    }
-
-    return <span className={styles['card-title']} onClick={nextTitle}>{title}</span>
+    return imageURL;
 }
 
-function AnimeCard(props: { data: AnimeMedia }) {
-    const animeData = props.data;
+// export function useCoverImageURL(animeData: FavAnimeMedia) {
+//     const [coverImageURL, setCoverImageURL] = useState<string>('/icons/anime/Dual Ring-5s-200px.svg')
 
-    const [clicked, setClicked] = useState(false);
+//     useMemo(() => {
+
+//         if (!animeData.coverImage) {
+//             console.log('no coverimage available');
+//             setCoverImageURL('#');
+//         } else {
+//             const fetchMediumImage = () => fetchImageAsLocalUrl(animeData.coverImage.medium)
+//                 .then(localimageUrl => setCoverImageURL(localimageUrl));
+        
+//             const fetchLargeImage = () => fetchImageAsLocalUrl(animeData.coverImage.large)
+//                 .then(localimageUrl => setCoverImageURL(localimageUrl));
+
+//             // fetch medium size image first then fetch large size image
+//             // so that user can at least see something first
+//             fetchMediumImage()
+//                 .catch(error => {
+//                     console.log(`error while fetch medium size image: ${error}`);
+//                 })
+//                 .then(fetchLargeImage)
+//                 .catch(error => {
+//                     console.log(`error while fetch large size image: ${error}`);
+//                 })
+//         }
+//     }, [animeData]);
+
+//     return coverImageURL;
+// }
+
+function useRotateString(strings: string[], defaultTitle: string = 'N/A'): [string, () => void] {
+    strings = strings.filter(title => title && title.trim() != '');
+    if (!strings || strings.length == 0) {
+        strings = [defaultTitle]
+    }
+    const [currString, setCurrString] = useState(strings[0]);
+    const [index, setIndex] = useState(0);
+    const nextString = () => setIndex(index + 1);
+    useEffect(() => {
+        setCurrString(strings[index % strings.length]);
+    }, [index, strings])
+
+    return [currString, nextString];
+}
+
+function CardImage(props: {
+    urls: string[],
+    alt?: string,
+    href?: string
+}) {
+    const imageURL = useSequentiallyLoadedImageURL(props.urls);
+    const alt = props.alt || 'Cover Image';
+
+    let img = <img className={styles['image']} src={imageURL} alt={alt} />
+    if (props.href) {
+        img = <a href={props.href}>{img}</a>
+    }
+
+    return img
+    // return (
+    //     <div className={styles['card-image-container']}>
+    //         <a href={`/anime/${pathName}`}>
+    //             <img className={styles['card-image']} src={coverImageURL} alt={alt} />
+    //         </a>
+    //     </div>
+    // )
+}
+
+function CardTitle(props: {
+    titles: string[],
+
+}) {
+    const [title, nextTitle] = useRotateString(props.titles);
+
+    return <span className={styles['title']} onClick={nextTitle}>{title}</span>
+}
+
+
+// function CoverImage(props: { animeData: FavAnimeMedia }) {
+    
+//     const animeData = props.animeData;
+//     const coverImageURL = useCoverImageURL(animeData);
+
+//     const alt = (animeData && animeData.title) ? `Cover Image for ${animeData.title.native}` : 'Cover Image';
+
+//     const pathName = isDevEnv() ? animeData.id : `${animeData.id}.html`
+
+//     return (
+//         <div className={styles['card-image-container']}>
+//             <a href={`/anime/${pathName}`}>
+//                 <img className={styles['card-image']} src={coverImageURL} alt={alt} />
+//             </a>
+//         </div>
+//     )
+// }
+
+// function AnimeTitle(props: { animeData: FavAnimeMedia }) {
+//     const animeData = props.animeData;
+
+//     const [title, setTitle] = useState<string>('title');
+//     const [index, setIndex] = useState<number>(0);
+//     const nextTitle = () => setIndex(index + 1);
+//     useEffect(() => {
+//         const titles: string[] = (animeData && animeData.title) ? [animeData.title.romaji, animeData.title.native, animeData.title.english]: [];
+//         setTitle(titles[index % titles.length])
+//     }, [index, animeData])
+
+//     if (!animeData) {
+//         return <span className={styles['card-title']}>anime data not available</span>
+//     }
+//     if (!animeData.title) {
+//         return <span className={styles['card-title']}>title not available</span>
+//     }
+
+//     return <span className={styles['card-title']} onClick={nextTitle}>{title}</span>
+// }
+
+export function Card(props: {
+    titles: string[],
+    imageUrls: string[],
+    href?: string,
+    alt?: string
+}) {
 
     return (
-        <li className={`${styles['anime-card']} ${clicked ? styles['clicked'] : ''}`} onClick={() => setClicked(!clicked)}>
-            <CoverImage animeData={animeData}/>
-            <AnimeTitle animeData={animeData} />
+        <li className={styles['card']}>
+            <CardImage urls={props.imageUrls} alt={props.alt} href={props.href} />
+            <CardTitle titles={props.titles}/>
         </li>
     )
 }
 
-export default function Card(props: { animeData: AnimeMedia }) {
-
-    return <AnimeCard data={props.animeData} />
+export default function AnimeCard(props: { animeData: FavAnimeMedia }) {
+    const animeData = props.animeData;
+    const imageUrls = animeData.coverImage ? [animeData.coverImage.medium, animeData.coverImage.large] : [];
+    const href = `/anime/${animeData.id}${isDevEnv() ? '' : '.html'}`;
+    const titles = animeData.title ? [animeData.title.english, animeData.title.romaji, animeData.title.native] : [];
+    
+    return <Card imageUrls={imageUrls} titles={titles} href={href} alt={animeData.title?.english} />
 }

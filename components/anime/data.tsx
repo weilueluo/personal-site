@@ -1,4 +1,4 @@
-import { AnimeMedia, AnimeMediaResponse, UserFavouriteResponse as UserFavourite } from "."
+import { FavAnimeMedia, AnimeMediaResponse, UserFavouriteResponse as UserFavourite } from "."
 
 // https://anilist.github.io/ApiV2-GraphQL-Docs/
 function query(query: string) {
@@ -21,49 +21,185 @@ function favouriteAnime(query: string, FavPage: number = 1, animePage: number = 
             nodes{
                 ${query}
             }
+            pageInfo{
+                total
+                perPage
+                currentPage
+                lastPage
+                hasNextPage
+            }
         }
     }`
 }
 
-function media(query: string, id: number) {
+function media(query: string, id: number | string) {
     return `Media(id: ${id}){
         ${query}
     }`;
 }
 
-function fields() {
-    return `id
-    title {
-      romaji
-      english
-      native
-      userPreferred
-    }
-    description
-    startDate {
-      year
-      month
-      day
-    }
-    endDate {
-      year
-      month
-      day
-    }
-    format
-    coverImage {
-      extraLarge
-      large
-      medium
-      color
-    }
-    bannerImage
-    genres
-    hashtag
-    isAdult
-    siteUrl
-    status`
+const favFields = `id
+title {
+  romaji
+  english
+  native
+  userPreferred
 }
+startDate {
+  year
+  month
+  day
+}
+coverImage {
+  extraLarge
+  large
+  medium
+  color
+}
+siteUrl`
+
+const mediaFields = favFields + `
+trailer {
+    id
+    site
+    thumbnail
+}
+description
+status
+format
+season
+seasonYear
+episodes
+duration
+chapters
+countryOfOrigin
+source
+updatedAt
+synonyms
+meanScore
+bannerImage
+genres
+hashtag
+isAdult
+endDate {
+    year
+    month
+    day
+}
+tags{
+    name
+    description
+    category
+    rank
+    isGeneralSpoiler
+    isMediaSpoiler
+}
+relations{
+    edges{
+        id
+        relationType
+        node{
+            id
+            siteUrl
+            title{
+                romaji
+                english
+                native
+            }
+            coverImage{
+                medium
+                large
+                extraLarge
+            }
+        }
+    }
+}
+characters (sort: ROLE){
+    edges{
+        id
+        role
+        node{
+            id
+            name{
+                full
+                native
+                alternative
+                alternativeSpoiler
+            }
+            image{
+                medium
+                large
+            }
+            description
+            gender
+            dateOfBirth{
+                year
+                month
+                day
+            }
+            bloodType
+            siteUrl
+        }
+        voiceActors (language: JAPANESE, sort: ROLE){
+            id
+            name{
+                full
+                native
+                alternative
+            }
+            description
+            image{
+                medium
+                large
+            }
+            languageV2
+            gender
+            age
+        }
+    }
+    pageInfo{
+        total
+        perPage
+        currentPage
+        lastPage
+        hasNextPage
+    }
+}`
+
+// #format
+//     #season
+//     #seasonYear
+//     #seasonInt
+//     #episodes
+//     #duration
+//     #chapters
+//     #volumes
+//     #countryOfOrigin
+//     #source
+//     #trailer
+//     #updatedAt
+//     #synonyms
+//     #averageScore
+//     #meanScore
+//     #popularity
+//characters
+
+
+// #type
+// # relations {
+// #     edges {
+// #         id
+// #         relationType
+// #         characters
+// #         characterRole
+// #         characterName
+// #         staffRole
+// #         voiceActors
+// #         voiceActorRoles
+// #     }
+// #     nodes
+// #     pageInfo
+// # }
 
 // https://anilist.co/home
 // their api has limit on return size
@@ -111,14 +247,19 @@ function fetchAnilistData(query: string): object {
             }));
 }
 
-export async function fetchFavouriteAnimeData(): Promise<AnimeMedia[]> {
-    const graphqlQuery = query(user(favouriteAnime(fields()), MY_USER_ID));
+export async function fetchFavouriteAnimeData(): Promise<FavAnimeMedia[]> {
+    const graphqlQuery = query(user(favouriteAnime(favFields), MY_USER_ID));
     const data = await (fetchAnilistData(graphqlQuery) as Promise<UserFavourite>);
+    console.log('loaded favourites');
+    console.log(data.User.favourites);
     return data.User.favourites.anime.nodes;
 }
 
-export async function fetchAnimeMedia(animeID: number) {
-    const graphqlQuery = query(media(fields(), animeID));
+export async function fetchAnimeMedia(animeID: number | string) {
+    // console.log('fetch media');
+    // console.log(mediaFields);
+    
+    const graphqlQuery = query(media(mediaFields, animeID));
     const data = await (fetchAnilistData(graphqlQuery) as Promise<AnimeMediaResponse>);
     return data.Media;
 }
@@ -132,57 +273,3 @@ export async function fetchImageAsLocalUrl(url: string) {
         .then(res => res.blob())
         .then(imageBlob => URL.createObjectURL(imageBlob))
 }
-
-
-
-// export function getAllAnilistAnimeData() {
-//     let anilistQuery = ''
-//     for (const [alias, id] of Object.entries(ANIME_ID_MAP)) {
-//         anilistQuery += getAnilistMediaQuery(alias, id);
-//     }
-//     const graphQLQuery = getGraphQLQuery(anilistQuery);
-//     const options = {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'Accept': 'application/json',
-//         },
-//         body: JSON.stringify({
-//             query: graphQLQuery
-//         })
-//     }
-
-//     // console.log(graphQLQuery);
-
-//     return fetch(graphqlEndpoint, options)
-//             .then(res => res.json().then(json => json.data as Map<string, AnimeJsonType>)
-//             .then(animeData => {
-//                 console.log('loaded anime data');
-//                 console.log(animeData);
-//                 return animeData;
-//             }));
-// }
-
-// export function getAnilistAnimeData(id: number): Promise<AnimeJsonType> {
-//     const variables = {
-//         id: id
-//     }
-//     const options = {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'Accept': 'application/json',
-//         },
-//         body: JSON.stringify({
-//             query: getGraphQLQuery(getAnilistMediaQuery('Media', id)),
-//             variables: variables
-//         })
-//     }
-
-//     return fetch(graphqlEndpoint, options)
-//             .then(res => res.json().then(json => json.data.Media as AnimeJsonType)
-//             .then(animeData => {
-//                 console.log(`loaded anime data: ${id} ${animeData.title ? animeData.title.native : 'N/A'}`);
-//                 return animeData
-//             }));
-// }

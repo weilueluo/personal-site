@@ -7,20 +7,15 @@ $tablet-screen: 481px
 $laptop-screen: 770px
 $desktop-screen: 1025px
 
-$small-screen: 768px
-$smaller-screen: 480px
-
 $n-screens: 5
 
 $min-screen-sizes: 0px, $mobile-screen, $tablet-screen, $laptop-screen, $desktop-screen
 $section-title-sizes: medium, medium, large, large, x-large
-$card-title-sizes: small, small, medium, medium, medium
 $card-widths: 100px, 120px, 140px, 160px, 180px
-$cover-heights: 200px, 220px, 240px, 280px, 280px
 
 $button-heights: 20px, 20px, 30px, 30px, 30px
 $button-font-sizes: 0.6em, 0.6em, 0.8em, 0.8em, 0.8em
-$button-widths: 80px, 80px, 100px, 100px, 100px
+$button-widths: 90px, 90px, 100px, 100px, 100px
     
 
 .all-container
@@ -126,67 +121,4 @@ $button-widths: 80px, 80px, 100px, 100px, 100px
         grid-auto-flow: column
         grid-auto-columns: 180px
 
-// Anime Card
-.anime-card
-    display: flex
-    flex-direction: column
-    width: 100%
-    height: 100%
-    align-items: center
-    justify-content: space-between
 
-    flex-shrink: 0
-    align-self: flex-start
-
-    overflow: hidden
-
-    &:hover .card-title
-        transition: 0.1s
-        color: #8800ff
-
-    .card-image-container
-        width: 100%
-        &:hover
-            cursor: pointer
-
-
-.card-image
-    width: 100%
-    @for $i from 1 through $n-screens
-        @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
-            height: list.nth($cover-heights, $i)
-    
-    object-fit: cover
-    object-position: center
-
-    border-radius: 5px
-
-$card-title-rows: 3
-
-.card-title
-    @for $i from 1 through $n-screens
-        @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
-            font-size: list.nth($card-title-sizes, $i)
-
-    line-height: 1em
-    height: 3em
-
-    width: 100%
-
-    font-weight: bold
-    overflow: hidden
-    text-overflow: ellipsis
-    display: -webkit-box
-    -webkit-box-orient: vertical
-    -moz-box-orient: vertical
-    line-clamp: $card-title-rows
-    -webkit-line-clamp: $card-title-rows
-
-    text-align: left
-
-    color: black
-
-    margin-top: 5px
-
-    &:hover
-        cursor: default

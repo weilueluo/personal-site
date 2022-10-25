@@ -1,6 +1,15 @@
+@use 'sass:list'
 
+// min sizes
+$mobile-screen: 320px
+$tablet-screen: 481px
+$laptop-screen: 770px
+$desktop-screen: 1025px
 
+$n-screens: 5
 
+$min-screen-sizes: 0px, $mobile-screen, $tablet-screen, $laptop-screen, $desktop-screen
+$banner-heights: 100px, 120px, 140px, 160px, 180px
 
 .all-container
     height: 100%
@@ -12,42 +21,61 @@
 
     gap: 20px
 
+    font-family: Overpass,-apple-system,BlinkMacSystemFont,Segoe UI,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif
+
 
 .content-container
     height: fit-content
     width: 1200px
-
-    display: grid
-    grid-template-areas: "header header header" "side main main"
-    grid-template-columns: 1fr 2fr 2fr
-    grid-template-rows: 160px auto
+    max-width: 95%
 
     gap: 40px
 
-    margin-top: 50px
+    margin: 50px 0px
 
     overflow: hidden
 
-    // border: 1px solid black
+    display: grid
+
+    grid-template-areas: "header header header" "main main main" "side side side"
+    grid-template-columns: 1fr 1fr 1fr
+    grid-template-rows: auto
+    // grid-template-columns: 1fr
+    // grid-template-rows: auto
+
+    @media screen and (min-width: $tablet-screen)
+        grid-template-areas: "header header header" "side main main"
+        grid-template-columns: 1fr 2fr 2fr
+        grid-template-rows: auto
 
 // Header
 .header
     grid-area: header
-    height: 100%
-    width: 100%
+    // height: 100%
+    // width: 100%
 
 .banner-image-container
-    height: 100%
+    @for $i from 1 through $n-screens
+        @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
+            height: list.nth($banner-heights, $i)
     width: 100%
 
 .banner-image
+    width: 100%
     height: 100%
+
+    object-fit: center
+    object-position: center
 
 
 // Side Panel
 .side-panel
     grid-area: side
     width: 240px
+
+    display: flex
+    flex-direction: column
+    gap: 20px
 
 .side-image-container
     width: 100%
@@ -58,6 +86,35 @@
     object-position: center
     border-radius: 5px
 
+// tokens
+.genre-container, .hashtag-container, .tag-container
+    width: 100%
+    height: fit-content
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
+
+    gap: 10px
+
+.genre, .hashtag, .tag
+    width: fit-content
+    padding: 4px 6px
+    // border: 1px solid black
+    // border-radius: 5px
+
+.genre
+    background-color: #C2E1C2
+.hashtag
+    background-color: #F48668
+.tag
+    background-color: #C7B8EA
+
+// .genre-container
+//     border: 1px solid green
+// .hashtag-container
+//     border: 1px solid red
+// .tag-container
+//     border: 1px solid black
 
 // Main Panel
 .main-panel
@@ -73,3 +130,51 @@
 
 .anime-description
     width: 100%
+    height: fit-content
+    max-height: 300px
+    scroll-behavior: smooth
+    overflow-y: auto
+    margin-bottom: 60px
+
+// Relations
+// .relation-container
+//     width: 100%
+//     height: fit-content
+
+//     display: grid
+//     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr))
+
+//     gap: 40px
+
+.relation-card-image-container
+    height: 220px
+
+// Characters
+.character-container, .relation-container
+    width: 100%
+    height: fit-content
+
+    display: grid
+    // grid-template-columns: unset
+    grid-auto-flow: column
+    grid-auto-columns: 140px
+    overflow-x: auto
+    // grid-template-columns: repeat(auto-fit, minmax(120px, 1fr))
+
+    gap: 20px
+
+.character-card-container, .relation-card-container
+    display: flex
+    flex-direction: column
+    width: 100%
+
+.character-card-image-container, .relation-card-image-container
+    width: 100%
+    margin-bottom: 5px
+
+.character-card-image, .relation-card-image
+    width: 100%
+    height: 100%
+    object-fit: cover
+    object-position: center
+    border-radius: 5px

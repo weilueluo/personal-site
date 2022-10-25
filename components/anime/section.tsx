@@ -1,8 +1,8 @@
 
 import { useEffect, useMemo, useState } from 'react';
-import { AnimeMedia, SectionProps } from '.';
+import { FavAnimeMedia } from '.';
 import styles from './anime.module.sass';
-import Card from './card';
+import AnimeCard from './card';
 
 
 function Header(props: {
@@ -23,7 +23,7 @@ function Header(props: {
     )
 }
 
-function useSortedAnimeDataList(animeDataList: AnimeMedia[]) {
+function useSortedAnimeDataList(animeDataList: FavAnimeMedia[]) {
     const [sortedAnimeDataList, setSortedAnimeDataList] = useState([]);
 
     // set anime cards according to data                                                  
@@ -66,14 +66,14 @@ function useSortedAnimeDataList(animeDataList: AnimeMedia[]) {
     return sortedAnimeDataList;
 }
 
-function AnimeCards(props: { animeDataList: AnimeMedia[], expand: boolean, loaded: boolean }) {
+function AnimeCards(props: { animeDataList: FavAnimeMedia[], expand: boolean, loaded: boolean }) {
     if (!props.loaded) {
         return <span>loading ...</span>
     }
 
     return (
         <ul className={`${styles['anime-list']} ${props.expand ? '' : styles['collapse']}`}>
-            {props.animeDataList.map(animeData => <Card key={animeData.id} animeData={animeData} />)}
+            {props.animeDataList.map(animeData => <AnimeCard key={animeData.id} animeData={animeData} />)}
         </ul>
     )
 }
@@ -141,7 +141,7 @@ function Footer(props: {
     )
 }
 
-function useDisplayAnimeDataList(sortedAnimeDataList: AnimeMedia[], displayAmount: number) {
+function useDisplayAnimeDataList(sortedAnimeDataList: FavAnimeMedia[], displayAmount: number) {
 
     const [displayAnimeDataList, setDisplayAnimeDataList] = useState([]);
     useEffect(() => {
@@ -154,7 +154,9 @@ function useDisplayAnimeDataList(sortedAnimeDataList: AnimeMedia[], displayAmoun
 const INIT_DISPLAY_AMOUNT = 15;
 const INCREMENT_AMOUNT = 20;
 
-export default function Section(props: SectionProps) {
+export default function Section(props: {
+    fetchData: () => Promise<FavAnimeMedia[]>,
+    title: string}) {
 
     const [animeDataList, setAnimeDataList] = useState([]);
     const [loaded, setLoaded] = useState(false);
