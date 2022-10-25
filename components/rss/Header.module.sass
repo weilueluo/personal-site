@@ -1,10 +1,14 @@
-@use '../common/common'
+@use '/components/common/css/colors'
+@use '/components/common/css/button'
+@use './common'
+
     
 $header-width: 350px
 
 // contain search box, refresh, stats, etc...
 .feeds-header
-    @include common.content
+    width: common.$content-width
+    max-width: 100%
     
     width: $header-width
 
@@ -17,18 +21,14 @@ $header-width: 350px
 
     gap: 0.5rem
 
-    // outline: 1px solid red
-
-    // border-bottom: 1px solid gray
-
     *
         height: 1.6rem
 
 .header-button
-    @include common.button
+    @include button.button
 
 .header-button.filter-active
-    background-color: common.$locked-color
+    background-color: colors.$locked-color
     
 .feeds-search-box
     width: 300px
@@ -82,7 +82,7 @@ $header-width: 350px
     gap: 1rem
 
 .header-button.loaded-feeds:hover
-    background-color: common.$inactive-color
+    background-color: colors.$inactive-color
     cursor: default
 
 .loaded-feeds

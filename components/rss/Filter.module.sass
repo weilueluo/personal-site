@@ -1,14 +1,18 @@
-@use '../common/common'
+@use '/components/common/css/colors'
+@use '/components/common/css/button'
+@use './common'
     
 .panels-container
-    @include common.content-container
+    width: 100%
+    max-width: 100%
     
     display: flex
     flex-direction: column
     align-items: center
 
 .panel
-    @include common.content
+    width: common.$content-width
+    max-width: 100%
 
     display: flex
     flex-direction: column
@@ -17,7 +21,7 @@
 
 
 .title
-    @include common.button
+    @include button.button
     background-color: transparent
     
     text-align: center
@@ -29,7 +33,7 @@
 
     &.active
         .filter-button
-            background-color: common.$locked-color
+            background-color: colors.$locked-color
 
 .filters
     padding-left: 0
@@ -40,5 +44,5 @@
     justify-content: center
 
 .filter-button
-    @include common.button
+    @include button.button
     

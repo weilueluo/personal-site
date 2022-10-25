@@ -16,7 +16,7 @@ export default function RSSHeader(props) {
 
     // const nonChinese = /[^\p{Script=Han}]/gim
     // console.log(nonChinese);
-    
+
 
     // searching
     const [searchString, setSearchString] = useState('');
@@ -24,7 +24,7 @@ export default function RSSHeader(props) {
         const searchInput = document.getElementById(
             'search-input'
         ) as HTMLInputElement;
-        
+
         setSearchString(searchInput.value);
     };
     const searchButtonKeyDown = (event) => {
@@ -62,9 +62,9 @@ export default function RSSHeader(props) {
     const [status, setStatus] = useState(<></>)
     useEffect(() => {
         if (completed) {
-            setStatus(<img className={styles['completed-img']} src='/icons/misc/check-mark.svg' alt=''/>)
+            setStatus(<img className={styles['completed-img']} src='/icons/misc/check-mark.svg' alt='' />)
         } else if (loading) {
-            setStatus(<img className={styles['loading-img']} src='/icons/misc/progress.svg' alt=''/>)
+            setStatus(<img className={styles['loading-img']} src='/icons/misc/progress.svg' alt='' />)
         }
     }, [loading, completed])
 
@@ -83,7 +83,7 @@ export default function RSSHeader(props) {
                 <button className={`${styles['header-button']} ${styles['search-button']}`} onClick={searchButtonClicked}>
                     <img className={styles['search-button-img']} src="/icons/misc/magnifying-glass-solid.svg" alt="search-icon" />
                 </button>
-                
+
             </div>
 
             {/* MIDDLE SECTION */}

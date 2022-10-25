@@ -1,12 +1,11 @@
 import { OrbitControls, Stats } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
-import React from 'react';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ACESFilmicToneMapping, sRGBEncoding, Vector3 } from 'three';
-import styles from '../styles/StatsPanel.module.sass';
-import { lightPositionContext } from '../utils/context';
-import { getDeviceDependent, initMobileScroll } from '../utils/hooks';
-import { polar2xyz } from '../utils/utils';
+import { lightPositionContext } from '../common/contexts';
+import { polar2xyz } from '../common/math';
+import { getDeviceDependent } from '../common/misc';
+import { initMobileScroll } from '../common/scroll';
 import About from './scene/About';
 import Ball from './scene/Ball';
 import CV from './scene/CV';
@@ -17,6 +16,7 @@ import LoaderProgress from './scene/LoaderProgress';
 import Moon from './scene/Moon';
 import RSS from './scene/RSS';
 import Stars from './scene/Stars';
+import styles from './StatsPanel.module.sass';
 
 
 const tempVector3 = new Vector3(10, 10, 0);
@@ -56,7 +56,7 @@ export function MyContent() {
                 <Stars />
                 <MyLights />
             </lightPositionContext.Provider>
-            
+
             <GradientBackground />
             <OrbitControls
                 enabled={true}
@@ -65,8 +65,8 @@ export function MyContent() {
                 enableRotate={enableOrbitControl}
                 autoRotate={!enableOrbitControl}
                 autoRotateSpeed={1.0}
-                // minPolarAngle={polarAngle}
-                // maxPolarAngle={maxPolarAngle}
+            // minPolarAngle={polarAngle}
+            // maxPolarAngle={maxPolarAngle}
             />
 
             <Stats showPanel={0} className={styles.panel1} />
@@ -134,7 +134,7 @@ export function MyCanvas(props) {
     }, []);
 
     const { children, ...otherProps } = props;
-    
+
     return (
         <Canvas
             style={{

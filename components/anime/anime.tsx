@@ -11,7 +11,7 @@ export default function Anime() {
     <>
       <UnderDevelopment />
       <div className={styles['all-container']}>
-        <Section title='Favourites' fetchData={fetchFavouriteAnimeData}/>
+        <Section title='Favourites' fetchData={fetchFavouriteAnimeData} />
       </div>
     </>
   )

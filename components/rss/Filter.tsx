@@ -30,9 +30,8 @@ export default function Filter(props) {
             return (
                 <li
                     key={filter.name}
-                    className={`${styles['filter']} ${
-                        filter.active ? styles['active'] : ''
-                    }`}
+                    className={`${styles['filter']} ${filter.active ? styles['active'] : ''
+                        }`}
                     onClick={() => onClick()}
                 >
                     <button className={styles['filter-button']}>

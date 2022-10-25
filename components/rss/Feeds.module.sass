@@ -1,8 +1,12 @@
-@use '../common/common'
+@use '/components/common/css/colors'
+@use '/components/common/css/button'
+@use './common'
 
 // contains all feeds
 .feeds-container
-    @include common.content-container
+    width: 100%
+    max-width: 100%
+
     list-style: none
     display: flex
     flex-direction: column
@@ -19,7 +23,7 @@
     margin-bottom: 20px
 
 .load-more-button
-    @include common.button
+    @include button.button
     font-size: medium
     width: 150px
     margin: 10px 0px

@@ -1,6 +1,5 @@
 @use 'sass:list'
-@use '../common/screens' as screens
-
+@use '/components/common/css/screens'
 
 $cover-heights: 200px, 220px, 240px, 280px, 280px
 $card-title-sizes: small, small, medium, medium, medium
@@ -29,44 +28,41 @@ $card-title-rows: 3
         &:hover
             cursor: pointer
 
-
-
 .image
     width: 100%
     @for $i from 1 through screens.$n-screens
         @media screen and (min-width: #{list.nth(screens.$min-screen-sizes, $i)})
             height: list.nth($cover-heights, $i)
-    
-    object-fit: cover
-    object-position: center
 
-    border-radius: 5px
+            object-fit: cover
+            object-position: center
 
+            border-radius: 5px
 
 .title
     @for $i from 1 through screens.$n-screens
         @media screen and (min-width: #{list.nth(screens.$min-screen-sizes, $i)})
             font-size: list.nth($card-title-sizes, $i)
 
-    line-height: 1em
-    height: 3em
+            line-height: 1em
+            height: 3em
 
-    width: 100%
+            width: 100%
 
-    font-weight: bold
-    overflow: hidden
-    text-overflow: ellipsis
-    display: -webkit-box
-    -webkit-box-orient: vertical
-    -moz-box-orient: vertical
-    line-clamp: $card-title-rows
-    -webkit-line-clamp: $card-title-rows
+            font-weight: bold
+            overflow: hidden
+            text-overflow: ellipsis
+            display: -webkit-box
+            -webkit-box-orient: vertical
+            -moz-box-orient: vertical
+            line-clamp: $card-title-rows
+            -webkit-line-clamp: $card-title-rows
 
-    text-align: left
+            text-align: left
 
-    color: black
+            color: black
 
-    margin-top: 5px
+            margin-top: 5px
 
     &:hover
         cursor: default

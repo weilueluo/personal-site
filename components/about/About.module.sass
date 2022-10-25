@@ -1,4 +1,4 @@
-@use '../common/common'
+@use '/components/common/css/button'
 
 .container
     display: flex
@@ -30,18 +30,22 @@
         outline: 1px dashed black
         cursor: default
 
-
 .list
+
+    max-width: 90%
+
     list-style: none
     padding-left: 0
     margin: 0px
-    
+
     display: flex
     flex-direction: row
     flex-wrap: wrap
     align-items: center
     justify-content: center
-    
+
+    gap: 10px
+
 .list-item-link
     display: flex
     flex-direction: column
@@ -52,12 +56,12 @@
     display: flex
     margin: 15px
     margin-top: 0px
-    
+
     transition: 0.5s
 
     &:hover
         transform: rotateZ(360deg)
-        
+
 .list, .drop-a-message-container
     margin-bottom: 40px
 
@@ -71,8 +75,6 @@
     text-align: center
 
     font-style: italic
-
-
 
 // drop a message
 .drop-a-message-container
@@ -92,10 +94,16 @@
     position: relative
 
 .message-textarea
-    @include common.textarea
+    font-size: 1.1rem
+    font-family: Arial, Helvetica, sans-serif
+    padding: 10px
+    border-radius: 5px
+    border: 1px solid black
 
     height: 200px
     width: 100%
+
+    resize: vertical
 
 .email-area, .name-area
     display: flex
@@ -124,7 +132,7 @@
 
 .send-button
     font-size: 1rem
-    @include common.button
+    @include button.button
     height: 30px
 
 .message-response-container
@@ -140,7 +148,7 @@
     flex-wrap: wrap
     align-items: center
     justify-content: center
-    
+
     background: black
     opacity: 0.75
 
@@ -156,5 +164,5 @@
 .message-response
 
 .close-button
-    @include common.button
+    @include button.button
     height: 30px

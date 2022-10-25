@@ -101,7 +101,7 @@ function useToggleAmount(initAmount: number, increment: number, decrement: numbe
 
 function LoadMoreButton(props: any) {
 
-    const {displayAmount, totalAmount, ...rest} = props;
+    const { displayAmount, totalAmount, ...rest } = props;
 
     const [allLoaded, setAllLoaded] = useState(false);
     useEffect(() => {
@@ -156,7 +156,8 @@ const INCREMENT_AMOUNT = 20;
 
 export default function Section(props: {
     fetchData: () => Promise<FavAnimeMedia[]>,
-    title: string}) {
+    title: string
+}) {
 
     const [animeDataList, setAnimeDataList] = useState([]);
     const [loaded, setLoaded] = useState(false);

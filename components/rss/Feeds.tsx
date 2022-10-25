@@ -1,8 +1,8 @@
-import Feed from "./Feed";
-import { sortFlatFeedsDesc } from "./Utils";
-import styles from './Feeds.module.sass'
-import { FlatFeed } from "./RSS.d";
 import { useState } from "react";
+import Feed from "./Feed";
+import styles from './Feeds.module.sass';
+import { FlatFeed } from "./RSS.d";
+import { sortFlatFeedsDesc } from "./Utils";
 
 
 const INITIAL_FEEDS_LIMIT = 20
@@ -18,7 +18,7 @@ export default function Feeds(props) {
         <Feed key={flatFeed.uniqueKey} flatFeed={flatFeed} i={i} />
     ));
 
-    feedJsxs.push(<LoadMore key={'load-more'} flatFeeds={flatFeeds} feedLimitState={[feedLimit, setFeedLimit]}/>)
+    feedJsxs.push(<LoadMore key={'load-more'} flatFeeds={flatFeeds} feedLimitState={[feedLimit, setFeedLimit]} />)
 
     return (
         <ul className={styles['feeds-container']}>{feedJsxs}</ul>

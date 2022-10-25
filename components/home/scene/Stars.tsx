@@ -1,19 +1,18 @@
 import { useFrame } from '@react-three/fiber';
 import { useContext, useEffect, useMemo, useRef } from 'react';
 import {
-    Color,
     InstancedMesh,
     Object3D,
     ShaderMaterial,
-    Vector3,
+    Vector3
 } from 'three';
-import { lightPositionContext } from '../../utils/context';
-import { useAltScroll } from '../../utils/hooks';
-import { polar2xyz, uniformSphereSample } from '../../utils/utils';
-import { getMainBallRadius as getMainBallRadius, getVisibleRadius } from './global';
+import { lightPositionContext } from '../../common/contexts';
+import { uniformSphereSample, polar2xyz } from '../../common/math';
+import { useAltScroll } from '../../common/threejs';
+import { getMainBallRadius, getVisibleRadius } from './global';
 
-import star_vs from './shaders/star_vs.glsl';
 import star_fs from './shaders/star_fs.glsl';
+import star_vs from './shaders/star_vs.glsl';
 
 const tempObject = new Object3D();
 const size = 0.1;
@@ -27,13 +26,13 @@ function getRandomPositions() {
 
     const positions = Array(amount * 3)
 
-    for (let i = 0; i < amount * 3; i+=3) {
+    for (let i = 0; i < amount * 3; i += 3) {
         const [theta, phi, r] = uniformSphereSample(1)
         // ensure it does not land in the ball
         const [x, y, z] = polar2xyz(theta, phi, mainBallRadius + r * (radius - mainBallRadius))
         positions[i] = x
-        positions[i+1] = y
-        positions[i+2] = z
+        positions[i + 1] = y
+        positions[i + 2] = z
     }
 
     return positions;
@@ -41,7 +40,7 @@ function getRandomPositions() {
 
 
 const whiteColor = new Vector3(255, 255, 255);
-const tempVector3 = new Vector3(0,0,0);
+const tempVector3 = new Vector3(0, 0, 0);
 
 export default function Stars() {
     const meshRef = useRef();
@@ -58,9 +57,9 @@ export default function Stars() {
         for (let i = 0; i < amount; i++) {
 
             tempObject.position.set(
-                positions[i*3],
-                positions[i*3+1],
-                positions[i*3+2]
+                positions[i * 3],
+                positions[i * 3 + 1],
+                positions[i * 3 + 2]
             );
 
             tempObject.updateMatrix();
@@ -78,7 +77,7 @@ export default function Stars() {
         uScrolledAmount: { value: 0 },
         uColor: { value: whiteColor },
     }
-    const material  = new ShaderMaterial({
+    const material = new ShaderMaterial({
         uniforms: uniforms,
         vertexShader: star_vs,
         fragmentShader: star_fs,

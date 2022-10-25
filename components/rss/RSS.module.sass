@@ -1,15 +1,28 @@
-@use '../common/common'
+@use '/components/common/css/colors'
+@use '/components/common/css/button'
+@use './common'
 
 .total-errors, .filter-text
-    @include common.hover-pointer-underline
+    &:hover
+        cursor: pointer
+        text-decoration: underline
 
 // .feed-alert
 
 .separator
-    @include common.separator
+    width: common.$content-width
+    max-width: 100%
+
+    border-bottom: 1px solid colors.$inactive-color
+    height: 0px
+    margin: 0 auto
+
+    padding-bottom: 30px
+    margin-bottom: 30px
     
 .feeds-title
-    @include common.content
+    width: common.$content-width
+    max-width: 100%
 
     padding: 5px 10px
     margin: 10px auto

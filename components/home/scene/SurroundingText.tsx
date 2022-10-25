@@ -1,11 +1,12 @@
 import { useFrame } from '@react-three/fiber';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { ShaderMaterial, Vector3 } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-import { getDeviceDependent, use3DParentHover, useAltScroll } from '../../utils/hooks';
 
-import { lightPositionContext } from '../../utils/context';
+import { lightPositionContext } from '../../common/contexts';
+import { getDeviceDependent } from '../../common/misc';
+import { useAltScroll } from '../../common/threejs';
 import text_fs from './shaders/text_fs.glsl';
 import text_vs from './shaders/text_vs.glsl';
 
@@ -19,7 +20,7 @@ export default function SurroundingText(props) {
     const [meshMaterials, setMeshMaterials] = useState([])
     const [offsets, setOffsets] = useState([])
     const [characters, setCharacters] = useState([])
-    
+
     useEffect(() => {
         setCharacters(props.text.split(''));
     }, [props.text])
@@ -28,7 +29,7 @@ export default function SurroundingText(props) {
 
     const fontLoader = useMemo(() => new FontLoader(), []);
     const fontSize = getDeviceDependent(props.fontSize * 0.6, props.fontSize)
-    
+
     useEffect(() => {
         fontLoader.load('/fonts/Roboto_Bold.json', font => {
             const [meshes_, meshMaterals_, offsets_] = computeMeshAndMaterial(
@@ -36,7 +37,7 @@ export default function SurroundingText(props) {
                 font,
                 fontSize,
                 lightPosition,
-                props.fadeInOnScrollSpeed, 
+                props.fadeInOnScrollSpeed,
                 props.rotationZ
             )
             setMeshes(meshes_)
@@ -55,7 +56,7 @@ export default function SurroundingText(props) {
         let phi = 0;
         let theta = props.initOffset;
         const charSpacingAngle = 0.02;
-        
+
         for (let i = 0; i < meshMaterials.length; i++) {
             const mat = meshMaterials[i];
             const offset = offsets[i];
@@ -94,7 +95,7 @@ function computeMeshAndMaterial(characters, font, fontSize, lightPosition, fadeI
         uScrollAmount: { value: 0.0 },
         uFadeInOnScrollSpeed: { value: fadeInOnScrollSpeed },
         uLightPosition: { value: lightPosition },
-        uPosition: { value: tempVector}
+        uPosition: { value: tempVector }
     };
 
     const sharedMaterial = new ShaderMaterial({
@@ -139,6 +140,6 @@ SurroundingText.defaultProps = {
     rotationZ: 0,
     initOffset: 0,
     fadeInOnScrollSpeed: 0,
-    position: new Vector3(0,0,0),
+    position: new Vector3(0, 0, 0),
     fontSize: 1.0
 };

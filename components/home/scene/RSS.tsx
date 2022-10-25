@@ -1,10 +1,9 @@
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef } from 'react';
 import { Group, Vector3 } from 'three';
-import {
-    getDeviceDependent, use3DHover, useAltScroll
-} from '../../utils/hooks';
-import { isDevEnv } from '../../utils/utils';
+
+import { getDeviceDependent, isDevEnv } from '../../common/misc';
+import { use3DHover, useAltScroll } from '../../common/threejs';
 import { useInnerBallMaterial } from './hooks';
 import ThreeSurroundingText from './ThreeSurroundingText';
 
@@ -16,7 +15,7 @@ const desktopPosition = new Vector3(-5, -5, -5);
 
 
 export default function RSS() {
-    
+
     const meshRef = useRef();
 
     const meshHovered = use3DHover(meshRef);
@@ -48,8 +47,8 @@ export default function RSS() {
         group.position.set(tempVector.x, tempVector.y, tempVector.z);
     });
 
-     //shaders
-     const material = useInnerBallMaterial(groupRef, meshRef, new Vector3(235, 64, 52).divideScalar(255.0))
+    //shaders
+    const material = useInnerBallMaterial(groupRef, meshRef, new Vector3(235, 64, 52).divideScalar(255.0))
 
     const sphereRadius = getDeviceDependent(1.5, 2)
     const textRadius = getDeviceDependent(2, 3)

@@ -1,5 +1,5 @@
 import { RSS_OPTIONS } from "./Options";
-import { FlatFeed, FilterSection } from "./RSS.d";
+import { FilterSection, FlatFeed } from "./RSS.d";
 import { toMonday, toStartOfMonth, toStartOfTheDay, toStartOfYear, toYesterday } from "./Utils";
 
 // did not use enum because I want to associate function and display name to the filter date
@@ -68,7 +68,7 @@ function filterDate(flatFeeds: FlatFeed[], opt: FilterSection): FlatFeed[] {
     const activeDateFilters = opt.filters.filter(opt => opt.active)
     // console.log('active filter');
     // console.log(activeDateFilters);
-    
+
     if (activeDateFilters.length == 0) {
         // if none of the filter is selected, do not filter
         return flatFeeds
@@ -77,7 +77,7 @@ function filterDate(flatFeeds: FlatFeed[], opt: FilterSection): FlatFeed[] {
     for (const filter of activeDateFilters) {
         const startDate = FilterDate[filter.name].getStartDate()
         // console.log(startDate.toDateString());
-        
+
         flatFeeds = flatFeeds.filter(feed => feed.jsDate && feed.jsDate.getTime() - startDate.getTime() >= 0)
     }
 
@@ -93,7 +93,7 @@ export function filterFlatFeeds(flatFeeds: FlatFeed[], filterSections: FilterSec
     }
     // console.log('filtered');
     // console.log(flatFeeds);
-    
+
     return flatFeeds
 }
 

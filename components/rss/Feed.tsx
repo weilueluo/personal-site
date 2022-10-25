@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { timeSince } from '../utils/utils';
+import { timeSince } from '../common/misc';
 import { FlatFeed } from './RSS.d';
 
 import styles from './Feed.module.sass';
@@ -32,14 +32,14 @@ export default function Feed(props: { flatFeed: FlatFeed; i: number }) {
     // https://stackoverflow.com/a/47224153
     const getContentWidth = (element) => {
         var styles = getComputedStyle(element)
-      
+
         return element.clientWidth
-          - parseFloat(styles.paddingLeft)
-          - parseFloat(styles.paddingRight)
-      }
+            - parseFloat(styles.paddingLeft)
+            - parseFloat(styles.paddingRight)
+    }
     const isOverflown = useMemo(() => (element, parent) => {
         // + 16 because the collapse/expand icon is 16px
-        return getContentWidth(parent) < (getContentWidth(element)+16);
+        return getContentWidth(parent) < (getContentWidth(element) + 16);
     }, [])
     const [overflown, setOverflown] = useState(false)
     useEffect(() => {

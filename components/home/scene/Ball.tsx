@@ -14,18 +14,18 @@ import {
     ShapeGeometry,
     Vector3
 } from 'three';
-import { use3DParentHover, useAltScroll } from '../../utils/hooks';
-import { getMeshCenter, useMaxAnimationDuration } from '../../utils/utils';
 import { getMainBallRadius } from './global';
 import sphere_fs from './shaders/sphere_fs.glsl';
 import sphere_vs from './shaders/sphere_vs.glsl';
 
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { lightPositionContext } from '../../utils/context';
+import { lightPositionContext } from '../../common/contexts';
 
 import { LineAnimator } from '../../animation/LineAnimator';
 import { TextAnimator } from '../../animation/TextAnimation';
+import { useMaxAnimationDuration } from '../../common/modelAnimation';
+import { getMeshCenter, use3DParentHover, useAltScroll } from '../../common/threejs';
 import { generateTextShape } from './Text';
 import ThreeSurroundingText from './ThreeSurroundingText';
 
@@ -116,7 +116,7 @@ function useCenterOffset(gltf) {
 
 function useJSXMeshes(meshNodes, materials) {
     const [meshes, setMeshes] = useState<JSX.Element[]>([]);
-    
+
     useMemo(() => {
         if (!materials) {
             return;
@@ -144,7 +144,7 @@ function useJSXMeshes(meshNodes, materials) {
 
 function useJSXOthers(otherNodes) {
     const [others, setOthers] = useState<JSX.Element[]>([]);
-    
+
     useMemo(() => {
         const new_others = otherNodes.map((node) => (
             <group
@@ -161,11 +161,11 @@ function useJSXOthers(otherNodes) {
 
 extend({ Line_: Line })
 declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      line_: ReactThreeFiber.Object3DNode<Line, typeof Line>
+    namespace JSX {
+        interface IntrinsicElements {
+            line_: ReactThreeFiber.Object3DNode<Line, typeof Line>
+        }
     }
-  }
 }
 
 const tempVec3 = new Vector3();
@@ -213,7 +213,7 @@ function MainBall(props) {
             scene.rotation.x += (scrolled ? 0.0 : 0.003);
         }
         ballRotationMat.setFromMatrix4(tempMat4.makeRotationFromEuler(scene.rotation))
-        
+
         materials.forEach((mat) => {
             mat.uniforms.uTime.value = time;
             mat.uniforms.uScrolledAmount.value = altScroll;
@@ -222,16 +222,16 @@ function MainBall(props) {
             mat.uniforms.uLightPosition.value = lightPosition;
         });
     });
-    
+
     useAnimationOnScroll(gltf, ballRef, animations)
     const radius = getMainBallRadius();
 
     const [hovered, hoveredObject] = use3DParentHover(ballRef);
-    
+
     const [lineAnimator, setLineAnimator] = useState<LineAnimator>(null);
     const [textAnimator, setTextAnimator] = useState<TextAnimator>(null);
 
-    const [textConfig, setTextConfig] = useState<{text?: string, position?: Vector3}>({});
+    const [textConfig, setTextConfig] = useState<{ text?: string, position?: Vector3 }>({});
     const [displayLeft, setDisplayLeft] = useState(false);
 
     useEffect(() => {
@@ -245,7 +245,7 @@ function MainBall(props) {
             const direction = meshCenter.clone().normalize();
             const to = meshCenter.clone().add(direction.multiplyScalar(3));
             setLineAnimator(new LineAnimator([meshCenter, to], 0.3));
-            
+
             // text display side
             const pt2cam = state.camera.position.clone().sub(to).normalize();
             const camDir = state.camera.getWorldDirection(tempVec3);
@@ -284,7 +284,7 @@ function MainBall(props) {
     // text mesh
     const textRef = useRef<any>(null)
     const [textGeometry, setTextGeometry] = useState(new ShapeGeometry([]));
-    
+
     useEffect(() => {
         setTextAnimator(new TextAnimator(textConfig.text || '', 0.5, displayLeft, 0.3));
     }, [textConfig, displayLeft]);
@@ -313,25 +313,25 @@ function MainBall(props) {
             }
         }
     }, [textGeometry, displayLeft, state.camera.position])
-    
+
 
     return (
         <>
             <line_ ref={lineRef} geometry={lineGeometry} material={lineMaterial} />
-            <mesh ref={textRef}  geometry={textGeometry} material={textMaterial} position={textConfig.position}/>
+            <mesh ref={textRef} geometry={textGeometry} material={textMaterial} position={textConfig.position} />
             <group ref={ballRef} scale={radius} dispose={null}>
-            <group name='Scene' position={centerOffset}>
-                {jsxOthers}
-                {jsxMeshes}
+                <group name='Scene' position={centerOffset}>
+                    {jsxOthers}
+                    {jsxMeshes}
+                </group>
             </group>
-        </group>
         </>
-        
+
     )
 }
 
 function useMaterials(meshNodes, lightPosition) {
-    
+
     const [materials, setMaterials] = useState([]);
 
     useMemo(() => {
@@ -359,13 +359,13 @@ function useMaterials(meshNodes, lightPosition) {
         meshNodes.forEach((mesh, i) => {
             const material = sharedMaterial.clone();
             const position = mesh.position;
-    
+
             if (Math.random() < 0.15) {
                 material.wireframe = true;
             }
-    
+
             material.uniforms.uPosition.value = position;
-            
+
             if (FLOAT_BALL) {
                 const distToCenter = position.clone().length();
                 if (distToCenter > 0.8 && Math.random() < 0.15) {
@@ -376,7 +376,7 @@ function useMaterials(meshNodes, lightPosition) {
             }
 
             new_materials[i] = material;
-    
+
         });
 
         setMaterials(new_materials);
@@ -407,11 +407,11 @@ function useAnimationOnScroll(gltf, ballRef, animations) {
         }
     })
 
-    return 
+    return
 }
 
 export default function Ball() {
-    
+
     const gltf = useBallGLTF();
 
     const textRadius = getMainBallRadius() + 0.1;

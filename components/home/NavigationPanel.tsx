@@ -1,6 +1,5 @@
 import { useEffect, useState, MouseEvent } from "react";
-import { getDeviceDependent } from "../utils/hooks";
-import { isDevEnv } from "../utils/utils";
+import { getDeviceDependent, isDevEnv } from "../common/misc";
 
 import styles from './NavigationPanel.module.sass'
 
@@ -81,8 +80,12 @@ function PanelItem(props: NavItem) {
     }
 
     return (
-        <button className={styles['nav-item']} onClick={onClick}>
-            {props.name}
-        </button>
+        <div className={styles['nav-item']}>
+            <a className={styles['nav-a']} href={link}>
+                <button className={styles['nav-button']} onClick={onClick}>
+                    {props.name}
+                </button>
+            </a>
+        </div>
     )
 }

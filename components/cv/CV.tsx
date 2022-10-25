@@ -1,5 +1,5 @@
-import styles from './CV.module.sass'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react';
+import styles from './CV.module.sass';
 
 export default function CV(props) {
 
@@ -85,7 +85,7 @@ export default function CV(props) {
         <>
             {/* <UnderDevelopment /> */}
 
-            <div id='cv' className={styles['cv']} dangerouslySetInnerHTML={{__html: props.cvContent}}></div>
+            <div id='cv' className={styles['cv']} dangerouslySetInnerHTML={{ __html: props.cvContent }}></div>
         </>
     )
 }

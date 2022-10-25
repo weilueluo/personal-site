@@ -1,9 +1,6 @@
-import { useThree } from "@react-three/fiber";
-import { useEffect, useMemo, useRef, useState } from "react"
-import { DoubleSide, LineBasicMaterial, Matrix4, Mesh, MeshBasicMaterial, ShapeGeometry, Vector3 } from "three";
+import { useEffect, useState } from "react";
+import { ShapeGeometry } from "three";
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-import { useRawFeed2FlatFeed } from "../../rss/hooks";
-import { deg2rad } from "../../utils/utils";
 
 const fontLoader = new FontLoader();
 let font = null;

@@ -1,15 +1,15 @@
 import { OrbitControls } from "@react-three/drei";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Vector3 } from "three";
-import { getNScrollPages } from "../home/scene/global";
-import GradientBackground from "../home/scene/GradientBackground"
+import { lightPositionContext } from "../common/contexts";
+import { getDeviceDependent } from "../common/misc";
+import { initMobileScroll } from "../common/scroll";
+import GradientBackground from "../home/scene/GradientBackground";
 import Stars from "../home/scene/Stars";
-import { MyCanvas, MyContent, MyLights } from "../home/ThreeJsHome"
-import { lightPositionContext } from "../utils/context"
-import { getDeviceDependent, initMobileScroll } from "../utils/hooks";
+import { MyCanvas, MyLights } from "../home/ThreeJsHome";
 import ExperimentalContent from "./ExperimentalContent";
 
-const tempVector3 =  new Vector3(0, 0, 0);
+const tempVector3 = new Vector3(0, 0, 0);
 
 function Content() {
 
@@ -36,8 +36,8 @@ function Content() {
                 enableRotate={enableOrbitControl}
                 autoRotate={!enableOrbitControl}
                 autoRotateSpeed={1.0}
-                // minPolarAngle={polarAngle}
-                // maxPolarAngle={maxPolarAngle}
+            // minPolarAngle={polarAngle}
+            // maxPolarAngle={maxPolarAngle}
             />
         </>
     )
@@ -50,6 +50,6 @@ export default function Playground() {
                 <Content />
             </MyCanvas>
         </>
-        
+
     )
 }

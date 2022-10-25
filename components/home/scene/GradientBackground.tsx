@@ -1,10 +1,9 @@
-import React from 'react'
-import { useAltScroll } from '../../utils/hooks'
 import { useFrame } from '@react-three/fiber'
-import { ShaderMaterial, Color } from 'three'
+import { Color, ShaderMaterial } from 'three'
+import { useAltScroll } from '../../common/threejs'
 
-import background_vs from './shaders/background_vs.glsl'
 import background_fs from './shaders/background_fs.glsl'
+import background_vs from './shaders/background_vs.glsl'
 
 export default function GradientBackground() {
     const altScroll = useAltScroll()
@@ -25,9 +24,9 @@ export default function GradientBackground() {
         material.uniforms.uScrolledAmount.value = altScroll;
     })
 
-    return ( 
+    return (
         <mesh material={material}>
-            <planeGeometry args={[2, 2, 1, 1] }/>
+            <planeGeometry args={[2, 2, 1, 1]} />
         </mesh>
     )
 }

@@ -1,10 +1,4 @@
 import Parser from "rss-parser";
-import {
-    toStartOfTheDay,
-    toMonday,
-    toStartOfMonth,
-    toStartOfYear
-} from './Utils'
 
 export type RSSOption = {
     name: string

@@ -1,6 +1,6 @@
 
-import styles from "./UnderDevelopment.module.sass"
 import { useState } from 'react'
+import styles from "./UnderDevelopment.module.sass"
 
 export default function UnderDevelopment() {
     const [visible, setVisible] = useState(true)

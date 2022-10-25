@@ -1,4 +1,4 @@
-@use '../common/common'
+@use '/components/common/css/button'
 @use 'sass:list'
 
 // min size
@@ -16,7 +16,6 @@ $card-widths: 100px, 120px, 140px, 160px, 180px
 $button-heights: 20px, 20px, 30px, 30px, 30px
 $button-font-sizes: 0.6em, 0.6em, 0.8em, 0.8em, 0.8em
 $button-widths: 90px, 90px, 100px, 100px, 100px
-    
 
 .all-container
     width: 100%
@@ -63,16 +62,16 @@ $button-widths: 90px, 90px, 100px, 100px, 100px
         @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
             font-size: list.nth($section-title-sizes, $i)
 
-    margin-top: 10px
-    margin-right: 20px
-    height: fit-content
-    
-    font-weight: bolder
-    text-transform: uppercase
+            margin-top: 10px
+            margin-right: 20px
+            height: fit-content
+
+            font-weight: bolder
+            text-transform: uppercase
 
 .section-load-more:not(.all-loaded), .section-toggle
 
-    @include common.button
+    @include button.button
 
     &:hover
         cursor: pointer
@@ -83,10 +82,10 @@ $button-widths: 90px, 90px, 100px, 100px, 100px
             font-size: list.nth($button-font-sizes, $i)
             height: list.nth($button-heights, $i)
             width: list.nth($button-widths, $i)
-   
-    text-transform: uppercase
-    font-weight: bold
-    color: gray
+
+            text-transform: uppercase
+            font-weight: bold
+            color: gray
     // width: 80px
 
     // @media screen and (min-width: #{$tablet-screen})
@@ -105,14 +104,14 @@ $button-widths: 90px, 90px, 100px, 100px, 100px
     @for $i from 1 through $n-screens
         @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
             grid-template-columns: repeat(auto-fit, minmax(list.nth($card-widths, $i), 1fr))
-    
-    margin: 16px 0
 
-    gap: 15px 12px
+            margin: 16px 0
 
-    padding: 0
+            gap: 15px 12px
 
-    transition: 0.5s
+            padding: 0
+
+            transition: 0.5s
 
     &.collapse
         overflow-x: scroll
@@ -120,5 +119,3 @@ $button-widths: 90px, 90px, 100px, 100px, 100px
         grid-template-rows: unset
         grid-auto-flow: column
         grid-auto-columns: 180px
-
-

@@ -1,25 +1,18 @@
 import { useFrame } from '@react-three/fiber';
 import { useContext, useEffect, useRef } from 'react';
-import { Color, InstancedMesh, Matrix4, Object3D, ShaderMaterial, Vector3 } from 'three';
-import { lightPositionContext } from '../../utils/context';
-import { useAltScroll } from '../../utils/hooks';
-import { polar2xyz, uniformSphereSample } from '../../utils/utils';
+import { InstancedMesh, Object3D, ShaderMaterial, Vector3 } from 'three';
+import { lightPositionContext } from '../../common/contexts';
+import { polar2xyz, uniformSphereSample } from '../../common/math';
+import { useAltScroll } from '../../common/threejs';
 import { getMainBallRadius, getVisibleRadius } from './global';
 import line_fs from './shaders/line_fs.glsl';
 import line_vs from './shaders/line_vs.glsl';
 
-const zVector = new Vector3(0, 0, 1);
-const yVector = new Vector3(0, 1, 0);
-const xVector = new Vector3(1, 0, 0);
-const upVector = new Vector3(0, 1, 0);
-const downVector = new Vector3(0, -1, 0);
-const tempMat4 = new Matrix4();
+const ballPosition = new Vector3(0, 0, 0);
 const tempObject = new Object3D();
-const tempColor = new Color();
-const lineRadius = 0.03;
-const ballPosition = new Vector3(0,0,0);
 
 const radius = getVisibleRadius();
+const lineRadius = 0.03;
 
 // around light lines init
 const aroundLightTransforms: Array<[Vector3, Vector3, number]> = [
@@ -74,7 +67,7 @@ export default function Lines() {
         if (mesh == null) {
             return;
         }
-        
+
         // for (let i = 0; i < aroundLightAmount; i++) {
 
         //     let x = aroundLightPositions[i * 3] + lightPosition.x;
@@ -102,7 +95,7 @@ export default function Lines() {
             let x = linePositions[i * 3];
             let y = linePositions[i * 3 + 1];
             let z = linePositions[i * 3 + 2];
-            
+
             tempObject.position.set(x, y, z);
             tempObject.rotation.set(0, 0, 0);
 
@@ -114,7 +107,7 @@ export default function Lines() {
             tempObject.updateMatrix();
             mesh.setMatrixAt(i + aroundLightAmount, tempObject.matrix);
         }
-        
+
         mesh.instanceMatrix.needsUpdate = true;
     }, []);
 

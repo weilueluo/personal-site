@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { AnimeCharacter, AnimeMedia, AnimeRelation } from "../anime";
-import { CardImage, useSequentiallyLoadedImageURL } from "../anime/card";
+import { CardImage } from "../anime/card";
 import { fetchAnimeMedia, fetchImageAsLocalUrl } from "../anime/data";
+import { useSequentiallyLoadedImageURL } from "../common/hooks";
 import UnderDevelopment from "../common/UnderDevelopment";
 import styles from './animeDetails.module.sass';
 
@@ -39,12 +40,12 @@ function CoverImage() {
     const coverImageURL = useSequentiallyLoadedImageURL(animeData.coverImage ? [
         animeData.coverImage.medium,
         animeData.coverImage.large,
-    ]: []);
+    ] : []);
 
     // console.log('cover image');
     // console.log(animeData);
     // console.log(animeData?.coverImage);
-    
+
     const alt = animeData?.title?.english || 'Cover Image';
 
     return (
@@ -55,7 +56,7 @@ function CoverImage() {
 }
 
 
-function useImageUrl(imageUrls: {medium?: string, large?: string, extraLarge?: string}) {
+function useImageUrl(imageUrls: { medium?: string, large?: string, extraLarge?: string }) {
     const [url, setURL] = useState('#');
 
     useEffect(() => {
@@ -68,8 +69,8 @@ function useImageUrl(imageUrls: {medium?: string, large?: string, extraLarge?: s
                 .catch(error => console.log(`error loading medium image: ${error}`))
                 .then(
                     () => fetchImageAsLocalUrl(imageUrls.large)
-                            .then(url => setURL(url))
-                            .catch(error => console.log(`error loading large image: ${error}`))
+                        .then(url => setURL(url))
+                        .catch(error => console.log(`error loading large image: ${error}`))
                 )
         }
     }, [imageUrls])
@@ -92,7 +93,7 @@ function useRotateString(strings: string[]): [string, () => void] {
     return [currString, nextString];
 }
 
-function VoiceActor(props: {characterData: AnimeCharacter}) {
+function VoiceActor(props: { characterData: AnimeCharacter }) {
     const VAs = props.characterData.voiceActors;
     let VANames = [];
     if (VAs.length > 0) {
@@ -100,7 +101,7 @@ function VoiceActor(props: {characterData: AnimeCharacter}) {
         VANames = [names.full, names.native, ...names.alternative]
     }
     const [vaName, nextName] = useRotateString(VANames)
-    if(VAs.length > 0) {
+    if (VAs.length > 0) {
         return (
             <>
                 <strong>VA </strong>
@@ -112,7 +113,7 @@ function VoiceActor(props: {characterData: AnimeCharacter}) {
     }
 }
 
-function CharacterCard(props: {characterData: AnimeCharacter}) {
+function CharacterCard(props: { characterData: AnimeCharacter }) {
     const charData = props.characterData;
     const charNode = charData.node;
 
@@ -140,11 +141,11 @@ function Characters() {
     const animeData = useContext(AnimeDataContext);
     // console.log('anime characters');
     // console.log(animeData.characters);
-    
+
     if (!animeData.characters) {
         return <></>
     }
-    
+
     return (
         <div>
             <h2 className={styles['character-section-title']}>Characters</h2>
@@ -158,7 +159,7 @@ function Characters() {
 function Hashtag() {
     const animeData = useContext(AnimeDataContext);
 
-    const HashTag = (props: {hashtag: string}) => {
+    const HashTag = (props: { hashtag: string }) => {
         return <div className={styles['hashtag']}>{props.hashtag}</div>
     }
 
@@ -177,7 +178,7 @@ function Hashtag() {
 function Tags() {
     const animeData = useContext(AnimeDataContext);
 
-    const Tag = (props: {name: string}) => {
+    const Tag = (props: { name: string }) => {
         return <div className={styles['tag']}>{props.name}</div>
     }
 
@@ -197,7 +198,7 @@ function Genres() {
 
     const animeData = useContext(AnimeDataContext);
 
-    const Genre = (props: {genre: string}) => {
+    const Genre = (props: { genre: string }) => {
         return <div className={styles['genre']}>{props.genre}</div>;
     }
 
@@ -242,7 +243,7 @@ function AnimeTitle() {
     const [index, setIndex] = useState<number>(0);
     const nextTitle = () => setIndex(index + 1);
     useEffect(() => {
-        const titles: string[] = (animeData && animeData.title) ? [animeData.title.romaji, animeData.title.native, animeData.title.english]: [];
+        const titles: string[] = (animeData && animeData.title) ? [animeData.title.romaji, animeData.title.native, animeData.title.english] : [];
         setTitle(titles[index % titles.length])
     }, [index, animeData])
 
@@ -259,19 +260,19 @@ function AnimeDescription() {
     const hasDescription = !!animeData.description;
 
     if (hasDescription) {
-        return <p className={styles['anime-description']} dangerouslySetInnerHTML={{__html: animeData.description}} />
+        return <p className={styles['anime-description']} dangerouslySetInnerHTML={{ __html: animeData.description }} />
     } else {
         return <p className={`${styles['anime-description']} ${styles['no-description-available']}`}>{'No description available'}</p>
     }
 }
 
-function Relation(props: {relationData: AnimeRelation}) {
+function Relation(props: { relationData: AnimeRelation }) {
     const relationData = props.relationData;
 
     const titles = relationData.node.title;
 
     const relationUrl = useImageUrl(relationData.node.coverImage);
-    const [title, nextTitle]= useRotateString([titles.english, titles.native, titles.romaji])
+    const [title, nextTitle] = useRotateString([titles.english, titles.native, titles.romaji])
 
     return (
         <div className={styles['relation-card-container']}>
@@ -295,7 +296,7 @@ function Relations() {
             <div>
                 <h2>Relations</h2>
                 <div className={styles['relation-container']}>
-                        {animeData.relations.edges.map(relationData => <Relation key={relationData.id} relationData={relationData} />)}
+                    {animeData.relations.edges.map(relationData => <Relation key={relationData.id} relationData={relationData} />)}
                 </div>
             </div>
         )
@@ -324,7 +325,7 @@ function Header() {
     )
 }
 
-const AnimeDataContext = createContext<AnimeMedia>({id: -1})
+const AnimeDataContext = createContext<AnimeMedia>({ id: -1 })
 
 export default function AnimeDetails(props: { animeID: string }) {
 

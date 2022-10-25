@@ -1,4 +1,4 @@
-import { FavAnimeMedia, AnimeMediaResponse, UserFavouriteResponse as UserFavourite } from "."
+import { AnimeMediaResponse, FavAnimeMedia, UserFavouriteResponse as UserFavourite } from ".";
 
 // https://anilist.github.io/ApiV2-GraphQL-Docs/
 function query(query: string) {
@@ -239,7 +239,7 @@ function fetchAnilistData(query: string): object {
     }
 
     return fetch(graphqlEndpoint, options)
-            .then(res => res.json().then(json => json.data)
+        .then(res => res.json().then(json => json.data)
             .then(animeData => {
                 console.log('loaded anime data');
                 console.log(animeData);
@@ -258,7 +258,7 @@ export async function fetchFavouriteAnimeData(): Promise<FavAnimeMedia[]> {
 export async function fetchAnimeMedia(animeID: number | string) {
     // console.log('fetch media');
     // console.log(mediaFields);
-    
+
     const graphqlQuery = query(media(mediaFields, animeID));
     const data = await (fetchAnilistData(graphqlQuery) as Promise<AnimeMediaResponse>);
     return data.Media;

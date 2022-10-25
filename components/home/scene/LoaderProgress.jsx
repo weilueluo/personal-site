@@ -40,7 +40,7 @@ export default function LoaderProgress() {
         complete ? null : (
             <div className={styles.loader}>
                 Loading {current} / {total} <br />
-                {loadingUrl}<br/>
+                {loadingUrl}<br />
                 {error || ""}
             </div>
         )

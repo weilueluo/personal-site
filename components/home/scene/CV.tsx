@@ -1,13 +1,13 @@
 import { useEffect, useRef } from 'react';
-import { Matrix3, Matrix4, Vector3 } from 'three';
-import { getDeviceDependent, use3DHover } from '../../utils/hooks';
-import { isDevEnv } from '../../utils/utils';
+import { Vector3 } from 'three';
+import { getDeviceDependent, isDevEnv } from '../../common/misc';
+import { use3DHover } from '../../common/threejs';
 import { useInnerBallMaterial } from './hooks';
 import ThreeSurroundingText from './ThreeSurroundingText';
 
 
 export default function CV() {
-    
+
     const meshRef = useRef();
 
     const meshHovered = use3DHover(meshRef);

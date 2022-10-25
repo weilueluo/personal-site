@@ -1,4 +1,4 @@
-@use '../common/common'
+@use '/components/common/css/button'
 
 .nav-panel
 
@@ -8,15 +8,13 @@
 
     background-color: #ffffff7f
 
-    padding: 0px 5px
+    padding: 0px 8px
     border-radius: 5px
 
     display: flex
     align-items: center
     flex-direction: column
     width: 100px
-
-    // transition: 0.5s
 
     z-index: 99
 
@@ -28,15 +26,13 @@
     width: 32px
     color: white
 
-
 .nav-item
-    @include common.button
+    width: 100%
+
+.nav-a
+    width: 100%
+
+.nav-button
+    @include button.button
     margin: 6px 0px
-    width: 90%
-
-.nav-item-name
-
-
-// .nav-active
-//     .nav-icon
-//         width: 100px
+    width: 100%

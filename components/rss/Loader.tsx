@@ -1,7 +1,6 @@
 import Parser from 'rss-parser';
+import { isDevEnv } from '../common/misc';
 import { RSSOption, RSSRequestError } from './RSS.d';
-import { DATABASE } from './Database';
-import { isDevEnv } from '../utils/utils';
 
 enum State {
     NOT_INITIALIZED,
@@ -66,7 +65,7 @@ export default class RSSLoader {
                 .catch((error) => {
                     console.log(`RSSLoader error: ${error}`);
                     console.log(error);
-                    
+
                     error.url = opt.url;
                     errors.push(error);
                     this.on_error && this.on_error(errors);

@@ -2,11 +2,6 @@ import { RSSOption } from "./RSS.d";
 
 export const RSS_OPTIONS: RSSOption[] = [
     {
-        name: 'Github',
-        url: 'https://github.com/Redcxx.private.atom?token=AJNW6TLPB4JTBWMC7SLIJ6WA3EMWI',
-    },
-
-    {
         name: 'Hacker News',
         url: 'https://rsshub.app/hackernews',
     },

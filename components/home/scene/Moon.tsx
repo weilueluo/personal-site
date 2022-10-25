@@ -1,15 +1,13 @@
 
 import { useFrame } from '@react-three/fiber';
 import { useContext, useRef } from 'react';
-import { Matrix3, Matrix4, ShaderMaterial, Vector3 } from 'three';
-import { lightPositionContext } from '../../utils/context';
-import { useAltScroll } from '../../utils/hooks';
+import { Matrix3, ShaderMaterial } from 'three';
+import { lightPositionContext } from '../../common/contexts';
+import { useAltScroll } from '../../common/threejs';
 import moon_fs from './shaders/moon_fs.glsl';
 import moon_vs from './shaders/moon_vs.glsl';
 
-const tempVector = new Vector3()
 const tempMat3 = new Matrix3()
-const tempMat4 = new Matrix4()
 
 export default function Moon() {
 
@@ -46,23 +44,23 @@ export default function Moon() {
     //         const axis = tempVector.set(1,0,0)
     //         const radians = 0.01
 
-            // tempMat4.makeRotationAxis(axis, radians);
-            // mesh.matrix.multiplyMatrices(tempMat4, mesh.matrix); // r56
-            // tempMat4.extractRotation(mesh.matrix);
-            // mesh.rotation.setFromRotationMatrix(tempMat4, mesh.rotation.order ); 
-            // console.log(state.clock.elapsedTime);
+    // tempMat4.makeRotationAxis(axis, radians);
+    // mesh.matrix.multiplyMatrices(tempMat4, mesh.matrix); // r56
+    // tempMat4.extractRotation(mesh.matrix);
+    // mesh.rotation.setFromRotationMatrix(tempMat4, mesh.rotation.order ); 
+    // console.log(state.clock.elapsedTime);
 
-            // save current position
-            
-            // if(state.clock.elapsedTime > 0.01) { // not sure why
-            //     mesh.position.setFromMatrixPosition( mesh.matrix );
-            // }
+    // save current position
+
+    // if(state.clock.elapsedTime > 0.01) { // not sure why
+    //     mesh.position.setFromMatrixPosition( mesh.matrix );
+    // }
     //     }
     // })
     // useEffect(() => {
     //     if(meshRef.current) {
     //         console.log(meshRef.current.position);
-            
+
     //     }
     // })
 
@@ -76,7 +74,7 @@ export default function Moon() {
                 fontSize={0.3}
                 expandOnScrollSpeed={0}
             /> */}
-        
+
             <mesh
                 ref={meshRef}
                 castShadow

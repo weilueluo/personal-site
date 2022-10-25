@@ -1,5 +1,3 @@
-
-
 import Parser from "rss-parser";
 import { FeedsMap as Name2FeedMap, FlatFeed } from "./RSS.d";
 
@@ -8,12 +6,12 @@ import { FeedsMap as Name2FeedMap, FlatFeed } from "./RSS.d";
 
 export function computeGUID(feed: FlatFeed) {
     const key = (
-            (feed.guid || "") +
-            (feed.name || "") +
-            (feed.title || "") +
-            (feed.link || "")
+        (feed.guid || "") +
+        (feed.name || "") +
+        (feed.title || "") +
+        (feed.link || "")
     );
-    
+
     return key
 }
 
@@ -77,7 +75,7 @@ export function sortFlatFeedsDesc(flatfeeds: FlatFeed[]) {
 
 // --- date stuff
 export function toStartOfTheDay(date: Date) {
-    date.setHours(0,0,0,0)  // set hours, minutes, seconds and milliseconds to 0
+    date.setHours(0, 0, 0, 0)  // set hours, minutes, seconds and milliseconds to 0
     return date
 }
 
@@ -89,7 +87,7 @@ export function toYesterday(date: Date) {
 
 export function toMonday(date: Date) {
     const day = date.getDay()
-    const monday = date.getDate() - day + (day === 0 ? -6:1); // adjust when day is sunday
+    const monday = date.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
     date.setDate(monday)
     toStartOfTheDay(date)
     return date

@@ -67,13 +67,13 @@ export default function RSS() {
 
             <div className={styles['separator']}></div>
 
-           <RSSContent
+            <RSSContent
                 filterSectionsState={[filterSections, setFilterSections]}
                 flatFeedsState={[flatFeeds, setFlatFeeds]}
                 filterActive={filterActive}
                 errorActive={errorActive}
                 errors={errors}
-           />
+            />
         </>
     );
 }

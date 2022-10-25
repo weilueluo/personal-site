@@ -1,6 +1,6 @@
 import { useIsomorphicLayoutEffect } from "@react-spring/three";
 import { ReactElement, useEffect, useState } from "react";
-import { getBuildTime, timeSince } from "../utils/utils";
+import { getBuildTime, timeSince } from "../common/misc";
 import styles from './About.module.sass'
 import { MessageStatus, MessageStatusType, sendMessage, SEND_AGAIN_DELAY } from "./MessageHandler";
 
