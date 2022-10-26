@@ -2,7 +2,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FavAnimeMedia } from '.';
 import styles from './anime.module.sass';
-import AnimeCard from './card';
+import BinaryButton from './buttons/BinaryButton';
+import LoadMoreButton from './buttons/LoadMoreButton';
+import AnimeCard from './animeCard';
 
 
 function Header(props: {
@@ -99,33 +101,35 @@ function useToggleAmount(initAmount: number, increment: number, decrement: numbe
     return [displayAmount, incrementFunction, decrementFunction]
 }
 
-function LoadMoreButton(props: any) {
 
-    const { displayAmount, totalAmount, ...rest } = props;
 
-    const [allLoaded, setAllLoaded] = useState(false);
-    useEffect(() => {
-        setAllLoaded(displayAmount >= totalAmount)
-    }, [displayAmount, totalAmount]);
+// function LoadMoreButton(props: any) {
 
-    if (allLoaded) {
-        return <button className={`${styles['section-load-more']} ${styles['all-loaded']}`} {...rest}>all loaded</button>
-    } else {
-        return <button className={styles['section-load-more']} {...rest}>load more</button>
-    }
-}
+//     const { displayAmount, totalAmount, ...rest } = props;
 
-function ToggleExpandButton(props: {
-    expand: boolean,
-    toggleFunc: () => any
-}) {
-    const [toggleText, setToggleText] = useState('collapse');
-    useEffect(() => {
-        setToggleText(props.expand ? 'collapse' : 'expand');
-    }, [props.expand]);
+//     const [allLoaded, setAllLoaded] = useState(false);
+//     useEffect(() => {
+//         setAllLoaded(displayAmount >= totalAmount)
+//     }, [displayAmount, totalAmount]);
 
-    return <button className={styles['section-toggle']} onClick={props.toggleFunc}>{toggleText}</button>
-}
+//     if (allLoaded) {
+//         return <button className={`${styles['section-load-more']} ${styles['all-loaded']}`} {...rest}>all loaded</button>
+//     } else {
+//         return <button className={styles['section-load-more']} {...rest}>load more</button>
+//     }
+// }
+
+// function ToggleExpandButton(props: {
+//     expand: boolean,
+//     toggleFunc: () => any
+// }) {
+//     const [toggleText, setToggleText] = useState('collapse');
+//     useEffect(() => {
+//         setToggleText(props.expand ? 'collapse' : 'expand');
+//     }, [props.expand]);
+
+//     return <button className={styles['section-toggle']} onClick={props.toggleFunc}>{toggleText}</button>
+// }
 
 function Footer(props: {
     loadMoreButton: JSX.Element,
@@ -181,11 +185,16 @@ export default function Section(props: {
     const [displayAmount, toggleIncrease, _toggleDecrease] = useToggleAmount(INIT_DISPLAY_AMOUNT, INCREMENT_AMOUNT, 0)
     const displayAnimeDataList = useDisplayAnimeDataList(sortedAnimeDataList, displayAmount);
     // set display amount when user want to load more
-    const loadMoreButton = <LoadMoreButton displayAmount={displayAmount} totalAmount={sortedAnimeDataList.length} onClick={toggleIncrease} />
+    const [hasMore, setHasMore] = useState(true);
+    useEffect(() => {
+        setHasMore(displayAmount < sortedAnimeDataList.length);
+    }, [displayAmount, sortedAnimeDataList])
+    const loadMoreButton = <LoadMoreButton hasMore={hasMore} onClick={toggleIncrease} />
 
     // expand ui button
     const [expand, setExpand] = useState(false);
-    const toggleExpandButton = <ToggleExpandButton toggleFunc={() => setExpand(!expand)} expand={expand} />
+    const onClick = () => setExpand(!expand);
+    const toggleExpandButton = <BinaryButton binary={expand} trueText='collapse' falseText='expand' onClick={onClick} />
 
     return (
         <div className={styles['section-container']}>

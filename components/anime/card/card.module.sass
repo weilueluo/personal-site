@@ -1,9 +1,8 @@
 @use 'sass:list'
 @use '/components/common/css/screens'
 
-$cover-heights: 200px, 220px, 240px, 280px, 280px
+$cover-heights: 160px, 180px, 220px, 240px, 280px
 $card-title-sizes: small, small, medium, medium, medium
-$cover-heights: 200px, 220px, 240px, 280px, 280px
 $card-title-rows: 3
 
 .card
@@ -23,21 +22,16 @@ $card-title-rows: 3
         transition: 0.1s
         color: #8800ff
 
-    // .image-container
-    //     width: 100%
-    //     &:hover
-    //         cursor: pointer
-
 .image
     width: 100%
     @for $i from 1 through screens.$n-screens
         @media screen and (min-width: #{list.nth(screens.$min-screen-sizes, $i)})
             height: list.nth($cover-heights, $i)
 
-            object-fit: cover
-            object-position: center
+    object-fit: cover
+    object-position: center
 
-            border-radius: 5px
+    border-radius: 5px
 
 .title
     @for $i from 1 through screens.$n-screens
@@ -66,3 +60,8 @@ $card-title-rows: 3
 
     &:hover
         cursor: default
+
+
+.link
+    height: fit-content
+    width: 100%

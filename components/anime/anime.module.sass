@@ -105,17 +105,19 @@ $button-widths: 90px, 90px, 100px, 100px, 100px
         @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
             grid-template-columns: repeat(auto-fit, minmax(list.nth($card-widths, $i), 1fr))
 
-            margin: 16px 0
+    margin: 16px 0
 
-            gap: 15px 12px
+    gap: 15px 12px
 
-            padding: 0
+    padding: 0
 
-            transition: 0.5s
+    transition: 0.5s
 
     &.collapse
         overflow-x: scroll
         grid-template-columns: unset
         grid-template-rows: unset
         grid-auto-flow: column
-        grid-auto-columns: 180px
+        @for $i from 1 through $n-screens
+            @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
+                grid-auto-columns: list.nth($card-widths, $i)

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { AnimeCharacter, AnimeMedia, AnimeRelation } from "../anime";
-import { CardImage } from "../anime/card";
+import Card from "../anime/card/Card";
 import { fetchAnimeMedia, fetchImageAsLocalUrl } from "../anime/data";
 import { useSequentiallyLoadedImageURL } from "../common/hooks";
 import UnderDevelopment from "../common/UnderDevelopment";
@@ -222,12 +222,16 @@ function SidePanel() {
     useEffect(() => {
         animeData.coverImage && setUrls([animeData.coverImage.medium, animeData.coverImage.large])
     }, [animeData.coverImage])
+    const imageUrl = useSequentiallyLoadedImageURL(urls);
+
     const alt = animeData.title ? animeData.title.english : 'Cover Image'
+    const href = animeData.siteUrl
 
     return (
         <div className={styles['side-panel']}>
             <div className={styles['side-image-container']}>
-                <CardImage urls={urls} alt={alt} href={animeData.siteUrl} />
+                {/* <CardImage urls={urls} alt={alt} href={} /> */}
+                <Card imageUrl={imageUrl} alt={alt} href={href} />
             </div>
             <Genres />
             <Hashtag />
