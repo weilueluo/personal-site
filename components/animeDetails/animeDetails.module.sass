@@ -77,6 +77,9 @@ $banner-heights: 100px, 120px, 140px, 160px, 180px
 
 .side-image-container
     width: 100%
+    display: none
+    @media screen and (min-width: $tablet-screen)
+        display: block
 
 .side-image, .banner-image
     width: 100%
@@ -101,11 +104,11 @@ $banner-heights: 100px, 120px, 140px, 160px, 180px
     // border-radius: 5px
 
 .genre
-    background-color: #C2E1C2
-.hashtag
     background-color: #F48668
-.tag
+.hashtag
     background-color: #C7B8EA
+.tag
+    background-color: #C2E1C2
 
 // .genre-container
 //     border: 1px solid green
@@ -144,6 +147,33 @@ $banner-heights: 100px, 120px, 140px, 160px, 180px
 
 //     gap: 40px
 
+.cardArray.collapse
+    grid-auto-columns: clamp(100px, 120px, 20vw)
+    // padding-bottom: 12px
+
+.cardTitle
+    width: 100%
+    span
+        width: 100%
+        line-break: anywhere
+        font-weight: normal
+        overflow: hidden
+        line-height: normal
+        text-overflow: ellipsis
+        line-clamp: 1
+        -webkit-line-clamp: 1
+        display: -webkit-inline-box
+        -webkit-box-orient: vertical
+        // line-height: normal
+
+.characterCardTitle
+    height: min(11vmax, 8em)
+    line-clamp: 4
+    -webkit-line-clamp: 4
+
+.relationContainer
+    margin-bottom: 36px
+
 .relation-card-image-container
     height: 220px
 
@@ -160,6 +190,8 @@ $banner-heights: 100px, 120px, 140px, 160px, 180px
     // grid-template-columns: repeat(auto-fit, minmax(120px, 1fr))
 
     gap: 20px
+
+    margin-bottom: 16px
 
 .character-card-container, .relation-card-container
     display: flex

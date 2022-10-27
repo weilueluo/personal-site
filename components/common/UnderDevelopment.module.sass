@@ -1,30 +1,35 @@
+@use '/components/common/css/button'
 
-$banner-height: 50px
-$button-height-percent: 65
-$button-width: 50px
 
 .under-development-banner
     position: relative
-    height: $banner-height
+    height: fit-content
     width: 100%
     background-color: #8a7529
     color: #fff
     text-transform: uppercase
+
+    padding: 15px 0px
 
     display: flex
     align-items: center
     justify-content: center
 
 .under-development-button
+
+    @include button.button
+
     position: absolute
-    top: calc($banner-height / 100 * (100 - $button-height-percent) / 2)
-    right: min(calc($banner-height / 2), 3%)
-    height: calc($banner-height / 100 * $button-height-percent)
-    width: min($button-width, 7vw)
+    right: 2vw
+    width: max(min(50px, 9vw), 35px)
+
+    margin: auto 0px
+
     background-color: #ccc
     color: #000
     border: none
     border-radius: 5px
+    padding: 6px 0px
 
     &:hover
         background-color: #333

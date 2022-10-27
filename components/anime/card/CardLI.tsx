@@ -1,16 +1,17 @@
-import { ComponentPropsWithoutRef, createContext, DOMAttributes, useContext } from "react";
+import { ComponentPropsWithoutRef, createContext, DOMAttributes, isValidElement, useContext } from "react";
 import { mergeStyles } from "../../common/styles";
 
-import styles from './card.module.sass'
+import styles from './CardLI.module.sass'
 
 export const CardStyleContext = createContext(undefined);
 export const CardImageStyleContext = createContext(undefined);
+export const CardImageContainerStyleContext = createContext(undefined);
 export const CardLinkStyleContext = createContext(undefined);
 export const CardTitleStyleContext = createContext(undefined);
 
-export interface CardProps extends ComponentPropsWithoutRef<'div'> {
+export interface CardProps extends ComponentPropsWithoutRef<'li'> {
     imageUrl: string,
-    title?: string,
+    cardTitle?: JSX.Element | string,
     alt?: string,
     href?: string,
     imageProps?: ComponentPropsWithoutRef<'img'>,
@@ -19,7 +20,7 @@ export interface CardProps extends ComponentPropsWithoutRef<'div'> {
 
 export default function Card({
     imageUrl,
-    title = undefined,
+    cardTitle = undefined,
     alt = undefined,
     href = undefined, // use this instead of '#' or '' to avoid unexpected behaviours https://stackoverflow.com/questions/5637969/is-an-empty-href-valid
     imageProps = undefined,
@@ -28,21 +29,23 @@ export default function Card({
 }: CardProps) {
 
     alt = alt || 'Card Image'
-    href = href || 'javascript:void(0)'
     imageProps = imageProps || {}
     titleProps = titleProps || {}
 
     const cardStyle = mergeStyles(styles.card, useContext(CardStyleContext));
     const imageStyle = mergeStyles(styles.image, useContext(CardImageStyleContext));
+    const imageContainerStyle = mergeStyles(styles.imageContainer, useContext(CardImageContainerStyleContext));
     const titleStyle = mergeStyles(styles.title, useContext(CardTitleStyleContext));
     const linkStyle = mergeStyles(styles.link, useContext(CardLinkStyleContext));
 
     return (
-        <div className={cardStyle} {...otherProps}>
-            <a className={linkStyle} href={href}>
-                <img src={imageUrl} alt={alt} className={imageStyle} {...imageProps}/>
-            </a>
-            {title && <span className={titleStyle} {...titleProps}>{title}</span>}
-        </div>
+        <li className={cardStyle} {...otherProps}>
+            <div className={imageContainerStyle}>
+                <a className={linkStyle} href={href} onClick={e => !href && e.preventDefault()}>
+                    <img src={imageUrl} alt={alt} className={imageStyle} {...imageProps} />
+                </a>
+            </div>
+            {cardTitle && <span className={titleStyle} {...titleProps}>{cardTitle}</span>}
+        </li>
     )
 }

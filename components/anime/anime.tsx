@@ -2,7 +2,7 @@
 import UnderDevelopment from '../common/UnderDevelopment';
 import styles from './anime.module.sass';
 import { fetchFavouriteAnimeData } from './data';
-import Section from "./section";
+import AnimeSection from "./AnimeSection";
 
 
 export default function Anime() {
@@ -11,7 +11,7 @@ export default function Anime() {
     <>
       <UnderDevelopment />
       <div className={styles['all-container']}>
-        <Section title='Favourites' fetchData={fetchFavouriteAnimeData} />
+        <AnimeSection title='Favourites' fetchData={fetchFavouriteAnimeData} />
       </div>
     </>
   )

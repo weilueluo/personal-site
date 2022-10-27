@@ -2,22 +2,20 @@
 @use '/components/common/css/screens'
 @use 'sass:list'
 
-$button-heights: 20px, 20px, 30px, 30px, 30px
-$button-font-sizes: 0.6em, 0.6em, 0.8em, 0.8em, 0.8em
-$button-widths: 90px, 90px, 100px, 100px, 100px
-
-
 .loadMoreButton, .binaryButton
     text-transform: uppercase
 
     @include button.button
 
-    @for $i from 1 through screens.$n-screens
-        @media screen and (min-width: #{list.nth(screens.$min-screen-sizes, $i)})
-            font-size: list.nth($button-font-sizes, $i)
-            height: list.nth($button-heights, $i)
-            width: list.nth($button-widths, $i)
+    font-size: max(min(3vw, 0.8em), 0.6em)
+    width: max(min(22vw, 120px), 60px)
+    height: clamp(20px, 30px, 8vw)
 
+    overflow: hidden
+    
+    display: flex
+    align-items: center
+    justify-content: center
 
 .loadMoreButton.allLoaded
         border: 0px

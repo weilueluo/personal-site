@@ -10,12 +10,10 @@ $desktop-screen: 1025px
 $n-screens: 5
 
 $min-screen-sizes: 0px, $mobile-screen, $tablet-screen, $laptop-screen, $desktop-screen
-$section-title-sizes: medium, medium, large, large, x-large
-$card-widths: 100px, 120px, 140px, 160px, 180px
 
-$button-heights: 20px, 20px, 30px, 30px, 30px
-$button-font-sizes: 0.6em, 0.6em, 0.8em, 0.8em, 0.8em
-$button-widths: 90px, 90px, 100px, 100px, 100px
+// $button-heights: 20px, 20px, 30px, 30px, 30px
+// $button-font-sizes: 0.6em, 0.6em, 0.8em, 0.8em, 0.8em
+// $button-widths: 90px, 90px, 100px, 100px, 100px
 
 .all-container
     width: 100%
@@ -40,6 +38,9 @@ $button-widths: 90px, 90px, 100px, 100px, 100px
     flex-wrap: wrap
     align-items: center
 
+    align-content: center
+
+
 .section-header
     justify-content: space-between
     gap: 8px
@@ -57,67 +58,59 @@ $button-widths: 90px, 90px, 100px, 100px, 100px
     height: fit-content
     align-items: flex-end
 
+    flex-grow: 0
+
+
 .section-title
-    @for $i from 1 through $n-screens
-        @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
-            font-size: list.nth($section-title-sizes, $i)
+    font-size: min(2.4vmax, 1.5em)
 
-            margin-top: 10px
-            margin-right: 20px
-            height: fit-content
-
-            font-weight: bolder
-            text-transform: uppercase
-
-.section-load-more:not(.all-loaded), .section-toggle
-
-    @include button.button
-
-    &:hover
-        cursor: pointer
-
-.section-load-more, .section-toggle, .section-load-more:not(.all-loaded)
-    @for $i from 1 through $n-screens
-        @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
-            font-size: list.nth($button-font-sizes, $i)
-            height: list.nth($button-heights, $i)
-            width: list.nth($button-widths, $i)
-
-            text-transform: uppercase
-            font-weight: bold
-            color: gray
-    // width: 80px
-
-    // @media screen and (min-width: #{$tablet-screen})
-    //     width: 100px
-
-.section-load-more.all-loaded
-    border: 0px
-    background-color: transparent
-
-// Content
-.anime-list
+    margin-top: 10px
+    margin-right: 20px
     height: fit-content
-    width: 100%
 
-    display: grid
-    @for $i from 1 through $n-screens
-        @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
-            grid-template-columns: repeat(auto-fit, minmax(list.nth($card-widths, $i), 1fr))
+    font-weight: bolder
+    text-transform: uppercase
 
-    margin: 16px 0
+// .section-load-more:not(.all-loaded), .section-toggle
 
-    gap: 15px 12px
+//     @include button.button
 
-    padding: 0
+//     &:hover
+//         cursor: pointer
 
-    transition: 0.5s
+// .section-load-more, .section-toggle, .section-load-more:not(.all-loaded)
 
-    &.collapse
-        overflow-x: scroll
-        grid-template-columns: unset
-        grid-template-rows: unset
-        grid-auto-flow: column
-        @for $i from 1 through $n-screens
-            @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
-                grid-auto-columns: list.nth($card-widths, $i)
+//     text-transform: uppercase
+//     font-weight: bold
+//     color: gray
+
+
+// .section-load-more.all-loaded
+//     border: 0px
+//     background-color: transparent
+
+// // Content
+// .anime-list
+//     height: fit-content
+//     width: 100%
+
+//     display: grid
+//     grid-template-columns: repeat(auto-fit, minmax(clamp(100px, 160px, 20vw), 1fr))
+//     grid-template-rows: repeat(auto-fill, minmax(clamp(150px, 280px, 20vh), 1fr))
+//     margin: 12px 0
+
+//     gap: 15px 12px
+
+//     padding: 0
+
+//     transition: 0.5s
+
+//     &.collapse
+//         overflow-x: scroll
+//         grid-template-columns: unset
+//         grid-template-rows: unset
+//         grid-auto-flow: column
+//         grid-auto-columns: clamp(100px, 160px, 20vw)
+//         // @for $i from 1 through $n-screens
+//         //     @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
+//         //         grid-auto-columns: list.nth($card-widths, $i)
