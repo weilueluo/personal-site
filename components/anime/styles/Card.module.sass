@@ -1,0 +1,88 @@
+.cardList
+    height: fit-content
+    width: 100%
+
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
+
+    gap: 15px 12px
+
+    padding: 0
+
+    scroll-behavior: smooth
+
+    &.collapse
+        flex-wrap: nowrap
+        overflow-x: auto
+
+    // &::-webkit-scrollbar
+    //     /* border: 1px solid black; */
+    //     background: lightgray
+    //     border-radius: 5px
+
+    // &::-webkit-scrollbar-thumb
+    //     /* border: 1px solid black; */
+    //     border-radius: 5px
+    //     background: gray
+
+
+    //     if (animeData.id == LOADING_ID) {
+
+    // } else if (!animeData) {
+
+    // } else {
+        
+    // }
+
+.card
+    display: flex
+    flex-direction: column
+    width: 100%
+    height: fit-content
+    align-items: center
+    justify-content: space-between
+
+    align-self: flex-start
+    flex-shrink: 0
+
+    overflow: hidden
+
+    &:hover .title
+        transition: 0.1s
+        color: #8800ff
+
+.imageContainer
+    width: 100%
+    height: 100%
+
+.image
+    width: 100%
+    height: 100%
+
+    object-fit: cover
+    object-position: center
+
+    border-radius: 5px
+
+.title
+    font-size: min(1.6vmax, 1em)
+    min-height: fit-content
+    line-height: normal
+    width: 100%
+
+    flex-shrink: 0
+
+    font-weight: bold
+
+    text-align: left
+
+    &:hover
+        cursor: default
+
+.link
+    height: fit-content
+    width: 100%
+
+.loadingCard
+    width: 180px

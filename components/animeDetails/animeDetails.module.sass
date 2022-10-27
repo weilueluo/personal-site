@@ -1,17 +1,17 @@
 @use 'sass:list'
 
-// min sizes
-$mobile-screen: 320px
+// // min sizes
+// $mobile-screen: 320px
 $tablet-screen: 481px
-$laptop-screen: 770px
-$desktop-screen: 1025px
+// $laptop-screen: 770px
+// $desktop-screen: 1025px
 
-$n-screens: 5
+// $n-screens: 5
 
-$min-screen-sizes: 0px, $mobile-screen, $tablet-screen, $laptop-screen, $desktop-screen
-$banner-heights: 100px, 120px, 140px, 160px, 180px
+// $min-screen-sizes: 0px, $mobile-screen, $tablet-screen, $laptop-screen, $desktop-screen
+// $banner-heights: 100px, 120px, 140px, 160px, 180px
 
-.all-container
+.allContainer
     height: 100%
     width: 100%
     display: flex
@@ -23,12 +23,12 @@ $banner-heights: 100px, 120px, 140px, 160px, 180px
 
     font-family: Overpass,-apple-system,BlinkMacSystemFont,Segoe UI,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif
 
-.content-container
+.contentContainer
     height: fit-content
     width: 1200px
     max-width: 95%
 
-    gap: 40px
+    gap: 20px
 
     margin: 50px 0px
 
@@ -47,27 +47,62 @@ $banner-heights: 100px, 120px, 140px, 160px, 180px
         grid-template-columns: 1fr 2fr 2fr
         grid-template-rows: auto
 
+
+.title
+    span
+        font-weight: normal
+
+        min-height: fit-content
+
+        // overflow: hidden
+        // text-overflow: ellipsis
+        // line-clamp: 1
+        // -webkit-line-clamp: 1
+        // display: -webkit-inline-box
+        // -webkit-box-orient: vertical
+
+
+.title.characterTitle
+        font-size: min(1.6vmax, 1em)
+        min-height: calc(min(1.6vmax, 1em) * 4)
+
+        line-clamp: 4
+        -webkit-line-clamp: 4
+
+
 // Header
 .header
     grid-area: header
-    // height: 100%
-    // width: 100%
 
-.banner-image-container
-    @for $i from 1 through $n-screens
-        @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
-            height: list.nth($banner-heights, $i)
-            width: 100%
+.bannerImageContainer
+    // @for $i from 1 through $n-screens
+    //     @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
+    //         height: list.nth($banner-heights, $i)
+    //         width: 100%
 
-.banner-image
+
+.card
+    width: 100%
+    width: clamp(100px, 120px, 20vw)
+    height: max-content
+
+.image
+    height: clamp(160px, 200px, 35vw)
+
+.bannerImage
     width: 100%
     height: 100%
 
     object-fit: center
     object-position: center
 
+    border-radius: 5px
+
+.sectionTitle
+    text-transform: capitalize
+
 // Side Panel
-.side-panel
+.sidePanel
     grid-area: side
     width: 240px
 
@@ -75,20 +110,18 @@ $banner-heights: 100px, 120px, 140px, 160px, 180px
     flex-direction: column
     gap: 20px
 
-.side-image-container
+.imageContainer
     width: 100%
-    display: none
-    @media screen and (min-width: $tablet-screen)
-        display: block
 
-.side-image, .banner-image
+.card.sidePanelCard
     width: 100%
-    object-fit: cover
-    object-position: center
-    border-radius: 5px
+
+.sidePanelImage
+    height: fit-content
+
 
 // tokens
-.genre-container, .hashtag-container, .tag-container
+.genreContainer, .hashtagContainer, .tagContainer
     width: 100%
     height: fit-content
     display: flex
@@ -118,24 +151,32 @@ $banner-heights: 100px, 120px, 140px, 160px, 180px
 //     border: 1px solid black
 
 // Main Panel
-.main-panel
+.mainPanel
     grid-area: main
     width: 100%
+    display: flex
+    flex-direction: column
+    gap: 20px
 
-.anime-title
+.animeTitle
     font-size: x-large
     font-weight: bolder
+    margin-bottom: 10px
 
     &:hover
         cursor: pointer
 
-.anime-description
+.animeDescription
     width: 100%
     height: fit-content
     max-height: 300px
     scroll-behavior: smooth
     overflow-y: auto
-    margin-bottom: 60px
+    padding: 0
+    margin: 0
+
+.noDescriptionAvailable
+    font-style: italic
 
 // Relations
 // .relation-container
@@ -155,7 +196,7 @@ $banner-heights: 100px, 120px, 140px, 160px, 180px
     width: 100%
     span
         width: 100%
-        line-break: anywhere
+        
         font-weight: normal
         overflow: hidden
         line-height: normal
@@ -170,9 +211,6 @@ $banner-heights: 100px, 120px, 140px, 160px, 180px
     height: min(11vmax, 8em)
     line-clamp: 4
     -webkit-line-clamp: 4
-
-.relationContainer
-    margin-bottom: 36px
 
 .relation-card-image-container
     height: 220px

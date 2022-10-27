@@ -1,14 +1,15 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { AnimeCharacter, AnimeMedia, AnimeRelation } from "../anime";
-import CardArray, { CardArrayStyleContext } from "../anime/card/CardArray";
-import Card, { CardStyleContext, CardTitleStyleContext } from "../anime/card/CardLI";
-import { fetchAnimeMedia, fetchImageAsLocalUrl } from "../anime/data";
+import { fetchAnimeMedia } from "../anime/data";
 import { useRotateString } from "../anime/hooks";
-import SectionTitle from "../anime/section/Title";
 import { useSequentiallyLoadedImageURL } from "../common/hooks";
 import UnderDevelopment from "../common/UnderDevelopment";
-import styles from './animeDetails.module.sass';
+import cardStyles from '../anime/styles/Card.module.sass';
+import sectionStyles from '../anime/styles/Section.module.sass';
+import styles from './AnimeDetails.module.sass';
+import { mergeStyles } from "../common/styles";
 
+const LOADING_ID = -1;
 
 function BannerImage() {
 
@@ -18,150 +19,136 @@ function BannerImage() {
 
     const alt = animeData.title ? animeData.title.english : animeData.id.toString()
 
-    return (
-        <div className={styles['banner-image-container']}>
-            <img className={styles['banner-image']} src={imageUrl} alt={alt} />
-        </div>
-    )
+    if (animeData.id == LOADING_ID) {
+        return (
+            <div className={styles.bannerImageContainer}>
+                loading ...
+            </div>
+        )
+    }
 
+    return animeData.bannerImage ? (
+        <div className={styles.bannerImageContainer}>
+            <img className={styles.bannerImage} src={imageUrl} alt={alt} />
+        </div>
+    ) : <></>
 }
 
 
 function VoiceActorName(props: { characterData: AnimeCharacter }) {
     const VAs = props.characterData.voiceActors;
-    let VANames = [];
-    if (VAs.length > 0) {
-        const names = VAs[0].name
-        VANames = [names.full, names.native, ...names.alternative]
-    }
-    const [vaName, nextName] = useRotateString(VANames)
-    if (VAs.length > 0) {
-        return (
-            <>
-                <strong>VA</strong><br />
-                <span className={styles['character-card-voice-actor-name']} onClick={nextName}>{vaName}</span>
-            </>
-        )
-    } else {
-        return <></>
-    }
+    const [VANames, setVANames] = useState([]);
+    const [VANAme, nextName] = useRotateString(VANames)
+    useEffect(() => {
+        if (VAs && VAs.length > 0) {
+            const names = VAs[0].name
+            setVANames([names.full, names.native, ...names.alternative])
+        }
+    }, [VAs])
+
+    return VAs ? (
+        <>
+            <strong>VA</strong><br />
+            <span className={styles.voiceActorName} onClick={nextName}>{VANAme}</span>
+        </>
+    ) : <></>
 }
 
-function CharacterCard(props: { characterData: AnimeCharacter }) {
+function Character(props: { characterData: AnimeCharacter }) {
     const charData = props.characterData;
     const charNode = charData.node;
 
     const urls = charNode?.image ? [charData.node.image.medium, charData.node.image.large] : [];
     const url = useSequentiallyLoadedImageURL(urls);
-    const alt = charNode?.name ? charNode?.name.full : 'Cahracter Image'
+    const alt = charNode?.name ? charNode?.name.full : 'Character Image'
     const [charName, nextCharName] = useRotateString([charNode.name.full, charNode.name.native, ...charNode.name.alternative])
+    const href = charData.node.siteUrl
 
-    const cardTitle = (
-        <>
-            <strong className={styles['character-role']}>{charData.role} </strong><br />
-            <span className={styles['character-card-name']} onClick={nextCharName}>{charName}</span><br />
-            <VoiceActorName characterData={charData} />
-        </>
-    )
+    const cardTitleStyle = mergeStyles(cardStyles.title, styles.title, styles.characterTitle);
+    const cardStyle = mergeStyles(cardStyles.card, styles.card);
+    const imgStyle = mergeStyles(cardStyles.image, styles.image);
 
     return (
-        // <CardStyleContext.Provider value={styles.card}>
-            <CardTitleStyleContext.Provider value={`${styles.cardTitle} ${styles.characterCardTitle}`}>
-                <Card 
-                    imageUrl={url}
-                    cardTitle={cardTitle}
-                    alt={alt}
-                    href={charData.node.siteUrl}
-                />
-            </CardTitleStyleContext.Provider>
-        // </CardStyleContext.Provider>
-    )
-    return (
-        <div className={styles['character-card-container']}>
-            <div className={styles['character-card-image-container']}>
-                <a href={charData.node.siteUrl}>
-                    <img className={styles['character-card-image']} src={url} alt={alt} />
+        <li className={cardStyle}>
+            <div className={cardStyles.imageContainer}>
+                <a className={cardStyles.link} href={href} onClick={e => !href && e.preventDefault()}>
+                    <img src={url} alt={alt} className={imgStyle} />
                 </a>
-
-                {/* <CardImage urls={urls} alt={alt} href={charData.node.siteUrl}/> */}
             </div>
-            <strong className={styles['character-role']}>{charData.role} </strong>
-            <span className={styles['character-card-name']} onClick={nextCharName}>{charName}</span>
-            <VoiceActorName characterData={charData} />
-        </div>
+        
+            <div className={cardTitleStyle}>
+                <strong>{charData.role} </strong><br />
+                <span onClick={nextCharName}>{charName}</span><br />
+                <VoiceActorName characterData={charData} />
+            </div>
+        </li>
     )
 }
 
-function Characters() {
-    const animeData = useContext(AnimeDataContext);
-
-    return animeData.characters ? (
-        <div className={styles.characterContainer}>
-            <SectionTitle sectionTitle='Characters' />
-            <CardArrayStyleContext.Provider value={`${styles.cardArray} ${styles.collapse}`}>
-                <CardArray expand={false}>
-                    {animeData.characters.edges.map(charData => <CharacterCard key={charData.id} characterData={charData} />)}
-                </CardArray>
-            </CardArrayStyleContext.Provider>
-        </div>
-    ) : <></>
-}
-
-function Hashtag() {
+function Hashtags() {
     const animeData = useContext(AnimeDataContext);
 
     const HashTag = (props: { hashtag: string }) => {
-        return <div className={styles['hashtag']}>{props.hashtag}</div>
+        return <div className={styles.hashtag}>{props.hashtag}</div>
     }
 
-    if (!animeData.hashtag) {
-        console.log('hashtag not availble');
-        return <></>
-    } else {
+    if (animeData.id == LOADING_ID) {
         return (
-            <div className={styles['hashtag-container']}>
-                {animeData.hashtag.split(' ').map(hashtag => <HashTag key={hashtag} hashtag={hashtag} />)}
+            <div className={styles.hashtagContainer}>
+                loading ...
             </div>
         )
     }
+
+    return animeData.hashtag ? (
+        <div className={styles.hashtagContainer}>
+            {animeData.hashtag.split(' ').map(hashtag => <HashTag key={hashtag} hashtag={hashtag} />)}
+        </div>
+    ) : <></>
 }
 
 function Tags() {
     const animeData = useContext(AnimeDataContext);
 
-    const Tag = (props: { name: string }) => {
-        return <div className={styles['tag']}>{props.name}</div>
+    const Tag = ({name}: { name: string }) => {
+        return <div className={styles.tag}>{name}</div>
     }
 
-    if (!animeData.tags) {
-        console.log('tags not availble');
-        return <></>
-    } else {
+    if (animeData.id == LOADING_ID) {
         return (
-            <div className={styles['tag-container']}>
-                {animeData.tags.map(tag => <Tag key={tag.name} name={tag.name} />)}
+            <div className={styles.tagContainer}>
+                loading ...
             </div>
         )
     }
+
+    return animeData.tags ? (
+        <div className={styles.tagContainer}>
+            {animeData.tags.map(tag => <Tag key={tag.name} name={tag.name} />)}
+        </div>
+    ) : <></>
 }
 
 function Genres() {
 
     const animeData = useContext(AnimeDataContext);
 
-    const Genre = (props: { genre: string }) => {
-        return <div className={styles['genre']}>{props.genre}</div>;
+    const Genre = ({ genre }: { genre: string }) => {
+        return <div className={styles.genre}>{genre}</div>;
     }
 
-    if (!animeData.genres) {
-        console.log('anime genres not available');
-        return <></>
-    } else {
+    if (animeData.id == LOADING_ID) {
         return (
-            <div className={styles['genre-container']}>
+            <div className={styles.genreContainer}>
+                loading ...
+            </div> 
+        )
+    } else {
+        return animeData.genres ? (
+            <div className={styles.genreContainer}>
                 {animeData.genres.map(genre => <Genre key={genre} genre={genre} />)}
             </div>
-        )
+        ) : <></>
     }
 }
 
@@ -176,15 +163,22 @@ function SidePanel() {
     const imageUrl = useSequentiallyLoadedImageURL(urls);
 
     const alt = animeData.title ? animeData.title.english : 'Cover Image'
-    const href = animeData.siteUrl
+    const href = animeData.siteUrl;
+
+    const cardStyle = mergeStyles(cardStyles.card, styles.card, styles.sidePanelCard);
+    const imgStyle = mergeStyles(cardStyles.image, styles.image, styles.sidePanelImage);
 
     return (
-        <div className={styles['side-panel']}>
-            <div className={styles['side-image-container']}>
-                <Card imageUrl={imageUrl} alt={alt} href={href} />
+        <div className={styles.sidePanel}>
+            <div className={cardStyle}>
+                <div className={cardStyles.imageContainer}>
+                    <a className={cardStyles.link} href={href} onClick={e => !href && e.preventDefault()}>
+                        <img src={imageUrl} alt={alt} className={imgStyle} />
+                    </a>
+                </div>
             </div>
             <Genres />
-            <Hashtag />
+            <Hashtags />
             <Tags />
         </div>
     )
@@ -193,7 +187,7 @@ function SidePanel() {
 function AnimeTitle() {
     const animeData = useContext(AnimeDataContext)
 
-    const [title, setTitle] = useState<string>('title');
+    const [title, setTitle] = useState<string>('~Title Not Available~');
     const [index, setIndex] = useState<number>(0);
     const nextTitle = () => setIndex(index + 1);
     useEffect(() => {
@@ -201,23 +195,21 @@ function AnimeTitle() {
         setTitle(titles[index % titles.length])
     }, [index, animeData])
 
-    if (!animeData.title) {
-        return <span className={styles['anime-title']}>title not available</span>
-    }
-
-    return <span className={styles['anime-title']} onClick={nextTitle}>{title}</span>
+    return <span className={styles.animeTitle} onClick={nextTitle}>{title}</span>
 }
 
 function AnimeDescription() {
-    const animeData = useContext(AnimeDataContext)
+    const animeData = useContext(AnimeDataContext);
 
-    const hasDescription = !!animeData.description;
-
-    if (hasDescription) {
-        return <p className={styles['anime-description']} dangerouslySetInnerHTML={{ __html: animeData.description }} />
+    const descStyle = mergeStyles(styles.animeDescription, !animeData.description && styles.noDescriptionAvailable)
+    if (animeData.id == LOADING_ID) {
+        return <p className={descStyle}>loading ...</p>
+    } else if (!animeData.description) {
+        return <p className={descStyle}>{'~No Description Available~'}</p>
     } else {
-        return <p className={`${styles['anime-description']} ${styles['no-description-available']}`}>{'No description available'}</p>
+        return <p className={descStyle} dangerouslySetInnerHTML={{ __html: animeData.description }} />
     }
+
 }
 
 function Relation(props: { relationData: AnimeRelation }) {
@@ -228,67 +220,110 @@ function Relation(props: { relationData: AnimeRelation }) {
 
     const relationUrl = useSequentiallyLoadedImageURL(coverImages && [coverImages.medium, coverImages.large]);
     const [title, nextTitle] = useRotateString([titles.english, titles.native, titles.romaji])
+    const href = relationData.node.siteUrl;
 
-    const titleJsx = (
-        <>
-            <strong className={styles['relation-type']}>{relationData.relationType} </strong><br />
-            <span className={styles['relation-title']} onClick={nextTitle}>{title}</span>
-        </>
-    )
+    const cardTitleStyle = mergeStyles(cardStyles.title, styles.title);
+    const cardStyle = mergeStyles(cardStyles.card, styles.card);
+    const imgStyle = mergeStyles(cardStyles.image, styles.image);
 
     return (
-        <CardTitleStyleContext.Provider value={styles.cardTitle}>
-            <Card 
-                imageUrl={relationUrl}
-                cardTitle={titleJsx} 
-                titleProps={{onClick: nextTitle}} 
-                href={relationData.node.siteUrl}
-            />
-        </CardTitleStyleContext.Provider>
+        <li className={cardStyle}>
+            <div className={cardStyles.imageContainer}>
+                <a className={cardStyles.link} href={href} onClick={e => !href && e.preventDefault()}>
+                    <img src={relationUrl} alt={'relation'} className={imgStyle} />
+                </a>
+            </div>
+
+            <div className={cardTitleStyle}>
+                <strong>{relationData.relationType}</strong><br />
+                <span onClick={nextTitle}>{title}</span>
+            </div>
+        </li>
     )
 }
 
 function Relations() {
     const animeData = useContext(AnimeDataContext)
-    return animeData.relations ? (
+    const relations = animeData.relations ? animeData.relations.edges.map(relationData => <Relation key={relationData.id} relationData={relationData} />) : <></>
+
+    const cardListStyle = mergeStyles(cardStyles.cardList, cardStyles.collapse);
+    const sectionTitleStyle = mergeStyles(sectionStyles.sectionTitle, styles.sectionTitle)
+
+    if (animeData.id == LOADING_ID) {
+        return (
+            <div className={styles.relationContainer}>
+                <span className={sectionTitleStyle}>Relations</span>
+                loading ...
+            </div>
+        )
+    } else if (!animeData.relations) {
+        return <></>
+    }
+
+    return (
         <div className={styles.relationContainer}>
-            <SectionTitle sectionTitle={'Relations'} />
-            <CardArrayStyleContext.Provider value={`${styles.cardArray} ${styles.collapse}`}>
-                <CardArray expand={false}>
-                    {animeData.relations.edges.map(relationData => <Relation key={relationData.id} relationData={relationData} />)}
-                </CardArray>
-            </CardArrayStyleContext.Provider>
+            <span className={sectionTitleStyle}>Relations</span>
+            <ul className={cardListStyle}>
+                {relations}
+            </ul>
         </div>
-    ) : <></>
+    )
+}
+
+function Characters() {
+    const animeData = useContext(AnimeDataContext);
+    const characters = animeData.characters ? animeData.characters.edges.map(charData => <Character key={charData.id} characterData={charData} />) : <></>
+    const cardListStyle = mergeStyles(cardStyles.cardList, cardStyles.collapse);
+    const sectionTitleStyle = mergeStyles(sectionStyles.sectionTitle, styles.sectionTitle)
+
+    if (animeData.id == LOADING_ID) {
+        return (
+            <div className={styles.charactersContainer}>
+                <span className={sectionTitleStyle}>Characters</span>
+                loading ...
+            </div>
+        )
+    } else if (!animeData.characters) {
+        return <></>
+    } else {
+        return (
+            <div className={styles.charactersContainer}>
+                <span className={sectionTitleStyle}>Characters</span>
+                <ul className={cardListStyle}>
+                    {characters}
+                </ul>
+            </div>
+        )
+    }
 }
 
 function MainPanel() {
 
     return (
-        <div className={styles['main-panel']}>
-            <AnimeTitle />
-            <AnimeDescription />
-            <Relations />
+        <div className={styles.mainPanel}>
+            <div>
+                <AnimeTitle />
+                <AnimeDescription />
+            </div>
             <Characters />
+            <Relations />
         </div>
     )
 }
 
 function Header() {
-    const animeData = useContext(AnimeDataContext)
-
     return (
-        <div className={styles['header']}>
+        <div className={styles.header}>
             <BannerImage />
         </div>
     )
 }
 
-const AnimeDataContext = createContext<AnimeMedia>({ id: -1 })
+const AnimeDataContext = createContext<AnimeMedia>({ id: LOADING_ID })
 
 export default function AnimeDetails(props: { animeID: string }) {
 
-    const [animeData, setAnimeData] = useState({ id: -1 });
+    const [animeData, setAnimeData] = useState({ id: LOADING_ID });
     useEffect(() => {
         fetchAnimeMedia(props.animeID).then(data => setAnimeData(data));
     }, [props.animeID])
@@ -296,8 +331,8 @@ export default function AnimeDetails(props: { animeID: string }) {
     return (
         <AnimeDataContext.Provider value={animeData}>
             <UnderDevelopment />
-            <div className={styles["all-container"]}>
-                <div className={styles["content-container"]}>
+            <div className={styles.allContainer}>
+                <div className={styles.contentContainer}>
                     <Header />
                     <SidePanel />
                     <MainPanel />

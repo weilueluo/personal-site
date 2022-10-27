@@ -2,7 +2,7 @@
 import UnderDevelopment from '../common/UnderDevelopment';
 import styles from './anime.module.sass';
 import { fetchFavouriteAnimeData } from './data';
-import AnimeSection from "./AnimeSection";
+import AnimeSection from "./section/AnimeSection";
 
 
 export default function Anime() {
