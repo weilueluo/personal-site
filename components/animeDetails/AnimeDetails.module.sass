@@ -55,13 +55,24 @@ $tablet-screen: 481px
 
 .bannerImageContainer
 
-.card
-    width: 100%
-    width: clamp(100px, 120px, 20vw)
-    height: max-content
+.allContainer
+    .card
+        width: 100%
+        width: clamp(100px, 120px, 20vw)
+        height: max-content
 
-.image
-    height: clamp(160px, 200px, 35vw)
+        .sidePanelCard
+            width: 100%
+
+    .image
+        height: clamp(160px, 200px, 35vw)
+
+    .imageContainer
+        width: 100%
+        display: none
+
+        @media screen and (min-width: $tablet-screen)
+            display: block
 
 .bannerImage
     width: 100%
@@ -83,16 +94,6 @@ $tablet-screen: 481px
     display: flex
     flex-direction: column
     gap: 20px
-
-.imageContainer
-    width: 100%
-    display: none
-
-    @media screen and (min-width: $tablet-screen)
-        display: block
-
-.card.sidePanelCard
-    width: 100%
 
 .sidePanelImage
     height: fit-content
