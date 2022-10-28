@@ -1,0 +1,287 @@
+@use 'sass:list'
+
+// // min sizes
+// $mobile-screen: 320px
+$tablet-screen: 481px
+// $laptop-screen: 770px
+// $desktop-screen: 1025px
+
+// $n-screens: 5
+
+// $min-screen-sizes: 0px, $mobile-screen, $tablet-screen, $laptop-screen, $desktop-screen
+// $banner-heights: 100px, 120px, 140px, 160px, 180px
+
+.allContainer
+    height: 100%
+    width: 100%
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+
+    gap: 20px
+
+    font-family: Overpass,-apple-system,BlinkMacSystemFont,Segoe UI,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif
+
+.contentContainer
+    height: fit-content
+    width: 1200px
+    max-width: 95%
+
+    margin: 10px 0px
+
+    overflow: hidden
+
+    display: grid
+
+    grid-template-areas: "header header header" "side side side" "main main main"
+    grid-template-columns: 1fr 1fr 1fr
+    grid-template-rows: auto
+    gap: 5px
+    // grid-template-columns: 1fr
+    // grid-template-rows: auto
+
+    @media screen and (min-width: $tablet-screen)
+        grid-template-areas: "header header header" "side main main"
+        grid-template-columns: 1fr 2fr 2fr
+        grid-template-rows: auto
+        gap: 20px
+        margin: 50px 0px
+
+.title
+    span
+        font-weight: normal
+
+        min-height: fit-content
+
+        // overflow: hidden
+        // text-overflow: ellipsis
+        // line-clamp: 1
+        // -webkit-line-clamp: 1
+        // display: -webkit-inline-box
+        // -webkit-box-orient: vertical
+
+.title.characterTitle
+    font-size: min(1.6vmax, 1em)
+    min-height: calc(min(1.6vmax, 1em) * 4)
+
+    line-clamp: 4
+    -webkit-line-clamp: 4
+
+// Header
+.header
+    grid-area: header
+
+.bannerImageContainer
+    // @for $i from 1 through $n-screens
+    //     @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
+    //         height: list.nth($banner-heights, $i)
+    //         width: 100%
+
+.card
+    width: 100%
+    width: clamp(100px, 120px, 20vw)
+    height: max-content
+
+.image
+    height: clamp(160px, 200px, 35vw)
+
+.bannerImage
+    width: 100%
+    height: 100%
+
+    object-fit: center
+    object-position: center
+
+    border-radius: 5px
+
+.sectionTitle
+    text-transform: capitalize
+
+// Side Panel
+.sidePanel
+    grid-area: side
+    width: 100%
+
+    display: flex
+    flex-direction: column
+    gap: 20px
+
+.imageContainer
+    width: 100%
+    display: none
+
+    @media screen and (min-width: $tablet-screen)
+        display: block
+
+.card.sidePanelCard
+    width: 100%
+
+.sidePanelImage
+    height: fit-content
+
+// tokens
+.genreContainer, .hashtagContainer, .tagContainer
+    width: 100%
+    height: fit-content
+    display: flex
+    flex-direction: row
+    overflow-x: auto
+
+    white-space: nowrap
+
+    gap: 10px
+
+    @media screen and (min-width: $tablet-screen)
+        flex-wrap: wrap
+
+.genre, .hashtag, .tag
+    width: fit-content
+    padding: 4px 6px
+    // border: 1px solid black
+    border-radius: 5px
+
+.genre
+    background-color: #F48668
+.hashtag
+    background-color: #C7B8EA
+.tag
+    background-color: #C2E1C2
+
+.metadata
+    margin-top: 5px
+    width: 100%
+    display: flex
+    flex-direction: column
+    gap: 10px
+
+.status, .nextAiring, .meanScore
+    width: 100%
+
+    text-align: center
+
+    line-height: 1.6em
+
+    border-radius: 5px
+
+    font-weight: bold
+
+    padding-top: 3px
+
+.status
+    background-color: #5edb92
+
+.nextAiring
+    background-color: lightblue
+
+.meanScore
+    // background-color: #000000
+
+// Main Panel
+.mainPanel
+    grid-area: main
+    width: 100%
+    display: flex
+    flex-direction: column
+    gap: 20px
+
+    margin-top: 20px
+    @media screen and (min-width: $tablet-screen)
+        margin-top: 0
+
+.animeTitle
+    font-size: x-large
+    font-weight: bolder
+    margin-bottom: 10px
+
+    &:hover
+        cursor: pointer
+
+.animeDescription
+    width: 100%
+    height: fit-content
+    max-height: 300px
+    scroll-behavior: smooth
+    overflow-y: auto
+    padding: 0
+    margin: 0
+
+.noDescriptionAvailable
+    font-style: italic
+
+.trailerContainer
+    display: flex
+    flex-direction: column
+
+.trailer
+    width: clamp(20vw, 560px, 90vw)
+    height: clamp(11.25vw, 315px, 53.4375vw)
+
+// Relations
+// .relation-container
+//     width: 100%
+//     height: fit-content
+
+//     display: grid
+//     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr))
+
+//     gap: 40px
+
+.cardArray.collapse
+    grid-auto-columns: clamp(100px, 120px, 20vw)
+    // padding-bottom: 12px
+
+.cardTitle
+    width: 100%
+    span
+        width: 100%
+
+        font-weight: normal
+        overflow: hidden
+        line-height: normal
+        text-overflow: ellipsis
+        line-clamp: 1
+        -webkit-line-clamp: 1
+        display: -webkit-inline-box
+        -webkit-box-orient: vertical
+        // line-height: normal
+
+.characterCardTitle
+    height: min(11vmax, 8em)
+    line-clamp: 4
+    -webkit-line-clamp: 4
+
+.relation-card-image-container
+    height: 220px
+
+// Characters
+.character-container, .relation-container
+    width: 100%
+    height: fit-content
+
+    display: grid
+    // grid-template-columns: unset
+    grid-auto-flow: column
+    grid-auto-columns: 140px
+    overflow-x: auto
+    // grid-template-columns: repeat(auto-fit, minmax(120px, 1fr))
+
+    gap: 20px
+
+    margin-bottom: 16px
+
+.character-card-container, .relation-card-container
+    display: flex
+    flex-direction: column
+    width: 100%
+
+.character-card-image-container, .relation-card-image-container
+    width: 100%
+    margin-bottom: 5px
+
+.character-card-image, .relation-card-image
+    width: 100%
+    height: 100%
+    object-fit: cover
+    object-position: center
+    border-radius: 5px
