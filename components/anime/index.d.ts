@@ -133,6 +133,34 @@ export type AnimeCharacter = {
     voiceActors?: VoiceActor[]
 }
 
+export type AiringSchedule = {
+    id: number,
+    airingAt: number,
+    timeUntilAiring: number,
+    episode: number
+}
+
+export type Staff = {
+    id: number,
+    role?: string,
+    node?: {
+        id,
+        name?: {
+            full?: string,
+            native?: string,
+            alternative?: string[]
+        },
+        image?: {
+            medium?: string,
+            large?: string
+        },
+        description?: string,
+        gender?: string,
+        age?: number
+        siteUrl?: string
+    }
+}
+
 export type AnimeMedia = FavAnimeMedia & {
     endDate?: FuzzyDate,
     trailer?: {
@@ -170,6 +198,10 @@ export type AnimeMedia = FavAnimeMedia & {
     },
     characters?: {
         edges: AnimeCharacter[]
+    },
+    nextAiringEpisode?: AiringSchedule,
+    staff?: {
+        edges: Staff[]
     }
 }
 

@@ -164,6 +164,41 @@ characters (sort: ROLE){
         lastPage
         hasNextPage
     }
+}
+nextAiringEpisode{
+    id
+    airingAt
+    timeUntilAiring
+    episode
+}
+staff (sort: RELEVANCE){
+    edges{
+        id
+        role
+        node{
+            id
+            name{
+                full
+                native
+                alternative
+            }
+            image{
+                medium
+                large
+            }
+            description
+            gender
+            age
+            siteUrl
+        }
+    }
+    pageInfo{
+        total
+        perPage
+        currentPage
+        lastPage
+        hasNextPage
+    }
 }`
 
 // #format

@@ -20,10 +20,7 @@ export function isMobileOrTablet() {
     return check;
 }
 
-export function timeSince(from: Date, date: Date) {
-
-    var seconds = Math.floor((from.getTime() - date.getTime()) / 1000);
-
+export function timeSinceSeconds(seconds: number) {
     var interval = seconds / 31536000;
 
     if (interval > 1) {
@@ -46,4 +43,11 @@ export function timeSince(from: Date, date: Date) {
         return Math.floor(interval) + " minutes";
     }
     return Math.floor(seconds) + " seconds";
+}
+
+export function timeSince(from: Date, date: Date) {
+
+    var seconds = Math.floor((from.getTime() - date.getTime()) / 1000);
+
+    return timeSinceSeconds(seconds);
 }
