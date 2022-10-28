@@ -6,6 +6,9 @@ jobs:
   update-aws:
     runs-on: ubuntu-latest
     steps:
+    
+      - name: update apt
+        run: sudo apt-get update
       
       - name: Checkout Master
         uses: actions/checkout@master
