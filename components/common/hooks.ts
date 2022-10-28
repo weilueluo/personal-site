@@ -6,6 +6,8 @@ import { LOADING_IMAGE_PATH } from './constants';
 export function useSequentiallyLoadedImageURL(urls: string[]) {
     urls = (urls && urls.filter(url => url && url.trim() != '')) || [];
 
+    // return LOADING_IMAGE_PATH;
+
     const [imageURL, setImageURL] = useState(LOADING_IMAGE_PATH);
     const [index, setIndex] = useState(0);
 

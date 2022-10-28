@@ -34,9 +34,8 @@ $tablet-screen: 481px
     @media screen and (min-width: $tablet-screen)
         grid-template-areas: "header header header" "side main main"
         grid-template-columns: 1fr 2fr 2fr
-        grid-template-rows: auto
         gap: 20px
-        margin: 50px 0px
+        margin: 20px 0px
 
 .title
     @include Card.title
@@ -67,6 +66,8 @@ $tablet-screen: 481px
     grid-area: header
 
 .bannerImageContainer
+    width: 100%
+    height: 100%
 
 .card
     @include Card.card
@@ -93,8 +94,9 @@ $tablet-screen: 481px
 .bannerImage
     width: 100%
     height: 100%
+    max-height: 300px
 
-    object-fit: center
+    object-fit: cover
     object-position: center
 
     border-radius: 5px
