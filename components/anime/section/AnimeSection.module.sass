@@ -1,14 +1,54 @@
+@use '../styles/Card.module' as Card
+@use '../styles/Section.module' as Section
 
 .cardList
+    @include Card.cardList
     margin-top: 10px
 
+    &.collapse
+        @include Card.collapse
+
 .card
+    @include Card.card
     flex-grow: 1.5
     width: clamp(100px, 160px, 20vw)
 
+.loadingCard
+    @include Card.loadingCard
+
 .image
+    @include Card.image
     height: clamp(160px, 260px, 35vw)
 
+
+.link
+    @include Card.link
+
+.imageContainer
+    @include Card.imageContainer
+
+.title
+    @include Card.title
+
+
+.sectionContainer
+    @include Section.sectionContainer
+    
+.headerLeft
+    @include Section.headerLeft
+    
+.headerRight
+    @include Section.headerRight
+    
+.sectionTitle
+    @include Section.sectionTitle
+
+.sectionHeader
+    @include Section.sectionHeader
+
+.sectionFooter
+    @include Section.sectionFooter
+    
 // .title
 //     overflow: hidden
 //     text-overflow: ellipsis

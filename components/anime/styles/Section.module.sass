@@ -1,10 +1,10 @@
-.sectionContainer
+@mixin sectionContainer
     width: 950px
     max-width: 90%
     margin: 50px 0px
 
 
-.sectionHeader, .sectionFooter
+@mixin sectionHeader
     width: 100%
     display: flex
     flex-direction: row
@@ -13,26 +13,45 @@
 
     align-content: center
 
-.sectionHeader
     justify-content: space-between
     gap: 8px
 
-.sectionFooter
+@mixin sectionFooter
+    width: 100%
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
+    align-items: center
+
+    align-content: center
+
     justify-content: flex-end
 
-.sectionFooter, .headerRight
     display: flex
     flex-direction: row
     gap: 20px
 
-.headerLeft, .headerRight
+
+@mixin headerRight
+    display: flex
+    flex-direction: row
+    gap: 20px
+
     display: flex
     height: fit-content
     align-items: flex-end
 
     flex-grow: 0
 
-.sectionTitle
+@mixin headerLeft
+    display: flex
+    height: fit-content
+    align-items: flex-end
+
+    flex-grow: 0
+    
+
+@mixin sectionTitle
     font-size: min(2.4vmax, 1.5em)
 
     margin-top: 10px

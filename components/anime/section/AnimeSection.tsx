@@ -1,10 +1,8 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { FavAnimeMedia } from '..';
-import sectionStyles from '../styles/Section.module.sass';
 import BinaryButton from '../buttons/BinaryButton';
 import LoadMoreButton from '../buttons/LoadMoreButton';
-import cardStyles from '../styles/Card.module.sass'
 import { mergeStyles } from '../../common/styles';
 import { useSequentiallyLoadedImageURL } from '../../common/hooks';
 import { isDevEnv } from '../../common/misc';
@@ -77,28 +75,25 @@ function AnimeCard({ animeData }: { animeData: FavAnimeMedia }) {
     const href = animeData.id ? `/anime/${animeData.id}${isDevEnv() ? '' : '.html'}` : 'javascript:void(0)';
     const alt = animeData.title?.english || 'Anime Card Image'
 
-    const cardStyle = mergeStyles(cardStyles.card, styles.card);
-    const titleStyle = mergeStyles(cardStyles.title, styles.title);
-    const imgStyle = mergeStyles(cardStyles.image, styles.image)
 
     return (
-        <li className={cardStyle}>
-            <div className={cardStyles.imageContainer}>
-                <a className={cardStyles.link} href={href} onClick={e => !href && e.preventDefault()}>
-                    <img src={imageURL} alt={alt} className={imgStyle} />
+        <li className={styles.card}>
+            <div className={styles.imageContainer}>
+                <a className={styles.link} href={href} onClick={e => !href && e.preventDefault()}>
+                    <img src={imageURL} alt={alt} className={styles.image} />
                 </a>
             </div>
-            <span className={titleStyle} onClick={nextTitle}>{title}</span>
+            <span className={styles.title} onClick={nextTitle}>{title}</span>
         </li>
     )
 }
 
 function LoadingCard() {
     return (
-        <li className={mergeStyles(cardStyles.card, cardStyles.loadingCard)}>
-            <div className={cardStyles.imageContainer}>
-                <a className={cardStyles.link}>
-                    <img src={LOADING_IMAGE_PATH} alt='loading' className={cardStyles.image} />
+        <li className={mergeStyles(styles.card, styles.loadingCard)}>
+            <div className={styles.imageContainer}>
+                <a className={styles.link}>
+                    <img src={LOADING_IMAGE_PATH} alt='loading' className={styles.image} />
                 </a>
             </div>
         </li>
@@ -155,16 +150,16 @@ export default function AnimeSection(props: {
     const cards = (displayAnimeDataList && displayAnimeDataList.length > 0)
         ? displayAnimeDataList.map(animeData => <AnimeCard key={animeData.id} animeData={animeData} />)
         : <LoadingCard />
-    const cardListStyle = mergeStyles(cardStyles.cardList, !expand && cardStyles.collapse, styles.cardList);
+    const cardListStyle = mergeStyles(styles.cardList, !expand && styles.collapse, styles.cardList);
 
     return (
-        <div className={sectionStyles.sectionContainer}>
+        <div className={styles.sectionContainer}>
             {/* Header */}
-            <div className={sectionStyles.sectionHeader}>
-                <div className={sectionStyles.headerLeft}>
-                    <span className={sectionStyles.sectionTitle}>{props.title}</span>
+            <div className={styles.sectionHeader}>
+                <div className={styles.headerLeft}>
+                    <span className={styles.sectionTitle}>{props.title}</span>
                 </div>
-                <div className={sectionStyles.headerRight}>
+                <div className={styles.headerRight}>
                     {loadMoreButton}
                     {toggleExpandButton}
                 </div>
@@ -176,7 +171,7 @@ export default function AnimeSection(props: {
             </ul>
 
             {/* Footer */}
-            <div className={sectionStyles.sectionFooter}>
+            <div className={styles.sectionFooter}>
                 {expand && loadMoreButton}
                 {expand && toggleExpandButton}
             </div>

@@ -2,8 +2,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { AnimeCharacter, AnimeMedia, AnimeRelation, Staff } from "../anime";
 import { fetchAnimeMedia } from "../anime/data";
 import { useRotateString } from "../anime/hooks";
-import cardStyles from '../anime/styles/Card.module.sass';
-import sectionStyles from '../anime/styles/Section.module.sass';
 import { useSequentiallyLoadedImageURL } from "../common/hooks";
 import { timeSinceSeconds } from "../common/misc";
 import { mergeStyles } from "../common/styles";
@@ -49,10 +47,10 @@ function VoiceActorName(props: { characterData: AnimeCharacter }) {
     return VAs ? (
         <>
             <strong>VA</strong><br />
-            <span className={styles.voiceActorName} onClick={nextName}>{VANAme}</span>
+            <span onClick={nextName}>{VANAme}</span>
         </>
     ) : (
-        <span className={styles.voiceActorName}>N/A</span>
+        <span>N/A</span>
     )
 }
 
@@ -66,15 +64,13 @@ function Character(props: { characterData: AnimeCharacter }) {
     const [charName, nextCharName] = useRotateString([charNode.name.full, charNode.name.native, ...charNode.name.alternative])
     const href = charData.node.siteUrl
 
-    const cardTitleStyle = mergeStyles(cardStyles.title, styles.title, styles.characterTitle);
-    const cardStyle = mergeStyles(cardStyles.card, styles.card);
-    const imgStyle = mergeStyles(cardStyles.image, styles.image);
+    const cardTitleStyle = mergeStyles(styles.title, styles.characterTitle);
 
     return (
-        <li className={cardStyle}>
-            <div className={cardStyles.imageContainer}>
-                <a className={cardStyles.link} href={href} onClick={e => !href && e.preventDefault()}>
-                    <img src={url} alt={alt} className={imgStyle} />
+        <li className={styles.card}>
+            <div className={styles.imageContainer}>
+                <a className={styles.link} href={href} onClick={e => !href && e.preventDefault()}>
+                    <img src={url} alt={alt} className={styles.image} />
                 </a>
             </div>
 
@@ -100,19 +96,16 @@ function Staff(props: { staffData: Staff }) {
 
     const href = staffData.siteUrl
 
-    const cardTitleStyle = mergeStyles(cardStyles.title, styles.title);
-    const cardStyle = mergeStyles(cardStyles.card, styles.card);
-    const imgStyle = mergeStyles(cardStyles.image, styles.image);
 
     return (
-        <li className={cardStyle}>
-            <div className={cardStyles.imageContainer}>
-                <a className={cardStyles.link} href={href} onClick={e => !href && e.preventDefault()}>
-                    <img src={imageURL} alt={'Staff Image'} className={imgStyle} />
+        <li className={styles.card}>
+            <div className={styles.imageContainer}>
+                <a className={styles.link} href={href} onClick={e => !href && e.preventDefault()}>
+                    <img src={imageURL} alt={'Staff Image'} className={styles.image} />
                 </a>
             </div>
 
-            <div className={cardTitleStyle}>
+            <div className={styles.title}>
                 <strong>{role}</strong><br />
                 <span onClick={nextName}>{staffName}</span>
             </div>
@@ -212,13 +205,13 @@ function NextAiring() {
 function Score() {
     const animeData = useContext(AnimeDataContext);
 
-    const left = Math.max((animeData?.meanScore - 2) || 0, 0);
-    const right = Math.min((animeData?.meanScore + 2) || 100, 100);
+    const left = Math.max((animeData?.meanScore - 25) || 0, 0);
+    const right = Math.min((animeData?.meanScore + 25) || 100, 100);
 
     return animeData.meanScore ? (
         <span className={styles.meanScore} style={{
             color: '#ffaaaa',
-            background: `linear-gradient(90deg, rgba(209,96,104,1) 0%, rgba(153,29,38,1) ${left}%, rgba(153,29,38,1) ${right}%, rgba(209,96,104,1) 100%)`
+            background: `linear-gradient(90deg, rgba(209,96,104,1) 0%, rgba(209,96,104,1) ${left}%, rgba(0,0,0,1) ${animeData.meanScore}%, rgba(209,96,104,1) ${right}%, rgba(209,96,104,1) 100%)`
         }}>
             Score - {animeData.meanScore}
         </span>
@@ -238,15 +231,15 @@ function SidePanel() {
     const alt = animeData.title ? animeData.title.english : 'Cover Image'
     const href = animeData.siteUrl;
 
-    const cardStyle = mergeStyles(cardStyles.card, styles.card, styles.sidePanelCard);
-    const imgStyle = mergeStyles(cardStyles.image, styles.image, styles.sidePanelImage);
-    const imgContainerStyle = mergeStyles(cardStyles.imageContainer, styles.imageContainer);
+    const cardStyle = mergeStyles(styles.card, styles.sidePanelCard);
+    const imgStyle = mergeStyles(styles.image, styles.sidePanelImage);
+    const imgContainerStyle = mergeStyles(styles.imageContainer);
 
     return (
         <div className={styles.sidePanel}>
             <div className={cardStyle}>
                 <div className={imgContainerStyle}>
-                    <a className={cardStyles.link} href={href} onClick={e => !href && e.preventDefault()}>
+                    <a className={styles.link} href={href} onClick={e => !href && e.preventDefault()}>
                         <img src={imageUrl} alt={alt} className={imgStyle} />
                     </a>
                 </div>
@@ -301,19 +294,15 @@ function Relation(props: { relationData: AnimeRelation }) {
     const [title, nextTitle] = useRotateString([titles.english, titles.native, titles.romaji])
     const href = relationData.node.siteUrl;
 
-    const cardTitleStyle = mergeStyles(cardStyles.title, styles.title);
-    const cardStyle = mergeStyles(cardStyles.card, styles.card);
-    const imgStyle = mergeStyles(cardStyles.image, styles.image);
-
     return (
-        <li className={cardStyle}>
-            <div className={cardStyles.imageContainer}>
-                <a className={cardStyles.link} href={href} onClick={e => !href && e.preventDefault()}>
-                    <img src={relationUrl} alt={'relation'} className={imgStyle} />
+        <li className={styles.card}>
+            <div className={styles.imageContainer}>
+                <a className={styles.link} href={href} onClick={e => !href && e.preventDefault()}>
+                    <img src={relationUrl} alt={'relation'} className={styles.image} />
                 </a>
             </div>
 
-            <div className={cardTitleStyle}>
+            <div className={styles.title}>
                 <strong>{relationData.relationType}</strong><br />
                 <span onClick={nextTitle}>{title}</span>
             </div>
@@ -325,13 +314,12 @@ function Relations() {
     const animeData = useContext(AnimeDataContext)
     const relations = animeData.relations ? animeData.relations.edges.map(relationData => <Relation key={relationData.id} relationData={relationData} />) : <></>
 
-    const cardListStyle = mergeStyles(cardStyles.cardList, cardStyles.collapse);
-    const sectionTitleStyle = mergeStyles(sectionStyles.sectionTitle, styles.sectionTitle)
+    const cardListStyle = mergeStyles(styles.cardList, styles.collapse);
 
     if (animeData.id == LOADING_ID) {
         return (
             <div className={styles.relationContainer}>
-                <span className={sectionTitleStyle}>Relations</span>
+                <span className={styles.sectionTitle}>Relations</span>
                 loading ...
             </div>
         )
@@ -339,7 +327,7 @@ function Relations() {
 
     return (
         <div className={styles.relationContainer}>
-            <span className={sectionTitleStyle}>Relations</span>
+            <span className={styles.sectionTitle}>Relations</span>
             <ul className={cardListStyle}>
                 {relations}
             </ul>
@@ -350,13 +338,12 @@ function Relations() {
 function Characters() {
     const animeData = useContext(AnimeDataContext);
     const characters = animeData.characters ? animeData.characters.edges.map(charData => <Character key={charData.id} characterData={charData} />) : <></>
-    const cardListStyle = mergeStyles(cardStyles.cardList, cardStyles.collapse);
-    const sectionTitleStyle = mergeStyles(sectionStyles.sectionTitle, styles.sectionTitle)
+    const cardListStyle = mergeStyles(styles.cardList, styles.collapse);
 
     if (animeData.id == LOADING_ID) {
         return (
             <div className={styles.charactersContainer}>
-                <span className={sectionTitleStyle}>Characters</span>
+                <span className={styles.sectionTitle}>Characters</span>
                 loading ...
             </div>
         )
@@ -364,7 +351,7 @@ function Characters() {
 
     return (
         <div className={styles.charactersContainer}>
-            <span className={sectionTitleStyle}>Characters</span>
+            <span className={styles.sectionTitle}>Characters</span>
             <ul className={cardListStyle}>
                 {characters}
             </ul>
@@ -375,13 +362,12 @@ function Characters() {
 function Staffs() {
     const animeData = useContext(AnimeDataContext);
     const staffs = (animeData && animeData.staff) ? animeData.staff.edges.map(staffData => <Staff key={staffData.id} staffData={staffData} />) : <></>
-    const cardListStyle = mergeStyles(cardStyles.cardList, cardStyles.collapse);
-    const sectionTitleStyle = mergeStyles(sectionStyles.sectionTitle, styles.sectionTitle)
+    const cardListStyle = mergeStyles(styles.cardList, styles.collapse);
 
     if (animeData.id == LOADING_ID) {
         return (
             <div className={styles.staffsContainer}>
-                <span className={sectionTitleStyle}>Staffs</span>
+                <span className={styles.sectionTitle}>Staffs</span>
                 loading ...
             </div>
         )
@@ -389,7 +375,7 @@ function Staffs() {
 
     return (
         <div className={styles.staffsContainer}>
-            <span className={sectionTitleStyle}>Staffs</span>
+            <span className={styles.sectionTitle}>Staffs</span>
             <ul className={cardListStyle}>
                 {staffs}
             </ul>
@@ -408,11 +394,9 @@ function Trailer() {
         ? `https://www.youtube.com/embed/${animeData?.trailer?.id}`
         : `https://www.dailymotion.com/embed/video/${animeData?.trailer?.id}?autoplay=0`
 
-    const sectionTitleStyle = mergeStyles(sectionStyles.sectionTitle, styles.sectionTitle)
-
     return (
         <div className={styles.trailerContainer}>
-            <span className={sectionTitleStyle}>Trailer</span>
+            <span className={styles.sectionTitle}>Trailer</span>
             {animeData.trailer && <iframe
                 className={styles.trailer}
                 src={videoSource}

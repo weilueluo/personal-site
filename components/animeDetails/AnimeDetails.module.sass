@@ -1,4 +1,6 @@
 @use 'sass:list'
+@use '../anime/styles/Card.module' as Card
+@use '../anime/styles/Section.module' as Section
 
 $tablet-screen: 481px
 .allContainer
@@ -37,6 +39,7 @@ $tablet-screen: 481px
         margin: 50px 0px
 
 .title
+    @include Card.title
     span
         font-weight: normal
 
@@ -49,30 +52,43 @@ $tablet-screen: 481px
     line-clamp: 4
     -webkit-line-clamp: 4
 
+.link
+    @include Card.link
+
+
+.cardList
+    @include Card.cardList
+
+    &.collapse
+        @include Card.collapse
+
 // Header
 .header
     grid-area: header
 
 .bannerImageContainer
 
-.allContainer
-    .card
-        width: 100%
-        width: clamp(100px, 120px, 20vw)
-        height: max-content
+.card
+    @include Card.card
 
-        .sidePanelCard
-            width: 100%
+    width: clamp(100px, 120px, 20vw)
+    height: max-content
 
-    .image
-        height: clamp(160px, 200px, 35vw)
+.card.sidePanelCard
+    width: 100%
+    display: none
 
-    .imageContainer
-        width: 100%
-        display: none
+    @media screen and (min-width: $tablet-screen)
+        display: block
 
-        @media screen and (min-width: $tablet-screen)
-            display: block
+.image
+    @include Card.image
+    height: clamp(160px, 200px, 35vw)
+
+.imageContainer
+    @include Card.imageContainer
+    width: 100%
+    height: fit-content
 
 .bannerImage
     width: 100%
@@ -84,6 +100,7 @@ $tablet-screen: 481px
     border-radius: 5px
 
 .sectionTitle
+    @include Section.sectionTitle
     text-transform: capitalize
 
 // Side Panel
