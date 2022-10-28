@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { fetchAllAnimeData } from '../../components/anime/data';
-import AnimeDetails from '../../components/animeDetails/animeDetails';
+import AnimeDetails from '../../components/animeDetails/AnimeDetails';
 
 export default function AnimeDetailsPage(props) {
 
