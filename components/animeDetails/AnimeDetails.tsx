@@ -212,8 +212,8 @@ function NextAiring() {
 function Score() {
     const animeData = useContext(AnimeDataContext);
 
-    const left = Math.max((animeData?.meanScore - 3) || 0, 0);
-    const right = Math.min((animeData?.meanScore + 3) || 100, 100);
+    const left = Math.max((animeData?.meanScore - 2) || 0, 0);
+    const right = Math.min((animeData?.meanScore + 2) || 100, 100);
 
     return animeData.meanScore ? (
         <span className={styles.meanScore} style={{
