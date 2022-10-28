@@ -147,10 +147,9 @@ export default function AnimeSection(props: {
     const toggleExpandButton = <BinaryButton binary={expand} trueText='collapse' falseText='expand' onClick={onClick} />
 
     // cards
-    const cards = <LoadingCard />
-    // const cards = (displayAnimeDataList && displayAnimeDataList.length > 0)
-    //     ? displayAnimeDataList.map(animeData => <AnimeCard key={animeData.id} animeData={animeData} />)
-    //     : <LoadingCard />
+    const cards = (displayAnimeDataList && displayAnimeDataList.length > 0)
+        ? displayAnimeDataList.map(animeData => <AnimeCard key={animeData.id} animeData={animeData} />)
+        : <LoadingCard />
     const cardListStyle = mergeStyles(styles.cardList, !expand && styles.collapse, styles.cardList);
 
     return (
