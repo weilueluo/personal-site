@@ -1,16 +1,6 @@
 @use 'sass:list'
 
-// // min sizes
-// $mobile-screen: 320px
 $tablet-screen: 481px
-// $laptop-screen: 770px
-// $desktop-screen: 1025px
-
-// $n-screens: 5
-
-// $min-screen-sizes: 0px, $mobile-screen, $tablet-screen, $laptop-screen, $desktop-screen
-// $banner-heights: 100px, 120px, 140px, 160px, 180px
-
 .allContainer
     height: 100%
     width: 100%
@@ -38,8 +28,6 @@ $tablet-screen: 481px
     grid-template-columns: 1fr 1fr 1fr
     grid-template-rows: auto
     gap: 5px
-    // grid-template-columns: 1fr
-    // grid-template-rows: auto
 
     @media screen and (min-width: $tablet-screen)
         grid-template-areas: "header header header" "side main main"
@@ -54,13 +42,6 @@ $tablet-screen: 481px
 
         min-height: fit-content
 
-        // overflow: hidden
-        // text-overflow: ellipsis
-        // line-clamp: 1
-        // -webkit-line-clamp: 1
-        // display: -webkit-inline-box
-        // -webkit-box-orient: vertical
-
 .title.characterTitle
     font-size: min(1.6vmax, 1em)
     min-height: calc(min(1.6vmax, 1em) * 4)
@@ -73,10 +54,6 @@ $tablet-screen: 481px
     grid-area: header
 
 .bannerImageContainer
-    // @for $i from 1 through $n-screens
-    //     @media screen and (min-width: #{list.nth($min-screen-sizes, $i)})
-    //         height: list.nth($banner-heights, $i)
-    //         width: 100%
 
 .card
     width: 100%
