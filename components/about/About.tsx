@@ -11,6 +11,7 @@ function IconListItem(props) {
     return (
         <a href={props.url} className={styles['list-item-link']}>
             <li className={styles['list-item']}>
+                    {/* eslint-disable-next-line */}
                     <img src={props.src} height={iconSize} width={iconSize} alt={`${props.caption} icon`}/>
             </li>
             {props.caption && caption}

@@ -14,7 +14,7 @@ function BannerImage() {
 
     const animeData = useContext(AnimeDataContext)
 
-    const imageUrl = useSequentiallyLoadedImageURL([animeData.bannerImage])
+    const [imageUrl] = useSequentiallyLoadedImageURL([animeData.bannerImage])
 
     const alt = animeData.title ? animeData.title.english : animeData.id.toString()
 
@@ -59,7 +59,7 @@ function Character(props: { characterData: AnimeCharacter }) {
     const charNode = charData.node;
 
     const urls = charNode?.image ? [charData.node.image.medium, charData.node.image.large] : [];
-    const url = useSequentiallyLoadedImageURL(urls);
+    const [url] = useSequentiallyLoadedImageURL(urls);
     const alt = charNode?.name ? charNode?.name.full : 'Character Image'
     const [charName, nextCharName] = useRotateString([charNode.name.full, charNode.name.native, ...charNode.name.alternative])
     const href = charData.node.siteUrl
@@ -70,6 +70,7 @@ function Character(props: { characterData: AnimeCharacter }) {
         <li className={styles.card}>
             <div className={styles.imageContainer}>
                 <a className={styles.link} href={href} onClick={e => !href && e.preventDefault()}>
+                    {/* eslint-disable-next-line */}
                     <img src={url} alt={alt} className={styles.image} />
                 </a>
             </div>
@@ -92,7 +93,7 @@ function Staff(props: { staffData: Staff }) {
     const role = props.staffData.role || 'N/A'
 
     const imageURLs = staffData.image ? [staffData.image.medium, staffData.image.large] : [];
-    const imageURL = useSequentiallyLoadedImageURL(imageURLs);
+    const [imageURL] = useSequentiallyLoadedImageURL(imageURLs);
 
     const href = staffData.siteUrl
 
@@ -101,6 +102,7 @@ function Staff(props: { staffData: Staff }) {
         <li className={styles.card}>
             <div className={styles.imageContainer}>
                 <a className={styles.link} href={href} onClick={e => !href && e.preventDefault()}>
+                    {/* eslint-disable-next-line */}
                     <img src={imageURL} alt={'Staff Image'} className={styles.image} />
                 </a>
             </div>
@@ -185,7 +187,7 @@ function Status() {
 
     return (
         <span className={styles.status}>
-            {animeData?.status || 'UNKNOWN'}
+            {animeData?.status || 'UNKNOWN'} - {animeData?.season || ''} {animeData?.seasonYear || ''}
         </span>
     )
 }
@@ -205,13 +207,13 @@ function NextAiring() {
 function Score() {
     const animeData = useContext(AnimeDataContext);
 
-    const left = Math.max((animeData?.meanScore - 25) || 0, 0);
-    const right = Math.min((animeData?.meanScore + 25) || 100, 100);
+    const left = Math.max((animeData?.meanScore - 2) || 0, 0);
+    const right = Math.min((animeData?.meanScore + 2) || 100, 100);
 
     return animeData.meanScore ? (
         <span className={styles.meanScore} style={{
-            color: '#ffaaaa',
-            background: `linear-gradient(90deg, rgba(209,96,104,1) 0%, rgba(209,96,104,1) ${left}%, rgba(0,0,0,1) ${animeData.meanScore}%, rgba(209,96,104,1) ${right}%, rgba(209,96,104,1) 100%)`
+            color: (animeData?.meanScore || 0) > 55 ? 'black' : 'white',
+            background: `linear-gradient(90deg, rgba(209,96,104,1) 0%, rgba(209,96,104,1) ${left}%, rgba(209,96,104,1) ${animeData.meanScore}%, rgba(0,0,0,1) 100%)`
         }}>
             Score - {animeData.meanScore}
         </span>
@@ -226,21 +228,18 @@ function SidePanel() {
     useEffect(() => {
         animeData.coverImage && setUrls([animeData.coverImage.medium, animeData.coverImage.large])
     }, [animeData.coverImage])
-    const imageUrl = useSequentiallyLoadedImageURL(urls);
+    const [imageUrl] = useSequentiallyLoadedImageURL(urls);
 
     const alt = animeData.title ? animeData.title.english : 'Cover Image'
     const href = animeData.siteUrl;
 
-    const cardStyle = mergeStyles(styles.card, styles.sidePanelCard);
-    const imgStyle = mergeStyles(styles.image, styles.sidePanelImage);
-    const imgContainerStyle = mergeStyles(styles.imageContainer);
-
     return (
         <div className={styles.sidePanel}>
-            <div className={cardStyle}>
-                <div className={imgContainerStyle}>
+            <div className={styles.sidePanelCard}>
+                <div className={styles.sidePanelImageContainer}>
                     <a className={styles.link} href={href} onClick={e => !href && e.preventDefault()}>
-                        <img src={imageUrl} alt={alt} className={imgStyle} />
+                        {/* eslint-disable-next-line */}
+                        <img className={styles.sidePanelImage} src={imageUrl} alt={alt} />
                     </a>
                 </div>
                 <div className={styles.metadata}>
@@ -290,7 +289,7 @@ function Relation(props: { relationData: AnimeRelation }) {
     const titles = relationData.node.title;
     const coverImages = relationData.node.coverImage;
 
-    const relationUrl = useSequentiallyLoadedImageURL(coverImages && [coverImages.medium, coverImages.large]);
+    const [relationUrl] = useSequentiallyLoadedImageURL(coverImages && [coverImages.medium, coverImages.large]);
     const [title, nextTitle] = useRotateString([titles.english, titles.native, titles.romaji])
     const href = relationData.node.siteUrl;
 
@@ -298,6 +297,7 @@ function Relation(props: { relationData: AnimeRelation }) {
         <li className={styles.card}>
             <div className={styles.imageContainer}>
                 <a className={styles.link} href={href} onClick={e => !href && e.preventDefault()}>
+                    {/* eslint-disable-next-line */}
                     <img src={relationUrl} alt={'relation'} className={styles.image} />
                 </a>
             </div>
@@ -443,7 +443,6 @@ export default function AnimeDetails(props: { animeID: string }) {
 
     return (
         <AnimeDataContext.Provider value={animeData}>
-            <UnderDevelopment />
             <div className={styles.allContainer}>
                 <div className={styles.contentContainer}>
                     <Header />

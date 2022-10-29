@@ -3,10 +3,8 @@ import { fetchImageAsLocalUrl } from '../anime/data';
 import { LOADING_IMAGE_PATH } from './constants';
 
 
-export function useSequentiallyLoadedImageURL(urls: string[]) {
+export function useSequentiallyLoadedImageURL(urls: string[]): [string, number] {
     urls = (urls && urls.filter(url => url && url.trim() != '')) || [];
-
-    // return LOADING_IMAGE_PATH;
 
     const [imageURL, setImageURL] = useState(LOADING_IMAGE_PATH);
     const [index, setIndex] = useState(0);
@@ -21,7 +19,7 @@ export function useSequentiallyLoadedImageURL(urls: string[]) {
             .catch(error => `failed to load image: ${urls[index]}, error=${error}`)
     }, [index, urls])
 
-    return imageURL;
+    return [imageURL, index];
 }
 
 

@@ -1,4 +1,5 @@
-import { AnimeMediaResponse, FavAnimeMedia, UserFavouriteResponse as UserFavourite } from ".";
+import { useState } from "react";
+import { AnimeMediaResponse, FavAnimeMedia, PageInfo, UserFavouriteResponse as UserFavourite, UserFavouriteResponse } from ".";
 
 // https://anilist.github.io/ApiV2-GraphQL-Docs/
 function query(query: string) {
@@ -201,64 +202,6 @@ staff (sort: RELEVANCE){
     }
 }`
 
-// #format
-//     #season
-//     #seasonYear
-//     #seasonInt
-//     #episodes
-//     #duration
-//     #chapters
-//     #volumes
-//     #countryOfOrigin
-//     #source
-//     #trailer
-//     #updatedAt
-//     #synonyms
-//     #averageScore
-//     #meanScore
-//     #popularity
-//characters
-
-
-// #type
-// # relations {
-// #     edges {
-// #         id
-// #         relationType
-// #         characters
-// #         characterRole
-// #         characterName
-// #         staffRole
-// #         voiceActors
-// #         voiceActorRoles
-// #     }
-// #     nodes
-// #     pageInfo
-// # }
-
-// https://anilist.co/home
-// their api has limit on return size
-// try not to query too many items
-// export const ANIME_ID_MAP = {
-//     'SPYxFAMILY': 140960,
-//     'SPYxFAMILY_s2': 142838,
-//     'JUJUTSU_KAISEN': 113415,
-//     'One_Punch_Man': 21087,
-//     'The_Promised_Neverland': 101759,
-//     'Rascal_Does_Not_Dream_of_Bunny_Girl_Senpai': 101291,
-//     'Dr_STONE': 105333,
-//     'ODD_TAXI': 128547,
-//     'Classroom_of_the_Elite': 98659,
-//     'Jobless_Reincarnation': 108465,
-//     'Jobless_Reincarnation_s2': 127720,
-//     'beyond_the_boundary': 18153,
-//     'angels_of_death': 99629,
-//     'Kaguya_sama': 101921,
-//     'Kaguya_sama_s2': 112641,
-//     'Kaguya_sama_s3': 125367,
-//     'Grand_Blue_Dreaming': 100922
-// }
-
 const graphqlEndpoint = 'https://graphql.anilist.co'
 
 function fetchAnilistData(query: string): object {
@@ -282,12 +225,12 @@ function fetchAnilistData(query: string): object {
             }));
 }
 
-export async function fetchFavouriteAnimeData(): Promise<FavAnimeMedia[]> {
-    const graphqlQuery = query(user(favouriteAnime(favFields), MY_USER_ID));
-    const data = await (fetchAnilistData(graphqlQuery) as Promise<UserFavourite>);
-    console.log('loaded favourites');
-    console.log(data.User.favourites);
-    return data.User.favourites.anime.nodes;
+async function fetchFavouriteAnimeData(page: number = 1): Promise<UserFavouriteResponse> {
+    console.log(`fetching favourite anime data, page=${page}`);
+    
+    const graphqlQuery = query(user(favouriteAnime(favFields, 1, page), MY_USER_ID));
+    const data = await (fetchAnilistData(graphqlQuery) as Promise<UserFavouriteResponse>);
+    return data;
 }
 
 export async function fetchAnimeMedia(animeID: number | string) {
@@ -299,12 +242,82 @@ export async function fetchAnimeMedia(animeID: number | string) {
     return data.Media;
 }
 
-export async function fetchAllAnimeData() {
-    return fetchFavouriteAnimeData()
+async function slowlyFetchAllFavAnimeData() {
+    const favAnimeData = []
+    let pageInfo = INIT_PAGE_INFO
+    while (pageInfo.hasNextPage) {
+        const response = await fetchFavouriteAnimeData(pageInfo.currentPage + 1);
+        pageInfo = response?.User?.favourites?.anime?.pageInfo || BAD_PAGE_INFO
+        const newData = response?.User?.favourites?.anime?.nodes || []
+        favAnimeData.push(...newData);
+
+        // wait before proceeding to fetch next page to avoid server blocking us
+        await new Promise(resolve => setTimeout(resolve, 500));
+    }
+    return favAnimeData
+}
+
+export async function slowlyFetchAllAnimeData() {
+    return slowlyFetchAllFavAnimeData()
 }
 
 export async function fetchImageAsLocalUrl(url: string) {
     return fetch(url)
         .then(res => res.blob())
         .then(imageBlob => URL.createObjectURL(imageBlob))
+}
+
+export type DataManagement<T>  = [
+    loadedData: T[],
+    loading: boolean,
+    pageInfo: PageInfo,
+    tryLoadMore: () => Promise<T[]>
+]
+
+const INIT_PAGE_INFO = {
+    total: undefined,
+    perPage: undefined,
+    currentPage: 0,
+    lastPage: undefined,
+    hasNextPage: true
+}
+
+const BAD_PAGE_INFO = {
+    total: undefined,
+    perPage: undefined,
+    currentPage: undefined,
+    lastPage: undefined,
+    hasNextPage: false
+}
+
+// export function useMediaDataManagement(): DataManagement<AnimeMedia> {
+
+// }
+
+export function useFavDataManagement(): DataManagement<FavAnimeMedia> {
+    const [pageInfo, setPageInfo] = useState(INIT_PAGE_INFO);
+    const [loadedData, setLoadedData] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const seen = new Set<number>();
+    const fetchMore = async () => {
+        if (loading || !pageInfo.hasNextPage) {
+            return Promise.resolve([]);
+        }
+        setLoading(true);
+        const data = await fetchFavouriteAnimeData(pageInfo.currentPage + 1);
+        setPageInfo(data?.User?.favourites?.anime?.pageInfo || BAD_PAGE_INFO);
+        const dataNodes = data?.User?.favourites?.anime?.nodes || [];
+        const newData = [];
+        dataNodes.forEach(d => {
+            if (!seen.has(d.id)) {
+                seen.add(d.id);
+                newData.push(d);
+            }
+        });
+        setLoadedData([...loadedData, ...newData]);
+        setLoading(false);
+        return dataNodes;
+    }
+
+    return [loadedData, loading, pageInfo, fetchMore]
 }

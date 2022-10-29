@@ -61,6 +61,7 @@ export default function NavigationPanel() {
 
     return (
         <div className={`${styles['nav-panel']} ${active ? styles['nav-active']: ''}  ${isMobile ? styles['mobile']: ''}`} onClick={onClick}>
+            {/* eslint-disable-next-line */}
             <img className={styles['nav-icon']} src={iconSrc} alt={`${iconSrc} icon`}/>
             {active && panelItems}
         </div>

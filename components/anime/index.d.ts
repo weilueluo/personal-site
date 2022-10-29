@@ -50,8 +50,7 @@ export type FuzzyDate = {
     day?: number
 }
 
-
-export type FavAnimeMedia = {
+export type SectionAnimeMedia = {
     id: number,
     title?: {
         romaji?: string,
@@ -66,6 +65,10 @@ export type FavAnimeMedia = {
         medium?: string,
     }
 }
+
+export type FavAnimeMedia = {
+    
+} & SectionAnimeMedia;
 
 export type AnimeRelationMedia = {
     id: number,
@@ -161,7 +164,7 @@ export type Staff = {
     }
 }
 
-export type AnimeMedia = FavAnimeMedia & {
+export type AnimeMedia = {
     endDate?: FuzzyDate,
     trailer?: {
         id?: string,
@@ -203,10 +206,18 @@ export type AnimeMedia = FavAnimeMedia & {
     staff?: {
         edges: Staff[]
     }
-}
+} & SectionAnimeMedia
 
 export type AnimeMediaResponse = {
     Media: AnimeMedia
+}
+
+export type PageInfo = {
+    total: number
+    perPage: number
+    currentPage: number
+    lastPage: number
+    hasNextPage: boolean
 }
 
 export type UserFavouriteResponse = {
@@ -214,13 +225,7 @@ export type UserFavouriteResponse = {
         favourites: {
             anime: {
                 nodes: FavAnimeMedia[]
-                pageInfo: {
-                    total: number
-                    perPage: number
-                    currentPage: number
-                    lastPage: number
-                    hasNextPage: boolean
-                }
+                pageInfo: PageInfo
             }
         }
     }

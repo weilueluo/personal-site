@@ -62,8 +62,10 @@ export default function RSSHeader(props) {
     const [status, setStatus] = useState(<></>)
     useEffect(() => {
         if (completed) {
+            {/* eslint-disable-next-line */}
             setStatus(<img className={styles['completed-img']} src='/icons/misc/check-mark.svg' alt='' />)
         } else if (loading) {
+            {/* eslint-disable-next-line */}
             setStatus(<img className={styles['loading-img']} src='/icons/misc/progress.svg' alt='' />)
         }
     }, [loading, completed])
@@ -81,6 +83,7 @@ export default function RSSHeader(props) {
                     tabIndex={0}
                 />
                 <button className={`${styles['header-button']} ${styles['search-button']}`} onClick={searchButtonClicked}>
+                    {/* eslint-disable-next-line */}
                     <img className={styles['search-button-img']} src="/icons/misc/magnifying-glass-solid.svg" alt="search-icon" />
                 </button>
 

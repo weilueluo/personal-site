@@ -51,3 +51,11 @@ export function timeSince(from: Date, date: Date) {
 
     return timeSinceSeconds(seconds);
 }
+
+export function stringFormat(str: string, ...replacements: string[]) {
+    return str.replace(/{(\d)}/g, (match, number) => {
+        return typeof replacements[number] != 'undefined'
+            ? replacements[number]
+            : match;
+        })
+}
