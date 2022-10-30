@@ -1,4 +1,4 @@
-import { INIT_PAGE_INFO, BAD_PAGE_INFO } from "./common";
+import { INIT_PAGE_INFO } from "./common";
 import { fetchFavouriteAnimeData } from "./favourites";
 
 // for pre-rendering on server side
@@ -7,7 +7,7 @@ async function slowlyFetchAllFavAnimeData() {
     let pageInfo = INIT_PAGE_INFO
     while (pageInfo.hasNextPage) {
         const response = await fetchFavouriteAnimeData(pageInfo.currentPage + 1);
-        pageInfo = response?.User?.favourites?.anime?.pageInfo || BAD_PAGE_INFO
+        pageInfo = response?.User?.favourites?.anime?.pageInfo || INIT_PAGE_INFO
         const newData = response?.User?.favourites?.anime?.nodes || []
         favAnimeData.push(...newData);
 

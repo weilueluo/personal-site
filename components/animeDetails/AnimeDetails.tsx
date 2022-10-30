@@ -32,7 +32,8 @@ function BannerImage() {
 
     return (
         <div className={styles.bannerImageContainer}>
-            {animeData.bannerImage && <img className={imageStyle} src={imageUrl} alt={alt} />}
+            {/* eslint-disable-next-line */}
+            {animeData.bannerImage && <img className={imageStyle} src={imageUrl} alt={alt} />}  
         </div>
     )
 }

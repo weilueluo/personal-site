@@ -9,7 +9,7 @@ export default function Feed(props: { flatFeed: FlatFeed; i: number }) {
 
     const feedName = feed.name;
     const title = feed.title;
-    const author = feed.creator || feed.author || 'n/a';
+    // const author = feed.creator || feed.author || 'n/a';
     const description =
         feed.summary || feed.contentSnippet || feed.content || 'description unavailable';
     const key = feed.uniqueKey;
@@ -66,7 +66,9 @@ export default function Feed(props: { flatFeed: FlatFeed; i: number }) {
 
             <span id={`feed-description-container-${props.i}`} className={`${styles['feed-more']} ${expandActive ? styles['expand-active'] : ''} ${overflown ? styles['overflown'] : ''}`} onClick={() => expandOnClick()}>
                 <p id={`feed-description-${props.i}`} className={`${styles['feed-description']}`}>{description}</p>
+                {/* eslint-disable-next-line */}
                 {overflown && expandActive && <span className={styles['feed-expand']}><img className={styles['feed-expand-img']} src='/icons/misc/angle-up-solid.svg' alt='collapse' /></span>}
+                {/* eslint-disable-next-line */}
                 {overflown && !expandActive && <span className={styles['feed-expand']}><img className={styles['feed-expand-img']} src='/icons/misc/angle-down-solid.svg' alt='expand' /></span>}
             </span>
         </li>
