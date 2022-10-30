@@ -88,7 +88,7 @@ export type AnimeRelationMedia = {
 export type AnimeRelation = {
     id: number,
     node: AnimeRelationMedia,
-    relationType
+    relationType: string
 }
 
 export type VoiceActor = {
@@ -143,7 +143,7 @@ export type AiringSchedule = {
     episode: number
 }
 
-export type Staff = {
+export type AnimeStaff = {
     id: number,
     role?: string,
     node?: {
@@ -162,6 +162,21 @@ export type Staff = {
         age?: number
         siteUrl?: string
     }
+}
+
+export type AnimeCharactersMedia = {
+    edges?: AnimeCharacter[],
+    pageInfo?: PageInfo
+}
+
+export type AnimeStaffsMedia = {
+    edges?: AnimeStaff[],
+    pageInfo?: PageInfo
+}
+
+export type RelationStaffsMedia = {
+    edges?: AnimeRelation[],
+    pageInfo?: PageInfo
 }
 
 export type AnimeMedia = {
@@ -196,20 +211,29 @@ export type AnimeMedia = {
         isGeneralSpoiler?: boolean,
         isMediaSpoiler?: boolean,
     }[],
-    relations?: {
-        edges: AnimeRelation[],
-    },
-    characters?: {
-        edges: AnimeCharacter[]
-    },
     nextAiringEpisode?: AiringSchedule,
-    staff?: {
-        edges: Staff[]
-    }
-} & SectionAnimeMedia
+} & SectionAnimeMedia & {
+    characters?: AnimeCharactersMedia
+} & {
+    staff?: AnimeStaffsMedia
+} & {
+    relations?: RelationStaffsMedia
+}
 
 export type AnimeMediaResponse = {
     Media: AnimeMedia
+}
+
+export type AnimeMediaCharactersResponse = {
+    Media: {
+        characters?: AnimeCharactersMedia
+    }
+}
+
+export type AnimeMediaStaffsResponse = {
+    Media: {
+        staff?: AnimeStaffsMedia
+    }
 }
 
 export type PageInfo = {

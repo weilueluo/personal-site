@@ -1,6 +1,7 @@
 @use 'sass:list'
 @use '../anime/styles/Card.module' as Card
 @use '../anime/styles/Section.module' as Section
+@use '/components/common/css/button'
 
 $tablet-screen: 481px
 .allContainer
@@ -54,7 +55,6 @@ $tablet-screen: 481px
 .link
     @include Card.link
 
-
 .cardList
     @include Card.cardList
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr))
@@ -78,13 +78,11 @@ $tablet-screen: 481px
 .card
     @include Card.card
 
-    // width: clamp(100px, 120px, 20vw)
-    // height: max-content
-
-
 .image
     @include Card.image
-    // height: clamp(160px, 200px, 35vw)
+
+.image.loadingImage
+    @include Card.loadingImage
 
 .sidePanelCard
     width: 100%
@@ -110,13 +108,38 @@ $tablet-screen: 481px
 
     border-radius: 5px
 
+.sectionHeader
+    width: 100%
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+    gap: 10px
+    margin-bottom: 10px
+
 .sectionTitle
     @include Section.sectionTitle
     text-transform: capitalize
     // background-color: wheat
     border-bottom: 1px solid black
-    margin-bottom: 10px
     margin-right: 0px
+
+    flex-grow: 1
+
+.loadButton
+    @include button.button
+    height: clamp(20px, 30px, 8vw)
+
+    align-self: flex-end
+    text-transform: uppercase
+
+    &.allLoaded
+        background-color: transparent
+        height: fit-content
+        padding: 0
+
+        &:hover
+            cursor: default
+
 
 // Side Panel
 .sidePanel
@@ -219,7 +242,7 @@ $tablet-screen: 481px
 .noDescriptionAvailable
     font-style: italic
 
-.trailerContainer, .relationContainer, .charactersContainer, .staffsContainer
+.trailerContainer, .relationContainer, .charactersContainer, .staffsContainer, .sectionContainer
     display: flex
     flex-direction: column
 
@@ -259,6 +282,10 @@ $tablet-screen: 481px
     height: min(11vmax, 8em)
     line-clamp: 4
     -webkit-line-clamp: 4
+
+
+
+
 
 
 // Characters

@@ -1,6 +1,6 @@
 
 import styles from './anime.module.sass';
-import { useFavDataManagement } from './data';
+import { useFavDataManagement } from './data/favourites';
 import AnimeSection from "./section/AnimeSection";
 
 

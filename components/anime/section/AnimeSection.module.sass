@@ -1,5 +1,6 @@
 @use '../styles/Card.module' as Card
 @use '../styles/Section.module' as Section
+@use '/components/common/css/button'
 
 .cardList
     @include Card.cardList
@@ -10,15 +11,15 @@
 
 .card
     @include Card.card
-    // flex-grow: 1.5
-    // width: clamp(100px, 160px, 20vw)
 
 .loadingCard
     @include Card.loadingCard
 
+.image.loadingImage
+    @include Card.loadingImage
+
 .image
     @include Card.image
-
 
 .link
     @include Card.link
@@ -47,11 +48,25 @@
 .sectionFooter
     @include Section.sectionFooter
     
-// .title
-//     overflow: hidden
-//     text-overflow: ellipsis
-//     display: -webkit-box
-//     -webkit-box-orient: vertical
-//     -moz-box-orient: vertical
-//     line-clamp: 3
-//     -webkit-line-clamp: 3
+.expandButton, .loadMoreButton
+    text-transform: uppercase
+
+    @include button.button
+
+    font-size: max(min(3vw, 0.8em), 0.6em)
+    width: max(min(22vw, 120px), 60px)
+    height: clamp(20px, 30px, 8vw)
+
+    overflow: hidden
+    
+    display: flex
+    align-items: center
+    justify-content: center
+
+.loadMoreButton.allLoaded,
+.loadMorebutton.loading
+    border: 0px
+    background-color: transparent
+
+    &:hover
+        cursor: default

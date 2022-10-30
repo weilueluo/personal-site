@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchImageAsLocalUrl } from '../anime/data';
+import { fetchImageAsLocalUrl } from '../anime/data/common';
 import { LOADING_IMAGE_PATH } from './constants';
 
 

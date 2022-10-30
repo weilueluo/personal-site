@@ -1,22 +1,26 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { AnimeCharacter, AnimeMedia, AnimeRelation, Staff } from "../anime";
-import { fetchAnimeMedia } from "../anime/data";
+import { createContext, FC, useContext, useEffect, useState } from "react";
+import { AnimeCharacter, AnimeCharactersMedia, AnimeMedia, AnimeRelation, PageInfo, AnimeStaff } from "../anime";
+import { DataManagement } from "../anime/data";
+import { useCharactersDataManagement } from "../anime/data/characters";
+import { fetchAnimeMedia } from "../anime/data/media";
+import { useAnimeStaffsDataManagement } from "../anime/data/staffs";
 import { useRotateString } from "../anime/hooks";
 import { useSequentiallyLoadedImageURL } from "../common/hooks";
 import { timeSinceSeconds } from "../common/misc";
 import { mergeStyles } from "../common/styles";
-import UnderDevelopment from "../common/UnderDevelopment";
 import styles from './AnimeDetails.module.sass';
 
-const LOADING_ID = -1;
+export const LOADING_ID = -1;
 
 function BannerImage() {
 
     const animeData = useContext(AnimeDataContext)
 
-    const [imageUrl] = useSequentiallyLoadedImageURL([animeData.bannerImage])
+    const [imageUrl, index] = useSequentiallyLoadedImageURL([animeData.bannerImage])
 
     const alt = animeData.title ? animeData.title.english : animeData.id.toString()
+
+    const imageStyle = mergeStyles(styles.bannerImage, index == 0 && styles.loadingImage)
 
     if (animeData.id == LOADING_ID) {
         return (
@@ -28,7 +32,7 @@ function BannerImage() {
 
     return (
         <div className={styles.bannerImageContainer}>
-            {animeData.bannerImage && <img className={styles.bannerImage} src={imageUrl} alt={alt} />}
+            {animeData.bannerImage && <img className={imageStyle} src={imageUrl} alt={alt} />}
         </div>
     )
 }
@@ -59,19 +63,20 @@ function Character(props: { characterData: AnimeCharacter }) {
     const charNode = charData.node;
 
     const urls = charNode?.image ? [charData.node.image.medium, charData.node.image.large] : [];
-    const [url] = useSequentiallyLoadedImageURL(urls);
+    const [url, index] = useSequentiallyLoadedImageURL(urls);
     const alt = charNode?.name ? charNode?.name.full : 'Character Image'
     const [charName, nextCharName] = useRotateString([charNode.name.full, charNode.name.native, ...charNode.name.alternative])
     const href = charData.node.siteUrl
 
     const cardTitleStyle = mergeStyles(styles.title, styles.characterTitle);
+    const imageStyle = mergeStyles(styles.image, index == 0 && styles.loadingImage)
 
     return (
         <li className={styles.card}>
             <div className={styles.imageContainer}>
                 <a className={styles.link} href={href} onClick={e => !href && e.preventDefault()}>
                     {/* eslint-disable-next-line */}
-                    <img src={url} alt={alt} className={styles.image} />
+                    <img src={url} alt={alt} className={imageStyle} />
                 </a>
             </div>
 
@@ -84,7 +89,7 @@ function Character(props: { characterData: AnimeCharacter }) {
     )
 }
 
-function Staff(props: { staffData: Staff }) {
+function Staff(props: { staffData: AnimeStaff }) {
     const staffData = props.staffData.node;
 
     const staffNames = staffData.name ? [staffData.name.full, staffData.name.native, ...staffData.name.alternative] : []
@@ -93,7 +98,9 @@ function Staff(props: { staffData: Staff }) {
     const role = props.staffData.role || 'N/A'
 
     const imageURLs = staffData.image ? [staffData.image.medium, staffData.image.large] : [];
-    const [imageURL] = useSequentiallyLoadedImageURL(imageURLs);
+    const [imageURL, index] = useSequentiallyLoadedImageURL(imageURLs);
+
+    const imageStyle = mergeStyles(styles.image, index == 0 && styles.loadingImage)
 
     const href = staffData.siteUrl
 
@@ -103,7 +110,7 @@ function Staff(props: { staffData: Staff }) {
             <div className={styles.imageContainer}>
                 <a className={styles.link} href={href} onClick={e => !href && e.preventDefault()}>
                     {/* eslint-disable-next-line */}
-                    <img src={imageURL} alt={'Staff Image'} className={styles.image} />
+                    <img src={imageURL} alt={'Staff Image'} className={imageStyle} />
                 </a>
             </div>
 
@@ -132,7 +139,10 @@ function Hashtags() {
 
     return (
         <div className={styles.hashtagContainer}>
-            {animeData.hashtag && animeData.hashtag.split(' ').map(hashtag => <HashTag key={hashtag} hashtag={hashtag} />)}
+            {
+                animeData.hashtag && animeData.hashtag.split(' ').map(hashtag => <HashTag key={hashtag} hashtag={hashtag} />)
+                || <HashTag hashtag={'-No Hashtag Available-'} />
+            }
         </div>
     )
 }
@@ -154,7 +164,10 @@ function Tags() {
 
     return (
         <div className={styles.tagContainer}>
-            {animeData.tags && animeData.tags.map(tag => <Tag key={tag.name} name={tag.name} />)}
+            {
+                animeData.tags && animeData.tags.map(tag => <Tag key={tag.name} name={tag.name} />)
+                || <Tag name={'-No Tag Available-'} />
+            }
         </div>
     )
 }
@@ -176,7 +189,10 @@ function Genres() {
     } else {
         return (
             <div className={styles.genreContainer}>
-                {animeData.genres && animeData.genres.map(genre => <Genre key={genre} genre={genre} />)}
+                {
+                    animeData.genres && animeData.genres.map(genre => <Genre key={genre} genre={genre} />)
+                    || <Genre genre={'-No Genre Available-'} />
+                }
             </div>
         )
     }
@@ -228,7 +244,9 @@ function SidePanel() {
     useEffect(() => {
         animeData.coverImage && setUrls([animeData.coverImage.medium, animeData.coverImage.large])
     }, [animeData.coverImage])
-    const [imageUrl] = useSequentiallyLoadedImageURL(urls);
+    const [imageUrl, index] = useSequentiallyLoadedImageURL(urls);
+
+    const imageStyle = mergeStyles(styles.sidePanelImage, index == 0 && styles.loadingImage)
 
     const alt = animeData.title ? animeData.title.english : 'Cover Image'
     const href = animeData.siteUrl;
@@ -239,7 +257,7 @@ function SidePanel() {
                 <div className={styles.sidePanelImageContainer}>
                     <a className={styles.link} href={href} onClick={e => !href && e.preventDefault()}>
                         {/* eslint-disable-next-line */}
-                        <img className={styles.sidePanelImage} src={imageUrl} alt={alt} />
+                        <img className={imageStyle} src={imageUrl} alt={alt} />
                     </a>
                 </div>
                 <div className={styles.metadata}>
@@ -289,7 +307,9 @@ function Relation(props: { relationData: AnimeRelation }) {
     const titles = relationData.node.title;
     const coverImages = relationData.node.coverImage;
 
-    const [relationUrl] = useSequentiallyLoadedImageURL(coverImages && [coverImages.medium, coverImages.large]);
+    const [relationUrl, index] = useSequentiallyLoadedImageURL(coverImages && [coverImages.medium, coverImages.large]);
+    const imageStyle = mergeStyles(styles.image, index == 0 && styles.loadingImage)
+
     const [title, nextTitle] = useRotateString([titles.english, titles.native, titles.romaji])
     const href = relationData.node.siteUrl;
 
@@ -298,7 +318,7 @@ function Relation(props: { relationData: AnimeRelation }) {
             <div className={styles.imageContainer}>
                 <a className={styles.link} href={href} onClick={e => !href && e.preventDefault()}>
                     {/* eslint-disable-next-line */}
-                    <img src={relationUrl} alt={'relation'} className={styles.image} />
+                    <img src={relationUrl} alt={'relation'} className={imageStyle} />
                 </a>
             </div>
 
@@ -319,7 +339,9 @@ function Relations() {
     if (animeData.id == LOADING_ID) {
         return (
             <div className={styles.relationContainer}>
-                <span className={styles.sectionTitle}>Relations</span>
+                <div className={styles.sectionHeader}>
+                    <span className={styles.sectionTitle}>Relations</span>
+                </div>
                 loading ...
             </div>
         )
@@ -327,7 +349,9 @@ function Relations() {
 
     return (
         <div className={styles.relationContainer}>
-            <span className={styles.sectionTitle}>Relations</span>
+            <div className={styles.sectionHeader}>
+                <span className={styles.sectionTitle}>Relations</span>
+            </div>
             <ul className={cardListStyle}>
                 {relations}
             </ul>
@@ -335,52 +359,92 @@ function Relations() {
     )
 }
 
-function Characters() {
-    const animeData = useContext(AnimeDataContext);
-    const characters = animeData.characters ? animeData.characters.edges.map(charData => <Character key={charData.id} characterData={charData} />) : <></>
-    const cardListStyle = mergeStyles(styles.cardList, styles.collapse);
+function CardsSection<T>({
+    title,
+    dataManagement,
+    renderFunction
+}: {
+    title: string,
+    dataManagement: DataManagement<T>,
+    renderFunction: (data: T[]) => JSX.Element[]
+}) {
+    const [loadedData, loading, pageInfo, loadMore, deps] = dataManagement;
 
-    if (animeData.id == LOADING_ID) {
-        return (
-            <div className={styles.charactersContainer}>
-                <span className={styles.sectionTitle}>Characters</span>
-                loading ...
-            </div>
-        )
-    }
+    // should already contain some data
+    // useEffect(() => {
+    //     loadMore();
+    // }, deps) // eslint-disable-line
+
+    // useEffect(() => {
+    //     console.log(loadedData)
+    // }, [loadedData])
+
+    const [displayAmount, setDisplayAmount] = useState(15);
+    const [displayData, setDisplayData] = useState([]);
+    useEffect(() => {
+        setDisplayData(loadedData.slice(0, displayAmount));
+    }, [loadedData, displayAmount]);
+
+    const [loadButtonText, setLoadButtonText] =  useState('');
+    const [firstClick, setFirstClick] = useState(true);
+    useEffect(() => {
+        if (loading) {
+            setLoadButtonText('loading')
+        } else if (displayAmount > loadedData.length && !pageInfo.hasNextPage) {
+            setLoadButtonText('all loaded')
+        } else {
+            setLoadButtonText('load more')
+        }
+    }, [loading, displayAmount, loadedData, pageInfo.hasNextPage]);
+    const loadButtonClick = () => {
+        setFirstClick(false);
+        setDisplayAmount(displayAmount + 20);
+    };
+    useEffect(() => {
+        if (!firstClick && displayAmount > loadedData.length && pageInfo.hasNextPage) {
+            loadMore();
+        }
+    }, [displayAmount]) // eslint-disable-line
+    const buttonStyle = mergeStyles(
+        styles.loadButton,
+        displayAmount > loadedData.length && !pageInfo.hasNextPage && styles.allLoaded
+    )
+    
+    const cardListStyle = mergeStyles(styles.cardList, styles.collapse);
+    
+    const animeData = useContext(AnimeDataContext);
 
     return (
-        <div className={styles.charactersContainer}>
-            <span className={styles.sectionTitle}>Characters</span>
-            <ul className={cardListStyle}>
-                {characters}
-            </ul>
+        <div className={styles.sectionContainer}>
+            <div className={styles.sectionHeader}>
+                <span className={styles.sectionTitle}>{title}</span>
+                {(animeData.id != LOADING_ID) && <button className={buttonStyle} onClick={loadButtonClick}>{loadButtonText}</button>}
+            </div>
+            {
+                animeData.id == LOADING_ID
+                ? 'loading ...'
+                : (
+                    <ul className={cardListStyle}>
+                        {renderFunction(displayData)}
+                    </ul>
+                )
+            }
         </div>
     )
 }
 
+function Characters() {
+    const animeData = useContext(AnimeDataContext);
+    const dataManagement = useCharactersDataManagement(animeData.id);
+    const renderFunction = (displayData: AnimeCharacter[]) => displayData.map(charData => <Character key={charData.id} characterData={charData} />)
+    return <CardsSection title='Characters' dataManagement={dataManagement} renderFunction={renderFunction} />
+}
+
 function Staffs() {
     const animeData = useContext(AnimeDataContext);
-    const staffs = (animeData && animeData.staff) ? animeData.staff.edges.map(staffData => <Staff key={staffData.id} staffData={staffData} />) : <></>
-    const cardListStyle = mergeStyles(styles.cardList, styles.collapse);
-
-    if (animeData.id == LOADING_ID) {
-        return (
-            <div className={styles.staffsContainer}>
-                <span className={styles.sectionTitle}>Staffs</span>
-                loading ...
-            </div>
-        )
-    }
-
-    return (
-        <div className={styles.staffsContainer}>
-            <span className={styles.sectionTitle}>Staffs</span>
-            <ul className={cardListStyle}>
-                {staffs}
-            </ul>
-        </div>
-    )
+    const dataManagement = useAnimeStaffsDataManagement(animeData.id);
+    const renderFunction = (displayData: AnimeStaff[]) => displayData.map(staffData => <Staff key={staffData.id} staffData={staffData} />)
+    return <CardsSection title='Staffs' dataManagement={dataManagement} renderFunction={renderFunction} />
 }
 
 function Trailer() {
@@ -394,18 +458,30 @@ function Trailer() {
         ? `https://www.youtube.com/embed/${animeData?.trailer?.id}`
         : `https://www.dailymotion.com/embed/video/${animeData?.trailer?.id}?autoplay=0`
 
-    return (
+    if (animeData.id == LOADING_ID) {
+        return (
+            <div className={styles.trailerContainer}>
+                <div className={styles.sectionHeader}>
+                    <span className={styles.sectionTitle}>Trailer</span>
+                </div>
+                loading ...
+            </div>
+        )
+    }
+
+    return animeData.trailer ? (
         <div className={styles.trailerContainer}>
-            <span className={styles.sectionTitle}>Trailer</span>
-            {animeData.trailer && <iframe
+            <div className={styles.sectionHeader}>
+                <span className={styles.sectionTitle}>Trailer</span>
+            </div>
+            <iframe
                 className={styles.trailer}
                 src={videoSource}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen={true}>
-            </iframe>}
+            </iframe>
         </div>
-    )
-
+    ) : <></>
 }
 
 function MainPanel() {
@@ -432,7 +508,7 @@ function Header() {
     )
 }
 
-const AnimeDataContext = createContext<AnimeMedia>({ id: LOADING_ID })
+export const AnimeDataContext = createContext<AnimeMedia>({ id: LOADING_ID })
 
 export default function AnimeDetails(props: { animeID: string }) {
 
