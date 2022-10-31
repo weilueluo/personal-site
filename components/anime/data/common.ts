@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DataManagement } from ".";
 import { PageInfo } from "..";
+import { EMPTY_ARRAY } from "../../common/constants";
 
 export const ANILIST_GRAPHQL_ENDPOINT = 'https://graphql.anilist.co'
 
@@ -27,49 +28,56 @@ export function fetchAnilistData(query: string): object {
     }
 
     return fetch(ANILIST_GRAPHQL_ENDPOINT, options)
-        .then(res => res.json().then(json => json.data)
-            .then(animeData => {
-                console.log('fetched anilist data');
-                console.log(animeData);
-                return animeData;
-            }));
+            .then(res => res.json().then(json => json.data)
+                .then(data => {
+                    console.log('Received anilist data');
+                    console.log(data);
+                    return data;
+                }));
 }
 
 export async function fetchImageAsLocalUrl(url: string) {
     return fetch(url)
-        .then(res => res.blob())
-        .then(imageBlob => URL.createObjectURL(imageBlob))
+            .then(res => res.blob())
+            .then(imageBlob => URL.createObjectURL(imageBlob))
 }
 
 // NOTE: all three pageInfo, loadedData, loading should not trigger loadMore
 // otherwise will leads to infinite loop
 export function useDataManagement<T extends {id: number}>(
     fetchFunction: (page: number) => Promise<{data: T[], pageInfo: PageInfo}>,
-    existingData: T[],
+    existingData: T[] = EMPTY_ARRAY,
     nextPage: number = 1,
 ): DataManagement<T> {
-    const initPageInfo = JSON.parse(JSON.stringify(INIT_PAGE_INFO));
-    initPageInfo.currentPage = nextPage - 1;
-    const [pageInfo, setPageInfo] = useState(initPageInfo);
 
+    const initPageInfo = useMemo(() => {
+        const prevPageInfo = JSON.parse(JSON.stringify(INIT_PAGE_INFO));
+        prevPageInfo.currentPage = nextPage - 1;
+        return prevPageInfo
+    }, [nextPage]);
+
+    const [pageInfo, setPageInfo] = useState(initPageInfo);
     const [loadedData, setLoadedData] = useState(existingData);
     const [loading, setLoading] = useState(false);
-    const seen = useMemo(() => new Set<number>(), [])
+    const seen = useRef(new Set<number>());
 
-    // next line ensure existing data is always used
+    // in case existing data changes, add them as well
     useEffect(() => {
         const newData = [];
-        existingData.forEach((d: T) => {
-            if (!seen.has(d.id)) {
-                seen.add(d.id);
-                newData.push(d)
+        existingData.forEach((data: T) => {
+            if (!seen.current.has(data.id)) {
+                seen.current.add(data.id);
+                newData.push(data)
             }
         });
         setLoadedData([...loadedData, ...newData]);
     }, [existingData]) // eslint-disable-line
 
-
-    const loadMore = async () => {
+    // fetch more data into loaded data,
+    // setting loading state
+    // update page info
+    // update seen anime data
+    const loadMore = useCallback(async () => {
         
         if (loading || !pageInfo.hasNextPage) {
             return Promise.resolve([]);
@@ -81,16 +89,17 @@ export function useDataManagement<T extends {id: number}>(
         setPageInfo(response?.pageInfo || INIT_PAGE_INFO);
         const newData = [];
         (response?.data || []).forEach((d: T) => {
-            if (!seen.has(d.id)) {
-                seen.add(d.id);
-                newData.push(d)
+            if (!seen.current.has(d.id)) {
+                seen.current.add(d.id);
+                newData.push(d);
             }
         });
         setLoadedData([...loadedData, ...newData]);
-        setLoading(false)
-    }
+        setLoading(false);
 
-    return [loadedData, loading, pageInfo, loadMore, []]
+    }, [fetchFunction, loadedData, loading, pageInfo.currentPage, pageInfo.hasNextPage, seen])
+
+    return [loadedData, loading, pageInfo, loadMore]
 }
 
 // https://anilist.github.io/ApiV2-GraphQL-Docs/

@@ -369,7 +369,7 @@ function CardsSection<T>({
     dataManagement: DataManagement<T>,
     renderFunction: (data: T[]) => JSX.Element[]
 }) {
-    const [loadedData, loading, pageInfo, loadMore, deps] = dataManagement;
+    const [loadedData, loading, pageInfo, loadMore] = dataManagement;
 
     // should already contain some data
     // useEffect(() => {

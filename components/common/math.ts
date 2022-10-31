@@ -18,6 +18,9 @@ export function getRandom(arr: Array<any>, n: number) {
     return result;
 }
 
+export function randomIntRange(from: number, to: number) {
+    return Math.floor(Math.random() + from * (to - from + 1))
+}
 
 
 export function polar2xyz(theta: number, phi: number, r: number) {

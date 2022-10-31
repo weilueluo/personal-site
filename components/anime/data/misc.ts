@@ -1,3 +1,4 @@
+import { EMPTY_ARRAY } from "../../common/constants";
 import { INIT_PAGE_INFO } from "./common";
 import { fetchFavouriteAnimeData } from "./favourites";
 
@@ -19,4 +20,16 @@ async function slowlyFetchAllFavAnimeData() {
 
 export async function slowlyFetchAllAnimeData() {
     return slowlyFetchAllFavAnimeData()
+}
+
+export function extractCoverImageURLs(coverImage: { medium?: string, large?: string }): string[] {
+    if (!coverImage) {
+        return EMPTY_ARRAY;
+    }
+
+    let urls = []
+    coverImage && coverImage.medium && urls.push(coverImage.medium);
+    coverImage && coverImage.large && urls.push(coverImage.large);
+
+    return urls;
 }

@@ -1,5 +1,6 @@
 import { DataManagement } from ".";
 import { AnimeMedia, FavAnimeMedia, UserFavouriteResponse } from "..";
+import { EMPTY_ARRAY } from "../../common/constants";
 import { favFields, favouriteAnime, fetchAnilistData, MY_USER_ID, query, useDataManagement, user } from "./common";
 
 export async function fetchFavouriteAnimeData(page: number = 1): Promise<UserFavouriteResponse> {
@@ -9,8 +10,6 @@ export async function fetchFavouriteAnimeData(page: number = 1): Promise<UserFav
     const data = await (fetchAnilistData(graphqlQuery) as Promise<UserFavouriteResponse>);
     return data;
 }
-
-const empty = []
 
 export function useFavDataManagement(): DataManagement<FavAnimeMedia> {
 
@@ -23,5 +22,5 @@ export function useFavDataManagement(): DataManagement<FavAnimeMedia> {
         }
     }
 
-    return useDataManagement<AnimeMedia>(fetchFunction, empty, 1);
+    return useDataManagement<AnimeMedia>(fetchFunction, EMPTY_ARRAY, 1);
 }

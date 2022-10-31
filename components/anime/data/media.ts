@@ -2,6 +2,8 @@ import { AnimeCharactersMedia, AnimeMediaCharactersResponse, AnimeMediaResponse,
 import { query, media, mediaFields, fetchAnilistData, characters, characterFields, staffs, staffFields } from "./common";
 
 export async function fetchAnimeMedia(animeID: number | string) {
+    console.log(`fetching anime media, id=${animeID}`);
+
     const graphqlQuery = query(media(mediaFields, animeID));
     const data = await (fetchAnilistData(graphqlQuery) as Promise<AnimeMediaResponse>);
     return data?.Media;
@@ -11,22 +13,15 @@ export async function fetchAnimeCharactersMedia(animeID: number | string, charac
     console.log(`fetching anime characters media, page=${characterPage}`);
     
     const graphqlQuery = query(media(characters(characterFields, characterPage), animeID));
-    // console.log(graphqlQuery);
-    
     const data = await (fetchAnilistData(graphqlQuery) as Promise<AnimeMediaCharactersResponse>)
-    // console.log('fetched characters');
-    // console.log(data);
-    
-    
     return data?.Media?.characters;
 }
 
 export async function fetchAnimeStaffsMedia(animeID: string | number, staffPage: number = 1): Promise<AnimeStaffsMedia> {
     console.log(`fetching anime staff media, page=${staffPage}`);
+
     const graphqlQuery = query(media(staffs(staffFields, staffPage), animeID));
-
     const data = await (fetchAnilistData(graphqlQuery) as Promise<AnimeMediaStaffsResponse>);
-
     return data?.Media?.staff;
 }
 

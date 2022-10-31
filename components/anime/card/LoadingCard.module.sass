@@ -1,0 +1,72 @@
+@use 'sass:math'
+@use '../styles/Card.module' as Card
+
+.card
+    @include Card.card
+
+@mixin loadingCard
+    max-width: 180px
+
+    position: relative
+
+    border-radius: 5px
+
+    &::before, &::after
+        content: ''
+        position: absolute
+        height: 100%
+        width: 100%
+        background: linear-gradient(90deg, transparent, #77777780, transparent)
+        
+        scale: 3
+
+        animation-name: loading
+        animation-duration: 2s
+        animation-iteration-count: infinite
+        animation-fill-mode: both
+        animation-play-state: running
+        animation-timing-function: linear
+        z-index: -1
+    
+    &::before
+        left: 20%
+        top: -20%
+
+    &::after
+        left: -20%
+        top: 20%
+        animation-direction: reverse
+
+.imageContainer
+    @include Card.imageContainer
+
+.image
+    @include Card.image
+
+
+@mixin loadingImage
+    object-fit: contain
+
+.image.loadingImage
+    @include loadingImage
+
+@for $i from 1 through 10
+    .loadingCard_#{$i}
+        @include loadingCard
+
+        &::before
+            left: percentage(random() * 0.8 - 0.4)
+            top: percentage(random() * 0.8 - 0.4)
+            animation-duration: random() * 2 + 1s
+        &::after
+            left: percentage(random() * 0.8 - 0.4)
+            top: percentage(random() * 0.8 - 0.4)
+            animation-duration: random() * 3 + 1s
+
+
+@keyframes loading
+    0%
+        transform: rotateZ(0deg)
+        
+    100%
+        transform: rotateZ(180deg)

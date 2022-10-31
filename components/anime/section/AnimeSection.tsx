@@ -4,19 +4,20 @@ import { mergeStyles } from '../../common/styles';
 import { useSequentiallyLoadedImageURL } from '../../common/hooks';
 import { isDevEnv } from '../../common/misc';
 import { useRotateString } from '../hooks';
-import { LOADING_IMAGE_PATH } from '../../common/constants';
+import { EMPTY_ARRAY, LOADING_IMAGE_PATH } from '../../common/constants';
 import styles from './AnimeSection.module.sass'
 import { DataManagement } from '../data';
+import { extractCoverImageURLs } from '../data/misc';
+import LoadingCard from '../card/LoadingCard';
 
 function AnimeCard({ animeData }: { animeData: FavAnimeMedia }) {
-    const imageURLs = animeData.coverImage ? [animeData.coverImage.medium, animeData.coverImage.large] : [];
-    const [imageURL, index] = useSequentiallyLoadedImageURL(imageURLs);
+    const [imageURL, index] = useSequentiallyLoadedImageURL(extractCoverImageURLs(animeData.coverImage));
 
-    const titles = animeData.title ? [animeData.title.english, animeData.title.romaji, animeData.title.native] : [];
+    const titles = animeData.title ? [animeData.title.english, animeData.title.romaji, animeData.title.native] : EMPTY_ARRAY;
     const [title, nextTitle] = useRotateString(titles);
 
-    const href = animeData.id ? `/anime/${animeData.id}${isDevEnv() ? '' : '.html'}` : 'javascript:void(0)';
-    const alt = animeData.title?.english || 'Anime Card Image'
+    const href = animeData.id ? `/anime/${animeData.id}${isDevEnv() ? '' : '.html'}` : undefined;
+    const alt = (titles && titles[0]) || 'Anime Card Image'
 
     const imageStyle = mergeStyles(styles.image, index == 0 && styles.loadingImage)
 
@@ -33,30 +34,17 @@ function AnimeCard({ animeData }: { animeData: FavAnimeMedia }) {
     )
 }
 
-function LoadingCard() {
-    return (
-        <li className={mergeStyles(styles.card, styles.loadingCard)}>
-            <div className={styles.imageContainer}>
-                <a className={styles.link}>
-                    {/* eslint-disable-next-line */}
-                    <img src={LOADING_IMAGE_PATH} alt='loading' className={mergeStyles(styles.image, styles.loadingImage)} />
-                </a>
-            </div>
-        </li>
-    )
-}
-
 export default function AnimeSection<T extends SectionAnimeMedia>(props: {
     dataManagementHook: () => DataManagement<T>,
     title: string
 }) {
 
-    const [animeDataList, loading, pageInfo, loadMore, deps] = props.dataManagementHook();
+    const [animeDataList, loading, pageInfo, loadMore] = props.dataManagementHook();
 
     // load data into database once
     useMemo(() => {
         loadMore()
-    }, deps) // eslint-disable-line
+    }, []) // eslint-disable-line
 
     // set display anime data according to display amount
     const [displayAmount, setDisplayAmount] = useState(15);
@@ -68,7 +56,7 @@ export default function AnimeSection<T extends SectionAnimeMedia>(props: {
         } else {
             setDisplayAnimeDataList(animeDataList.slice(0, displayAmount))
         }
-    }, [displayAmount, animeDataList, ...deps]);  // eslint-disable-line
+    }, [displayAmount, animeDataList]);  // eslint-disable-line
 
     // load more button
     const [hasMore, setHasMore] = useState(true);
@@ -90,8 +78,8 @@ export default function AnimeSection<T extends SectionAnimeMedia>(props: {
     // cards
     const cards = (displayAnimeDataList && displayAnimeDataList.length > 0)
         ? displayAnimeDataList.map(animeData => <AnimeCard key={animeData.id} animeData={animeData} />)
-        : <LoadingCard />
-    // const cards = <LoadingCard />
+        : Array.from(Array(10)).map((_, i) => <LoadingCard key={i} />)
+    // const cards = Array.from(Array(5)).map((_, i) => <LoadingCard key={i} />)
     const cardListStyle = mergeStyles(styles.cardList, !expand && styles.collapse, styles.cardList);
 
     return (

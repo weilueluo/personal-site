@@ -1,3 +1,4 @@
+@use 'sass:math'
 @use '../styles/Card.module' as Card
 @use '../styles/Section.module' as Section
 @use '/components/common/css/button'
@@ -11,12 +12,6 @@
 
 .card
     @include Card.card
-
-.loadingCard
-    @include Card.loadingCard
-
-.image.loadingImage
-    @include Card.loadingImage
 
 .image
     @include Card.image
@@ -63,10 +58,12 @@
     align-items: center
     justify-content: center
 
-.loadMoreButton.allLoaded,
-.loadMorebutton.loading
-    border: 0px
-    background-color: transparent
+    &.allLoaded,
+    &.loading
+        border: 0px
+        background-color: transparent
 
-    &:hover
-        cursor: default
+        &:hover
+            cursor: default
+
+
