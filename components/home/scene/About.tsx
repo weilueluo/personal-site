@@ -1,7 +1,6 @@
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef } from 'react';
 import { Group, Vector3 } from 'three';
-import { } from '../../common/hooks';
 import { getDeviceDependent, isDevEnv } from '../../common/misc';
 import { use3DHover, useAltScroll } from '../../common/threejs';
 import { useInnerBallMaterial } from './hooks';

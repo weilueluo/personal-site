@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { slowlyFetchAllAnimeData } from '../../components/anime/data/misc';
+import { getAllAnime } from '../../components/anime/data/misc';
 import AnimeDetails from '../../components/animeDetails/AnimeDetails';
 
 export default function AnimeDetailsPage(props) {
@@ -30,7 +30,7 @@ export async function getStaticPaths() {
 
     // const cachedData = {};
 
-    const paths = await slowlyFetchAllAnimeData().then(datum => datum.map(animeData => {
+    const paths = await getAllAnime().then(datum => datum.map(animeData => {
 
         const animeIDString = animeData.id.toString();
         // cachedData[animeIDString] = animeData;

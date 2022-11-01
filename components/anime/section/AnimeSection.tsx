@@ -1,14 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FavAnimeMedia, SectionAnimeMedia } from '..';
-import { mergeStyles } from '../../common/styles';
-import { useSequentiallyLoadedImageURL } from '../../common/hooks';
+import { EMPTY_ARRAY } from '../../common/constants';
 import { isDevEnv } from '../../common/misc';
-import { useRotateString } from '../hooks';
-import { EMPTY_ARRAY, LOADING_IMAGE_PATH } from '../../common/constants';
-import styles from './AnimeSection.module.sass'
-import { DataManagement } from '../data';
-import { extractCoverImageURLs } from '../data/misc';
-import LoadingCard from '../card/LoadingCard';
+import { mergeStyles } from '../../common/styles';
+import { LOADING_CARDS } from '../card/LoadingCard';
+import { SegmentedDataFetching } from '../data/hooks';
+import { extractCoverImageURLs, useSequentiallyLoadedImageURL } from '../data/misc';
+import { useRotateString } from '../utils';
+import styles from './AnimeSection.module.sass';
 
 function AnimeCard({ animeData }: { animeData: FavAnimeMedia }) {
     const [imageURL, index] = useSequentiallyLoadedImageURL(extractCoverImageURLs(animeData.coverImage));
@@ -34,16 +33,17 @@ function AnimeCard({ animeData }: { animeData: FavAnimeMedia }) {
     )
 }
 
+
 export default function AnimeSection<T extends SectionAnimeMedia>(props: {
-    dataManagementHook: () => DataManagement<T>,
+    segmentedDataFetching: () => SegmentedDataFetching<T>,
     title: string
 }) {
 
-    const [animeDataList, loading, pageInfo, loadMore] = props.dataManagementHook();
+    const [animeDataList, loading, pageInfo, fetchNext] = props.segmentedDataFetching();
 
     // load data into database once
     useMemo(() => {
-        loadMore()
+        fetchNext()
     }, []) // eslint-disable-line
 
     // set display anime data according to display amount
@@ -52,7 +52,7 @@ export default function AnimeSection<T extends SectionAnimeMedia>(props: {
     const [displayAnimeDataList, setDisplayAnimeDataList] = useState([]);
     useEffect(() => {
         if (displayAmount > animeDataList.length && pageInfo.hasNextPage) {
-            loadMore();
+            fetchNext();
         } else {
             setDisplayAnimeDataList(animeDataList.slice(0, displayAmount))
         }
@@ -78,8 +78,7 @@ export default function AnimeSection<T extends SectionAnimeMedia>(props: {
     // cards
     const cards = (displayAnimeDataList && displayAnimeDataList.length > 0)
         ? displayAnimeDataList.map(animeData => <AnimeCard key={animeData.id} animeData={animeData} />)
-        : Array.from(Array(10)).map((_, i) => <LoadingCard key={i} />)
-    // const cards = Array.from(Array(5)).map((_, i) => <LoadingCard key={i} />)
+        : LOADING_CARDS.map((card, i) => <div key={i} className={styles.loadingCardContainer}>{card}</div>)
     const cardListStyle = mergeStyles(styles.cardList, !expand && styles.collapse, styles.cardList);
 
     return (

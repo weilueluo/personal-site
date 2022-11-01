@@ -1,6 +1,5 @@
 @use 'sass:list'
 @use '../anime/styles/Card.module.sass' as Card
-@use '../anime/card/LoadingCard.module.sass' as LoadingCard
 @use '../anime/styles/Section.module.sass' as Section
 @use '/components/common/css/button'
 
@@ -76,14 +75,17 @@ $tablet-screen: 481px
     width: 100%
     height: 100%
 
+.loadingBannerImage
+    height: 200px
+
+.bannerImage.loadingImage
+    object-fit: contain
+
 .card
     @include Card.card
 
 .image
     @include Card.image
-
-.image.loadingImage
-    @include LoadingCard.loadingImage
 
 .sidePanelCard
     width: 100%
@@ -133,13 +135,17 @@ $tablet-screen: 481px
     align-self: flex-end
     text-transform: uppercase
 
-    &.allLoaded
+    &.allLoaded, &.loading
         background-color: transparent
-        height: fit-content
         padding: 0
 
         &:hover
             cursor: default
+
+    &.allLoaded
+        height: fit-content
+    
+        
 
 
 // Side Panel

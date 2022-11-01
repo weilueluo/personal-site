@@ -13,16 +13,28 @@
 
     scroll-behavior: smooth
 
+
 @mixin collapse
     grid-template-columns: unset
     grid-auto-flow: column
     grid-auto-columns: clamp(120px, 160px, 20vw)
     overflow-x: auto
 
+    // make scrollbar visible only on hover
+    visibility: hidden
+    transition: visibility 0.3s
+
+    &>*
+        visibility: visible
+
+    &:hover
+        visibility: visible
+
 @mixin card
     display: flex
     flex-direction: column
     width: 100%
+    max-width: 200px
     height: fit-content
     align-items: center
     justify-content: space-between

@@ -1,6 +1,6 @@
 
 import styles from './anime.module.sass';
-import { useFavDataManagement } from './data/favourites';
+import { useFavouritesFetching, useMediaListCurrentFetching, useMediaListPlannedFetching } from './data/hooks';
 import AnimeSection from "./section/AnimeSection";
 
 
@@ -8,8 +8,10 @@ export default function Anime() {
 
   return (
     <>
-      <div className={styles['all-container']}>
-        <AnimeSection title='Favourites' dataManagementHook={useFavDataManagement} />
+      <div className={styles.allContainer}>
+        <AnimeSection title='Favourites' segmentedDataFetching={useFavouritesFetching} />
+        <AnimeSection title='WATCHING' segmentedDataFetching={useMediaListCurrentFetching} />
+        <AnimeSection title='PLANNED' segmentedDataFetching={useMediaListPlannedFetching} />
       </div>
     </>
   )

@@ -10,6 +10,7 @@
     &.collapse
         @include Card.collapse
 
+
 .card
     @include Card.card
 
@@ -27,6 +28,7 @@
 
 .sectionContainer
     @include Section.sectionContainer
+    border-bottom: 1px solid black
     
 .headerLeft
     @include Section.headerLeft
@@ -66,4 +68,5 @@
         &:hover
             cursor: default
 
-
+.loadingCardContainer
+    height: clamp(160px, 260px, 35vw)

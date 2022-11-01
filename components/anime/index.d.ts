@@ -60,14 +60,13 @@ export type SectionAnimeMedia = {
     siteUrl?: string,
     startDate?: FuzzyDate,
     coverImage?: {
-        extraLarge?: string,
         large?: string,
         medium?: string,
     }
 }
 
 export type FavAnimeMedia = {
-    
+
 } & SectionAnimeMedia;
 
 export type AnimeRelationMedia = {
@@ -80,7 +79,6 @@ export type AnimeRelationMedia = {
     coverImage?: {
         medium?: string,
         large?: string,
-        extraLarge?: string
     },
     siteUrl?: string
 }
@@ -125,8 +123,7 @@ export type AnimeCharacter = {
         name?: {
             full: string,
             native: string,
-            alternative: string[],
-            alternativeSpoiler: string[]
+            alternative: string[]
         },
         image?: {
             medium: string,
