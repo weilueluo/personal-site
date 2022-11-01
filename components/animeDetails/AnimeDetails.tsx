@@ -489,13 +489,18 @@ function Trailer() {
             </div>
             {
                 animeData?.id == LOADING_ID
-                ? <iframe
-                    className={styles.trailer}
-                    src={videoSource}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen={true}>
-                </iframe>
-                : (animeData?.trailer ? TRAILER_LOADING_CARD : <></>)
+                ? TRAILER_LOADING_CARD
+                : (animeData?.trailer 
+                    ? (
+                        <iframe
+                            className={styles.trailer}
+                            src={videoSource}
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen={true}>
+                        </iframe>
+                    ) 
+                    : <></>
+                )
             }
         </div>
     )
