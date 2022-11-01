@@ -214,9 +214,12 @@ function Genres() {
 function Status() {
     const animeData = useContext(AnimeDataContext);
 
+    const statusRaw = animeData?.status || 'UNKNOWN';
+    const status = statusRaw.replace('_', '');
+
     return (
         <span className={styles.status}>
-            {animeData?.status || 'UNKNOWN'} {animeData?.season || ''} {animeData?.seasonYear || ''}
+            {status} {animeData?.season || ''} {animeData?.seasonYear || ''}
         </span>
     )
 }
@@ -356,7 +359,7 @@ function Relations() {
 
     const relations = animeData?.relations 
         ? animeData.relations.edges.map(relationData => <Relation_ key={relationData.id} relationData={relationData} />) 
-        : SECTION_LOADING_CARDS
+        : (animeData?.id == LOADING_ID ? SECTION_LOADING_CARDS : <></>)
 
     const cardListStyle = mergeStyles(styles.cardList, styles.collapse);
 
@@ -485,14 +488,14 @@ function Trailer() {
                 <span className={styles.sectionTitle}>Trailer</span>
             </div>
             {
-                animeData?.trailer
+                animeData?.id == LOADING_ID
                 ? <iframe
                     className={styles.trailer}
                     src={videoSource}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen={true}>
                 </iframe>
-                : TRAILER_LOADING_CARD
+                : (animeData?.trailer ? TRAILER_LOADING_CARD : <></>)
             }
         </div>
     )

@@ -273,20 +273,19 @@ ${relations}
 ${characters(1)}
 ${staffs(1)}`
 
-export enum AnimeStatus {
-    FINISHED,
-    RELEASING,
-    NOT_YET_RELEASED,
-    CANCELLED,
-    HIATUS
-}
+export type AnimeStatus =
+    "FINISHED" |
+    "RELEASING" |
+    "NOT_YET_RELEASED" |
+    "CANCELLED" |
+    "HIATUS"
 
-export enum AnimeSeason {
-    WINTER,
-    SPRING,
-    SUMMER,
-    FALL
-}
+
+export type AnimeSeason = 
+    "WINTER" |
+    "SPRING" |
+    "SUMMER" |
+    "FALL"
 
 export type Media = {
     trailer?: {
