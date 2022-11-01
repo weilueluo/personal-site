@@ -1,6 +1,6 @@
 import { PageInfo } from "..";
 import { EMPTY_ARRAY } from "../../common/constants";
-import { AnilistPagedData, Character, Media, mediaList, MediaListItem, MEDIALIST_STATUS, medias, mediasCharacterOnly, mediasStaffsOnly, MEDIA_STATUS, page, query, SectionMedia, Staff, usersFavouritesAnimeNodes } from "./query";
+import { AnilistPagedData, Character, Media, mediaList, MediaListItem, MEDIALIST_STATUS, medias, mediasCharacterOnly, mediasStaffsOnly, page, query, SectionMedia, Staff, usersFavouritesAnimeNodes } from "./query";
 
 export const INIT_PAGE_INFO: PageInfo = {
     total: undefined,
@@ -36,11 +36,11 @@ async function fetchAnilist(query: string): Promise<any> {
             json.errors && console.log(json.errors);
             return json.data
         })
-        .then(data => {
-            console.log('Received Anilist data');
-            console.log(data);
-            return data;
-        }))
+            .then(data => {
+                console.log('Received Anilist data');
+                console.log(data);
+                return data;
+            }))
         .catch(error => {
             console.log('Error while fetching Anilist data');
             console.log(error);
@@ -62,7 +62,7 @@ export async function fetchFavouritesPage(page_: number = 1): Promise<AnilistPag
 
 export async function fetchMediaList(page_: number = 1, status: MEDIALIST_STATUS = undefined): Promise<AnilistPagedData<SectionMedia>> {
     const graphqlQuery = query(page(mediaList(MY_USER_ID, status), page_));
-    
+
     const response = await fetchAnilist(graphqlQuery);
 
     const mediaListItems: MediaListItem[] = response?.Page?.mediaList || EMPTY_ARRAY;
