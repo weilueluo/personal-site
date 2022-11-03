@@ -1,8 +1,5 @@
 import Head from "next/head"
-
-import ThreeJsContent from "../components/home/ThreeJsHome"
-import NavigationPanel from "../components/home/NavigationPanel"
-
+import HomePage from "../components/home/HomePage"
 
 export default function Home() {
     return (
@@ -13,9 +10,8 @@ export default function Home() {
                 <link rel="icon" href="/icons/favicon-32x32.png"/>
             </Head>
             
-            <NavigationPanel />
+            <HomePage />
 
-            <ThreeJsContent />
         </div>
     )
 }

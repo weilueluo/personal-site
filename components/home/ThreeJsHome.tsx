@@ -107,7 +107,7 @@ export function MyLights() {
 }
 
 
-export default function Home() {
+export default function ThreeJsHome() {
     const [pages, setPages] = useState(1)
 
     useEffect(() => {
@@ -138,12 +138,11 @@ export function MyCanvas(props) {
     return (
         <Canvas
             style={{
-                height: '100vh',
-                width: '100vw',
+                height: '100%',
+                width: '100%',
                 position: 'fixed',
                 top: 0,
                 left: 0,
-                overflowY: 'scroll',
             }}
             // https://docs.pmnd.rs/react-three-fiber/api/canvas#render-props
             camera={{
