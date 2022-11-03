@@ -47,8 +47,8 @@ async function getAllFavourites() {
     let pageInfo = INIT_PAGE_INFO
     while (pageInfo && pageInfo.hasNextPage) {
         const response = await fetchFavouritesPage(pageInfo.currentPage + 1);
-        allData.push(...response.data)
-        pageInfo = response.pageInfo
+        allData.push(...(response?.data || []))
+        pageInfo = response?.pageInfo
     }
     return allData;
 }

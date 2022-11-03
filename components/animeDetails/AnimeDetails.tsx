@@ -15,7 +15,7 @@ function BannerImage() {
 
     const animeData = useContext(AnimeDataContext)
 
-    const [imageUrl, index] = useSequentiallyLoadedImageURL([animeData.bannerImage])
+    const [imageUrl, index] = useSequentiallyLoadedImageURL([animeData?.bannerImage])
 
     const alt = animeData.title ? animeData.title.english : animeData.id.toString()
 
@@ -215,7 +215,7 @@ function Status() {
     const animeData = useContext(AnimeDataContext);
 
     const statusRaw = animeData?.status || 'UNKNOWN';
-    const status = statusRaw.replace('_', '');
+    const status = statusRaw.replaceAll('_', ' ');
 
     return (
         <span className={styles.status}>
@@ -241,7 +241,7 @@ function NextAiring() {
             {
                 animeData?.nextAiringEpisode 
                 ? `Ep. ${nextEpisode}/${totalEpisode} in ${timeUntilNextAiring}`
-                : 'Episode N/A'
+                : 'Episode Unavailable'
             }
         </span>
     )
@@ -250,7 +250,7 @@ function NextAiring() {
 function Score() {
     const animeData = useContext(AnimeDataContext);
 
-    const breakpoint = Math.max(animeData?.meanScore || 50, 0);
+    const breakpoint = Math.max(animeData?.meanScore || 0, 0);
 
     return (
         <span className={styles.meanScore} style={{
@@ -482,7 +482,7 @@ function Trailer() {
     //     )
     // }
 
-    return (
+    return animeData?.trailer ? (
         <div className={styles.trailerContainer}>
             <div className={styles.sectionHeader}>
                 <span className={styles.sectionTitle}>Trailer</span>
@@ -490,20 +490,17 @@ function Trailer() {
             {
                 animeData?.id == LOADING_ID
                 ? TRAILER_LOADING_CARD
-                : (animeData?.trailer 
-                    ? (
-                        <iframe
-                            className={styles.trailer}
-                            src={videoSource}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen={true}>
-                        </iframe>
-                    ) 
-                    : <></>
+                : (
+                    <iframe
+                        className={styles.trailer}
+                        src={videoSource}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen={true}>
+                    </iframe>
                 )
             }
         </div>
-    )
+    ) : <></>
 }
 
 function MainPanel() {
