@@ -2,6 +2,7 @@ import NavigationPanel from "./NavigationPanel";
 
 import styles from './HomePage.module.sass'
 import ThreeJsHome from "./ThreeJsHome";
+import Content from "./Content";
 
 
 export default function HomePage() {
@@ -11,6 +12,7 @@ export default function HomePage() {
                 <ThreeJsHome />
             </div>
             <NavigationPanel />
+            <Content />
         </div>
     )
 }

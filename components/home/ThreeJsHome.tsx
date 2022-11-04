@@ -49,9 +49,9 @@ export function MyContent() {
             <lightPositionContext.Provider value={lightPosition}>
                 <Moon />
                 <Ball />
-                <CV />
+                {/* <CV />
                 <RSS />
-                <About />
+                <About /> */}
                 <Lines />
                 <Stars />
                 <MyLights />

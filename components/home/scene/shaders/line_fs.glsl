@@ -26,7 +26,9 @@ void main() {
     float opacity = 1. - clamp(dist / near, 0., 1.);
     // opacity = mix(2. * opacity, 1., uScrolledAmount) - opacity;
 
-    float dist2surface = sphere_surface_dist(vPosition, uMainBallPosition, uMainBallRadius);
+    float mainBallRadius = (1. - uScrolledAmount) * uMainBallRadius;
+
+    float dist2surface = sphere_surface_dist(vPosition, uMainBallPosition, mainBallRadius);
     opacity = mix(0.0, opacity, clamp(dist2surface / 35., 0.0, 1.0));
 
     vec3 color = mix(darkColor, brightColor, uScrolledAmount);
