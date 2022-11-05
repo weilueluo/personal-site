@@ -6,6 +6,7 @@ import { lightPositionContext } from '../common/contexts';
 import { polar2xyz } from '../common/math';
 import { getDeviceDependent } from '../common/misc';
 import { initMobileScroll } from '../common/scroll';
+import { useAltScroll } from '../common/threejs';
 import About from './scene/About';
 import Ball from './scene/Ball';
 import CV from './scene/CV';
@@ -20,6 +21,9 @@ import styles from './StatsPanel.module.sass';
 
 
 const tempVector3 = new Vector3(10, 10, 0);
+const tempVec3 = new Vector3();
+const initCameraPosition = new Vector3(0, 20, 20)
+const targetCameraPosition = new Vector3(10, 10, -20);
 
 export function MyContent() {
     const enableOrbitControl = getDeviceDependent(false, true); // disable scroll on mobile, because it is used to play animation
@@ -28,20 +32,30 @@ export function MyContent() {
         initMobileScroll();
     }, []);
 
+
     const [lightPosition, setLightPosition] = useState(tempVector3);
-    let theta = 0;
+    const theta = useRef(0);
     const thetaSpeed = 0.04;
-    let phi = 0.3;
+    const phi = useRef(0.3);
     const phiSpeed = 0.00;
-    const moonRadius = getDeviceDependent(8, 10);
+    const moonRadius = getDeviceDependent(5, 10);
 
     // rotate light source around ball
     useFrame(() => {
-        theta += Math.atan2(thetaSpeed, moonRadius);
-        phi += Math.atan2(phiSpeed, moonRadius);
-        const [x, y, z] = polar2xyz(theta, phi, moonRadius);
+        theta.current += Math.atan2(thetaSpeed, moonRadius);
+        phi.current += Math.atan2(phiSpeed, moonRadius);
+        const [x, y, z] = polar2xyz(theta.current, phi.current, moonRadius);
         tempVector3.set(x, y, z);
         setLightPosition(tempVector3);
+    })
+
+    // const controlRef = useRef(undefined);
+
+    // camera 
+    const scrolledAmount = useAltScroll();
+    useFrame(state => {
+        tempVec3.lerpVectors(initCameraPosition, targetCameraPosition, scrolledAmount);
+        state.camera.position.set(...tempVec3.toArray());
     })
 
     return (
@@ -59,6 +73,7 @@ export function MyContent() {
 
             <GradientBackground />
             <OrbitControls
+                // ref={controlRef}
                 enabled={true}
                 enablePan={false}
                 enableZoom={false}
@@ -108,11 +123,6 @@ export function MyLights() {
 
 
 export default function ThreeJsHome() {
-    const [pages, setPages] = useState(1)
-
-    useEffect(() => {
-        setPages(getNScrollPages())
-    }, [])
 
     return (
         <>
@@ -120,14 +130,13 @@ export default function ThreeJsHome() {
                 <MyContent />
             </MyCanvas>
             <LoaderProgress />
-            <div>
-                <div style={{ height: `${pages * 100}vh`, width: `100vw` }} />
-            </div>
         </>
     );
 }
 
 React.useLayoutEffect = React.useEffect;  // suppress useLayoutEffect warning, because we did not use it, dont know where it comes from
+
+
 export function MyCanvas(props) {
     const onCreated = useMemo(() => (state) => {
         state.setDpr(window.devicePixelRatio);
@@ -146,7 +155,7 @@ export function MyCanvas(props) {
             }}
             // https://docs.pmnd.rs/react-three-fiber/api/canvas#render-props
             camera={{
-                position: [0, 20, 20],
+                position: initCameraPosition.toArray(),
                 fov: 50,
                 near: 0.1,
                 far: 100,

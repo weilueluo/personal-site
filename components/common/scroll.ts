@@ -77,11 +77,12 @@ function getMobileScrollPercent() {
 }
 
 export function getScrollPercent() {
-    if (getDeviceDependent(false, true)) {
-        return getDesktopScrollPercent();
-    } else {
-        return getMobileScrollPercent();
-    }
+    return getDesktopScrollPercent();
+    // if (getDeviceDependent(false, true)) {
+    //     return getDesktopScrollPercent();
+    // } else {
+    //     return getMobileScrollPercent();
+    // }
 }
 
 
