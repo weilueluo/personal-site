@@ -1,7 +1,8 @@
 import { OrbitControls, Stats } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { ACESFilmicToneMapping, sRGBEncoding, Vector3 } from 'three';
+import { ACESFilmicToneMapping, DoubleSide, ExtrudeGeometry, ShapeGeometry, sRGBEncoding, Vector3 } from 'three';
+import { lerp } from 'three/src/math/MathUtils';
 import { lightPositionContext } from '../common/contexts';
 import { polar2xyz } from '../common/math';
 import { getDeviceDependent } from '../common/misc';
@@ -17,6 +18,7 @@ import LoaderProgress from './scene/LoaderProgress';
 import Moon from './scene/Moon';
 import RSS from './scene/RSS';
 import Stars from './scene/Stars';
+import { generateTextShape, useExtrudeTextGeometry, useTextGeometry, useTextShape } from './scene/Text';
 import styles from './StatsPanel.module.sass';
 
 
@@ -58,6 +60,31 @@ export function MyContent() {
         state.camera.position.set(...tempVec3.toArray());
     })
 
+
+    // some random text
+    const targetSize = 0.6;
+    const [fontSize, setFontsize] = useState(targetSize);
+    const text = 'Nothing Here Yet...'
+    const [textShape] = useTextShape(text, fontSize);
+    const [textGeometry] = useExtrudeTextGeometry(textShape) as [ExtrudeGeometry];
+    const [opacity, setOpacity] = useState(0);
+    useEffect(() => {
+        // const [textShape] = generateTextShape(text, fontSize)
+        // if (textGeometry) {
+        //     console.log(textGeometry.attributes);
+        // }
+        
+        // setFontsize(lerp(0.0, targetSize, scrolledAmount))\
+        setOpacity(lerp(0.0, 1.0, scrolledAmount))
+    }, [scrolledAmount, textGeometry])
+
+    useEffect(() => {
+        if (!textGeometry) return
+        textGeometry.center()
+        textGeometry.rotateY(90)
+        textGeometry.scale(1, 1, 1)
+    }, [textGeometry])
+
     return (
         <>
             <lightPositionContext.Provider value={lightPosition}>
@@ -70,6 +97,10 @@ export function MyContent() {
                 <Stars />
                 <MyLights />
             </lightPositionContext.Provider>
+
+            <mesh geometry={textGeometry}>
+                <meshBasicMaterial side={DoubleSide} opacity={opacity} transparent={true}/>
+            </mesh>
 
             <GradientBackground />
             <OrbitControls
@@ -129,7 +160,6 @@ export default function ThreeJsHome() {
             <MyCanvas>
                 <MyContent />
             </MyCanvas>
-            <LoaderProgress />
         </>
     );
 }

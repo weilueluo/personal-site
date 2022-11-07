@@ -18,7 +18,7 @@ export default function Content() {
             <div className={styles.contentContainer}>
                 <section className={styles.titleSection}>
                     <div className={styles.header}>
-                        <h2>Hello</h2>
+                        <h2>{'Hello I\'m Weilue'}</h2>
                         {/* <span>I am Weilue</span> */}
                     </div>
                 </section>

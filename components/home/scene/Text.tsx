@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ShapeGeometry } from "three";
+import { ExtrudeGeometry, ShapeGeometry } from "three";
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 
 const fontLoader = new FontLoader();
@@ -32,6 +32,28 @@ export function useTextGeometry(textShape) {
     useEffect(() => {
         if (textShape) {
             setTextGeometry(new ShapeGeometry(textShape));
+        }
+    }, [textShape])
+
+    return [textGeometry, setTextGeometry];
+}
+
+const extrudeSettings = {
+	steps: 2,
+	depth: 0.02,
+	bevelEnabled: true,
+	bevelThickness: 0.05,
+	bevelSize: 0.05,
+	bevelOffset: 0,
+	bevelSegments: 1
+};
+
+export function useExtrudeTextGeometry(textShape) {
+    const [textGeometry, setTextGeometry] = useState(null);
+
+    useEffect(() => {
+        if (textShape) {
+            setTextGeometry(new ExtrudeGeometry(textShape, extrudeSettings));
         }
     }, [textShape])
 
