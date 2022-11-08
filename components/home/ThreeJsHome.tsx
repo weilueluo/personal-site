@@ -2,6 +2,8 @@ import { OrbitControls, Stats } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ACESFilmicToneMapping, DoubleSide, ExtrudeGeometry, ShapeGeometry, sRGBEncoding, Vector3 } from 'three';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
+import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { lerp } from 'three/src/math/MathUtils';
 import { lightPositionContext } from '../common/contexts';
 import { polar2xyz } from '../common/math';
@@ -26,6 +28,7 @@ const tempVector3 = new Vector3(10, 10, 0);
 const tempVec3 = new Vector3();
 const initCameraPosition = new Vector3(0, 20, 20)
 const targetCameraPosition = new Vector3(10, 10, -20);
+const fontLoader = new FontLoader();
 
 export function MyContent() {
     const enableOrbitControl = getDeviceDependent(false, true); // disable scroll on mobile, because it is used to play animation
@@ -62,13 +65,37 @@ export function MyContent() {
 
 
     // some random text
-    const targetSize = 0.6;
-    const [fontSize, setFontsize] = useState(targetSize);
-    const text = 'Nothing Here Yet...'
-    const [textShape] = useTextShape(text, fontSize);
-    const [textGeometry] = useExtrudeTextGeometry(textShape) as [ExtrudeGeometry];
-    const [opacity, setOpacity] = useState(0);
+    const [textGeometry, setTextGeometry] = useState(null);
     useEffect(() => {
+        fontLoader.load('/fonts/Fira Mono_Regular.json', font => {
+            const geometry = new TextGeometry( 'Nothing Here Yet...', {
+                font: font,
+                size: 0.6,
+                height: 0.02,
+                curveSegments: 1,
+                bevelEnabled: true,
+                bevelThickness: 0.05,
+                bevelSize: 0.05,
+                bevelOffset: 0,
+                bevelSegments: 1
+            } );
+            setTextGeometry(geometry)
+        });
+    }, [])
+    // useEffect(() => {
+    //     if (!font) return;
+    //     setTextGeometry(new ExtrudeGeometry(font.generateShapes('', 0.6), {
+    //         steps: 2,
+    //         depth: 0.02,
+    //         bevelEnabled: true,
+    //         bevelThickness: 0.05,
+    //         bevelSize: 0.05,
+    //         bevelOffset: 0,
+    //         bevelSegments: 1
+    //     }));
+    // }, [font])
+    const [opacity, setOpacity] = useState(0);
+    useFrame(() => {
         // const [textShape] = generateTextShape(text, fontSize)
         // if (textGeometry) {
         //     console.log(textGeometry.attributes);
@@ -76,7 +103,7 @@ export function MyContent() {
         
         // setFontsize(lerp(0.0, targetSize, scrolledAmount))\
         setOpacity(lerp(0.0, 1.0, scrolledAmount))
-    }, [scrolledAmount, textGeometry])
+    })
 
     useEffect(() => {
         if (!textGeometry) return
@@ -98,9 +125,9 @@ export function MyContent() {
                 <MyLights />
             </lightPositionContext.Provider>
 
-            <mesh geometry={textGeometry}>
+            {textGeometry && <mesh geometry={textGeometry}>
                 <meshBasicMaterial side={DoubleSide} opacity={opacity} transparent={true}/>
-            </mesh>
+            </mesh>}
 
             <GradientBackground />
             <OrbitControls
