@@ -56,11 +56,11 @@ export default function LoaderProgress() {
                     clipPath: `polygon(0% 0%, 100% 0%, 100% ${100-left}%, 0% ${100-right}%)`
                 }}></div>
                 </div>
-                <div className={styles.loadingText}>
+                {/* <div className={styles.loadingText}>
                     <span>Loading {current} / {total}</span>
                     <span>{loadingUrl}</span>
                     <span>{error || ""}</span>
-                </div>
+                </div> */}
             </div>
         )
     )

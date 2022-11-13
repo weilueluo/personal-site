@@ -182,11 +182,19 @@ export function MyLights() {
 
 export default function ThreeJsHome() {
 
-    return (
-        <>
+    const [canvas, setCanvas] = useState(<>fetching model</>);
+
+    useEffect(() => {
+        setCanvas(
             <MyCanvas>
                 <MyContent />
             </MyCanvas>
+        )
+    }, [])
+
+    return (
+        <>
+           {canvas} 
         </>
     );
 }

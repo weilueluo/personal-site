@@ -101,7 +101,7 @@
         background-image: url('/icons/contact/house-chimney-solid.svg')
 
 
-// education, skills, experience & projects
+// all sections
 .cv > div
     position: relative
     overflow: hidden
@@ -156,15 +156,31 @@
             @include sectionSubHeader
         
 
-// skills
+// experience
 .cv > div:nth-child(4)
+    &::before
+        content: 'Experience'
+
+// events
+.cv > div:nth-child(5)
+    &::before
+        content: 'Events'
+
+
+// projects
+.cv > div:nth-child(6)
+    &::before
+        content: 'Selected Projects'
+
+// skills
+.cv > div:nth-child(7)
     &::before
         content: 'Skills'
     >p
         display: flex
-        flex-direction: row
+        flex-direction: row-reverse
         @media (max-width:1100px)
-            flex-direction: column
+            flex-direction: column-reverse
 
         span:nth-child(1)
             @include sectionSubHeader
@@ -174,24 +190,14 @@
 
         span:nth-child(2)
             width: 80%
+            font-weight: normal
             @include contentText
             @media (max-width:1100px)
                 width: 100%
 
 
-// experience
-.cv > div:nth-child(5)
-    &::before
-        content: 'Experience'
-
-
-// projects
-.cv > div:nth-child(6)
-    &::before
-        content: 'Selected Projects'
-
-// experience & project
-.cv > div:nth-child(5), .cv > div:nth-child(6)
+// all sections
+.cv > div
     >p
         span:nth-child(2)
             order: -1
