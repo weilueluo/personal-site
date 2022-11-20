@@ -1,7 +1,7 @@
-import { OrbitControls, Stats } from '@react-three/drei';
+import { OrbitControls, Stats, useHelper } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { ACESFilmicToneMapping, DoubleSide, ExtrudeGeometry, ShapeGeometry, sRGBEncoding, Vector3 } from 'three';
+import { ACESFilmicToneMapping, DoubleSide, ExtrudeGeometry, ShapeGeometry, SpotLightHelper, sRGBEncoding, Vector3 } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { lerp } from 'three/src/math/MathUtils';
@@ -153,14 +153,18 @@ export function MyContent() {
 export function MyLights() {
     const lightRef = useRef();
 
+    // useHelper(lightRef, SpotLightHelper, 'cyan')
+
+    const lightPosition = useContext(lightPositionContext)
+
     const mapSize = getDeviceDependent(128, 512);
-    const position = useContext(lightPositionContext);
+    // const position = useContext(lightPositionContext);
 
     return (
         <>
             <spotLight
                 ref={lightRef}
-                position={position}
+                position={lightPosition}
                 color={0xffffff}
                 intensity={5}
                 castShadow
