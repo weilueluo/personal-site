@@ -1,4 +1,4 @@
-import { Box3, BufferGeometry, DoubleSide, Line, LineBasicMaterial, MeshPhongMaterial, MeshStandardMaterial, RepeatWrapping, Shader, ShaderMaterial, TextureLoader, UniformsLib, UniformsUtils, Vector2, Vector3 } from "three";
+import { Box3, BufferGeometry, Color, DoubleSide, Line, LineBasicMaterial, MeshPhongMaterial, MeshStandardMaterial, RepeatWrapping, Shader, ShaderChunk, ShaderMaterial, TextureLoader, UniformsLib, UniformsUtils, Vector2, Vector3 } from "three";
 
 import { extend, ReactThreeFiber, useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -152,9 +152,10 @@ export default function ExperimentalContent() {
         type: 't',
         value: normalMap
       },
-      uBallCenter: { value: [0,0,0] }
+      uBallCenter: { value: [0,0,0] },
+      // emissive: new Vector3(1., 1., 1.)
     }
-    const uniforms = UniformsUtils.merge([UniformsLib.lights, myUniforms]);
+    const uniforms = UniformsUtils.merge([UniformsLib.lights, UniformsLib.common, UniformsLib.metalnessmap, UniformsLib.roughnessmap, myUniforms]);
     console.log(uniforms);
     
     return new ShaderMaterial({
@@ -174,7 +175,26 @@ export default function ExperimentalContent() {
   }, [normalMap])
 
   material.onBeforeCompile = (shader, renderer) => {
+    console.log('shaderchunk');
+    // replace comment with shader chunk actual code
+    Object.entries(ShaderChunk).forEach(chunk => {
+      const searchString = `//${chunk[0]}`;
+      if (shader.fragmentShader.indexOf(searchString) >= 0) {
+        console.log(`replacing fragment: ${searchString}`);
+        shader.fragmentShader = shader.fragmentShader.replace(searchString, chunk[1]);
+      }
+
+      if (shader.vertexShader.indexOf(searchString) >= 0) {
+        console.log(`replacing vertex: ${searchString}`);
+        shader.vertexShader = shader.vertexShader.replace(searchString, chunk[1]);
+      }
+    })
+    
+    // shader.fragmentShader = shader.fragmentShader.replace('//shaderCommon', ShaderChunk.common);
+    // shader.fragmentShader = shader.fragmentShader.replace('//lights_pars_begin', ShaderChunk.light);
     console.log(shader.fragmentShader);
+    // console.log(ShaderChunk.common);
+    
   }
 
   const jsxMeshes = useJSXMeshes(meshNodes, material);

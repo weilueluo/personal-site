@@ -11,7 +11,7 @@ import Stars from "../home/scene/Stars";
 import { MyCanvas, MyLights } from "../home/ThreeJsHome";
 import ExperimentalContent from "./ExperimentalContent";
 
-const tempVector3 = new Vector3(-10, -10, -10);
+const tempVector3 = new Vector3(10, -10, -10);
 
 function Content() {
 
@@ -45,11 +45,14 @@ function Content() {
 }
 
 export function PlaygroundLights() {
-    const lightRef = useRef();
+    const lightRef1 = useRef();
+    const lightRef2 = useRef();
 
-    useHelper(lightRef, SpotLightHelper, 'cyan')
+    useHelper(lightRef1, SpotLightHelper, 'cyan')
+    useHelper(lightRef2, SpotLightHelper, 'yellow')
 
     const lightPosition = useContext(lightPositionContext);
+    const lightPosition2 = new Vector3(10, 10, -10);
 
     // useFrame(() => {
     //     console.log(lightPosition);
@@ -61,10 +64,10 @@ export function PlaygroundLights() {
     return (
         <>
             <spotLight
-                ref={lightRef}
+                ref={lightRef1}
                 position={lightPosition}
                 color={0xffffff}
-                intensity={5}
+                intensity={30}
                 castShadow
                 shadow-mapSize-height={mapSize}
                 shadow-mapSize-width={mapSize}
@@ -75,6 +78,22 @@ export function PlaygroundLights() {
                 shadow-camera-top={10}
                 shadow-camera-bottom={-10}
             />
+
+            {/* <spotLight
+                ref={lightRef2}
+                position={lightPosition2}
+                color={0xffffff}
+                intensity={30}
+                castShadow
+                shadow-mapSize-height={mapSize}
+                shadow-mapSize-width={mapSize}
+                shadow-camera-near={0.1}
+                shadow-camera-far={20}
+                shadow-camera-left={-10}
+                shadow-camera-right={10}
+                shadow-camera-top={10}
+                shadow-camera-bottom={-10}
+            />  */}
 
             {/* <ambientLight color={0xffffff} intensity={1.0} /> */}
         </>
