@@ -1,6 +1,19 @@
 import { OrbitControls, useFBO, useHelper } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
-import { useContext, useEffect, useRef, useState } from "react";
+import {
+    EffectComposer,
+    DepthOfField,
+    Bloom,
+    Noise,
+    Vignette,
+    GodRays
+  } from "@react-three/postprocessing";
+import {
+    BlendFunction,
+    Resizer,
+    KernelSize
+} from 'postprocessing'
+import {useThree} from "@react-three/fiber"
+import { forwardRef, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { SpotLightHelper, Vector3 } from "three";
 import { lightPositionContext } from "../common/contexts";
 import { getDeviceDependent } from "../common/misc";
@@ -21,12 +34,48 @@ function Content() {
         initMobileScroll();
     }, []);
 
+
+    const [godRay, setGodRay] = useState(null);
+    const handleSun = useCallback(sun => {
+        setGodRay( <GodRays
+            sun={sun}
+            blendFunction={BlendFunction.SCREEN}
+            samples={50}
+            density={0.97}
+            decay={0.85}
+            weight={0.6}
+            exposure={1}
+            clampMax={1}
+            width={Resizer.AUTO_SIZE}
+            height={Resizer.AUTO_SIZE}
+            kernelSize={KernelSize.LARGE}
+            blur={true}
+        />)
+    }, [])
+
     return (
         <>
             <lightPositionContext.Provider value={tempVector3}>
-                <Stars />
+                {/* <Stars /> */}
                 <PlaygroundLights />
                 <ExperimentalContent />
+
+                {/* <pointLight
+                    position={[10,10,0]}
+                    intensity={100}
+                /> */}
+                <mesh ref={handleSun}>
+                    <sphereGeometry args={[7, 32,16]} />
+                    <meshStandardMaterial emissive={0xffffff}/>
+                </mesh>
+
+                <EffectComposer>
+                    {/* <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={2} height={480} />
+                    <Bloom luminanceThreshold={0} luminanceSmoothing={0.9} height={300} />
+                    <Noise opacity={0.02} />
+                    <Vignette eskil={false} offset={0.1} darkness={1.1} /> */}
+                    {godRay}
+                </EffectComposer>
             </lightPositionContext.Provider>
 
             <GradientBackground />
@@ -48,35 +97,59 @@ export function PlaygroundLights() {
     const lightRef1 = useRef();
     const lightRef2 = useRef();
 
-    useHelper(lightRef1, SpotLightHelper, 'cyan')
-    useHelper(lightRef2, SpotLightHelper, 'yellow')
+    // useHelper(lightRef1, SpotLightHelper, 'cyan')
+    // useHelper(lightRef2, SpotLightHelper, 'yellow')
 
-    const lightPosition = useContext(lightPositionContext);
-    const lightPosition2 = new Vector3(10, 10, -10);
+    const [lightPosition1, setLightPosition1] = useState(new Vector3(0,0,0));
+    const [lightPosition2, setLightPosition2] = useState(new Vector3(0,0,0));
+    const state = useThree()
 
-    // useFrame(() => {
-    //     console.log(lightPosition);
-    // })
+    useEffect(() => {
+        const lightPos1 = state.camera.position.clone().cross(state.camera.up).multiplyScalar(1);
+        lightPos1.lerp(state.camera.position, 0.2)
+        
+        setLightPosition1(lightPos1);
+
+        const lightPos2 = state.camera.up.clone().cross(state.camera.position).multiplyScalar(1);
+        lightPos2.lerp(state.camera.position, 0.2)
+        
+        setLightPosition2(lightPos2);
+    }, [])
 
     const mapSize = getDeviceDependent(128, 512);
-    // const position = useContext(lightPositionContext);
+    const shadowCam = 50;
 
     return (
         <>
             <spotLight
                 ref={lightRef1}
-                position={lightPosition}
+                position={lightPosition1}
                 color={0xffffff}
-                intensity={30}
+                intensity={50}
                 castShadow
                 shadow-mapSize-height={mapSize}
                 shadow-mapSize-width={mapSize}
                 shadow-camera-near={0.1}
-                shadow-camera-far={20}
-                shadow-camera-left={-10}
-                shadow-camera-right={10}
-                shadow-camera-top={10}
-                shadow-camera-bottom={-10}
+                shadow-camera-far={shadowCam}
+                shadow-camera-left={-shadowCam}
+                shadow-camera-right={shadowCam}
+                shadow-camera-top={shadowCam}
+                shadow-camera-bottom={-shadowCam}
+            />
+            <spotLight
+                ref={lightRef2}
+                position={lightPosition2}
+                color={0xffffff}
+                intensity={50}
+                castShadow
+                shadow-mapSize-height={mapSize}
+                shadow-mapSize-width={mapSize}
+                shadow-camera-near={0.1}
+                shadow-camera-far={shadowCam}
+                shadow-camera-left={-shadowCam}
+                shadow-camera-right={shadowCam}
+                shadow-camera-top={shadowCam}
+                shadow-camera-bottom={-shadowCam}
             />
 
             {/* <spotLight
@@ -95,7 +168,7 @@ export function PlaygroundLights() {
                 shadow-camera-bottom={-10}
             />  */}
 
-            {/* <ambientLight color={0xffffff} intensity={1.0} /> */}
+            <ambientLight color={0xffffff} intensity={10} />
         </>
     );
 }

@@ -39,8 +39,9 @@ void main() {
     vec3 totalDiffuse = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse;
 	// vec3 totalSpecular = reflectedLight.directSpecular + reflectedLight.indirectSpecular;
     vec3 totalEmissiveRadiance = emissive;
-	vec3 outgoingLight = totalDiffuse  + totalEmissiveRadiance;
+	// vec3 outgoingLight = totalDiffuse  + totalEmissiveRadiance;
 
+    vec3 outgoingLight = vec3(vPosition);
 
     vec4 texture = texture(normalMap, vUv);
     vec3 surfaceNormal = normalize(texture.xyz);
@@ -50,18 +51,19 @@ void main() {
 
 
     // vec3 color = vec3(1., 1., 1.);
+// #if NUM_SPOT_LIGHTS > 0
 
-    for (int i = 0; i < NUM_SPOT_LIGHTS; i++) {
-        SpotLight spotLight = spotLights[i];
-        // vec3 lightPosition = vNormalMatrix * spotLight.position;
-        // vec3 lightDirection = normalize(lightPosition - vPosition);
-        vec3 lightDirection = spotLight.direction;
-        //IncidentLight outLight;
-        //getSpotLightInfo(spotLight, geometry, outLight);
-        outgoingLight *= dot(lightDirection, surfaceNormal);
-        // color = lightDirection;
-    }
-
+//     for (int i = 0; i < NUM_SPOT_LIGHTS; i++) {
+//         SpotLight spotLight = spotLights[i];
+//         // vec3 lightPosition = vNormalMatrix * spotLight.position;
+//         // vec3 lightDirection = normalize(lightPosition - vPosition);
+//         vec3 lightDirection = spotLight.direction;
+//         //IncidentLight outLight;
+//         //getSpotLightInfo(spotLight, geometry, outLight);
+//         outgoingLight *= dot(lightDirection, surfaceNormal);
+//         // color = lightDirection;
+//     }
+// #endif
 
     //output_fragment
 

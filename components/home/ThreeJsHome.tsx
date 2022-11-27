@@ -236,7 +236,7 @@ export function MyCanvas(props) {
                 physicallyCorrectLights: true,
             }}
             raycaster={{}}
-            shadowMap={true}
+            // shadowMap={true}
             shadows={true}
             onCreated={onCreated}
             {...otherProps}
