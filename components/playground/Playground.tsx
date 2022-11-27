@@ -46,10 +46,10 @@ function Content() {
             weight={0.6}
             exposure={1}
             clampMax={1}
-            width={Resizer.AUTO_SIZE}
-            height={Resizer.AUTO_SIZE}
+            // width={Resizer.AUTO_SIZE}
+            // height={Resizer.AUTO_SIZE}
             kernelSize={KernelSize.LARGE}
-            blur={true}
+            blur={1}
         />)
     }, [])
 

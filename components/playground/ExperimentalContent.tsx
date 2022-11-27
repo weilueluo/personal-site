@@ -232,9 +232,9 @@ export default function ExperimentalContent() {
   const ballCenter = new Vector3(0, 0, 0);
   const meshesMovementProps = useMemo(() => {
     const props = {}
-    console.log(jsxMeshes);
+    // console.log(jsxMeshes && typeof jsxMeshes[0]);
     
-    jsxMeshes.forEach((mesh_) => {
+    jsxMeshes.forEach((mesh_: any) => {
       const mesh = mesh_.props;
       props[mesh.name] = {
         startPos: mesh.position.clone(),
