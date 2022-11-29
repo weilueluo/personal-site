@@ -12,9 +12,9 @@ import {
     Resizer,
     KernelSize
 } from 'postprocessing'
-import {useThree} from "@react-three/fiber"
+import {useFrame, useThree} from "@react-three/fiber"
 import { forwardRef, useCallback, useContext, useEffect, useRef, useState } from "react";
-import { SpotLightHelper, Vector3 } from "three";
+import { MathUtils, SpotLightHelper, Vector3 } from "three";
 import { lightPositionContext } from "../common/contexts";
 import { getDeviceDependent } from "../common/misc";
 import { initMobileScroll } from "../common/scroll";
@@ -23,6 +23,8 @@ import GradientBackground from "../home/scene/GradientBackground";
 import Stars from "../home/scene/Stars";
 import { MyCanvas, MyLights } from "../home/ThreeJsHome";
 import ExperimentalContent from "./ExperimentalContent";
+import { useAltScroll } from "../common/threejs";
+import assert from "assert";
 
 const tempVector3 = new Vector3(10, -10, -10);
 
@@ -33,6 +35,12 @@ function Content() {
     useEffect(() => {
         initMobileScroll();
     }, []);
+
+    const [sunSize, setSunSize] = useState(7);
+    const scroll = useAltScroll();
+    useFrame(() => {
+        setSunSize(MathUtils.lerp(7, 0, scroll))
+    })
 
 
     const [godRay, setGodRay] = useState(null);
@@ -65,7 +73,7 @@ function Content() {
                     intensity={100}
                 /> */}
                 <mesh ref={handleSun}>
-                    <sphereGeometry args={[7, 32,16]} />
+                    <sphereGeometry args={[sunSize, 32,16]} />
                     <meshStandardMaterial emissive={0xffffff}/>
                 </mesh>
 
@@ -93,6 +101,7 @@ function Content() {
     )
 }
 
+
 export function PlaygroundLights() {
     const lightRef1 = useRef();
     const lightRef2 = useRef();
@@ -115,6 +124,7 @@ export function PlaygroundLights() {
         
         setLightPosition2(lightPos2);
     }, [])
+
 
     const mapSize = getDeviceDependent(128, 512);
     const shadowCam = 50;

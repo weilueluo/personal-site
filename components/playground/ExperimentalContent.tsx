@@ -36,7 +36,7 @@ function useBallGLTF() {
   useMemo(() => {
     loader.setDRACOLoader(dracoLoader);
     loader.load(
-      '/models/ball/ball-no-animation.glb',
+      '/models/ball/sphere.glb',
       // '/models/ball/sphere.glb',
       function (gltf) {
         setgltf(gltf);
@@ -119,6 +119,31 @@ function useJSXOthers(otherNodes) {
   return others;
 }
 
+function useAltScrollSplitItems(splits: number[], items: any[], onChange: () => any = undefined) {
+  const [item, setItem] = useState(items[0]);
+  const scroll = useAltScroll();
+  const lastScroll = useRef(0);
+  useFrame(() => {
+      if (Math.abs(scroll - lastScroll.current) < 1e-6) {
+        
+          return;
+      }
+      if (splits.length == 0) {
+          return;
+      }
+      let i = 0;
+      while (scroll > splits[i] && i < splits.length) {
+          i++
+      }
+      if (items[i] !== item) {
+          onchange && onChange();
+      }
+      setItem(items[i]);
+      lastScroll.current = scroll;
+  })
+
+  return item;
+}
 
 export default function ExperimentalContent() {
 
@@ -261,8 +286,8 @@ export default function ExperimentalContent() {
         if (!props) {
           return
         }
-        const position = tempVec3.lerpVectors(props.startPos, props.animateEndPos, scroll);
-        mesh.position.copy(position); 
+        const targetPosition = tempVec3.lerpVectors(props.startPos, props.animateEndPos, scroll);
+        mesh.position.lerp(targetPosition, 0.075) 
         })
       } else {
         const time = state.clock.getElapsedTime()
@@ -271,8 +296,8 @@ export default function ExperimentalContent() {
           if (!props) {
             return
           }
-          const position = tempVec3.lerpVectors(props.startPos, props.endPos, (Math.sin(time + props.random * 37) + 1) / 2);
-          mesh.position.copy(position);
+          const targetPosition = tempVec3.lerpVectors(props.startPos, props.endPos, (Math.sin(time + props.random * 37) + 1) / 2);
+          mesh.position.lerp(targetPosition, 0.075)
         })
       }
     }
