@@ -2,7 +2,7 @@ import { Quaternion, BufferGeometry, DoubleSide, Line, LineBasicMaterial, Mesh, 
 
 import { extend, ReactThreeFiber, useFrame } from '@react-three/fiber';
 import { RootState } from "@react-three/fiber/dist/declarations/src/core/store";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { LineAnimator } from "../animation/LineAnimator";
@@ -10,6 +10,7 @@ import { useAltScroll } from "../common/threejs";
 import { getMainBallRadius } from "../home/scene/global";
 import fragmentShader from "./playground_ball.fs.glsl";
 import vertexShader from "./playground_ball.vs.glsl";
+import MainBall from "./MainBall";
 
 // https://github.com/pmndrs/react-three-fiber/discussions/1387
 extend({ Line_: Line })
@@ -119,41 +120,16 @@ function useJSXOthers(otherNodes) {
   return others;
 }
 
-function useAltScrollSplitItems(splits: number[], items: any[], onChange: () => any = undefined) {
-  const [item, setItem] = useState(items[0]);
-  const scroll = useAltScroll();
-  const lastScroll = useRef(0);
-  useFrame(() => {
-      if (Math.abs(scroll - lastScroll.current) < 1e-6) {
-        
-          return;
-      }
-      if (splits.length == 0) {
-          return;
-      }
-      let i = 0;
-      while (scroll > splits[i] && i < splits.length) {
-          i++
-      }
-      if (items[i] !== item) {
-          onchange && onChange();
-      }
-      setItem(items[i]);
-      lastScroll.current = scroll;
-  })
-
-  return item;
-}
 
 export default function ExperimentalContent() {
 
   // destinations.push(new Vector3(10, 0, 0));
   // destinations.push(new Vector3(- 10, 0, 0));
 
-  const geometry = new BufferGeometry();
-  const lineMaterial = new LineBasicMaterial({
-    color: 0xfffffff
-  });
+  // const geometry = new BufferGeometry();
+  // const lineMaterial = new LineBasicMaterial({
+  //   color: 0xfffffff
+  // });
 
   const gltf = useBallGLTF();
 
@@ -164,38 +140,38 @@ export default function ExperimentalContent() {
   const [meshNodes, otherNodes] = useMeshNodes(gltf);
 
   // const albedoMap = useMemo(() => textureLoader.load('/models/ball/albedo.jpg'), [])
-  const normalMap = useMemo(() => textureLoader.load('/models/ball/normal2.jpg'), []);
-  normalMap.wrapS = RepeatWrapping;
-  normalMap.wrapT = RepeatWrapping;
-  normalMap.repeat.set(4, 4);
+  // const normalMap = useMemo(() => textureLoader.load('/models/ball/normal2.jpg'), []);
+  // normalMap.wrapS = RepeatWrapping;
+  // normalMap.wrapT = RepeatWrapping;
+  // normalMap.repeat.set(4, 4);
   // const roughnessMap = useMemo(() => textureLoader.load('/models/ball/roughness.jpg'), [])
   // const aoMap = useMemo(() => textureLoader.load('/models/ball/ao.jpg'), [])
   // const heightMap = useMemo(() => textureLoader.load('/models/ball/height.jpg'), [])
 
 
   const material = useMemo(() => {
-    const myUniforms = {
-      normalMap: {
-        type: 't',
-        value: normalMap
-      },
-      uBallCenter: { value: [0, 0, 0] }
-    }
-    const uniforms = UniformsUtils.merge([UniformsLib.lights, UniformsLib.common, UniformsLib.metalnessmap, UniformsLib.roughnessmap, myUniforms]);
-    // console.log(uniforms);
+  //   // const myUniforms = {
+  //   //   normalMap: {
+  //   //     type: 't',
+  //   //     value: normalMap
+  //   //   },
+  //   //   uBallCenter: { value: [0, 0, 0] }
+  //   // }
+  //   // const uniforms = UniformsUtils.merge([UniformsLib.lights, UniformsLib.common, UniformsLib.metalnessmap, UniformsLib.roughnessmap, myUniforms]);
+  //   // // console.log(uniforms);
 
     return new MeshStandardMaterial({
       color: 0x2f2f2f
 
     })
 
-    return new ShaderMaterial({
-      side: DoubleSide,
-      lights: true,
-      uniforms: uniforms,
-      fragmentShader: fragmentShader,
-      vertexShader: vertexShader
-    })
+    // return new ShaderMaterial({
+    //   side: DoubleSide,
+    //   lights: true,
+    //   uniforms: uniforms,
+    //   fragmentShader: fragmentShader,
+    //   vertexShader: vertexShader
+    // })
 
     // const material = new MeshStandardMaterial({
     //   color: 0x1f1f1f,
@@ -203,29 +179,29 @@ export default function ExperimentalContent() {
     // })
 
     // return material
-  }, [normalMap])
+  }, [])
 
-  material.onBeforeCompile = (shader, renderer) => {
-    // console.log('shaderchunk');
+  // material.onBeforeCompile = (shader, renderer) => {
+  //   // console.log('shaderchunk');
 
-    // replace comment with shader chunk actual code
-    Object.entries(ShaderChunk).forEach(chunk => {
-      const searchString = `//${chunk[0]}`;
-      if (shader.fragmentShader.indexOf(searchString) >= 0) {
-        console.log(`replacing fragment: ${searchString}`);
-        shader.fragmentShader = shader.fragmentShader.replace(searchString, chunk[1]);
-      }
+  //   // replace comment with shader chunk actual code
+  //   Object.entries(ShaderChunk).forEach(chunk => {
+  //     const searchString = `//${chunk[0]}`;
+  //     if (shader.fragmentShader.indexOf(searchString) >= 0) {
+  //       console.log(`replacing fragment: ${searchString}`);
+  //       shader.fragmentShader = shader.fragmentShader.replace(searchString, chunk[1]);
+  //     }
 
-      if (shader.vertexShader.indexOf(searchString) >= 0) {
-        console.log(`replacing vertex: ${searchString}`);
-        shader.vertexShader = shader.vertexShader.replace(searchString, chunk[1]);
-      }
-    })
+  //     if (shader.vertexShader.indexOf(searchString) >= 0) {
+  //       console.log(`replacing vertex: ${searchString}`);
+  //       shader.vertexShader = shader.vertexShader.replace(searchString, chunk[1]);
+  //     }
+  //   })
 
-    // shader.fragmentShader = shader.fragmentShader.replace('//shaderCommon', ShaderChunk.common);
-    // shader.fragmentShader = shader.fragmentShader.replace('//lights_pars_begin', ShaderChunk.light);
-    // console.log(shader.fragmentShader);
-  }
+  //   // shader.fragmentShader = shader.fragmentShader.replace('//shaderCommon', ShaderChunk.common);
+  //   // shader.fragmentShader = shader.fragmentShader.replace('//lights_pars_begin', ShaderChunk.light);
+  //   // console.log(shader.fragmentShader);
+  // }
 
   const jsxMeshes = useJSXMeshes(meshNodes, material);
   const jsxOthers = useJSXOthers(otherNodes);
@@ -233,75 +209,75 @@ export default function ExperimentalContent() {
   const ballRef = useRef();
   const radius = getMainBallRadius();
 
-  const start = new Vector3(- 10, 0, 0);
-  const end = start.clone().add(new Vector3(1, 0, 0).multiplyScalar(10));
-  const lineRef = useRef<any>();
-  const points = [
-    start, end,
-    new Vector3(- 10, 0, 0),
-    new Vector3(0, 10, 0),
-    new Vector3(10, 0, 0),
-    new Vector3(- 10, 0, 0)
-  ];
-  const lineAnimator = new LineAnimator(points, 1);
-  useFrame(state => {
-    if (lineRef.current) {
-      const points = lineAnimator.animateFrame(state);
-      lineRef.current.geometry.setFromPoints(points);
-    }
-  })
+  // const start = new Vector3(- 10, 0, 0);
+  // const end = start.clone().add(new Vector3(1, 0, 0).multiplyScalar(10));
+  // const lineRef = useRef<any>();
+  // const points = [
+  //   start, end,
+  //   new Vector3(- 10, 0, 0),
+  //   new Vector3(0, 10, 0),
+  //   new Vector3(10, 0, 0),
+  //   new Vector3(- 10, 0, 0)
+  // ];
+  // const lineAnimator = new LineAnimator(points, 1);
+  // useFrame(state => {
+  //   if (lineRef.current) {
+  //     const points = lineAnimator.animateFrame(state);
+  //     lineRef.current.geometry.setFromPoints(points);
+  //   }
+  // })
 
 
 
   const sceneRef = useRef<any>()
-  const ballCenter = new Vector3(0, 0, 0);
-  const meshesMovementProps = useMemo(() => {
-    const props = {}
-    // console.log(jsxMeshes && typeof jsxMeshes[0]);
+  // const ballCenter = new Vector3(0, 0, 0);
+  // const meshesMovementProps = useMemo(() => {
+  //   const props = {}
+  //   // console.log(jsxMeshes && typeof jsxMeshes[0]);
     
-    jsxMeshes.forEach((mesh_: any) => {
-      const mesh = mesh_.props;
-      props[mesh.name] = {
-        startPos: mesh.position.clone(),
-        endPos: mesh.position.clone().add(mesh.position.clone().normalize().multiplyScalar(Math.random() * 0.15 * mesh.position.length())),
-        random: Math.random(),
-        // animateStartPos: undefined,
-        animateEndPos: mesh.position.clone().add(mesh.position.clone().normalize().multiplyScalar(Math.random() * 50 * mesh.position.length())),
-        animateEndRot: new Quaternion().setFromEuler(new Euler(Math.PI * Math.random(), Math.PI * Math.random(), Math.PI * Math.random()))
-      }
-    })
-    return props
-  }, [jsxMeshes])
+  //   jsxMeshes.forEach((mesh_: any) => {
+  //     const mesh = mesh_.props;
+  //     props[mesh.name] = {
+  //       startPos: mesh.position.clone(),
+  //       endPos: mesh.position.clone().add(mesh.position.clone().normalize().multiplyScalar(Math.random() * 0.15 * mesh.position.length())),
+  //       random: Math.random(),
+  //       // animateStartPos: undefined,
+  //       animateEndPos: mesh.position.clone().add(mesh.position.clone().normalize().multiplyScalar(Math.random() * 50 * mesh.position.length())),
+  //       animateEndRot: new Quaternion().setFromEuler(new Euler(Math.PI * Math.random(), Math.PI * Math.random(), Math.PI * Math.random()))
+  //     }
+  //   })
+  //   return props
+  // }, [jsxMeshes])
 
-  const tempVec3 = new Vector3()
-  const scroll = useAltScroll();
+  // const tempVec3 = new Vector3()
+  // const scroll = useAltScroll();
 
-  useFrame((state: RootState) => {
+  // useFrame((state: RootState) => {
     
-    if (sceneRef.current && meshesMovementProps !== null) {
-      // console.log(meshesMovementProps);
-      if (scroll > 1e-6) {
-        sceneRef.current.children.forEach((mesh: Mesh) => {
-        const props = meshesMovementProps[mesh.name];
-        if (!props) {
-          return
-        }
-        const targetPosition = tempVec3.lerpVectors(props.startPos, props.animateEndPos, scroll);
-        mesh.position.lerp(targetPosition, 0.075) 
-        })
-      } else {
-        const time = state.clock.getElapsedTime()
-        sceneRef.current.children.forEach((mesh: Mesh) => {
-          const props = meshesMovementProps[mesh.name];
-          if (!props) {
-            return
-          }
-          const targetPosition = tempVec3.lerpVectors(props.startPos, props.endPos, (Math.sin(time + props.random * 37) + 1) / 2);
-          mesh.position.lerp(targetPosition, 0.075)
-        })
-      }
-    }
-  })
+  //   if (sceneRef.current && meshesMovementProps !== null) {
+  //     // console.log(meshesMovementProps);
+  //     if (scroll > 1e-6) {
+  //       sceneRef.current.children.forEach((mesh: Mesh) => {
+  //       const props = meshesMovementProps[mesh.name];
+  //       if (!props) {
+  //         return
+  //       }
+  //       const targetPosition = tempVec3.lerpVectors(props.startPos, props.animateEndPos, scroll);
+  //       mesh.position.lerp(targetPosition, 0.075) 
+  //       })
+  //     } else {
+  //       const time = state.clock.getElapsedTime()
+  //       sceneRef.current.children.forEach((mesh: Mesh) => {
+  //         const props = meshesMovementProps[mesh.name];
+  //         if (!props) {
+  //           return
+  //         }
+  //         const targetPosition = tempVec3.lerpVectors(props.startPos, props.endPos, (Math.sin(time + props.random * 37) + 1) / 2);
+  //         mesh.position.lerp(targetPosition, 0.075)
+  //       })
+  //     }
+  //   }
+  // })
 
 
   // useFrame(state => {
@@ -324,6 +300,16 @@ export default function ExperimentalContent() {
 
   // })
 
+  // useEffect(() => {
+    
+  //   console.log([...jsxOthers, ...jsxMeshes]);
+    
+
+  // }, [jsxOthers, jsxMeshes])
+  
+  const rotation = useRef(new Euler().setFromQuaternion(new Quaternion().random()).toArray());
+  const rotation2 = useRef(new Euler().setFromQuaternion(new Quaternion().random()).toArray());
+
   return (
     <>
       {/* <line_ ref={lineRef} geometry={geometry} material={lineMaterial} /> */}
@@ -338,11 +324,16 @@ export default function ExperimentalContent() {
         <meshStandardMaterial />
       </mesh> */}
 
-      <group ref={ballRef} scale={radius} dispose={null}>
+      {/* <group ref={ballRef} scale={radius} dispose={null}>
         <group ref={sceneRef} name='Scene'>
           {[...jsxOthers, ...jsxMeshes] as any[]}
         </group>
-      </group>
+      </group> */}
+
+      <MainBall ballRadius={8} /> 
+      <MainBall ballRadius={5} rotation={rotation2.current} delay={0.012}/> 
+      <MainBall ballRadius={3} rotation={rotation.current} delay={0.01}/> 
+      <MainBall ballRadius={3} rotation={rotation2.current} delay={0.02}/> 
     </>
   )
 }

@@ -14,7 +14,7 @@ import {
 } from 'postprocessing'
 import {useFrame, useThree} from "@react-three/fiber"
 import { forwardRef, useCallback, useContext, useEffect, useRef, useState } from "react";
-import { MathUtils, SpotLightHelper, Vector3 } from "three";
+import { Color, MathUtils, SpotLightHelper, Vector3 } from "three";
 import { lightPositionContext } from "../common/contexts";
 import { getDeviceDependent } from "../common/misc";
 import { initMobileScroll } from "../common/scroll";
@@ -27,6 +27,9 @@ import { useAltScroll } from "../common/threejs";
 import assert from "assert";
 
 const tempVector3 = new Vector3(10, -10, -10);
+const tempColor = new Color()
+const white = new Color(0xffffff);
+const black = new Color(0x000000);
 
 function Content() {
 
@@ -37,9 +40,11 @@ function Content() {
     }, []);
 
     const [sunSize, setSunSize] = useState(7);
+    const [sunEmissive, setSunEmissive] = useState(white)
     const scroll = useAltScroll();
     useFrame(() => {
-        setSunSize(MathUtils.lerp(7, 0, scroll))
+        setSunSize(Math.max(MathUtils.lerp(7, -50, scroll), 0))
+        setSunEmissive(tempColor.lerpColors(white, black, scroll))
     })
 
 
@@ -74,7 +79,7 @@ function Content() {
                 /> */}
                 <mesh ref={handleSun}>
                     <sphereGeometry args={[sunSize, 32,16]} />
-                    <meshStandardMaterial emissive={0xffffff}/>
+                    <meshStandardMaterial emissive={sunEmissive}/>
                 </mesh>
 
                 <EffectComposer>
