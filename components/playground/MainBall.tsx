@@ -1,6 +1,6 @@
 import { RootState, useFrame } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Euler, Group, Mesh, MeshStandardMaterial, Quaternion, Vector3 } from "three";
+import { Box3, Euler, Group, Mesh, MeshStandardMaterial, Object3D, Quaternion, Vector3 } from "three";
 import { useBallGLTF, useMeshNodes, useJsx as useJsx } from "../common/model";
 import { useAltScroll } from "../common/threejs";
 
@@ -94,14 +94,19 @@ type MeshAnimationPropValue = {
     random: number,
 }
 
+const tempBox3 = new Box3();
+
 function useMeshAnimationProps(meshes: Mesh[]): MeshAnimationProps {
     return useMemo(() => {
         const props = {}
         meshes.forEach(mesh => {
             // assumed ball center is 0,0,0
+            const volume = getVolume(mesh);
+            console.log(volume);
+            
             const dist2center = mesh.position.length();
             const floatEndPos = mesh.position.clone().add(mesh.position.clone().normalize().multiplyScalar(Math.random() * 0.15 * dist2center));
-            const expandEndPos = mesh.position.clone().add(mesh.position.clone().normalize().multiplyScalar((Math.random() + 0.5) * 10 * Math.exp(dist2center * 2)));
+            const expandEndPos = mesh.position.clone().add(mesh.position.clone().normalize().multiplyScalar((Math.random() + 0.5) * 10 * Math.exp((1/(volume+1)) * 2)));
             // const expandEndRot = new Quaternion().setFromEuler(new Euler(Math.PI * Math.random() * rotFactor, Math.PI * Math.random() * rotFactor, Math.PI * Math.random() * rotFactor));
             const expandEndRot = new Quaternion().random();
             const rotAmount = Math.random() * dist2center * 10;
@@ -117,4 +122,10 @@ function useMeshAnimationProps(meshes: Mesh[]): MeshAnimationProps {
         })
         return props;
     }, [meshes]);
+}
+
+function getVolume(object3d: Object3D) {
+    tempBox3.setFromObject(object3d);
+    tempVec3.subVectors(tempBox3.max, tempBox3.min)
+    return Math.abs(tempVec3.x) * Math.abs(tempVec3.y) * Math.abs(tempVec3.z)
 }

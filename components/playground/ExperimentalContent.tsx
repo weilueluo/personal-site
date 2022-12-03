@@ -307,8 +307,8 @@ export default function ExperimentalContent() {
 
   // }, [jsxOthers, jsxMeshes])
   
-  const rotation = useRef(new Euler().setFromQuaternion(new Quaternion().random()).toArray());
-  const rotation2 = useRef(new Euler().setFromQuaternion(new Quaternion().random()).toArray());
+  const rotation = useRef(new Euler().setFromQuaternion(new Quaternion().random()).toArray() as unknown as number[]);
+  const rotation2 = useRef(new Euler().setFromQuaternion(new Quaternion().random()).toArray() as unknown as number[]);
 
   return (
     <>

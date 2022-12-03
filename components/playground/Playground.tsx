@@ -47,6 +47,15 @@ function Content() {
         setSunEmissive(tempColor.lerpColors(white, black, scroll))
     })
 
+    const postEffects = useRef(
+        <>
+            <DepthOfField focusDistance={0} focalLength={1.2} bokehScale={2} height={480} />
+            <Bloom intensity={1} luminanceThreshold={0} luminanceSmoothing={0.9} height={200} />
+            <Noise opacity={0.02} />
+            <Vignette eskil={false} offset={0.1} darkness={1.1} /> 
+        </>
+    )
+
 
     const [godRay, setGodRay] = useState(null);
     const handleSun = useCallback(sun => {
@@ -81,15 +90,16 @@ function Content() {
                     <sphereGeometry args={[sunSize, 32,16]} />
                     <meshStandardMaterial emissive={sunEmissive}/>
                 </mesh>
-
-                <EffectComposer>
-                    {/* <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={2} height={480} />
-                    <Bloom luminanceThreshold={0} luminanceSmoothing={0.9} height={300} />
-                    <Noise opacity={0.02} />
-                    <Vignette eskil={false} offset={0.1} darkness={1.1} /> */}
-                    {godRay}
-                </EffectComposer>
             </lightPositionContext.Provider>
+
+            <EffectComposer>
+                {/* <DepthOfField focusDistance={0} focalLength={1.2} bokehScale={2} height={480} /> */}
+                {/* <Bloom intensity={1} luminanceThreshold={0} luminanceSmoothing={0.9} height={200} /> */}
+                {/* <Noise opacity={0.02} />
+                <Vignette eskil={false} offset={0.1} darkness={1.1} /> */}
+                {postEffects.current}
+                {godRay}
+            </EffectComposer>
 
             <GradientBackground />
             <OrbitControls
