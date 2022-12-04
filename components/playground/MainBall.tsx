@@ -102,10 +102,10 @@ function useMeshAnimationProps(meshes: Mesh[]): MeshAnimationProps {
         meshes.forEach(mesh => {
             // assumed ball center is 0,0,0
             const volume = getVolume(mesh);
-            console.log(volume);
+            // console.log(volume);
             
             const dist2center = mesh.position.length();
-            const floatEndPos = mesh.position.clone().add(mesh.position.clone().normalize().multiplyScalar(Math.random() * 0.15 * dist2center));
+            const floatEndPos = mesh.position.clone().add(mesh.position.clone().normalize().multiplyScalar(Math.random() * 0.03 * Math.exp((1/(volume+1)) * 2)));
             const expandEndPos = mesh.position.clone().add(mesh.position.clone().normalize().multiplyScalar((Math.random() + 0.5) * 10 * Math.exp((1/(volume+1)) * 2)));
             // const expandEndRot = new Quaternion().setFromEuler(new Euler(Math.PI * Math.random() * rotFactor, Math.PI * Math.random() * rotFactor, Math.PI * Math.random() * rotFactor));
             const expandEndRot = new Quaternion().random();

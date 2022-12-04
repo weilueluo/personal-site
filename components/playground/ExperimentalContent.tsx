@@ -312,24 +312,6 @@ export default function ExperimentalContent() {
 
   return (
     <>
-      {/* <line_ ref={lineRef} geometry={geometry} material={lineMaterial} /> */}
-      {/* <Text text={'Hello Text'} /> */}
-
-      {/* <mesh material={material}>
-        <sphereGeometry args={[8, 32, 16]} />
-      </mesh> */}
-
-      {/* <mesh position={[5, 5, 5]}>
-        <sphereGeometry args={[2, 32, 16]}/>
-        <meshStandardMaterial />
-      </mesh> */}
-
-      {/* <group ref={ballRef} scale={radius} dispose={null}>
-        <group ref={sceneRef} name='Scene'>
-          {[...jsxOthers, ...jsxMeshes] as any[]}
-        </group>
-      </group> */}
-
       <MainBall ballRadius={8} /> 
       <MainBall ballRadius={5} rotation={rotation2.current} delay={0.012}/> 
       <MainBall ballRadius={3} rotation={rotation.current} delay={0.01}/> 

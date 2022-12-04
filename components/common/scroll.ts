@@ -114,3 +114,22 @@ export function useScrollPercent(from: number, to: number) {
 
     return scroll;
 }
+
+export function getAltScroll() {
+    const scroll = getScrollPercent() / 100
+
+    let altScroll = scroll * 2;
+    if (altScroll > 1) {
+        altScroll = 2 - altScroll;
+    }
+    const maxScroll = 0.9999 // avoid flashing animation at 100%
+    altScroll = clamp(altScroll, 0, maxScroll);
+
+    // make number stay at 0.9999 longer
+    const stay_duration = 0.15;
+    altScroll =
+        (Math.min(maxScroll, altScroll + stay_duration) - stay_duration) /
+        (1 - stay_duration);
+
+    return altScroll;
+}

@@ -1,4 +1,4 @@
-import { OrbitControls, useFBO, useHelper } from "@react-three/drei";
+import { OrbitControls, ScrollControls, useFBO, useHelper } from "@react-three/drei";
 import {
     EffectComposer,
     DepthOfField,
@@ -17,7 +17,7 @@ import { forwardRef, useCallback, useContext, useEffect, useRef, useState } from
 import { Color, MathUtils, SpotLightHelper, Vector3 } from "three";
 import { lightPositionContext } from "../common/contexts";
 import { getDeviceDependent } from "../common/misc";
-import { initMobileScroll } from "../common/scroll";
+import { getAltScroll, initMobileScroll } from "../common/scroll";
 import { getNScrollPages } from "../home/scene/global";
 import GradientBackground from "../home/scene/GradientBackground";
 import Stars from "../home/scene/Stars";
@@ -25,6 +25,7 @@ import { MyCanvas, MyLights } from "../home/ThreeJsHome";
 import ExperimentalContent from "./ExperimentalContent";
 import { useAltScroll } from "../common/threejs";
 import assert from "assert";
+import { useScrollLerp, useGodray } from "./godray";
 
 const tempVector3 = new Vector3(10, -10, -10);
 const tempColor = new Color()
@@ -39,41 +40,36 @@ function Content() {
         initMobileScroll();
     }, []);
 
-    const [sunSize, setSunSize] = useState(7);
-    const [sunEmissive, setSunEmissive] = useState(white)
     const scroll = useAltScroll();
-    useFrame(() => {
-        setSunSize(Math.max(MathUtils.lerp(7, -50, scroll), 0))
-        setSunEmissive(tempColor.lerpColors(white, black, scroll))
-    })
+    
+    // useFrame(() => {
+    //     setSunSize(Math.max(MathUtils.lerp(7, -50, scroll), 0))
+    // })
 
-    const postEffects = useRef(
-        <>
-            <DepthOfField focusDistance={0} focalLength={1.2} bokehScale={2} height={480} />
-            <Bloom intensity={1} luminanceThreshold={0} luminanceSmoothing={0.9} height={200} />
-            <Noise opacity={0.02} />
-            <Vignette eskil={false} offset={0.1} darkness={1.1} /> 
-        </>
-    )
+    // const [godrayBall, godrayEffect] = useGodray();
 
+    // const effectComposerRef = useRef();
+    // useFrame(() => {
+    //       if (effectComposerRef.current) {
+    //         effectComposerRef.current.autoRenderToScreen = true;
+    //       }
+    // })
+    // const postEffects = useRef(
+    //     <EffectComposer ref={effectComposerRef} >
+    //         {/* <DepthOfField focusDistance={0} focalLength={1.2} bokehScale={2} height={480} /> */}
+    //         <Bloom intensity={1} luminanceThreshold={0} luminanceSmoothing={0.9} height={200} />
+    //         <Noise opacity={0.02} />
+    //         <Vignette eskil={false} offset={0.1} darkness={1.1} /> 
+    //         {godrayEffect}
+    //     </EffectComposer>
+    // )
 
-    const [godRay, setGodRay] = useState(null);
-    const handleSun = useCallback(sun => {
-        setGodRay( <GodRays
-            sun={sun}
-            blendFunction={BlendFunction.SCREEN}
-            samples={50}
-            density={0.97}
-            decay={0.85}
-            weight={0.6}
-            exposure={1}
-            clampMax={1}
-            // width={Resizer.AUTO_SIZE}
-            // height={Resizer.AUTO_SIZE}
-            kernelSize={KernelSize.LARGE}
-            blur={1}
-        />)
-    }, [])
+    // useFrame(() => {
+    //     if (bloomRef.current) {
+    //         bloomRef.current.intensity = 1. - scroll;
+    //     }
+    // })
+
 
     return (
         <>
@@ -86,20 +82,16 @@ function Content() {
                     position={[10,10,0]}
                     intensity={100}
                 /> */}
-                <mesh ref={handleSun}>
+                {/* {godrayBall} */}
+                {/* <mesh ref={handleSun}>
                     <sphereGeometry args={[sunSize, 32,16]} />
-                    <meshStandardMaterial emissive={sunEmissive}/>
-                </mesh>
+                    <meshStandardMaterial emissive={white}/>
+                </mesh> */}
             </lightPositionContext.Provider>
 
-            <EffectComposer>
-                {/* <DepthOfField focusDistance={0} focalLength={1.2} bokehScale={2} height={480} /> */}
-                {/* <Bloom intensity={1} luminanceThreshold={0} luminanceSmoothing={0.9} height={200} /> */}
-                {/* <Noise opacity={0.02} />
-                <Vignette eskil={false} offset={0.1} darkness={1.1} /> */}
-                {postEffects.current}
-                {godRay}
-            </EffectComposer>
+            {/* {postEffects.current} */}
+
+
 
             <GradientBackground />
             <OrbitControls
@@ -203,15 +195,114 @@ export default function Playground() {
     useEffect(() => {
         setPages(getNScrollPages())
     }, [])
+
+
     return (
         <>
             <MyCanvas>
                 <Content />
+                <PostEffect />
             </MyCanvas>
             <div>
                 <div style={{ height: `${pages * 100}vh`, width: `100vw` }} />
             </div>
         </>
 
+    )
+}
+
+
+function PostEffect() {
+    // const godray = useGodray();
+    const sunRef = useRef(null);
+    const godrayRef = useRef(null);
+    const dofRef = useRef(null)
+    const bloomRef = useRef(null);
+    const matRef = useRef();
+
+    useFrame((state) => {
+        const scroll = getAltScroll()
+        if (sunRef.current) {
+            const scale = Math.max(MathUtils.lerp(1, -10, scroll), 0.1)
+            sunRef.current.scale.set(scale, scale, scale)
+        }
+        if (godrayRef.current) {
+            // clampMax
+            // decay
+            // density
+            // exposure
+            // inputBuffer
+            // lightPosition
+            // weight
+            const uniforms = godrayRef.current.godRaysMaterial.uniforms;
+            // uniforms.decay.value = Math.min(MathUtils.lerp(0.85, 0, scroll), 0.95)
+            // uniforms.weight.value = Math.max(MathUtils.lerp(0.6, 1.0, scroll), 1.0)
+            // uniforms.decay.value = Math.min(MathUtils.lerp(0.85, 2.0, scroll), 0.95)
+            // uniforms.exposure.value = Math.max(MathUtils.lerp(1, -7, scroll), 0)
+            // uniforms.density.value = Math.max(MathUtils.lerp(1, -7, scroll), 0)
+            uniforms.clampMax.value = Math.max(MathUtils.lerp(1, -7, scroll), 0)
+        }
+
+        if (dofRef.current) {
+            // console.log(dofRef.current);
+            
+        }
+
+        if (bloomRef.current) {
+            // console.log(bloomRef.current);
+            bloomRef.current.uniforms.get('intensity').value =  Math.max(MathUtils.lerp(1, 0, Math.max(-1/(scroll+1e-6)+9, 0)), 0)
+            // console.log(Math.max(MathUtils.lerp(1, 0, Math.max(-1/(scroll+1e-6)+6, 0)), 0));
+            // console.log(bloomRef.current.uniforms.get('intensity').value)
+        }
+
+        if (matRef.current) {
+            // console.log(matRef.current);
+            matRef.current.color.set(tempColor.lerpColors(white, black, MathUtils.clamp(-1/(scroll+1e-6)+9, 0, 1)))
+            matRef.current.emissive.set(tempColor.lerpColors(white, black, MathUtils.clamp(-1/(scroll+1e-6)+9, 0, 1)))
+            matRef.needsUpdate = true
+            // console.log(MathUtils.clamp(-1/(scroll+1e-6)+9, 0, 1));
+            // console.log(matRef.current.color);
+            
+            
+        }
+    })
+
+
+    const [godray, setGodray] = useState(null);
+    const handleSun = useCallback((sun) => {
+        sunRef.current = sun
+        setGodray(
+            <GodRays
+                    ref={godrayRef}
+                    sun={sunRef.current}
+                    blendFunction={BlendFunction.SCREEN}
+                    samples={50}
+                    density={0.97}
+                    decay={0.85}
+                    weight={0.6}
+                    exposure={1}
+                    clampMax={1}
+                    // width={Resizer.AUTO_SIZE}
+                    // height={Resizer.AUTO_SIZE}
+                    kernelSize={KernelSize.LARGE}
+                    blur={1}
+                />
+        )
+    }, [])
+
+    return (
+        <>
+            <EffectComposer >
+                <DepthOfField ref={dofRef} focusDistance={0.5} focalLength={5} bokehScale={5} height={480} />
+                <Bloom ref={bloomRef} intensity={1} luminanceThreshold={0} luminanceSmoothing={0.75} height={200} />
+                <Noise opacity={0.05} />
+                <Vignette eskil={false} offset={0.1} darkness={1.1} /> 
+                {godray}
+            </EffectComposer>
+            <mesh ref={handleSun}>
+                <sphereGeometry args={[7.5, 32, 16]} />
+                <meshStandardMaterial ref={matRef} emissive={white} />
+            </mesh>
+        </>
     )
 }
