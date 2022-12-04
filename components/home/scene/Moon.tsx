@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { useContext, useRef } from 'react';
 import { Matrix3, ShaderMaterial } from 'three';
 import { lightPositionContext } from '../../common/contexts';
-import { useAltScroll } from '../../common/threejs';
+import { getAltScroll } from '../../common/scroll';
 import moon_fs from './shaders/moon_fs.glsl';
 import moon_vs from './shaders/moon_vs.glsl';
 
@@ -26,9 +26,8 @@ export default function Moon() {
 
     const meshRef = useRef(null);
 
-    const scrollAmount = useAltScroll()
     useFrame(() => {
-        uniforms.uScrollAmount.value = scrollAmount;
+        uniforms.uScrollAmount.value = getAltScroll();
     })
 
     useFrame(() => {

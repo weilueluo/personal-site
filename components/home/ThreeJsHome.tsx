@@ -8,8 +8,7 @@ import { lerp } from 'three/src/math/MathUtils';
 import { lightPositionContext } from '../common/contexts';
 import { polar2xyz } from '../common/math';
 import { getDeviceDependent } from '../common/misc';
-import { initMobileScroll } from '../common/scroll';
-import { useAltScroll } from '../common/threejs';
+import { getAltScroll } from '../common/scroll';
 import About from './scene/About';
 import Ball from './scene/Ball';
 import CV from './scene/CV';
@@ -33,11 +32,6 @@ const fontLoader = new FontLoader();
 export function MyContent() {
     const enableOrbitControl = getDeviceDependent(false, true); // disable scroll on mobile, because it is used to play animation
 
-    useEffect(() => {
-        initMobileScroll();
-    }, []);
-
-
     const [lightPosition, setLightPosition] = useState(tempVector3);
     const theta = useRef(0);
     const thetaSpeed = 0.04;
@@ -57,9 +51,8 @@ export function MyContent() {
     // const controlRef = useRef(undefined);
 
     // camera 
-    const scrolledAmount = useAltScroll();
     useFrame(state => {
-        tempVec3.lerpVectors(initCameraPosition, targetCameraPosition, scrolledAmount);
+        tempVec3.lerpVectors(initCameraPosition, targetCameraPosition, getAltScroll());
         state.camera.position.set(...tempVec3.toArray());
     })
 
@@ -102,7 +95,7 @@ export function MyContent() {
         // }
         
         // setFontsize(lerp(0.0, targetSize, scrolledAmount))\
-        setOpacity(lerp(0.0, 1.0, scrolledAmount))
+        setOpacity(lerp(0.0, 1.0, getAltScroll()))
     })
 
     useEffect(() => {
@@ -203,7 +196,7 @@ export default function ThreeJsHome() {
     );
 }
 
-React.useLayoutEffect = React.useEffect;  // suppress useLayoutEffect warning, because we did not use it, dont know where it comes from
+// React.useLayoutEffect = React.useEffect;  // suppress useLayoutEffect warning, because we did not use it, dont know where it comes from
 
 
 export function MyCanvas(props) {
@@ -236,7 +229,6 @@ export function MyCanvas(props) {
                 physicallyCorrectLights: true,
             }}
             raycaster={{}}
-            // shadowMap={true}
             shadows={true}
             onCreated={onCreated}
             {...otherProps}

@@ -8,6 +8,7 @@ import {
 } from 'three';
 import { lightPositionContext } from '../../common/contexts';
 import { uniformSphereSample, polar2xyz } from '../../common/math';
+import { getAltScroll } from '../../common/scroll';
 import { useAltScroll } from '../../common/threejs';
 import { getMainBallRadius, getVisibleRadius } from './global';
 
@@ -71,7 +72,6 @@ export default function Stars() {
 
     // shader
     const lightPosition = useContext(lightPositionContext);
-    const scrolledAmount = useAltScroll();
     const uniforms = {
         uLightPosition: { value: tempVector3 },
         uScrolledAmount: { value: 0 },
@@ -86,6 +86,7 @@ export default function Stars() {
     })
 
     useFrame(() => {
+        const scrolledAmount = getAltScroll();
         material.uniforms.uLightPosition.value = lightPosition;
         material.uniforms.uScrolledAmount.value = scrolledAmount;
     })

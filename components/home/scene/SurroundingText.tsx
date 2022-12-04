@@ -6,7 +6,7 @@ import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 
 import { lightPositionContext } from '../../common/contexts';
 import { getDeviceDependent } from '../../common/misc';
-import { useAltScroll } from '../../common/threejs';
+import { getAltScroll } from '../../common/scroll';
 import text_fs from './shaders/text_fs.glsl';
 import text_vs from './shaders/text_vs.glsl';
 
@@ -14,7 +14,6 @@ import text_vs from './shaders/text_vs.glsl';
 const tempVector = new Vector3(0, 0, 0)
 
 export default function SurroundingText(props) {
-    const altScroll = useAltScroll();
 
     const [meshes, setMeshes] = useState([])
     const [meshMaterials, setMeshMaterials] = useState([])
@@ -46,9 +45,10 @@ export default function SurroundingText(props) {
         })
     }, [characters, fontLoader, fontSize, lightPosition, props.fadeInOnScrollSpeed, props.rotationZ])
 
-    const scrollAmount = useAltScroll()
 
     useFrame((state) => {
+        const altScroll = getAltScroll();
+
         const radius = props.radius + props.expandOnScrollSpeed * altScroll;
         // const opacity = 1 - (props.expandOnScrollSpeed == 0 ? 0 : altScroll);
         const time = state.clock.getElapsedTime();
@@ -67,7 +67,7 @@ export default function SurroundingText(props) {
             mat.uniforms.uPhi.value = phi;
             mat.uniforms.uTheta.value = theta;
             mat.uniforms.uCenterOffset.value = offset;
-            mat.uniforms.uScrollAmount.value = scrollAmount;
+            mat.uniforms.uScrollAmount.value = altScroll;
             mat.uniforms.uPosition.value = geometry.boundingBox.getCenter(tempVector)
             mat.uniforms.uLightPosition.value = lightPosition;
 

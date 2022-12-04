@@ -17,13 +17,12 @@ import { forwardRef, useCallback, useContext, useEffect, useRef, useState } from
 import { Color, Material, MathUtils, Mesh, MeshStandardMaterial, SpotLightHelper, Vector3 } from "three";
 import { lightPositionContext } from "../common/contexts";
 import { getDeviceDependent } from "../common/misc";
-import { getAltScroll, initMobileScroll } from "../common/scroll";
+import { getAltScroll } from "../common/scroll";
 import { getNScrollPages } from "../home/scene/global";
 import GradientBackground from "../home/scene/GradientBackground";
 import Stars from "../home/scene/Stars";
 import { MyCanvas, MyLights } from "../home/ThreeJsHome";
 import ExperimentalContent from "./ExperimentalContent";
-import { useAltScroll } from "../common/threejs";
 import assert from "assert";
 import { useScrollLerp, useGodray } from "./godray";
 
@@ -36,11 +35,6 @@ function Content() {
 
     const enableOrbitControl = getDeviceDependent(false, true); // disable scroll on mobile, because it is used to play animation
 
-    useEffect(() => {
-        initMobileScroll();
-    }, []);
-
-    const scroll = useAltScroll();
     
     // useFrame(() => {
     //     setSunSize(Math.max(MathUtils.lerp(7, -50, scroll), 0))

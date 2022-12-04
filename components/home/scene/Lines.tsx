@@ -3,7 +3,7 @@ import { useContext, useEffect, useRef } from 'react';
 import { InstancedMesh, Object3D, ShaderMaterial, Vector3 } from 'three';
 import { lightPositionContext } from '../../common/contexts';
 import { polar2xyz, uniformSphereSample } from '../../common/math';
-import { useAltScroll } from '../../common/threejs';
+import { getAltScroll } from '../../common/scroll';
 import { getMainBallRadius, getVisibleRadius } from './global';
 import line_fs from './shaders/line_fs.glsl';
 import line_vs from './shaders/line_vs.glsl';
@@ -127,8 +127,8 @@ export default function Lines() {
         depthWrite: false
     })
 
-    const scrollAmount = useAltScroll();
     useFrame(() => {
+        const scrollAmount = getAltScroll();
         material.uniforms.uScrolledAmount.value = scrollAmount;
         material.uniforms.uLightPosition.value = lightPosition;
     })

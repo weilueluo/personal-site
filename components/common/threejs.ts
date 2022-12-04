@@ -37,25 +37,6 @@ export function useOddClick() {
     return [() => setOddClick(!oddClick), oddClick];
 }
 
-export function useAltScroll() {
-    const scroll = useScrollPercent(0, 100);
-
-    let altScroll = scroll * 2;
-    if (altScroll > 1) {
-        altScroll = 2 - altScroll;
-    }
-    const maxScroll = 0.9999 // avoid flashing animation at 100%
-    altScroll = clamp(altScroll, 0, maxScroll);
-
-    // make number stay at 0.9999 longer
-    const stay_duration = 0.15;
-    altScroll =
-        (Math.min(maxScroll, altScroll + stay_duration) - stay_duration) /
-        (1 - stay_duration);
-
-    return altScroll;
-}
-
 const intersectResult = new Array()
 
 export function useCurrent3DHover(): Object3D {

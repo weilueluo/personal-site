@@ -1,12 +1,11 @@
 import { useFrame } from '@react-three/fiber'
 import { Color, ShaderMaterial } from 'three'
-import { useAltScroll } from '../../common/threejs'
+import { getAltScroll } from '../../common/scroll'
 
 import background_fs from './shaders/background_fs.glsl'
 import background_vs from './shaders/background_vs.glsl'
 
 export default function GradientBackground() {
-    const altScroll = useAltScroll()
 
     const uniforms = {
         uColorA: { value: new Color(0x1e3966) },
@@ -21,6 +20,7 @@ export default function GradientBackground() {
     })
 
     useFrame(() => {
+        const altScroll = getAltScroll();
         material.uniforms.uScrolledAmount.value = altScroll;
     })
 

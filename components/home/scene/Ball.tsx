@@ -28,6 +28,7 @@ import { useMaxAnimationDuration } from '../../common/modelAnimation';
 import { getMeshCenter, use3DParentHover, useAltScroll } from '../../common/threejs';
 import { generateTextShape } from './Text';
 import ThreeSurroundingText from './ThreeSurroundingText';
+import { getAltScroll } from '../../common/scroll';
 
 
 const FLOAT_BALL = false;
@@ -184,8 +185,6 @@ function MainBall(props) {
     const jsxMeshes = useJSXMeshes(meshNodes, materials);
     const jsxOthers = useJSXOthers(otherNodes);
 
-    const altScroll = useAltScroll();
-
     const ballRef = useRef();
 
     const state = useThree();
@@ -193,6 +192,7 @@ function MainBall(props) {
     // update ball rotation
     let lastTime = 0;
     useFrame((state) => {
+        const altScroll = getAltScroll();
         const scrolled = altScroll > 0.15;
 
         let time: number;
@@ -389,7 +389,6 @@ function useAnimationOnScroll(gltf, ballRef, animations) {
     const maxAnimationDuration = useMaxAnimationDuration(animations);
 
     let mixer = useRef(null);
-    const altScroll = useAltScroll();
 
     useEffect(() => {
         mixer.current = new AnimationMixer(ballRef.current);
@@ -403,6 +402,7 @@ function useAnimationOnScroll(gltf, ballRef, animations) {
     useFrame(() => {
         // set animation state
         if (mixer.current) {
+            const altScroll = getAltScroll();
             mixer.current.setTime(maxAnimationDuration * altScroll);
         }
     })

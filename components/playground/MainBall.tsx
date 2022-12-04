@@ -2,7 +2,7 @@ import { RootState, useFrame } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Box3, Euler, Group, Mesh, MeshStandardMaterial, Object3D, Quaternion, Vector3 } from "three";
 import { useBallGLTF, useMeshNodes, useJsx as useJsx } from "../common/model";
-import { useAltScroll } from "../common/threejs";
+import { getAltScroll } from "../common/scroll";
 
 
 
@@ -12,19 +12,14 @@ export type MainBallProps = {
     delay?: number
 }
 
-function useAltScrollWithDelay(delay: number) {
-    const scroll = useAltScroll();
-    const [scrollWithDelay, setScrollWithDelay] = useState(0);
+function getAltScrollWithDelay(delay: number) {
+    const scroll = getAltScroll();
     const available = 1 - delay;
-    useEffect(() => {
-        if (scroll < delay) {
-            setScrollWithDelay(0)
-        } else {
-            setScrollWithDelay(scroll * available);
-        }
-    }, [available, delay, scroll])
-
-    return scrollWithDelay;
+    if (scroll < delay) {
+        return 0
+    } else {
+        return scroll * available
+    }
 }
 
 const tempVec3 = new Vector3();
@@ -42,10 +37,11 @@ export default function MainBall(props: MainBallProps) {
     const ballRef = useRef<Group>();
     const sceneRef = useRef<Group>();
 
-    const scroll = useAltScrollWithDelay(props.delay || 0);
 
     useFrame((state: RootState) => {
+
         if (sceneRef.current && animationProps !== null) {
+            const scroll = getAltScrollWithDelay(props.delay || 0);
             // console.log(meshesMovementProps);
             const time = state.clock.getElapsedTime()
             sceneRef.current.children.forEach((mesh: Mesh) => {
