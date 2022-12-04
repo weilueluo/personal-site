@@ -73,7 +73,7 @@ export default function RSS() {
                 rotation={[Math.PI / 4, 0, 0]}
                 material={material}
             >
-                <sphereBufferGeometry args={[sphereRadius, ballDetails, ballDetails]} />
+                <sphereGeometry args={[sphereRadius, ballDetails, ballDetails]} />
             </mesh>
         </group>
     );

@@ -6,7 +6,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { LineAnimator } from "../animation/LineAnimator";
-import { useAltScroll } from "../common/threejs";
 import { getMainBallRadius } from "../home/scene/global";
 import fragmentShader from "./playground_ball.fs.glsl";
 import vertexShader from "./playground_ball.vs.glsl";
@@ -312,7 +311,7 @@ export default function ExperimentalContent() {
 
   return (
     <>
-      <MainBall ballRadius={8} /> 
+      <MainBall ballRadius={8} float/> 
       <MainBall ballRadius={5} rotation={rotation2.current} delay={0.012}/> 
       <MainBall ballRadius={3} rotation={rotation.current} delay={0.01}/> 
       <MainBall ballRadius={3} rotation={rotation2.current} delay={0.02}/> 

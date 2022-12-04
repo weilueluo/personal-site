@@ -1,37 +1,79 @@
-import { RootState, useFrame } from "@react-three/fiber";
+import { RootState, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Box3, Euler, Group, Mesh, MeshStandardMaterial, Object3D, Quaternion, Vector3 } from "three";
+import { Box3, Euler, Group, Material, Mesh, MeshLambertMaterial, MeshStandardMaterial, MixOperation, Object3D, Quaternion, ShaderLib, ShaderMaterial, UniformsLib, UniformsUtils, Vector3 } from "three";
 import { useBallGLTF, useMeshNodes, useJsx as useJsx } from "../common/model";
-import { getAltScroll } from "../common/scroll";
+import { getAltScroll, getAltScrollWithDelay } from "../common/scroll";
 
+function computeMaterial(sharedMat: MeshStandardMaterial, uniforms: {[key: string]: {"value": any}}) {
+    const mat = sharedMat.clone()
+    // if (Math.random() < 0.15) {
+    //     mat.wireframe = true;
+    // }
+    
+    mat.onBeforeCompile = (shader, renderer) => {
+        // console.log(shader);
+        shader.uniforms = UniformsUtils.merge([shader.uniforms, uniforms]);
+        
+        shader.vertexShader = shader.vertexShader.replace('void main() {', `
+        
+        void main() {
+        
+        `)
+
+        shader.fragmentShader = shader.fragmentShader.replace('void main() {', `
+        uniform vec3 meshPosition;
+        void main() {`)
+
+        shader.fragmentShader = shader.fragmentShader.replace('vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;', `
+        vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;
+        outgoingLight = mix(outgoingLight, meshPosition, 0.1);
+        //diffuseColor.a = 0.9;
+        `)
+        
+        console.log(shader.fragmentShader);
+        
+    }
+
+    return mat
+}
+
+function computeMaterials(meshNodes) {
+    const sharedMat = new MeshStandardMaterial({ 
+        color: 0x000000, 
+        transparent: true, 
+        // roughness: 0,
+        // metalness: 0
+    })
+    return meshNodes.map(node => {
+        return computeMaterial(sharedMat, {
+            meshPosition: { value: node.position }
+        })
+    })
+}
 
 
 export type MainBallProps = {
     ballRadius: number,
     rotation?: number[],
-    delay?: number
+    delay?: number,
+    float?: boolean
 }
 
-function getAltScrollWithDelay(delay: number) {
-    const scroll = getAltScroll();
-    const available = 1 - delay;
-    if (scroll < delay) {
-        return 0
-    } else {
-        return scroll * available
-    }
-}
+
 
 const tempVec3 = new Vector3();
+
+
 
 export default function MainBall(props: MainBallProps) {
 
     const gltf = useBallGLTF('/models/ball/sphere.glb');
 
-    const material = useRef(new MeshStandardMaterial({ color: 0x2f2f2f }));
+    // const material = useRef(new MeshStandardMaterial({ color: 0x2f2f2f }))
 
     const [meshNodes, otherNodes] = useMeshNodes(gltf);
-    const meshJsx = useJsx(meshNodes, otherNodes, material.current);
+    const materials = useMemo(() => computeMaterials(meshNodes), [meshNodes])
+    const meshJsx = useJsx(meshNodes, otherNodes, materials);
     const animationProps = useMeshAnimationProps(meshNodes);
 
     const ballRef = useRef<Group>();
@@ -45,16 +87,16 @@ export default function MainBall(props: MainBallProps) {
             // console.log(meshesMovementProps);
             const time = state.clock.getElapsedTime()
             sceneRef.current.children.forEach((mesh: Mesh) => {
-                const props = animationProps[mesh.name];
-                if (!props) {
+                const aniProps = animationProps[mesh.name];
+                if (!aniProps) {
                   return
                 }
-                const targetPosition = tempVec3.lerpVectors(props.startPos, props.expandEndPos, scroll);
+                const targetPosition = tempVec3.lerpVectors(aniProps.startPos, aniProps.expandEndPos, scroll);
                 mesh.position.lerp(targetPosition, 0.075)
-                const targetRotation = props.startQuaternion.clone().slerp(props.expandEndRot, scroll * props.expandRotAmount);
+                const targetRotation = aniProps.startQuaternion.clone().slerp(aniProps.expandEndRot, scroll * aniProps.expandRotAmount);
                 mesh.quaternion.slerp(targetRotation, 0.075);
-                if (scroll < 1e-6) {
-                    const targetPosition = tempVec3.lerpVectors(props.startPos, props.floatEndPos, (Math.sin(time + props.random * 37) + 1) / 2);
+                if (scroll < 1e-6 && props.float) {
+                    const targetPosition = tempVec3.lerpVectors(aniProps.startPos, aniProps.floatEndPos, (Math.sin(time + aniProps.random * 37) + 1) / 2);
                     mesh.position.lerp(targetPosition, 0.075)
                 }
             })

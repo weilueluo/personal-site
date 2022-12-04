@@ -25,7 +25,7 @@ import { lightPositionContext } from '../../common/contexts';
 import { LineAnimator } from '../../animation/LineAnimator';
 import { TextAnimator } from '../../animation/TextAnimation';
 import { useMaxAnimationDuration } from '../../common/modelAnimation';
-import { getMeshCenter, use3DParentHover, useAltScroll } from '../../common/threejs';
+import { getMeshCenter, use3DParentHover } from '../../common/threejs';
 import { generateTextShape } from './Text';
 import ThreeSurroundingText from './ThreeSurroundingText';
 import { getAltScroll } from '../../common/scroll';

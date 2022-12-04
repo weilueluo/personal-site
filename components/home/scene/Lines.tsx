@@ -135,7 +135,7 @@ export default function Lines() {
 
     return (
         <instancedMesh ref={meshRef} args={[null, null, amount + aroundLightAmount]} material={material}>
-            <cylinderBufferGeometry args={[lineRadius, lineRadius, 16, 32]} />
+            <cylinderGeometry args={[lineRadius, lineRadius, 16, 32]} />
         </instancedMesh>
     );
 }

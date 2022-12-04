@@ -11,18 +11,16 @@ export default function Content() {
         setPages(getNScrollPages())
     }, [])
 
+    // <section className={styles.titleSection}>
+    //                 <div className={styles.header}>
+    //                     <h2>{'Hello I\'m Weilue'}</h2>
+    //                     {/* <span>I am Weilue</span> */}
+    //                 </div>
+    //             </section>
     
     return (
         <>
-
             <div className={styles.contentContainer}>
-                <section className={styles.titleSection}>
-                    <div className={styles.header}>
-                        <h2>{'Hello I\'m Weilue'}</h2>
-                        {/* <span>I am Weilue</span> */}
-                    </div>
-                </section>
-
                 <div>
                     <div style={{ height: `${pages * 100}vh`, width: `100vw` }} />
                 </div>

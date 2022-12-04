@@ -31,8 +31,6 @@ export function getScrollPercent() {
 }
 
 
-
-
 export function getAltScroll() {
     const scroll = getScrollPercent() / 100
 
@@ -50,4 +48,14 @@ export function getAltScroll() {
         (1 - stay_duration);
 
     return altScroll;
+}
+
+export function getAltScrollWithDelay(delay: number) {
+    const scroll = getAltScroll();
+    const available = 1 - delay;
+    if (scroll < delay) {
+        return 0
+    } else {
+        return scroll * available
+    }
 }

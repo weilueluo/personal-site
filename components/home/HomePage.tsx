@@ -12,9 +12,7 @@ export default function HomePage() {
     return (
        <>
         <div className={styles.allContainer}>
-            <div className={styles.threejsContainer}>
-                <ThreeJsHome />
-            </div>
+            <ThreeJsHome />
             <LoaderProgress />
             <NavigationPanel />
             <Content />

@@ -180,6 +180,8 @@ export function PlaygroundLights() {
             />  */}
 
             <ambientLight color={0xffffff} intensity={10} />
+
+            <pointLight color={0xffffff} intensity={1000.0} position={[0,0,0]} />
         </>
     );
 }

@@ -93,7 +93,7 @@ export default function Stars() {
 
     return (
         <instancedMesh ref={meshRef} args={[null, null, amount]} material={material}>
-            <sphereBufferGeometry args={[0.05, 12, 12]} />
+            <sphereGeometry args={[0.05, 12, 12]} />
             {/* <octahedronBufferGeometry args={[size, 0]} /> */}
             {/* <meshStandardMaterial
                 color={0x4287f5}

@@ -82,7 +82,7 @@ export default function Moon() {
                 position={lightPosition}
                 material={material}
             >
-                <sphereBufferGeometry args={[0.5, 16, 16]} />
+                <sphereGeometry args={[0.5, 16, 16]} />
             </mesh>
         </>
     )

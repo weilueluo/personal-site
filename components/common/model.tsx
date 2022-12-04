@@ -56,22 +56,22 @@ export function useMeshNodes(gltf) {
   return [meshes, others];
 }
 
-export function useJsx(meshNodes, otherNodes, material): ThreeElements[] {
+export function useJsx(meshNodes, otherNodes, materials): ThreeElements[] {
   const [jsx, setJsx] = useState<ThreeElements[]>([]);
 
   useMemo(() => {
-    if (!material || !meshNodes || !otherNodes) {
+    if (!materials || !meshNodes || !otherNodes) {
       return;
     }
     const newJsx = []
 
-    meshNodes.forEach(meshNode => {
+    meshNodes.forEach((meshNode, i) => {
       newJsx.push(
         <mesh
           key={meshNode.uuid}
           name={meshNode.name}
           geometry={meshNode.geometry}
-          material={material}
+          material={materials[i]}
           position={meshNode.position}
         />
       );
@@ -89,7 +89,7 @@ export function useJsx(meshNodes, otherNodes, material): ThreeElements[] {
 
     setJsx(newJsx);
 
-  }, [meshNodes, otherNodes, material]);
+  }, [meshNodes, otherNodes, materials]);
 
   return jsx;
 }
