@@ -69,7 +69,7 @@ export default function MainBall(props: MainBallProps) {
         if (!ballRef.current) return;
         const rot = props.rotation || [0,0,0];
         ballRef.current.rotation.set(rot[0], rot[1], rot[2])
-    }, [])
+    }, [props.rotation])
 
     return (
         <group ref={ballRef} name='Ball' scale={props.ballRadius} dispose={null}>

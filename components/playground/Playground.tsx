@@ -14,7 +14,7 @@ import {
 } from 'postprocessing'
 import {useFrame, useThree} from "@react-three/fiber"
 import { forwardRef, useCallback, useContext, useEffect, useRef, useState } from "react";
-import { Color, MathUtils, SpotLightHelper, Vector3 } from "three";
+import { Color, Material, MathUtils, Mesh, MeshStandardMaterial, SpotLightHelper, Vector3 } from "three";
 import { lightPositionContext } from "../common/contexts";
 import { getDeviceDependent } from "../common/misc";
 import { getAltScroll, initMobileScroll } from "../common/scroll";
@@ -130,7 +130,7 @@ export function PlaygroundLights() {
         lightPos2.lerp(state.camera.position, 0.2)
         
         setLightPosition2(lightPos2);
-    }, [])
+    }, [state.camera.position, state.camera.up])
 
 
     const mapSize = getDeviceDependent(128, 512);
@@ -214,11 +214,10 @@ export default function Playground() {
 
 function PostEffect() {
     // const godray = useGodray();
-    const sunRef = useRef(null);
-    const godrayRef = useRef(null);
-    const dofRef = useRef(null)
-    const bloomRef = useRef(null);
-    const matRef = useRef();
+    const sunRef = useRef<any>(null);
+    const godrayRef = useRef<any>(null);
+    const bloomRef = useRef<any>(null);
+    const matRef = useRef<any>();
 
     useFrame((state) => {
         const scroll = getAltScroll()
@@ -243,10 +242,6 @@ function PostEffect() {
             uniforms.clampMax.value = Math.max(MathUtils.lerp(1, -7, scroll), 0)
         }
 
-        if (dofRef.current) {
-            // console.log(dofRef.current);
-            
-        }
 
         if (bloomRef.current) {
             // console.log(bloomRef.current);
@@ -259,7 +254,7 @@ function PostEffect() {
             // console.log(matRef.current);
             matRef.current.color.set(tempColor.lerpColors(white, black, MathUtils.clamp(-1/(scroll+1e-6)+9, 0, 1)))
             matRef.current.emissive.set(tempColor.lerpColors(white, black, MathUtils.clamp(-1/(scroll+1e-6)+9, 0, 1)))
-            matRef.needsUpdate = true
+            // matRef.needsUpdate = true
             // console.log(MathUtils.clamp(-1/(scroll+1e-6)+9, 0, 1));
             // console.log(matRef.current.color);
             
@@ -293,7 +288,7 @@ function PostEffect() {
     return (
         <>
             <EffectComposer >
-                <DepthOfField ref={dofRef} focusDistance={0.5} focalLength={5} bokehScale={5} height={480} />
+                <DepthOfField focusDistance={0.5} focalLength={5} bokehScale={5} height={480} />
                 <Bloom ref={bloomRef} intensity={1} luminanceThreshold={0} luminanceSmoothing={0.75} height={200} />
                 <Noise opacity={0.05} />
                 <Vignette eskil={false} offset={0.1} darkness={1.1} /> 

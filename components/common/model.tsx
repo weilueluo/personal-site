@@ -29,7 +29,7 @@ export function useBallGLTF(modelPath: string) {
         console.error(error);
       }
     );
-  }, []);
+  }, [modelPath]);
 
   return gltf
 }
