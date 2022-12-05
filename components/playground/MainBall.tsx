@@ -22,16 +22,14 @@ function computeMaterial(sharedMat: MeshStandardMaterial, uniforms: {[key: strin
 
         shader.fragmentShader = shader.fragmentShader.replace('void main() {', `
         uniform vec3 meshPosition;
+        uniform float specularFactor;
         void main() {`)
 
         shader.fragmentShader = shader.fragmentShader.replace('vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;', `
-        vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;
+        vec3 outgoingLight = totalDiffuse + totalSpecular * specularFactor + totalEmissiveRadiance;
         outgoingLight = mix(outgoingLight, meshPosition, 0.1);
         //diffuseColor.a = 0.9;
         `)
-        
-        console.log(shader.fragmentShader);
-        
     }
 
     return mat
@@ -41,12 +39,13 @@ function computeMaterials(meshNodes) {
     const sharedMat = new MeshStandardMaterial({ 
         color: 0x000000, 
         transparent: true, 
-        // roughness: 0,
-        // metalness: 0
+        roughness: 0.9,
+        metalness: 0.5
     })
     return meshNodes.map(node => {
         return computeMaterial(sharedMat, {
-            meshPosition: { value: node.position }
+            meshPosition: { value: node.position },
+            specularFactor: { value: 1 }
         })
     })
 }
@@ -144,7 +143,7 @@ function useMeshAnimationProps(meshes: Mesh[]): MeshAnimationProps {
             
             const dist2center = mesh.position.length();
             const floatEndPos = mesh.position.clone().add(mesh.position.clone().normalize().multiplyScalar(Math.random() * 0.03 * Math.exp((1/(volume+1)) * 2)));
-            const expandEndPos = mesh.position.clone().add(mesh.position.clone().normalize().multiplyScalar((Math.random() + 0.5) * 10 * Math.exp((1/(volume+1)) * 2)));
+            const expandEndPos = mesh.position.clone().add(mesh.position.clone().normalize().multiplyScalar((Math.random() + 0.5) * 15 * Math.exp((1/(volume+1)) * 2)));
             // const expandEndRot = new Quaternion().setFromEuler(new Euler(Math.PI * Math.random() * rotFactor, Math.PI * Math.random() * rotFactor, Math.PI * Math.random() * rotFactor));
             const expandEndRot = new Quaternion().random();
             const rotAmount = Math.random() * dist2center * 10;

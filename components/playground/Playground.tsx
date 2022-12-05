@@ -24,7 +24,6 @@ import Stars from "../home/scene/Stars";
 import { MyCanvas, MyLights } from "../home/ThreeJsHome";
 import ExperimentalContent from "./ExperimentalContent";
 import assert from "assert";
-import { useScrollLerp, useGodray } from "./godray";
 
 const tempVector3 = new Vector3(10, -10, -10);
 const tempColor = new Color()
@@ -181,7 +180,6 @@ export function PlaygroundLights() {
 
             <ambientLight color={0xffffff} intensity={10} />
 
-            <pointLight color={0xffffff} intensity={1000.0} position={[0,0,0]} />
         </>
     );
 }
@@ -214,13 +212,24 @@ function PostEffect() {
     const godrayRef = useRef<any>(null);
     const bloomRef = useRef<any>(null);
     const matRef = useRef<any>();
+    const pointLightRef = useRef<any>();
 
     useFrame((state) => {
-        const scroll = getAltScroll()
+        const scroll = getAltScroll();
+
+        const peak = 0.1;
+        const climb = scroll * scroll * (1/(peak*peak));
+        const fall = 1 - Math.max((scroll-peak) * (1/(1-peak)), 0.1)
+        const peakFactor = scroll > peak ? fall : climb;
+
+        const fallFactor = MathUtils.clamp(-1/(scroll+1e-6)+9, 0, 1)//Math.max(, 0);  // 0, when fall go to 1
+        const climbFactor = MathUtils.lerp(1, 0, fallFactor); // inverse of fall factor
+
         if (sunRef.current) {
             const scale = Math.max(MathUtils.lerp(1, -10, scroll), 0.1)
             sunRef.current.scale.set(scale, scale, scale)
         }
+
         if (godrayRef.current) {
             // clampMax
             // decay
@@ -230,31 +239,21 @@ function PostEffect() {
             // lightPosition
             // weight
             const uniforms = godrayRef.current.godRaysMaterial.uniforms;
-            // uniforms.decay.value = Math.min(MathUtils.lerp(0.85, 0, scroll), 0.95)
-            // uniforms.weight.value = Math.max(MathUtils.lerp(0.6, 1.0, scroll), 1.0)
-            // uniforms.decay.value = Math.min(MathUtils.lerp(0.85, 2.0, scroll), 0.95)
-            // uniforms.exposure.value = Math.max(MathUtils.lerp(1, -7, scroll), 0)
-            // uniforms.density.value = Math.max(MathUtils.lerp(1, -7, scroll), 0)
             uniforms.clampMax.value = Math.max(MathUtils.lerp(1, -7, scroll), 0)
+            uniforms.exposure.value = peakFactor * 9.5 + 0.5;
         }
 
-
         if (bloomRef.current) {
-            // console.log(bloomRef.current);
-            bloomRef.current.uniforms.get('intensity').value =  Math.max(MathUtils.lerp(1, 0, Math.max(-1/(scroll+1e-6)+9, 0)), 0)
-            // console.log(Math.max(MathUtils.lerp(1, 0, Math.max(-1/(scroll+1e-6)+6, 0)), 0));
-            // console.log(bloomRef.current.uniforms.get('intensity').value)
+            bloomRef.current.uniforms.get('intensity').value = climbFactor
         }
 
         if (matRef.current) {
-            // console.log(matRef.current);
-            matRef.current.color.set(tempColor.lerpColors(white, black, MathUtils.clamp(-1/(scroll+1e-6)+9, 0, 1)))
-            matRef.current.emissive.set(tempColor.lerpColors(white, black, MathUtils.clamp(-1/(scroll+1e-6)+9, 0, 1)))
-            // matRef.needsUpdate = true
-            // console.log(MathUtils.clamp(-1/(scroll+1e-6)+9, 0, 1));
-            // console.log(matRef.current.color);
-            
-            
+            matRef.current.color.set(tempColor.lerpColors(white, black, fallFactor))
+            matRef.current.emissive.set(tempColor.lerpColors(white, black, fallFactor))
+        }
+
+        if (pointLightRef.current) {
+            pointLightRef.current.intensity = peakFactor * 1000 *  climbFactor;
         }
     })
 
@@ -275,7 +274,7 @@ function PostEffect() {
                     clampMax={1}
                     // width={Resizer.AUTO_SIZE}
                     // height={Resizer.AUTO_SIZE}
-                    kernelSize={KernelSize.LARGE}
+                    kernelSize={KernelSize.SMALL}
                     blur={1}
                 />
         )
@@ -285,15 +284,16 @@ function PostEffect() {
         <>
             <EffectComposer >
                 <DepthOfField focusDistance={0.5} focalLength={5} bokehScale={5} height={480} />
-                <Bloom ref={bloomRef} intensity={1} luminanceThreshold={0} luminanceSmoothing={0.75} height={200} />
-                <Noise opacity={0.05} />
-                <Vignette eskil={false} offset={0.1} darkness={1.1} /> 
+                <Bloom ref={bloomRef} intensity={2} luminanceThreshold={0} luminanceSmoothing={0.75} height={200} />
+                <Noise opacity={0.02} />
+                <Vignette eskil={false} offset={0} darkness={0.85} /> 
                 {godray}
             </EffectComposer>
             <mesh ref={handleSun}>
                 <sphereGeometry args={[7.5, 32, 16]} />
                 <meshStandardMaterial ref={matRef} emissive={white} />
             </mesh>
+            <pointLight ref={pointLightRef} color={0xffffff} intensity={1.0} position={[0,0,0]} />
         </>
     )
 }

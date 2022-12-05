@@ -1,8 +1,6 @@
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useState } from "react";
 import { Mesh, Object3D, Vector3 } from "three";
-import { clamp } from "./math";
-import { useScrollPercent } from "./scroll";
 
 export function useCursorPointerOnHover(hover) {
     useEffect(() => {

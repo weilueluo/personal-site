@@ -3,7 +3,8 @@ import { useEffect, useMemo, useRef } from 'react';
 import { Group, Vector3 } from 'three';
 
 import { getDeviceDependent, isDevEnv } from '../../common/misc';
-import { use3DHover, useAltScroll } from '../../common/threejs';
+import { getAltScroll } from '../../common/scroll';
+import { use3DHover } from '../../common/threejs';
 import { useInnerBallMaterial } from './hooks';
 import ThreeSurroundingText from './ThreeSurroundingText';
 
@@ -33,7 +34,6 @@ export default function RSS() {
         }
     };
 
-    const scrollAmount = useAltScroll();
     const groupRef = useRef();
     const finalPosition = useMemo(
         () => getDeviceDependent(mobilePosition, desktopPosition),
@@ -42,7 +42,7 @@ export default function RSS() {
     useFrame((state) => {
         const group = groupRef.current as Group;
         if (!group) return;
-
+        const scrollAmount = getAltScroll();
         tempVector.lerpVectors(zeroVector, finalPosition, scrollAmount);
         group.position.set(tempVector.x, tempVector.y, tempVector.z);
     });

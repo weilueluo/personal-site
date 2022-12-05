@@ -9,7 +9,6 @@ import {
 import { lightPositionContext } from '../../common/contexts';
 import { uniformSphereSample, polar2xyz } from '../../common/math';
 import { getAltScroll } from '../../common/scroll';
-import { useAltScroll } from '../../common/threejs';
 import { getMainBallRadius, getVisibleRadius } from './global';
 
 import star_fs from './shaders/star_fs.glsl';
