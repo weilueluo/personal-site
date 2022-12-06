@@ -15,7 +15,6 @@ import star_fs from './shaders/star_fs.glsl';
 import star_vs from './shaders/star_vs.glsl';
 
 const tempObject = new Object3D();
-const size = 0.1;
 const amount = 1000;
 
 function getRandomPositions() {
@@ -52,7 +51,6 @@ export default function Stars() {
         if (mesh == null) {
             return;
         }
-        // console.log(mesh);
 
         for (let i = 0; i < amount; i++) {
 
@@ -81,7 +79,7 @@ export default function Stars() {
         vertexShader: star_vs,
         fragmentShader: star_fs,
         transparent: true,
-        depthWrite: false
+        depthWrite: true
     })
 
     useFrame(() => {

@@ -27,7 +27,7 @@ function computeMaterial(sharedMat: MeshStandardMaterial, uniforms: {[key: strin
 
         shader.fragmentShader = shader.fragmentShader.replace('vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;', `
         vec3 outgoingLight = totalDiffuse + totalSpecular * specularFactor + totalEmissiveRadiance;
-        outgoingLight = mix(outgoingLight, meshPosition, 0.1);
+        outgoingLight = mix(outgoingLight, meshPosition, 0.05);
         //diffuseColor.a = 0.9;
         `)
     }
@@ -39,8 +39,10 @@ function computeMaterials(meshNodes) {
     const sharedMat = new MeshStandardMaterial({ 
         color: 0x000000, 
         transparent: true, 
-        roughness: 0.9,
-        metalness: 0.5
+        roughness: 1,
+        metalness: 0,
+        depthWrite: true,
+        depthTest: true
     })
     return meshNodes.map(node => {
         return computeMaterial(sharedMat, {
@@ -77,7 +79,6 @@ export default function MainBall(props: MainBallProps) {
 
     const ballRef = useRef<Group>();
     const sceneRef = useRef<Group>();
-
 
     useFrame((state: RootState) => {
 

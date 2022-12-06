@@ -24,6 +24,8 @@ import Stars from "../home/scene/Stars";
 import { MyCanvas, MyLights } from "../home/ThreeJsHome";
 import ExperimentalContent from "./ExperimentalContent";
 import assert from "assert";
+import Lines from "../home/scene/Lines";
+import Moon from "../home/scene/Moon";
 
 const tempVector3 = new Vector3(10, -10, -10);
 const tempColor = new Color()
@@ -67,7 +69,9 @@ function Content() {
     return (
         <>
             <lightPositionContext.Provider value={tempVector3}>
-                {/* <Stars /> */}
+                <Stars />
+                <Lines />
+                <Moon />
                 <PlaygroundLights />
                 <ExperimentalContent />
 
@@ -135,7 +139,7 @@ export function PlaygroundLights() {
                 ref={lightRef1}
                 position={lightPosition1}
                 color={0xffffff}
-                intensity={50}
+                intensity={1000}
                 castShadow
                 shadow-mapSize-height={mapSize}
                 shadow-mapSize-width={mapSize}
@@ -146,7 +150,7 @@ export function PlaygroundLights() {
                 shadow-camera-top={shadowCam}
                 shadow-camera-bottom={-shadowCam}
             />
-            <spotLight
+            {/* <spotLight
                 ref={lightRef2}
                 position={lightPosition2}
                 color={0xffffff}
@@ -160,7 +164,7 @@ export function PlaygroundLights() {
                 shadow-camera-right={shadowCam}
                 shadow-camera-top={shadowCam}
                 shadow-camera-bottom={-shadowCam}
-            />
+            /> */}
 
             {/* <spotLight
                 ref={lightRef2}
@@ -178,7 +182,7 @@ export function PlaygroundLights() {
                 shadow-camera-bottom={-10}
             />  */}
 
-            <ambientLight color={0xffffff} intensity={10} />
+            <ambientLight color={0xffffff} intensity={1} />
 
         </>
     );
@@ -266,7 +270,7 @@ function PostEffect() {
                     ref={godrayRef}
                     sun={sunRef.current}
                     blendFunction={BlendFunction.SCREEN}
-                    samples={50}
+                    samples={60}
                     density={0.97}
                     decay={0.85}
                     weight={0.6}
@@ -274,7 +278,7 @@ function PostEffect() {
                     clampMax={1}
                     // width={Resizer.AUTO_SIZE}
                     // height={Resizer.AUTO_SIZE}
-                    kernelSize={KernelSize.SMALL}
+                    kernelSize={KernelSize.MEDIUM}
                     blur={1}
                 />
         )
@@ -290,7 +294,7 @@ function PostEffect() {
                 {godray}
             </EffectComposer>
             <mesh ref={handleSun}>
-                <sphereGeometry args={[7.5, 32, 16]} />
+                <sphereGeometry args={[7, 32, 16]} />
                 <meshStandardMaterial ref={matRef} emissive={white} />
             </mesh>
             <pointLight ref={pointLightRef} color={0xffffff} intensity={1.0} position={[0,0,0]} />
