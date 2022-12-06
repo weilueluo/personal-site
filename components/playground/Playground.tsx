@@ -27,7 +27,7 @@ import assert from "assert";
 import Lines from "../home/scene/Lines";
 import Moon from "../home/scene/Moon";
 import { polar2xyz } from "../common/math";
-import { NewMoon } from "./NEwMoon";
+import { NewMoon } from "./NewMoon";
 
 const tempVector3 = new Vector3(10, -10, -10);
 const tempColor = new Color()
@@ -239,7 +239,7 @@ function PostEffect() {
         const climbFactor = MathUtils.lerp(1, 0, fallFactor); // inverse of fall factor
 
         if (sunRef.current) {
-            const scale = Math.max(MathUtils.lerp(1, -10, scroll), 0.1)
+            const scale = Math.max(MathUtils.lerp(1, -10, scroll), 0.2)
             sunRef.current.scale.set(scale, scale, scale)
         }
 
