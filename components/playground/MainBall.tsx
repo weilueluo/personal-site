@@ -27,7 +27,7 @@ function computeMaterial(sharedMat: MeshStandardMaterial, uniforms: {[key: strin
 
         shader.fragmentShader = shader.fragmentShader.replace('vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;', `
         vec3 outgoingLight = totalDiffuse + totalSpecular * specularFactor + totalEmissiveRadiance;
-        outgoingLight = mix(outgoingLight, meshPosition, 0.05);
+        outgoingLight = mix(outgoingLight, meshPosition, 0.01);
         //diffuseColor.a = 0.9;
         `)
     }
@@ -69,6 +69,7 @@ const tempVec3 = new Vector3();
 export default function MainBall(props: MainBallProps) {
 
     const gltf = useBallGLTF('/models/ball/sphere.glb');
+    // const gltf = useBallGLTF('/models/ball/ball-transformed.glb')
 
     // const material = useRef(new MeshStandardMaterial({ color: 0x2f2f2f }))
 

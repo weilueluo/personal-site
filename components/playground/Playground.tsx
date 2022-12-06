@@ -26,6 +26,8 @@ import ExperimentalContent from "./ExperimentalContent";
 import assert from "assert";
 import Lines from "../home/scene/Lines";
 import Moon from "../home/scene/Moon";
+import { polar2xyz } from "../common/math";
+import { NewMoon } from "./NEwMoon";
 
 const tempVector3 = new Vector3(10, -10, -10);
 const tempColor = new Color()
@@ -36,7 +38,32 @@ function Content() {
 
     const enableOrbitControl = getDeviceDependent(false, true); // disable scroll on mobile, because it is used to play animation
 
-    
+
+    const theta = useRef(0);
+    const thetaSpeed = 0.04;
+    const phi = useRef(0.3);
+    const phiSpeed = 0.00;
+    const moonRadius = getDeviceDependent(5, 10);
+
+    const lightRef = useRef<any>();
+    const moonRef = useRef<any>();
+    const [lightPosition, setLightPosition] = useState(tempVector3)
+
+    // rotate light source around ball
+    useFrame(() => {
+        theta.current += Math.atan2(thetaSpeed, moonRadius);
+        phi.current += Math.atan2(phiSpeed, moonRadius);
+        const [x, y, z] = polar2xyz(theta.current, phi.current, moonRadius);
+        // tempVector3.set(x, y, z);
+        if (lightRef.current) {
+            lightRef.current.position.set(x,y,z)
+        }
+        if (moonRef.current) {
+            moonRef.current.position.set(x,y,z)
+        }
+        setLightPosition(tempVector3.set(x,y,z));
+    })
+
     // useFrame(() => {
     //     setSunSize(Math.max(MathUtils.lerp(7, -50, scroll), 0))
     // })
@@ -68,12 +95,14 @@ function Content() {
 
     return (
         <>
-            <lightPositionContext.Provider value={tempVector3}>
-                <Stars />
-                <Lines />
-                <Moon />
-                <PlaygroundLights />
-                <ExperimentalContent />
+        <lightPositionContext.Provider value={lightPosition}>
+            <Stars />
+            <Lines />
+            <NewMoon ref={moonRef} />
+            <PlaygroundLights ref={lightRef}/>
+            <ExperimentalContent />
+        </lightPositionContext.Provider>
+               
 
                 {/* <pointLight
                     position={[10,10,0]}
@@ -84,7 +113,6 @@ function Content() {
                     <sphereGeometry args={[sunSize, 32,16]} />
                     <meshStandardMaterial emissive={white}/>
                 </mesh> */}
-            </lightPositionContext.Provider>
 
             {/* {postEffects.current} */}
 
@@ -106,29 +134,9 @@ function Content() {
 }
 
 
-export function PlaygroundLights() {
-    const lightRef1 = useRef();
-    const lightRef2 = useRef();
-
+export const PlaygroundLights = forwardRef((props, ref: any) => {
     // useHelper(lightRef1, SpotLightHelper, 'cyan')
-    // useHelper(lightRef2, SpotLightHelper, 'yellow')
-
-    const [lightPosition1, setLightPosition1] = useState(new Vector3(0,0,0));
-    const [lightPosition2, setLightPosition2] = useState(new Vector3(0,0,0));
-    const state = useThree()
-
-    useEffect(() => {
-        const lightPos1 = state.camera.position.clone().cross(state.camera.up).multiplyScalar(1);
-        lightPos1.lerp(state.camera.position, 0.2)
-        
-        setLightPosition1(lightPos1);
-
-        const lightPos2 = state.camera.up.clone().cross(state.camera.position).multiplyScalar(1);
-        lightPos2.lerp(state.camera.position, 0.2)
-        
-        setLightPosition2(lightPos2);
-    }, [state.camera.position, state.camera.up])
-
+    const lightPosition = useContext(lightPositionContext)
 
     const mapSize = getDeviceDependent(128, 512);
     const shadowCam = 50;
@@ -136,10 +144,10 @@ export function PlaygroundLights() {
     return (
         <>
             <spotLight
-                ref={lightRef1}
-                position={lightPosition1}
+                ref={ref}
+                position={lightPosition}
                 color={0xffffff}
-                intensity={1000}
+                intensity={100}
                 castShadow
                 shadow-mapSize-height={mapSize}
                 shadow-mapSize-width={mapSize}
@@ -186,7 +194,8 @@ export function PlaygroundLights() {
 
         </>
     );
-}
+});
+PlaygroundLights.displayName = "PlaygroundLights"
 
 export default function Playground() {
     const [pages, setPages] = useState(1);
@@ -294,7 +303,7 @@ function PostEffect() {
                 {godray}
             </EffectComposer>
             <mesh ref={handleSun}>
-                <sphereGeometry args={[7, 32, 16]} />
+                <sphereGeometry args={[7.75, 32, 16]} />
                 <meshStandardMaterial ref={matRef} emissive={white} />
             </mesh>
             <pointLight ref={pointLightRef} color={0xffffff} intensity={1.0} position={[0,0,0]} />
