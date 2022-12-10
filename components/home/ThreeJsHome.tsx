@@ -119,12 +119,20 @@ export function MyContent() {
         textGeometry.scale(1, 1, 1)
     }, [textGeometry])
 
+
+    // const rotation1 = useRef(new Euler().setFromQuaternion(new Quaternion().random()).toArray() as unknown as number[]);
+    // const rotation2 = useRef(new Euler().setFromQuaternion(new Quaternion().random()).toArray() as unknown as number[]);
+    // const rotation3 = useRef(new Euler().setFromQuaternion(new Quaternion().random()).toArray() as unknown as number[]);
+
   
     return (
         <>
             <lightPositionContext.Provider value={lightPosition}>
                 <Moon />
                 <Ball />
+                {/* <MainBall ballRadius={7} rotation={rotation1.current} />
+                <MainBall ballRadius={6} rotation={rotation2.current}/>
+                <MainBall ballRadius={3} rotation={rotation3.current}/> */}
                 {/* <CV />
                 <RSS />
                 <About /> */}
@@ -218,6 +226,7 @@ export default function ThreeJsHome() {
             <MainBall ballRadius={3} rotation={rotation.current} delay={0.01}/> 
             <MainBall ballRadius={3} rotation={rotation2.current} delay={0.02}/> 
             <PostEffect /> */}
+
         </MyCanvas>
     );
 }
@@ -277,41 +286,41 @@ function PostEffect() {
     })
 
 
-    const [godray, setGodray] = useState(null);
-    const handleSun = useCallback((sun) => {
-        sunRef.current = sun
-        setGodray(
-            <GodRays
-                    ref={godrayRef}
-                    sun={sunRef.current}
-                    blendFunction={BlendFunction.SCREEN}
-                    samples={50}
-                    density={0.97}
-                    decay={0.85}
-                    weight={0.6}
-                    exposure={1}
-                    clampMax={1}
-                    // width={Resizer.AUTO_SIZE}
-                    // height={Resizer.AUTO_SIZE}
-                    kernelSize={KernelSize.LARGE}
-                    blur={1}
-                />
-        )
-    }, [])
+    // const [godray, setGodray] = useState(null);
+    // const handleSun = useCallback((sun) => {
+    //     sunRef.current = sun
+    //     setGodray(
+    //         <GodRays
+    //                 ref={godrayRef}
+    //                 sun={sunRef.current}
+    //                 blendFunction={BlendFunction.SCREEN}
+    //                 samples={50}
+    //                 density={0.97}
+    //                 decay={0.85}
+    //                 weight={0.6}
+    //                 exposure={1}
+    //                 clampMax={1}
+    //                 // width={Resizer.AUTO_SIZE}
+    //                 // height={Resizer.AUTO_SIZE}
+    //                 kernelSize={KernelSize.LARGE}
+    //                 blur={1}
+    //             />
+    //     )
+    // }, [])
 
     return (
         <>
             <EffectComposer >
                 <DepthOfField focusDistance={0.5} focalLength={5} bokehScale={5} height={480} />
-                <Bloom ref={bloomRef} intensity={1} luminanceThreshold={0} luminanceSmoothing={0.75} height={200} />
+                <Bloom ref={bloomRef} intensity={0.1} luminanceThreshold={0} luminanceSmoothing={0.75} height={200} />
                 <Noise opacity={0.05} />
                 <Vignette eskil={false} offset={0.1} darkness={1.1} /> 
-                {godray}
+                {/* {godray} */}
             </EffectComposer>
-            <mesh ref={handleSun}>
+            {/* <mesh ref={handleSun}>
                 <sphereGeometry args={[7.5, 32, 16]} />
                 <meshStandardMaterial ref={matRef} emissive={white} />
-            </mesh>
+            </mesh> */}
         </>
     )
 }

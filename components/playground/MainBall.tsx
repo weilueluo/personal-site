@@ -27,9 +27,18 @@ function computeMaterial(sharedMat: MeshStandardMaterial, uniforms: {[key: strin
 
         shader.fragmentShader = shader.fragmentShader.replace('vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;', `
         vec3 outgoingLight = totalDiffuse + totalSpecular * specularFactor + totalEmissiveRadiance;
-        outgoingLight = mix(outgoingLight, meshPosition, 0.01);
+        //outgoingLight = mix(outgoingLight, meshPosition, 0.3);
+        outgoingLight = mix(outgoingLight, vec3(0.8), 0.3);
         //diffuseColor.a = 0.9;
         `)
+
+        // console.log(shader.fragmentShader);
+
+        shader.fragmentShader = shader.fragmentShader.replace('vec3 totalSpecular = reflectedLight.directSpecular + reflectedLight.indirectSpecular;',`
+        vec3 totalSpecular = reflectedLight.directSpecular + reflectedLight.indirectSpecular;
+        
+        `)
+        
     }
 
     return mat

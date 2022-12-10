@@ -227,6 +227,30 @@ function PostEffect() {
     const matRef = useRef<any>();
     const pointLightRef = useRef<any>();
 
+    const handleGodray = godray => {
+        godrayRef.current = godray;
+        if (!godray) {
+            return;
+        }
+        godray.godRaysPass.fullscreenMaterial.onBeforeCompile = (shader, renderer) => {
+            shader.fragmentShader = shader.fragmentShader.replace(
+                '#include <dithering_fragment>',
+                `
+                //#include <dithering_fragment>
+                gl_FragColor = gl_FragColor * -1.;
+            `)
+            // .replace('texel=texture2D(inputBuffer,coord);', `
+            // texel=vec4(0.0);
+            // `)
+
+            console.log(shader.fragmentShader);
+
+        };
+
+        console.log(godrayRef.current);
+        
+    }
+
     useFrame((state) => {
         const scroll = getAltScroll();
 
@@ -254,6 +278,8 @@ function PostEffect() {
             const uniforms = godrayRef.current.godRaysMaterial.uniforms;
             uniforms.clampMax.value = Math.max(MathUtils.lerp(1, -7, scroll), 0)
             uniforms.exposure.value = peakFactor * 9.5 + 0.5;
+            // console.log(godrayRef.current);
+            
         }
 
         if (bloomRef.current) {
@@ -261,8 +287,10 @@ function PostEffect() {
         }
 
         if (matRef.current) {
-            matRef.current.color.set(tempColor.lerpColors(white, black, fallFactor))
-            matRef.current.emissive.set(tempColor.lerpColors(white, black, fallFactor))
+            // matRef.current.color.set(tempColor.lerpColors(white, black, fallFactor))
+            // matRef.current.emissive.set(tempColor.lerpColors(white, black, fallFactor))
+            // matRef.current.color.set(black);
+            // matRef.current.emissive.set(black);
         }
 
         if (pointLightRef.current) {
@@ -271,16 +299,16 @@ function PostEffect() {
     })
 
 
-    const [godray, setGodray] = useState(null);
+    const [godray, setGodray] = useState<any>(null);
     const handleSun = useCallback((sun) => {
         sunRef.current = sun
         setGodray(
             <GodRays
-                    ref={godrayRef}
+                    ref={handleGodray}
                     sun={sunRef.current}
                     blendFunction={BlendFunction.SCREEN}
                     samples={60}
-                    density={0.97}
+                    density={0.95}
                     decay={0.85}
                     weight={0.6}
                     exposure={1}
@@ -290,8 +318,15 @@ function PostEffect() {
                     kernelSize={KernelSize.MEDIUM}
                     blur={1}
                 />
-        )
+        );
     }, [])
+
+    const someColor =new Color(Color.NAMES.skyblue);
+
+    useEffect(() => {
+        console.log(Color.NAMES);
+        
+    })
 
     return (
         <>
@@ -303,8 +338,8 @@ function PostEffect() {
                 {godray}
             </EffectComposer>
             <mesh ref={handleSun}>
-                <sphereGeometry args={[7.75, 32, 16]} />
-                <meshStandardMaterial ref={matRef} emissive={white} />
+                <sphereGeometry args={[4.5, 32, 16]} />
+                <meshStandardMaterial ref={matRef} emissive={someColor} color={someColor}/>
             </mesh>
             <pointLight ref={pointLightRef} color={0xffffff} intensity={1.0} position={[0,0,0]} />
         </>

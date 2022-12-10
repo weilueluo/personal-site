@@ -311,10 +311,9 @@ export default function ExperimentalContent() {
 
   return (
     <>
-      <MainBall ballRadius={8} float/> 
-      <MainBall ballRadius={5} rotation={rotation2.current} delay={0.012}/> 
-      <MainBall ballRadius={3} rotation={rotation.current} delay={0.01}/> 
-      <MainBall ballRadius={3} rotation={rotation2.current} delay={0.02}/> 
+      <MainBall ballRadius={5} float/> 
+      <MainBall ballRadius={3} rotation={rotation2.current} delay={0.012}/> 
+      <MainBall ballRadius={2} rotation={rotation.current} delay={0.01}/> 
     </>
   )
 }
