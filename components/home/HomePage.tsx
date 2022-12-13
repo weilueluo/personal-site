@@ -6,6 +6,7 @@ import UnderDevelopment from "../common/UnderDevelopment";
 import LoaderProgress from "./scene/LoaderProgress";
 import ThreeJsHome from "./ThreeJsHome";
 import { Suspense } from "react";
+import ManualScrolls from "./ManualScrolls";
 
 
 export default function HomePage() {
@@ -16,6 +17,7 @@ export default function HomePage() {
             <LoaderProgress />
             <NavigationPanel />
             <Content />
+            <ManualScrolls />
         </div>
        </>
     )

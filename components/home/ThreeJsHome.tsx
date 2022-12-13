@@ -29,6 +29,7 @@ import Stars from './scene/Stars';
 import { generateTextShape, useExtrudeTextGeometry, useTextGeometry, useTextShape } from './scene/Text';
 import styles from './StatsPanel.module.sass';
 import ThreeSurroundingText from './scene/ThreeSurroundingText';
+import canvasStyles from './Canvas.module.sass';
 
 
 const tempVector3 = new Vector3(10, 10, 0);
@@ -344,6 +345,7 @@ export function MyCanvas(props) {
                 top: 0,
                 left: 0,
             }}
+            className={canvasStyles.canvas}
             // https://docs.pmnd.rs/react-three-fiber/api/canvas#render-props
             camera={{
                 position: initCameraPosition.toArray(),
