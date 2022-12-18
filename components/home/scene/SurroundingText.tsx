@@ -103,7 +103,7 @@ function computeMeshAndMaterial(characters, font, fontSize, lightPosition, fadeI
         vertexShader: text_vs,
         fragmentShader: text_fs,
         transparent: true,
-        depthWrite: false
+        depthWrite: true
     });
 
     for (const [i, char] of characters.entries()) {

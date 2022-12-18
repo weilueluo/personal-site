@@ -1,4 +1,4 @@
-import { OrbitControls, ScrollControls, useFBO, useHelper } from "@react-three/drei";
+import { OrbitControls, ScrollControls, Stats, useFBO, useHelper } from "@react-three/drei";
 import {
     EffectComposer,
     DepthOfField,
@@ -28,6 +28,8 @@ import Lines from "../home/scene/Lines";
 import Moon from "../home/scene/Moon";
 import { polar2xyz } from "../common/math";
 import { NewMoon } from "./NewMoon";
+import panelStyles from '../home/StatsPanel.module.sass';
+import ThreeSurroundingText from "../home/scene/ThreeSurroundingText";
 
 const tempVector3 = new Vector3(10, -10, -10);
 const tempColor = new Color()
@@ -116,7 +118,13 @@ function Content() {
 
             {/* {postEffects.current} */}
 
-
+            <ThreeSurroundingText
+                text={'Weilue\'s Place'}
+                radius={6}
+                rotationZ={0}
+                // initOffset={Math.PI}
+                fadeInOnScrollSpeed={-1}
+            />
 
             <GradientBackground />
             <OrbitControls
@@ -129,6 +137,9 @@ function Content() {
             // minPolarAngle={polarAngle}
             // maxPolarAngle={maxPolarAngle}
             />
+            <Stats showPanel={0} className={panelStyles.panel1} />
+            <Stats showPanel={1} className={panelStyles.panel2} />
+            <Stats showPanel={2} className={panelStyles.panel3} />
         </>
     )
 }
@@ -237,7 +248,7 @@ function PostEffect() {
                 '#include <dithering_fragment>',
                 `
                 //#include <dithering_fragment>
-                gl_FragColor = gl_FragColor * -1.;
+                gl_FragColor = gl_FragColor * -100.;
             `)
             // .replace('texel=texture2D(inputBuffer,coord);', `
             // texel=vec4(0.0);
@@ -321,11 +332,11 @@ function PostEffect() {
         );
     }, [])
 
-    const someColor =new Color(Color.NAMES.skyblue);
+    const someEmissiveColor =new Color(Color.NAMES.skyblue);
+    const someColor =new Color(Color.NAMES.black);
 
     useEffect(() => {
         console.log(Color.NAMES);
-        
     })
 
     return (
@@ -339,7 +350,7 @@ function PostEffect() {
             </EffectComposer>
             <mesh ref={handleSun}>
                 <sphereGeometry args={[4.5, 32, 16]} />
-                <meshStandardMaterial ref={matRef} emissive={someColor} color={someColor}/>
+                <meshStandardMaterial ref={matRef} emissive={someEmissiveColor} color={someColor} opacity={0.01}/>
             </mesh>
             <pointLight ref={pointLightRef} color={0xffffff} intensity={1.0} position={[0,0,0]} />
         </>

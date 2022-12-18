@@ -1,0 +1,24 @@
+@use '/components/common/css/button'
+
+.scrollButton
+    @include button.button
+
+    position: fixed
+
+    height: 50px
+
+    right: 10px
+
+    z-index: 99
+
+    opacity: 0.75
+
+.scrollButtonDown
+    bottom: 10px
+
+.scrollButtonUp
+    bottom: 70px
+
+.scrollArrowImg
+    height: 100%
+    width: 100%

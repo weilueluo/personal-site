@@ -1,8 +1,9 @@
 import { RootState, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Box3, Euler, Group, Material, Mesh, MeshLambertMaterial, MeshStandardMaterial, MixOperation, Object3D, Quaternion, ShaderLib, ShaderMaterial, UniformsLib, UniformsUtils, Vector3 } from "three";
-import { useBallGLTF, useMeshNodes, useJsx as useJsx } from "../common/model";
+import { Box3, Box3Helper, BoxHelper, Color, Euler, Group, Material, Mesh, MeshLambertMaterial, MeshStandardMaterial, MixOperation, Object3D, Quaternion, ShaderLib, ShaderMaterial, UniformsLib, UniformsUtils, Vector3 } from "three";
+import { useBallGLTF, useMeshNodes, useJsx as useJsx, useCenterOffset } from "../common/model";
 import { getAltScroll, getAltScrollWithDelay } from "../common/scroll";
+import { useHelper } from "@react-three/drei";
 
 function computeMaterial(sharedMat: MeshStandardMaterial, uniforms: {[key: string]: {"value": any}}) {
     const mat = sharedMat.clone()
@@ -27,8 +28,8 @@ function computeMaterial(sharedMat: MeshStandardMaterial, uniforms: {[key: strin
 
         shader.fragmentShader = shader.fragmentShader.replace('vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;', `
         vec3 outgoingLight = totalDiffuse + totalSpecular * specularFactor + totalEmissiveRadiance;
-        //outgoingLight = mix(outgoingLight, meshPosition, 0.3);
-        outgoingLight = mix(outgoingLight, vec3(0.8), 0.3);
+        outgoingLight = mix(outgoingLight, meshPosition, 0.05);
+        //outgoingLight = mix(outgoingLight, vec3(0.8), 0.3);
         //diffuseColor.a = 0.9;
         `)
 
@@ -119,9 +120,15 @@ export default function MainBall(props: MainBallProps) {
         ballRef.current.rotation.set(rot[0], rot[1], rot[2])
     }, [props.rotation])
 
+    const handleBallRef = (ball: Group) => {
+        ballRef.current = ball;
+    }
+
+    const centerOffset = useCenterOffset(gltf);
+
     return (
-        <group ref={ballRef} name='Ball' scale={props.ballRadius} dispose={null}>
-            <group ref={sceneRef} name='Scene'>
+        <group ref={handleBallRef} name='Ball' scale={props.ballRadius} dispose={null}>
+            <group ref={sceneRef} name='Scene' position={centerOffset}>
                 {meshJsx as any[]}
             </group>
         </group>
@@ -154,10 +161,10 @@ function useMeshAnimationProps(meshes: Mesh[]): MeshAnimationProps {
             
             const dist2center = mesh.position.length();
             const floatEndPos = mesh.position.clone().add(mesh.position.clone().normalize().multiplyScalar(Math.random() * 0.03 * Math.exp((1/(volume+1)) * 2)));
-            const expandEndPos = mesh.position.clone().add(mesh.position.clone().normalize().multiplyScalar((Math.random() + 0.5) * 15 * Math.exp((1/(volume+1)) * 2)));
+            const expandEndPos = mesh.position.clone().add(mesh.position.clone().normalize().multiplyScalar((Math.random() + 0.5) * 5 * Math.exp((1/(volume+1)) * 2)));
             // const expandEndRot = new Quaternion().setFromEuler(new Euler(Math.PI * Math.random() * rotFactor, Math.PI * Math.random() * rotFactor, Math.PI * Math.random() * rotFactor));
             const expandEndRot = new Quaternion().random();
-            const rotAmount = Math.random() * dist2center * 10;
+            const rotAmount = Math.random() * dist2center * 8;
             props[mesh.name] = {
                 startPos: mesh.position.clone(),
                 startQuaternion: mesh.quaternion,

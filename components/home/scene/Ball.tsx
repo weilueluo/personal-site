@@ -1,4 +1,4 @@
-import { extend, ReactThreeFiber, useFrame, useThree } from '@react-three/fiber';
+import { extend, ReactThreeFiber, RootState, useFrame, useThree } from '@react-three/fiber';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
     AnimationMixer,
@@ -10,7 +10,7 @@ import {
     LineBasicMaterial,
     LoopPingPong, Matrix3,
     Matrix4,
-    Mesh, ShaderMaterial,
+    Mesh, Object3D, Quaternion, ShaderMaterial,
     ShapeGeometry,
     Vector3
 } from 'three';
@@ -28,7 +28,7 @@ import { useMaxAnimationDuration } from '../../common/modelAnimation';
 import { getMeshCenter, use3DParentHover } from '../../common/threejs';
 import { generateTextShape } from './Text';
 import ThreeSurroundingText from './ThreeSurroundingText';
-import { getAltScroll } from '../../common/scroll';
+import { getAltScroll, getAltScrollWithDelay } from '../../common/scroll';
 
 
 const FLOAT_BALL = false;
@@ -50,7 +50,8 @@ function useBallGLTF() {
     useMemo(() => {
         loader.setDRACOLoader(dracoLoader);
         loader.load(
-            '/models/ball/ball-transformed.glb',
+            // '/models/ball/ball-transformed.glb',
+            '/models/ball/sphere.glb',
             function (gltf) {
                 setgltf(gltf);
             },
@@ -160,6 +161,56 @@ function useJSXOthers(otherNodes) {
     return others;
 }
 
+type MeshAnimationProps = {
+    [key: string]: MeshAnimationPropValue
+}
+
+type MeshAnimationPropValue = {
+    startPos: Vector3,
+    startQuaternion: Quaternion,
+    floatEndPos: Vector3,
+    expandEndPos: Vector3,
+    expandEndRot: Quaternion,
+    expandRotAmount: number,
+    random: number,
+}
+
+function useMeshAnimationProps(meshes: Mesh[]): MeshAnimationProps {
+    return useMemo(() => {
+        const props = {}
+        meshes.forEach(mesh => {
+            // assumed ball center is 0,0,0
+            const volume = getVolume(mesh);
+            // console.log(volume);
+            
+            const dist2center = mesh.position.length();
+            const floatEndPos = mesh.position.clone().add(mesh.position.clone().normalize().multiplyScalar(Math.random() * 0.03 * Math.exp((1/(volume+1)) * 2)));
+            const expandEndPos = mesh.position.clone().add(mesh.position.clone().normalize().multiplyScalar((Math.random() + 0.5) * Math.exp((1/(volume+1)) * 2)));
+            // const expandEndRot = new Quaternion().setFromEuler(new Euler(Math.PI * Math.random() * rotFactor, Math.PI * Math.random() * rotFactor, Math.PI * Math.random() * rotFactor));
+            const expandEndRot = new Quaternion().random();
+            const rotAmount = Math.random() * dist2center * 5;
+            props[mesh.name] = {
+                startPos: mesh.position.clone(),
+                startQuaternion: mesh.quaternion,
+                floatEndPos: floatEndPos,
+                expandEndPos: expandEndPos,
+                expandEndRot: expandEndRot,
+                expandRotAmount: rotAmount,
+                random: Math.random()
+            }
+        })
+        return props;
+    }, [meshes]);
+}
+
+const tempBox3 = new Box3();
+
+function getVolume(object3d: Object3D) {
+    tempBox3.setFromObject(object3d);
+    tempVec3.subVectors(tempBox3.max, tempBox3.min)
+    return Math.abs(tempVec3.x) * Math.abs(tempVec3.y) * Math.abs(tempVec3.z)
+}
+
 extend({ Line_: Line })
 declare global {
     namespace JSX {
@@ -185,6 +236,7 @@ function MainBall(props) {
     const jsxMeshes = useJSXMeshes(meshNodes, materials);
     const jsxOthers = useJSXOthers(otherNodes);
 
+    const sceneRef = useRef();
     const ballRef = useRef();
 
     const state = useThree();
@@ -222,6 +274,33 @@ function MainBall(props) {
             mat.uniforms.uLightPosition.value = lightPosition;
         });
     });
+
+
+    const animationProps = useMeshAnimationProps(meshNodes);
+
+    useFrame((state: RootState) => {
+
+        if (sceneRef.current && animationProps !== null) {
+            const scroll = getAltScrollWithDelay(props.delay || 0);
+            // console.log(meshesMovementProps);
+            const time = state.clock.getElapsedTime()
+            sceneRef.current.children.forEach((mesh: Mesh) => {
+                const aniProps = animationProps[mesh.name];
+                if (!aniProps) {
+                  return
+                }
+                const targetPosition = tempVec3.lerpVectors(aniProps.startPos, aniProps.expandEndPos, scroll);
+                mesh.position.lerp(targetPosition, 0.075)
+                const targetRotation = aniProps.startQuaternion.clone().slerp(aniProps.expandEndRot, scroll * aniProps.expandRotAmount);
+                mesh.quaternion.slerp(targetRotation, 0.075);
+                if (scroll < 1e-6 && props.float) {
+                    const targetPosition = tempVec3.lerpVectors(aniProps.startPos, aniProps.floatEndPos, (Math.sin(time + aniProps.random * 37) + 1) / 2);
+                    mesh.position.lerp(targetPosition, 0.075)
+                }
+            })
+        }
+    })
+
 
     useAnimationOnScroll(gltf, ballRef, animations)
     const radius = getMainBallRadius();
@@ -320,7 +399,7 @@ function MainBall(props) {
             <line_ ref={lineRef} geometry={lineGeometry} material={lineMaterial} />
             <mesh ref={textRef} geometry={textGeometry} material={textMaterial} position={textConfig.position} />
             <group ref={ballRef} scale={radius} dispose={null}>
-                <group name='Scene' position={centerOffset}>
+                <group ref={sceneRef} name='Scene' position={centerOffset} scale={[0.75, 0.75, 0.75]}>
                     {jsxOthers}
                     {jsxMeshes}
                 </group>

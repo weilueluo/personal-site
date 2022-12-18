@@ -1,7 +1,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { mergeStyles } from '../common/styles';
 import styles from './ManualScrolls.module.sass';
+import { mergeStyles } from '../../common/styles';
 
 export default function ManualScrolls() {
     const [scroll, setScroll] = useState(undefined);

@@ -1,6 +1,6 @@
 import { ThreeElements } from "@react-three/fiber";
 import { useState, useMemo } from "react";
-import { Group, Mesh } from "three";
+import { Box3, Group, Mesh, Vector3 } from "three";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
@@ -92,4 +92,17 @@ export function useJsx(meshNodes, otherNodes, materials): ThreeElements[] {
   }, [meshNodes, otherNodes, materials]);
 
   return jsx;
+}
+export function useCenterOffset(gltf) {
+  const [centerOffset, setCenterOffset] = useState<Vector3>(new Vector3(0, 0, 0));
+  useMemo(() => {
+      if (!gltf) {
+          return;
+      }
+      const box = new Box3().setFromObject(gltf.scene);
+      const center = box.getCenter(new Vector3());
+      setCenterOffset(center.multiplyScalar(-1));
+  }, [gltf]);
+
+  return centerOffset;
 }
