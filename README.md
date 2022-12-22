@@ -1,4 +1,5 @@
 # Personal Website
+> Development in progress, you may experience slow, flaky, white screen experience
 
 > Source code for https://weilueluo.com
 
