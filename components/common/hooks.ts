@@ -1,4 +1,7 @@
 import { RefObject, useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { Vector3 } from "three";
+import { Rotator3D } from './rotate'
+import { useFrame } from "@react-three/fiber";
 
 export function useArrayRefs<T>(total: number): [RefObject<Array<T>>, boolean, (i: number, item: T) => void] {
     const arrRef = useRef(new Array(total));

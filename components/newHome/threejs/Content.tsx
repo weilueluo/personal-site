@@ -1,6 +1,6 @@
 import { OrbitControls, Sparkles } from '@react-three/drei';
-import { useContext } from 'react';
-import { Euler, Quaternion } from 'three';
+import { useCallback, useContext, useRef } from 'react';
+import { AxesHelper, Euler, Quaternion, Vector3 } from 'three';
 import { lightPositionContext } from '../../common/contexts';
 import ThreeJsLights from './Lights';
 import GradientBackground from './gradientBackground/GradientBackground';
@@ -8,6 +8,10 @@ import MainBall from './mainBall//MainBall';
 import Moon from './moon/Moon';
 import ThreeRotateText from './rotateText/ThreeRotateText';
 import ThreeJsStats from './stats/Stats';
+import { ThreeJsPostEffects } from './PostEffects';
+import Lines from './lines/Lines';
+import { useFrame } from '@react-three/fiber';
+import { Rotator3D } from '../../common/rotate';
 
 const rotation1 = new Euler()
     .setFromQuaternion(new Quaternion().random())
@@ -15,19 +19,26 @@ const rotation1 = new Euler()
 const rotation2 = new Euler()
     .setFromQuaternion(new Quaternion().random())
     .toArray() as unknown as number[];
+const tempVec3 = new Vector3(10, 10, 0);
+
 
 export default function ThreeJsContent() {
-    const lightPosition = useContext(lightPositionContext);
+    const lightPosition = tempVec3;
 
-    // const handleAxesHelper = (axesHelper:  AxesHelper) => {
+    const rotator = useRef(new Rotator3D(0,0,8.5,0.01));
+
+    useFrame(state => {
+        lightPosition.set(...rotator.current.next(0.003, 0.005))
+    })
+
+    // const handleAxesHelper = useCallback( (axesHelper:  AxesHelper) => {
     //     axesHelper.setColors('red', 'blue', 'green');
-    // }
+    // }, [])
 
     return (
         <>
             <GradientBackground />
             <ThreeJsStats />
-            <Moon />
             <MainBall ballRadius={6} float={true} />
             <MainBall ballRadius={3} rotation={rotation1} delay={0.012} />
             <MainBall ballRadius={2} rotation={rotation2} delay={0.01} />
@@ -49,11 +60,14 @@ export default function ThreeJsContent() {
                 noise={5}
             />
 
+
             <lightPositionContext.Provider value={lightPosition}>
                 <ThreeJsLights />
+                <Moon />
+                <Lines />
             </lightPositionContext.Provider>
 
-            {/* <ThreeJsPostEffects /> */}
+            <ThreeJsPostEffects />
 
             <OrbitControls
                 // ref={controlRef}

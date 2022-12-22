@@ -33,7 +33,7 @@ varying vec3 vvNormal;
 //     return vec3(quantize(values.x), quantize(values.y), quantize(values.z));
 // }
 
-const float MAX_OPACITY = 0.55;
+const float MAX_OPACITY = .5;
 
 void main() {
     float opacity = 1.0;

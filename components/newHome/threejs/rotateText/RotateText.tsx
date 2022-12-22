@@ -99,6 +99,7 @@ export default function RotateText(props: RotateTextProps) {
                 mesh.up.set(upVec.x, upVec.y, upVec.z);
 
                 mesh.lookAt(
+                    // look at somewhere in front so that the character face outwards
                     tempVec3.addVectors(
                         mesh.position,
                         mesh.position.clone().normalize(),

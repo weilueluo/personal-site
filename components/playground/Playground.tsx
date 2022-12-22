@@ -164,38 +164,6 @@ export const PlaygroundLights = forwardRef((props, ref: Ref<SpotLight>) => {
                 shadow-camera-top={shadowCam}
                 shadow-camera-bottom={-shadowCam}
             />
-            {/* <spotLight
-                ref={lightRef2}
-                position={lightPosition2}
-                color={0xffffff}
-                intensity={50}
-                castShadow
-                shadow-mapSize-height={mapSize}
-                shadow-mapSize-width={mapSize}
-                shadow-camera-near={0.1}
-                shadow-camera-far={shadowCam}
-                shadow-camera-left={-shadowCam}
-                shadow-camera-right={shadowCam}
-                shadow-camera-top={shadowCam}
-                shadow-camera-bottom={-shadowCam}
-            /> */}
-
-            {/* <spotLight
-                ref={lightRef2}
-                position={lightPosition2}
-                color={0xffffff}
-                intensity={30}
-                castShadow
-                shadow-mapSize-height={mapSize}
-                shadow-mapSize-width={mapSize}
-                shadow-camera-near={0.1}
-                shadow-camera-far={20}
-                shadow-camera-left={-10}
-                shadow-camera-right={10}
-                shadow-camera-top={10}
-                shadow-camera-bottom={-10}
-            />  */}
-
             <ambientLight color={0xffffff} intensity={1} />
         </>
     );

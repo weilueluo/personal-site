@@ -2,8 +2,8 @@ import { useContext, useRef } from "react";
 import { lightPositionContext } from "../../common/contexts";
 import { getDeviceDependent } from "../../common/misc";
 import { useHelper } from "@react-three/drei";
-import { SpotLightHelper } from "three";
-
+import { SpotLight, SpotLightHelper } from "three";
+import { useFrame } from "@react-three/fiber";
 
 
 export default function ThreeJsLights() {
@@ -12,11 +12,17 @@ export default function ThreeJsLights() {
 
     const mapSize = getDeviceDependent(128, 512);
 
-    const lightRef = useRef();
+    const lightRef = useRef<SpotLight>();
 
-    useHelper(lightRef, SpotLightHelper, 'cyan');
+    // useHelper(lightRef, SpotLightHelper, 'cyan');
 
     const num = 1;
+
+    useFrame(() => {
+        if (lightRef.current) {
+            lightRef.current.position.set(lightPosition.x, lightPosition.y, lightPosition.z);
+        }
+    })
 
     return (
         <>
