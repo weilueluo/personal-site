@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { getAllAnime } from '../../components/anime/data/misc';
 import AnimeDetails from '../../components/animeDetails/AnimeDetails';
 
-export default function AnimeDetailsPage(props) {
+export default function AnimeDetailsPage() {
 
     const router = useRouter();
     const { animeID } = router.query as unknown as { animeID: string };
@@ -55,7 +55,7 @@ export async function getStaticPaths() {
     }
 }
 
-export async function getStaticProps(context) {
+export async function getStaticProps() {
     // const fs = require('fs');
     // const cachedData = JSON.parse(fs.readFileSync(CACHED_ANIME_DATA_FILE, {
     //     encoding: 'utf-8'

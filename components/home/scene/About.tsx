@@ -7,7 +7,6 @@ import { use3DHover } from '../../common/threejs';
 import { useInnerBallMaterial } from './hooks';
 import ThreeSurroundingText from './ThreeSurroundingText';
 
-
 const tempVector = new Vector3(0, 0, 0);
 const zeroVector = new Vector3(0, 0, 0);
 const mobilePosition = new Vector3(3, 3, 3);
@@ -34,9 +33,9 @@ export default function About() {
     const groupRef = useRef();
     const finalPosition = useMemo(
         () => getDeviceDependent(mobilePosition, desktopPosition),
-        []
+        [],
     );
-    useFrame((state) => {
+    useFrame(() => {
         const group = groupRef.current as Group;
         if (!group) return;
         const scrollAmount = getAltScroll();
@@ -46,11 +45,15 @@ export default function About() {
     });
 
     //shaders
-    const material = useInnerBallMaterial(groupRef, meshRef, new Vector3(50, 168, 80).divideScalar(255.0))
+    const material = useInnerBallMaterial(
+        groupRef,
+        meshRef,
+        new Vector3(50, 168, 80).divideScalar(255.0),
+    );
 
-    const sphereRadius = getDeviceDependent(1.5, 2)
-    const textRadius = getDeviceDependent(2, 3)
-    const ballDetails = getDeviceDependent(16, 32)
+    const sphereRadius = getDeviceDependent(1.5, 2);
+    const textRadius = getDeviceDependent(2, 3);
+    const ballDetails = getDeviceDependent(16, 32);
 
     return (
         <group ref={groupRef}>
@@ -69,9 +72,10 @@ export default function About() {
                 receiveShadow
                 onClick={onClick}
                 rotation={[Math.PI / 4, 0, 0]}
-                material={material}
-            >
-                <sphereGeometry args={[sphereRadius, ballDetails, ballDetails]} />
+                material={material}>
+                <sphereGeometry
+                    args={[sphereRadius, ballDetails, ballDetails]}
+                />
             </mesh>
         </group>
     );

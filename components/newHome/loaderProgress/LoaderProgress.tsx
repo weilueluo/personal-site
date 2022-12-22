@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { DefaultLoadingManager } from 'three';
-import styles from './LoaderProgress.module.sass';
 import { clamp } from 'three/src/math/MathUtils';
+import styles from './LoaderProgress.module.sass';
 
 export default function LoaderProgress() {
     const [total, setTotal] = useState(0);
     const [current, setCurrent] = useState(0);
-    const [loadingUrl, setLoadingUrl] = useState('Initializing');
+    const [, setLoadingUrl] = useState('Initializing');
     const [complete, setComplete] = useState(true);
-    const [error, setError] = useState(null);
+    const [, setError] = useState(null);
 
     DefaultLoadingManager.onStart = function (url, itemsLoaded, itemsTotal) {
         console.log(

@@ -17,7 +17,8 @@ export default function CVPage(props) {
 }
 
 
-export async function getStaticProps(context) {
+export async function getStaticProps() {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const fs = require('fs');
     const cvContent = fs.readFileSync('components/cv/resume.html', { encoding: 'utf-8'});
 

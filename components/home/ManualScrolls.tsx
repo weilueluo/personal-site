@@ -1,5 +1,4 @@
-
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { mergeStyles } from '../common/styles';
 import styles from './ManualScrolls.module.sass';
 
@@ -10,10 +9,13 @@ export default function ManualScrolls() {
         let id = undefined;
         if (scroll !== undefined) {
             const scrollAmount = scroll ? 1 : -1;
-            id = setInterval(() => window.scrollBy({top: scrollAmount * 2}), 1);
+            id = setInterval(
+                () => window.scrollBy({ top: scrollAmount * 2 }),
+                1,
+            );
         }
         return () => clearInterval(id);
-    }, [scroll])
+    }, [scroll]);
 
     const scrollUp = () => setScroll(false);
     const scrollDown = () => setScroll(true);
@@ -21,14 +23,38 @@ export default function ManualScrolls() {
 
     return (
         <>
-            <div className={mergeStyles(styles.scrollButton, styles.scrollButtonUp)} onMouseDown={scrollUp} onMouseUp={scrollReset} onTouchStart={scrollUp} onTouchEnd={scrollReset}>
+            <div
+                className={mergeStyles(
+                    styles.scrollButton,
+                    styles.scrollButtonUp,
+                )}
+                onMouseDown={scrollUp}
+                onMouseUp={scrollReset}
+                onTouchStart={scrollUp}
+                onTouchEnd={scrollReset}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className={styles.scrollArrowImg} src='/icons/misc/angle-up-solid.svg' alt='arrow up'/>
+                <img
+                    className={styles.scrollArrowImg}
+                    src="/icons/misc/angle-up-solid.svg"
+                    alt="arrow up"
+                />
             </div>
-            <div className={mergeStyles(styles.scrollButton, styles.scrollButtonDown)} onMouseDown={scrollDown} onMouseUp={scrollReset} onTouchStart={scrollDown} onTouchEnd={scrollReset}>
+            <div
+                className={mergeStyles(
+                    styles.scrollButton,
+                    styles.scrollButtonDown,
+                )}
+                onMouseDown={scrollDown}
+                onMouseUp={scrollReset}
+                onTouchStart={scrollDown}
+                onTouchEnd={scrollReset}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className={styles.scrollArrowImg} src='/icons/misc/angle-down-solid.svg' alt='arrow up'/>
+                <img
+                    className={styles.scrollArrowImg}
+                    src="/icons/misc/angle-down-solid.svg"
+                    alt="arrow up"
+                />
             </div>
         </>
-    )
+    );
 }

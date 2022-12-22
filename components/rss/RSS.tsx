@@ -25,14 +25,14 @@ export default function RSS() {
     const [errors, setErrors] = useState([]);
     rssLoader.on_error = (errors: RSSRequestError[]) => setErrors(errors);
     // on loading
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
     rssLoader.on_loading = () => {
-        setLoading(true)
-        setCompleted(false)
+        setLoading(true);
+        setCompleted(false);
     };
     // on completed
-    const [completed, setCompleted] = useState(false)
-    rssLoader.on_complete = () => setCompleted(true)
+    const [completed, setCompleted] = useState(false);
+    rssLoader.on_complete = () => setCompleted(true);
 
     // whether to show errors
     const [errorActive, setErrorActive] = useState(false);
@@ -41,7 +41,7 @@ export default function RSS() {
     const [filterActive, setFilterActive] = useState(false);
     // filter sections completely represents the state of the filter, used by filtering function and rendering
     const [filterSections, setFilterSections] = useState(
-        DEFAULT_FILTER_SECTIONS
+        DEFAULT_FILTER_SECTIONS,
     );
 
     // initialize rssloader to load feeds
@@ -90,13 +90,14 @@ function RSSContent(props) {
                 />
             )}
 
-
-            {(props.errorActive || props.filterActive) && <div className={styles['separator']}></div>}
+            {(props.errorActive || props.filterActive) && (
+                <div className={styles['separator']}></div>
+            )}
             <Feeds flatFeeds={props.flatFeedsState[0]} />
         </div>
-    )
+    );
 }
 
-function LoadingFeed({ i }) {
-    return <li key={i} className={styles['feed-li-loading']}></li>;
-}
+// function LoadingFeed({ i }) {
+//     return <li key={i} className={styles['feed-li-loading']}></li>;
+// }

@@ -1,13 +1,12 @@
-
 export function clamp(num: number, min: number, max: number) {
     return Math.max(Math.min(num, max), min);
 }
 
 // https://stackoverflow.com/a/19270021/6880256
 export function getRandom(arr: Array<any>, n: number) {
-    let result = new Array(n),
-        len = arr.length,
-        taken = new Array(len);
+    const result = new Array(n);
+    let len = arr.length;
+    const taken = new Array(len);
     if (n > len)
         throw new RangeError('getRandom: more elements taken than available');
     while (n--) {
@@ -19,11 +18,14 @@ export function getRandom(arr: Array<any>, n: number) {
 }
 
 export function randomIntRange(from: number, to: number) {
-    return Math.floor(Math.random() + from * (to - from + 1))
+    return Math.floor(Math.random() + from * (to - from + 1));
 }
 
-
-export function polar2xyz(theta: number, phi: number, r: number) {
+export function polar2xyz(
+    theta: number,
+    phi: number,
+    r: number,
+): [number, number, number] {
     const x = r * Math.sin(theta) * Math.cos(phi);
     const y = r * Math.sin(theta) * Math.sin(phi);
     const z = r * Math.cos(theta);
@@ -45,5 +47,5 @@ export function uniformSphereSample(radius: number) {
 }
 
 export function deg2rad(deg) {
-    return deg * (Math.PI / 180)
+    return deg * (Math.PI / 180);
 }

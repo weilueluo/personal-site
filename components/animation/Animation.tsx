@@ -1,9 +1,9 @@
 import { RootState } from "@react-three/fiber";
 
 export interface Animation {
-    onStart: Function;
-    onFrame: Function;
-    onFinish: Function;
+    onStart: () => unknown;
+    onFrame: () => unknown;
+    onFinish: () => unknown;
 
     animateFrame(state: RootState): void;
 }

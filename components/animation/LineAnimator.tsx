@@ -14,9 +14,9 @@ export class LineAnimator {
   private currentAnimation: SingleLineAnimation;
   private finished: boolean;
 
-  onStart: Function;
-  onFrame: Function;
-  onFinished: Function;
+  onStart: () => unknown;
+  onFrame: () => unknown;
+  onFinished: () => unknown;
 
   constructor(points: Vector3[], duration: number) {
     assert(points.length >= 2);
@@ -88,9 +88,9 @@ class SingleLineAnimation implements Animation {
     this.animateVector = new Vector3();
   }
 
-  onStart: Function;
-  onFrame: Function;
-  onFinish: Function;
+  onStart: () => unknown;
+  onFrame: () => unknown;
+  onFinish: () => unknown;
 
   reset() {
     this.animateTime = 0;

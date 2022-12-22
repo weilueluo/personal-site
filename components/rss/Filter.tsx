@@ -2,13 +2,14 @@ import { DATABASE } from './Database';
 import styles from './Filter.module.sass';
 import {
     filterFlatFeeds,
-    isAllFiltersSame, setAllFiltersInplace
+    isAllFiltersSame,
+    setAllFiltersInplace,
 } from './FilterManager';
-import { Filter as Filter_t, FilterSection } from './RSS.d';
+import { FilterSection, Filter as Filter_t } from './RSS.d';
 
 export default function Filter(props) {
     const [filterSections, setFilterSections] = props.filterSectionsState;
-    const [flatFeeds, setFlatFeeds] = props.flatFeedsState;
+    const [, setFlatFeeds] = props.flatFeedsState;
 
     const setAndApplyNewSections = (newSections: FilterSection[]) => {
         setFilterSections(newSections);
@@ -30,10 +31,10 @@ export default function Filter(props) {
             return (
                 <li
                     key={filter.name}
-                    className={`${styles['filter']} ${filter.active ? styles['active'] : ''
-                        }`}
-                    onClick={() => onClick()}
-                >
+                    className={`${styles['filter']} ${
+                        filter.active ? styles['active'] : ''
+                    }`}
+                    onClick={() => onClick()}>
                     <button className={styles['filter-button']}>
                         {filter.displayName}
                     </button>
@@ -56,8 +57,7 @@ export default function Filter(props) {
             <div key={section.name} className={styles['panel']}>
                 <span
                     className={`${styles['title']}`}
-                    onClick={sectionTitleOnClick}
-                >
+                    onClick={sectionTitleOnClick}>
                     {sectionName}
                 </span>
                 <ul className={styles['filters']}>{filters}</ul>

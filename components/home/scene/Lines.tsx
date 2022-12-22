@@ -19,21 +19,18 @@ const aroundLightTransforms: Array<[Vector3, Vector3, number]> = [
     // --- UNCOMMENT TO USE ---
     // [zVector, upVector, Math.PI / 3],
     // [zVector, upVector, Math.PI / 3 * 2],
-
     // [zVector, downVector, Math.PI / 3],
     // [zVector, downVector, Math.PI / 3 * 2],
-
     // [xVector, upVector, Math.PI / 3],
     // [xVector, upVector, Math.PI / 3 * 2],
-
     // [xVector, downVector, Math.PI / 3],
     // [xVector, downVector, Math.PI / 3 * 2]
-]
+];
 const aroundLightAmount = aroundLightTransforms.length;
 
-const aroundLightPositions = new Array(aroundLightAmount * 3)
+const aroundLightPositions = new Array(aroundLightAmount * 3);
 for (let i = 0; i < aroundLightPositions.length; i += 3) {
-    let [theta, phi, r] = [0, 0, 0];
+    const [theta, phi, r] = [0, 0, 0];
     const [x, y, z] = polar2xyz(theta, phi, r);
     aroundLightPositions[i] = x;
     aroundLightPositions[i + 1] = y;
@@ -46,7 +43,7 @@ const linePositions = new Array(amount * 3);
 const lineRotations = new Array(amount * 3);
 
 for (let i = 0; i < linePositions.length; i += 3) {
-    let [theta, phi, r] = uniformSphereSample(radius);
+    const [theta, phi, r] = uniformSphereSample(radius);
     const [x, y, z] = polar2xyz(theta, phi, r);
     linePositions[i] = x;
     linePositions[i + 1] = y;
@@ -91,10 +88,9 @@ export default function Lines() {
         // }
 
         for (let i = 0; i < amount; i++) {
-
-            let x = linePositions[i * 3];
-            let y = linePositions[i * 3 + 1];
-            let z = linePositions[i * 3 + 2];
+            const x = linePositions[i * 3];
+            const y = linePositions[i * 3 + 1];
+            const z = linePositions[i * 3 + 2];
 
             tempObject.position.set(x, y, z);
             tempObject.rotation.set(0, 0, 0);
@@ -111,30 +107,32 @@ export default function Lines() {
         mesh.instanceMatrix.needsUpdate = true;
     }, []);
 
-
     // shaders
     const uniforms = {
         uScrolledAmount: { value: 0 },
         uLightPosition: { value: lightPosition },
         uMainBallRadius: { value: getMainBallRadius() },
-        uMainBallPosition: { value: ballPosition }
-    }
+        uMainBallPosition: { value: ballPosition },
+    };
     const material = new ShaderMaterial({
         uniforms: uniforms,
         vertexShader: line_vs,
         fragmentShader: line_fs,
         transparent: true,
-        depthWrite: false
-    })
+        depthWrite: false,
+    });
 
     useFrame(() => {
         const scrollAmount = getAltScroll();
         material.uniforms.uScrolledAmount.value = scrollAmount;
         material.uniforms.uLightPosition.value = lightPosition;
-    })
+    });
 
     return (
-        <instancedMesh ref={meshRef} args={[null, null, amount + aroundLightAmount]} material={material}>
+        <instancedMesh
+            ref={meshRef}
+            args={[null, null, amount + aroundLightAmount]}
+            material={material}>
             <cylinderGeometry args={[lineRadius, lineRadius, 16, 32]} />
         </instancedMesh>
     );

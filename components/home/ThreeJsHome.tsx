@@ -1,62 +1,27 @@
-import { OrbitControls, Stats, useHelper } from '@react-three/drei';
+import { OrbitControls, Stats } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
-import {
-    GodRays,
-    EffectComposer,
-    DepthOfField,
-    Bloom,
-    Noise,
-    Vignette,
-} from '@react-three/postprocessing';
-import React, {
-    useCallback,
-    useContext,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
     ACESFilmicToneMapping,
-    Color,
     DoubleSide,
-    Euler,
-    ExtrudeGeometry,
-    MathUtils,
-    Quaternion,
-    ShapeGeometry,
-    SpotLightHelper,
-    sRGBEncoding,
+    MeshBasicMaterial,
     Vector3,
+    sRGBEncoding,
 } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
-import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { lerp } from 'three/src/math/MathUtils';
 import { lightPositionContext } from '../common/contexts';
 import { polar2xyz } from '../common/math';
 import { getDeviceDependent } from '../common/misc';
 import { getAltScroll } from '../common/scroll';
-import MainBall from '../playground/MainBall';
-import { BlendFunction, Resizer, KernelSize } from 'postprocessing';
-import About from './scene/About';
+import canvasStyles from './Canvas.module.sass';
+import styles from './StatsPanel.module.sass';
 import Ball from './scene/Ball';
-import CV from './scene/CV';
-import { getNScrollPages } from './scene/global';
 import GradientBackground from './scene/GradientBackground';
 import Lines from './scene/Lines';
-import LoaderProgress from './scene/LoaderProgress';
 import Moon from './scene/Moon';
-import RSS from './scene/RSS';
 import Stars from './scene/Stars';
-import {
-    generateTextShape,
-    useExtrudeTextGeometry,
-    useTextGeometry,
-    useTextShape,
-} from './scene/Text';
-import styles from './StatsPanel.module.sass';
-import ThreeSurroundingText from './scene/ThreeSurroundingText';
-import canvasStyles from './Canvas.module.sass';
 
 const tempVector3 = new Vector3(10, 10, 0);
 const tempVec3 = new Vector3();
@@ -65,7 +30,7 @@ const targetCameraPosition = new Vector3(10, 10, -20);
 const fontLoader = new FontLoader();
 
 export function MyContent() {
-    const enableOrbitControl = getDeviceDependent(false, true); // disable scroll on mobile, because it is used to play animation
+    // const enableOrbitControl = getDeviceDependent(false, true); // disable scroll on mobile, because it is used to play animation
 
     const [lightPosition, setLightPosition] = useState(tempVector3);
     const theta = useRef(0);
@@ -102,7 +67,7 @@ export function MyContent() {
 
     // some random text
     const [textGeometry, setTextGeometry] = useState(null);
-    const textMeshRef = useRef<any>();
+    const textMeshRef = useRef<MeshBasicMaterial>();
     useEffect(() => {
         fontLoader.load('/fonts/Fira Mono_Regular.json', font => {
             const geometry = new TextGeometry('Nothing Here Yet...', {
@@ -257,124 +222,124 @@ export default function ThreeJsHome() {
     );
 }
 
-const tempColor = new Color();
-const white = new Color(0xffffff);
-const black = new Color(0x000000);
+// const tempColor = new Color();
+// const white = new Color(0xffffff);
+// const black = new Color(0x000000);
 
-function PostEffect() {
-    // const godray = useGodray();
-    const sunRef = useRef<any>(null);
-    const godrayRef = useRef<any>(null);
-    const bloomRef = useRef<any>(null);
-    const matRef = useRef<any>();
+// function PostEffect() {
+//     // const godray = useGodray();
+//     const sunRef = useRef<Mesh>(null);
+//     const godrayRef = useRef<any>(null);
+//     const bloomRef = useRef<any>(null);
+//     const matRef = useRef<Material>();
 
-    useFrame(state => {
-        const scroll = getAltScroll();
-        if (sunRef.current) {
-            const scale = Math.max(MathUtils.lerp(1, -10, scroll), 0.1);
-            sunRef.current.scale.set(scale, scale, scale);
-        }
-        if (godrayRef.current) {
-            // clampMax
-            // decay
-            // density
-            // exposure
-            // inputBuffer
-            // lightPosition
-            // weight
-            const uniforms = godrayRef.current.godRaysMaterial.uniforms;
-            // uniforms.decay.value = Math.min(MathUtils.lerp(0.85, 0, scroll), 0.95)
-            // uniforms.weight.value = Math.max(MathUtils.lerp(0.6, 1.0, scroll), 1.0)
-            // uniforms.decay.value = Math.min(MathUtils.lerp(0.85, 2.0, scroll), 0.95)
-            // uniforms.exposure.value = Math.max(MathUtils.lerp(1, -7, scroll), 0)
-            // uniforms.density.value = Math.max(MathUtils.lerp(1, -7, scroll), 0)
-            uniforms.clampMax.value = Math.max(
-                MathUtils.lerp(1, -7, scroll),
-                0,
-            );
-        }
+//     useFrame(() => {
+//         const scroll = getAltScroll();
+//         if (sunRef.current) {
+//             const scale = Math.max(MathUtils.lerp(1, -10, scroll), 0.1);
+//             sunRef.current.scale.set(scale, scale, scale);
+//         }
+//         if (godrayRef.current) {
+//             // clampMax
+//             // decay
+//             // density
+//             // exposure
+//             // inputBuffer
+//             // lightPosition
+//             // weight
+//             const uniforms = godrayRef.current.godRaysMaterial.uniforms;
+//             // uniforms.decay.value = Math.min(MathUtils.lerp(0.85, 0, scroll), 0.95)
+//             // uniforms.weight.value = Math.max(MathUtils.lerp(0.6, 1.0, scroll), 1.0)
+//             // uniforms.decay.value = Math.min(MathUtils.lerp(0.85, 2.0, scroll), 0.95)
+//             // uniforms.exposure.value = Math.max(MathUtils.lerp(1, -7, scroll), 0)
+//             // uniforms.density.value = Math.max(MathUtils.lerp(1, -7, scroll), 0)
+//             uniforms.clampMax.value = Math.max(
+//                 MathUtils.lerp(1, -7, scroll),
+//                 0,
+//             );
+//         }
 
-        if (bloomRef.current) {
-            // console.log(bloomRef.current);
-            bloomRef.current.uniforms.get('intensity').value = Math.max(
-                MathUtils.lerp(1, 0, Math.max(-1 / (scroll + 1e-6) + 9, 0)),
-                0,
-            );
-            // console.log(Math.max(MathUtils.lerp(1, 0, Math.max(-1/(scroll+1e-6)+6, 0)), 0));
-            // console.log(bloomRef.current.uniforms.get('intensity').value)
-        }
+//         if (bloomRef.current) {
+//             // console.log(bloomRef.current);
+//             bloomRef.current.uniforms.get('intensity').value = Math.max(
+//                 MathUtils.lerp(1, 0, Math.max(-1 / (scroll + 1e-6) + 9, 0)),
+//                 0,
+//             );
+//             // console.log(Math.max(MathUtils.lerp(1, 0, Math.max(-1/(scroll+1e-6)+6, 0)), 0));
+//             // console.log(bloomRef.current.uniforms.get('intensity').value)
+//         }
 
-        if (matRef.current) {
-            // console.log(matRef.current);
-            matRef.current.color.set(
-                tempColor.lerpColors(
-                    white,
-                    black,
-                    MathUtils.clamp(-1 / (scroll + 1e-6) + 9, 0, 1),
-                ),
-            );
-            matRef.current.emissive.set(
-                tempColor.lerpColors(
-                    white,
-                    black,
-                    MathUtils.clamp(-1 / (scroll + 1e-6) + 9, 0, 1),
-                ),
-            );
-            // matRef.needsUpdate = true
-            // console.log(MathUtils.clamp(-1/(scroll+1e-6)+9, 0, 1));
-            // console.log(matRef.current.color);
-        }
-    });
+//         if (matRef.current) {
+//             // console.log(matRef.current);
+//             matRef.current.color.set(
+//                 tempColor.lerpColors(
+//                     white,
+//                     black,
+//                     MathUtils.clamp(-1 / (scroll + 1e-6) + 9, 0, 1),
+//                 ),
+//             );
+//             matRef.current.emissive.set(
+//                 tempColor.lerpColors(
+//                     white,
+//                     black,
+//                     MathUtils.clamp(-1 / (scroll + 1e-6) + 9, 0, 1),
+//                 ),
+//             );
+//             // matRef.needsUpdate = true
+//             // console.log(MathUtils.clamp(-1/(scroll+1e-6)+9, 0, 1));
+//             // console.log(matRef.current.color);
+//         }
+//     });
 
-    // const [godray, setGodray] = useState(null);
-    // const handleSun = useCallback((sun) => {
-    //     sunRef.current = sun
-    //     setGodray(
-    //         <GodRays
-    //                 ref={godrayRef}
-    //                 sun={sunRef.current}
-    //                 blendFunction={BlendFunction.SCREEN}
-    //                 samples={50}
-    //                 density={0.97}
-    //                 decay={0.85}
-    //                 weight={0.6}
-    //                 exposure={1}
-    //                 clampMax={1}
-    //                 // width={Resizer.AUTO_SIZE}
-    //                 // height={Resizer.AUTO_SIZE}
-    //                 kernelSize={KernelSize.LARGE}
-    //                 blur={1}
-    //             />
-    //     )
-    // }, [])
+//     // const [godray, setGodray] = useState(null);
+//     // const handleSun = useCallback((sun) => {
+//     //     sunRef.current = sun
+//     //     setGodray(
+//     //         <GodRays
+//     //                 ref={godrayRef}
+//     //                 sun={sunRef.current}
+//     //                 blendFunction={BlendFunction.SCREEN}
+//     //                 samples={50}
+//     //                 density={0.97}
+//     //                 decay={0.85}
+//     //                 weight={0.6}
+//     //                 exposure={1}
+//     //                 clampMax={1}
+//     //                 // width={Resizer.AUTO_SIZE}
+//     //                 // height={Resizer.AUTO_SIZE}
+//     //                 kernelSize={KernelSize.LARGE}
+//     //                 blur={1}
+//     //             />
+//     //     )
+//     // }, [])
 
-    return (
-        <>
-            <EffectComposer>
-                <DepthOfField
-                    focusDistance={0.5}
-                    focalLength={5}
-                    bokehScale={5}
-                    height={480}
-                />
-                <Bloom
-                    ref={bloomRef}
-                    intensity={0.1}
-                    luminanceThreshold={0}
-                    luminanceSmoothing={0.75}
-                    height={200}
-                />
-                <Noise opacity={0.05} />
-                <Vignette eskil={false} offset={0.1} darkness={1.1} />
-                {godray}
-            </EffectComposer>
-            {/* <mesh ref={handleSun}>
-                <sphereGeometry args={[7.5, 32, 16]} />
-                <meshStandardMaterial ref={matRef} emissive={white} />
-            </mesh> */}
-        </>
-    );
-}
+//     return (
+//         <>
+//             <EffectComposer>
+//                 <DepthOfField
+//                     focusDistance={0.5}
+//                     focalLength={5}
+//                     bokehScale={5}
+//                     height={480}
+//                 />
+//                 <Bloom
+//                     ref={bloomRef}
+//                     intensity={0.1}
+//                     luminanceThreshold={0}
+//                     luminanceSmoothing={0.75}
+//                     height={200}
+//                 />
+//                 <Noise opacity={0.05} />
+//                 <Vignette eskil={false} offset={0.1} darkness={1.1} />
+//                 {/* {godray} */}
+//             </EffectComposer>
+//             {/* <mesh ref={handleSun}>
+//                 <sphereGeometry args={[7.5, 32, 16]} />
+//                 <meshStandardMaterial ref={matRef} emissive={white} />
+//             </mesh> */}
+//         </>
+//     );
+// }
 
 // React.useLayoutEffect = React.useEffect;  // suppress useLayoutEffect warning, because we did not use it, dont know where it comes from
 

@@ -5,18 +5,15 @@ import { Group, Vector3 } from 'three';
 import { getDeviceDependent, isDevEnv } from '../../common/misc';
 import { getAltScroll } from '../../common/scroll';
 import { use3DHover } from '../../common/threejs';
-import { useInnerBallMaterial } from './hooks';
 import ThreeSurroundingText from './ThreeSurroundingText';
-
+import { useInnerBallMaterial } from './hooks';
 
 const tempVector = new Vector3(0, 0, 0);
 const zeroVector = new Vector3(0, 0, 0);
 const mobilePosition = new Vector3(-3, -3, -3);
 const desktopPosition = new Vector3(-5, -5, -5);
 
-
 export default function RSS() {
-
     const meshRef = useRef();
 
     const meshHovered = use3DHover(meshRef);
@@ -37,9 +34,9 @@ export default function RSS() {
     const groupRef = useRef();
     const finalPosition = useMemo(
         () => getDeviceDependent(mobilePosition, desktopPosition),
-        []
+        [],
     );
-    useFrame((state) => {
+    useFrame(() => {
         const group = groupRef.current as Group;
         if (!group) return;
         const scrollAmount = getAltScroll();
@@ -48,11 +45,15 @@ export default function RSS() {
     });
 
     //shaders
-    const material = useInnerBallMaterial(groupRef, meshRef, new Vector3(235, 64, 52).divideScalar(255.0))
+    const material = useInnerBallMaterial(
+        groupRef,
+        meshRef,
+        new Vector3(235, 64, 52).divideScalar(255.0),
+    );
 
-    const sphereRadius = getDeviceDependent(1.5, 2)
-    const textRadius = getDeviceDependent(2, 3)
-    const ballDetails = getDeviceDependent(16, 32)
+    const sphereRadius = getDeviceDependent(1.5, 2);
+    const textRadius = getDeviceDependent(2, 3);
+    const ballDetails = getDeviceDependent(16, 32);
 
     return (
         <group ref={groupRef}>
@@ -71,9 +72,10 @@ export default function RSS() {
                 receiveShadow
                 onClick={onClick}
                 rotation={[Math.PI / 4, 0, 0]}
-                material={material}
-            >
-                <sphereGeometry args={[sphereRadius, ballDetails, ballDetails]} />
+                material={material}>
+                <sphereGeometry
+                    args={[sphereRadius, ballDetails, ballDetails]}
+                />
             </mesh>
         </group>
     );

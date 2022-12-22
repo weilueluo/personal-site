@@ -1,41 +1,59 @@
 import { OrbitControls, Sparkles } from '@react-three/drei';
-import { BaseProps } from '../../types/react';
-import GradientBackground from './gradientBackground/GradientBackground';
-import ThreeJsStats from './stats/Stats';
-import MainBall from '../../playground/MainBall';
-import ThreeSurroundingText from '../../home/scene/ThreeSurroundingText';
-import Stars from '../../home/scene/Stars';
-import { Vector3 } from 'three';
-import { useState } from 'react';
+import { useContext } from 'react';
+import { Euler, Quaternion } from 'three';
 import { lightPositionContext } from '../../common/contexts';
 import ThreeJsLights from './Lights';
-import { ThreeJsPostEffects } from './PostEffects';
+import GradientBackground from './gradientBackground/GradientBackground';
+import MainBall from './mainBall//MainBall';
+import Moon from './moon/Moon';
+import ThreeRotateText from './rotateText/ThreeRotateText';
+import ThreeJsStats from './stats/Stats';
 
-const tempVec3 = new Vector3(10, 10, 0);
+const rotation1 = new Euler()
+    .setFromQuaternion(new Quaternion().random())
+    .toArray() as unknown as number[];
+const rotation2 = new Euler()
+    .setFromQuaternion(new Quaternion().random())
+    .toArray() as unknown as number[];
 
-export default function ThreeJsContent(props: BaseProps) {
-    const [lightPosition, setLightPosition] = useState(tempVec3);
+export default function ThreeJsContent() {
+    const lightPosition = useContext(lightPositionContext);
+
+    // const handleAxesHelper = (axesHelper:  AxesHelper) => {
+    //     axesHelper.setColors('red', 'blue', 'green');
+    // }
 
     return (
         <>
             <GradientBackground />
             <ThreeJsStats />
-            <MainBall ballRadius={6} float={true}/>
+            <Moon />
+            <MainBall ballRadius={6} float={true} />
+            <MainBall ballRadius={3} rotation={rotation1} delay={0.012} />
+            <MainBall ballRadius={2} rotation={rotation2} delay={0.01} />
 
-            <ThreeSurroundingText
-                text={'Weilue\'s Place'}
+            {/* <axesHelper ref={handleAxesHelper} args={[100]} /> */}
+            <ThreeRotateText
+                text={"Weilue's Place"}
                 radius={7.5}
                 rotationZ={0}
                 fadeInOnScrollSpeed={-1}
             />
 
-            <Sparkles count={500} scale={50} size={20} speed={1} opacity={0.75} noise={5} />
+            <Sparkles
+                count={500}
+                scale={50}
+                size={20}
+                speed={1}
+                opacity={0.75}
+                noise={5}
+            />
 
             <lightPositionContext.Provider value={lightPosition}>
-                {/* <ThreeJsLights /> */}
+                <ThreeJsLights />
             </lightPositionContext.Provider>
 
-            <ThreeJsPostEffects />
+            {/* <ThreeJsPostEffects /> */}
 
             <OrbitControls
                 // ref={controlRef}

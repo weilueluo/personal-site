@@ -1,36 +1,36 @@
-import Parser from "rss-parser";
+import Parser from 'rss-parser';
 
 export type RSSOption = {
-    name: string
+    name: string;
     url: string;
 };
 
-export type FeedsMap = Map<string, Parser.Output<{}>>
+export type FeedsMap = Map<string, Parser.Output<object>>;
 
 declare type Extras = {
-    name: string
-    jsDate?: Date
-    uniqueKey: string
-    id?: string
-    author?: string
-}
+    name: string;
+    jsDate?: Date;
+    uniqueKey: string;
+    id?: string;
+    author?: string;
+};
 
-export type FlatFeed = Parser.Output<{}> & Extras & Parser.Item
+export type FlatFeed = Parser.Output<object> & Extras & Parser.Item;
 
 export type RSSRequestError = {
-    message: string
-    stack: string
-    url: string
-}
+    message: string;
+    stack: string;
+    url: string;
+};
 
 export type Filter = {
-    displayName: string
-    name: string
-    active: boolean
-}
+    displayName: string;
+    name: string;
+    active: boolean;
+};
 
 export type FilterSection = {
-    displayName: string
-    name: string
-    filters: Filter[]
-}
+    displayName: string;
+    name: string;
+    filters: Filter[];
+};

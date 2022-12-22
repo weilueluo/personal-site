@@ -7,27 +7,26 @@ import { searchFlatFeeds } from './Searcher';
 export default function RSSHeader(props) {
     const [flatFeeds, setFlatFeeds] = props.flatFeedsState;
     const [filterActive, setFilterActive] = props.filterActiveState;
-    const [filterSections, setFilterSections] = props.filterSectionsState;
+    const [, setFilterSections] = props.filterSectionsState;
     const [errorActive, setErrorActive] = props.errorActiveState;
     const errors = props.errors;
     const rssLoader = props.rssLoader;
     const loading = props.loading;
-    const completed = props.completed
+    const completed = props.completed;
 
     // const nonChinese = /[^\p{Script=Han}]/gim
     // console.log(nonChinese);
-
 
     // searching
     const [searchString, setSearchString] = useState('');
     const searchButtonClicked = () => {
         const searchInput = document.getElementById(
-            'search-input'
+            'search-input',
         ) as HTMLInputElement;
 
         setSearchString(searchInput.value);
     };
-    const searchButtonKeyDown = (event) => {
+    const searchButtonKeyDown = event => {
         // handle enter button entered
         if (event.code === 'Enter') {
             searchButtonClicked();
@@ -35,7 +34,7 @@ export default function RSSHeader(props) {
     };
     useEffect(() => {
         console.log(`Search Received: ${searchString}`);
-        // currently it searches from the database, not the current displayed feeds, 
+        // currently it searches from the database, not the current displayed feeds,
         // if desired, use flatFeeds instead of [...DATABASE.values()]
         setFlatFeeds(searchFlatFeeds(searchString, [...DATABASE.values()]));
     }, [searchString, setFlatFeeds]);
@@ -54,55 +53,93 @@ export default function RSSHeader(props) {
 
     // refresh
     const refreshOnClick = () => {
-        DATABASE.clear()
-        rssLoader.reload()
-    }
+        DATABASE.clear();
+        rssLoader.reload();
+    };
 
     // display status
-    const [status, setStatus] = useState(<></>)
+    const [status, setStatus] = useState(<></>);
     useEffect(() => {
         if (completed) {
-            {/* eslint-disable-next-line */}
-            setStatus(<img className={styles['completed-img']} src='/icons/misc/check-mark.svg' alt='' />)
+            {
+                /* eslint-disable-next-line */
+            }
+            setStatus(
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                    className={styles['completed-img']}
+                    src="/icons/misc/check-mark.svg"
+                    alt=""
+                />,
+            );
         } else if (loading) {
-            {/* eslint-disable-next-line */}
-            setStatus(<img className={styles['loading-img']} src='/icons/misc/progress.svg' alt='' />)
+            {
+                /* eslint-disable-next-line */
+            }
+            setStatus(
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                    className={styles['loading-img']}
+                    src="/icons/misc/progress.svg"
+                    alt=""
+                />,
+            );
         }
-    }, [loading, completed])
+    }, [loading, completed]);
 
     return (
         <div className={styles['feeds-header']}>
-
             {/* TOP SECTION */}
             <div className={styles['feeds-header-top']}>
                 <input
-                    id='search-input'
-                    type='text'
+                    id="search-input"
+                    type="text"
                     className={styles['feeds-search-box']}
                     onKeyDown={searchButtonKeyDown}
                     tabIndex={0}
                 />
-                <button className={`${styles['header-button']} ${styles['search-button']}`} onClick={searchButtonClicked}>
+                <button
+                    className={`${styles['header-button']} ${styles['search-button']}`}
+                    onClick={searchButtonClicked}>
                     {/* eslint-disable-next-line */}
-                    <img className={styles['search-button-img']} src="/icons/misc/magnifying-glass-solid.svg" alt="search-icon" />
+                    <img
+                        className={styles['search-button-img']}
+                        src="/icons/misc/magnifying-glass-solid.svg"
+                        alt="search-icon"
+                    />
                 </button>
-
             </div>
 
             {/* MIDDLE SECTION */}
             <div className={styles['feeds-header-middle']}>
-                <button className={`${styles['header-button']} ${styles['reset-button']}`} onClick={resetOnClick}>Reset</button>
-                <button className={`${styles['header-button']} ${styles['refresh-button']}`} onClick={refreshOnClick}>Refresh</button>
-                <button className={`${styles['header-button']} ${styles['filter-button']} ${filterActive ? styles['filter-active'] : ''}`} onClick={filterTextOnClick}>Filter</button>
+                <button
+                    className={`${styles['header-button']} ${styles['reset-button']}`}
+                    onClick={resetOnClick}>
+                    Reset
+                </button>
+                <button
+                    className={`${styles['header-button']} ${styles['refresh-button']}`}
+                    onClick={refreshOnClick}>
+                    Refresh
+                </button>
+                <button
+                    className={`${styles['header-button']} ${
+                        styles['filter-button']
+                    } ${filterActive ? styles['filter-active'] : ''}`}
+                    onClick={filterTextOnClick}>
+                    Filter
+                </button>
             </div>
 
             {/* BOTTOM SECTION */}
             <div className={styles['feeds-header-bottom']}>
-                <button className={`${styles['loaded-feeds']} ${styles['header-button']}`}>{flatFeeds.length} Feeds {status}</button>
+                <button
+                    className={`${styles['loaded-feeds']} ${styles['header-button']}`}>
+                    {flatFeeds.length} Feeds {status}
+                </button>
                 <button
                     className={`${styles['total-errors']} ${styles['header-button']}`}
-                    onClick={totalErrorsOnClick}
-                >
+                    onClick={totalErrorsOnClick}>
                     Error {errors.length}
                 </button>
             </div>

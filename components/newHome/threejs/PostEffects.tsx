@@ -1,15 +1,15 @@
+import { useFrame } from '@react-three/fiber';
 import {
-    EffectComposer,
-    DepthOfField,
     Bloom,
+    DepthOfField,
+    EffectComposer,
+    GodRays,
     Noise,
     Vignette,
-    GodRays,
 } from '@react-three/postprocessing';
-import { useState, useCallback, useRef } from 'react';
-import { BlendFunction, Resizer, KernelSize } from 'postprocessing';
+import { BlendFunction, KernelSize } from 'postprocessing';
+import { useCallback, useRef, useState } from 'react';
 import { Color, MathUtils } from 'three';
-import { useFrame } from '@react-three/fiber';
 import { getAltScroll } from '../../common/scroll';
 
 const white = new Color(0xffffff);
@@ -28,24 +28,23 @@ export function ThreeJsPostEffects() {
         if (!godray) {
             return;
         }
-        godray.godRaysPass.fullscreenMaterial.onBeforeCompile = (shader, renderer) => {
+        godray.godRaysPass.fullscreenMaterial.onBeforeCompile = shader => {
             shader.fragmentShader = shader.fragmentShader.replace(
                 '#include <dithering_fragment>',
                 `
                 //#include <dithering_fragment>
-                gl_FragColor = gl_FragColor * -100.;
-            `)
+                gl_FragColor = gl_FragColor * -50.;
+            `,
+            );
             // .replace('texel=texture2D(inputBuffer,coord);', `
             // texel=vec4(0.0);
             // `)
 
             console.log(shader.fragmentShader);
-
         };
 
         console.log(godrayRef.current);
-        
-    }
+    };
 
     const handleSun = useCallback(sun => {
         sunRef.current = sun;
@@ -54,10 +53,10 @@ export function ThreeJsPostEffects() {
                 ref={handleGodray}
                 sun={sunRef.current}
                 blendFunction={BlendFunction.SCREEN}
-                samples={50}
-                density={0.97}
-                decay={0.85}
-                weight={0.6}
+                samples={60}
+                density={0.95}
+                decay={0.94}
+                weight={0.1}
                 exposure={1}
                 clampMax={1}
                 // width={Resizer.AUTO_SIZE}
@@ -71,7 +70,8 @@ export function ThreeJsPostEffects() {
     useFrame(state => {
         const scroll = getAltScroll();
         if (sunRef.current) {
-            const scale = Math.max(MathUtils.lerp(1, -10, scroll), 0.1);
+            // const scale = Math.max(MathUtils.lerp(1, -10, scroll), 0.1);
+            const scale = Math.max(MathUtils.lerp(1, -5, scroll), 0.1);
             sunRef.current.scale.set(scale, scale, scale);
         }
         if (godrayRef.current) {
@@ -130,7 +130,7 @@ export function ThreeJsPostEffects() {
                     intensity={0.1}
                     luminanceThreshold={0}
                     luminanceSmoothing={0.75}
-                    height={200}
+                    height={500}
                 />
                 <Noise opacity={0.05} />
                 <Vignette eskil={false} offset={0.1} darkness={1.1} />
@@ -138,7 +138,11 @@ export function ThreeJsPostEffects() {
             </EffectComposer>
             <mesh ref={handleSun}>
                 <sphereGeometry args={[5, 32, 16]} />
-                <meshStandardMaterial ref={matRef} emissive={black} opacity={0.01}/>
+                <meshStandardMaterial
+                    ref={matRef}
+                    emissive={black}
+                    opacity={0.01}
+                />
             </mesh>
         </>
     );

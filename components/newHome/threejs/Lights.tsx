@@ -16,25 +16,28 @@ export default function ThreeJsLights() {
 
     useHelper(lightRef, SpotLightHelper, 'cyan');
 
+    const num = 1;
+
     return (
         <>
             <spotLight
                 ref={lightRef}
                 position={lightPosition}
-                color={0xffffff}
-                intensity={500}
-                castShadow
+                // color={0xffffff}
+                intensity={10}
                 shadow-mapSize-height={mapSize}
                 shadow-mapSize-width={mapSize}
-                shadow-camera-near={0.1}
-                shadow-camera-far={20}
-                shadow-camera-left={-10}
-                shadow-camera-right={10}
-                shadow-camera-top={10}
-                shadow-camera-bottom={-10}
+                shadow-camera-near={0.01}
+                shadow-camera-far={num}
+                shadow-camera-left={-num}
+                shadow-camera-right={num}
+                shadow-camera-top={num}
+                shadow-camera-bottom={-num}
+                castShadow
+                receiveShadow
             />
 
-            {/* <ambientLight color={0xffffff} intensity={0} /> */}
+            {/* <ambientLight color={0xffffff} intensity={10} /> */}
         </>
     )
 }

@@ -1,6 +1,6 @@
-import { useFrame } from "@react-three/fiber";
-import { useEffect, useState } from "react";
-import { Mesh, Object3D, Vector3 } from "three";
+import { useFrame } from '@react-three/fiber';
+import { useEffect, useState } from 'react';
+import { Mesh, Object3D, Vector3 } from 'three';
 
 export function useCursorPointerOnHover(hover) {
     useEffect(() => {
@@ -10,7 +10,7 @@ export function useCursorPointerOnHover(hover) {
 
 export function getMeshCenter(mesh: Mesh) {
     const middle = new Vector3();
-    const geometry = mesh.geometry
+    const geometry = mesh.geometry;
 
     geometry.computeBoundingBox();
 
@@ -35,10 +35,9 @@ export function useOddClick() {
     return [() => setOddClick(!oddClick), oddClick];
 }
 
-const intersectResult = new Array()
+const intersectResult = [];
 
 export function useCurrent3DHover(): Object3D {
-
     const [intersect, setIntersect] = useState(null);
 
     useFrame(state => {
@@ -62,9 +61,9 @@ export function useCurrent3DHover(): Object3D {
         if (intersectResult.length == 0) {
             setIntersect(null);
         } else {
-            setIntersect(intersectResult[0].object)
+            setIntersect(intersectResult[0].object);
         }
-    })
+    });
 
     return intersect;
 }
@@ -75,10 +74,14 @@ export function use3DHover(objectRef: { current: null | Object3D }) {
 
     useFrame(() => {
         const objectToCheck = objectRef.current;
-        setHover(objectToCheck && intersectedObject && objectToCheck.id == intersectedObject.id);
+        setHover(
+            objectToCheck &&
+                intersectedObject &&
+                objectToCheck.id == intersectedObject.id,
+        );
     });
 
-    return hover
+    return hover;
 }
 
 export function use3DParentHover(objectRef: { current: null | Object3D }) {
@@ -106,5 +109,5 @@ export function use3DParentHover(objectRef: { current: null | Object3D }) {
         setObject(null);
     });
 
-    return [hover, object]
+    return [hover, object];
 }

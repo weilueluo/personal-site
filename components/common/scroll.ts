@@ -1,23 +1,18 @@
-import assert from "assert";
-import { useEffect, useState } from "react";
-import { clamp } from "./math";
-import { getDeviceDependent } from "./misc";
-
-
+import { clamp } from './math';
 
 function getDesktopScrollPercent() {
-    let h = document.documentElement,
+    const h = document.documentElement,
         b = document.body,
         st = 'scrollTop',
         sh = 'scrollHeight';
 
-    const availableScroll = ((h[sh] || b[sh]) - h.clientHeight);
+    const availableScroll = (h[sh] || b[sh]) - h.clientHeight;
     const scrolled = h[st] || b[st];
 
     if (availableScroll < 1e-6) {
-        return 0; // when there is no scroll available 
+        return 0; // when there is no scroll available
     } else {
-        return clamp(scrolled / availableScroll * 100, 0, 100);
+        return clamp((scrolled / availableScroll) * 100, 0, 100);
     }
 }
 
@@ -30,15 +25,14 @@ export function getScrollPercent() {
     // }
 }
 
-
 export function getAltScroll() {
-    const scroll = getScrollPercent() / 100
+    const scroll = getScrollPercent() / 100;
 
     let altScroll = scroll * 2;
     if (altScroll > 1) {
         altScroll = 2 - altScroll;
     }
-    const maxScroll = 0.9999 // avoid flashing animation at 100%
+    const maxScroll = 0.9999; // avoid flashing animation at 100%
     altScroll = clamp(altScroll, 0, maxScroll);
 
     // make number stay at 0.9999 longer
@@ -54,8 +48,8 @@ export function getAltScrollWithDelay(delay: number) {
     const scroll = getAltScroll();
     const available = 1 - delay;
     if (scroll < delay) {
-        return 0
+        return 0;
     } else {
-        return scroll * available
+        return scroll * available;
     }
 }

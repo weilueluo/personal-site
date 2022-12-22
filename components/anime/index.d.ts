@@ -65,9 +65,7 @@ export type SectionAnimeMedia = {
     }
 }
 
-export type FavAnimeMedia = {
-
-} & SectionAnimeMedia;
+export type FavAnimeMedia = SectionAnimeMedia;
 
 export type AnimeRelationMedia = {
     id: number,

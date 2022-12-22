@@ -1,17 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styles from './CV.module.sass';
 
 export default function CV(props) {
 
-    const [postprocessed, setPostProcessed] = useState(false);
 
     // some post processing to resume.html
     useEffect(() => {
-        if (postprocessed) {
-            return;
-        } else {
-            setPostProcessed(true);
-        }
 
         const cv = document.querySelector('#cv');
 
@@ -78,7 +72,7 @@ export default function CV(props) {
         contactDiv.insertBefore(githubLink, null);
         contactDiv.insertBefore(websiteLink, null);
 
-    }, [postprocessed])
+    }, [])
 
 
     return (

@@ -1,6 +1,6 @@
 import Parser from 'rss-parser';
 import { isDevEnv } from '../common/misc';
-import { RSSOption, RSSRequestError } from './RSS.d';
+import { FlatFeed, RSSOption, RSSRequestError } from './RSS.d';
 
 enum State {
     NOT_INITIALIZED,
@@ -9,15 +9,15 @@ enum State {
 }
 
 export default class RSSLoader {
-    _setFeeds: Function;
+    _setFeeds: (feeds: Map<string, FlatFeed>) => unknown;
     _state: State;
     _rssOptions: RSSOption[];
 
-    on_loading: Function;
-    on_complete: Function;
-    on_error: Function;
+    on_loading: () => unknown;
+    on_complete: () => unknown;
+    on_error: (error) => unknown;
 
-    constructor(setFeed: Function) {
+    constructor(setFeed: (feed) => unknown) {
         this._setFeeds = setFeed;
         this._state = State.NOT_INITIALIZED;
     }
@@ -46,9 +46,9 @@ export default class RSSLoader {
         const errors: RSSRequestError[] = [];
 
         const rssPromises = [];
-        rssOptions.forEach((opt) => {
+        rssOptions.forEach(opt => {
             const rssPromise = loadRSSFeed(opt.url)
-                .then((newFeed) => {
+                .then(newFeed => {
                     console.log(`loaded feed: ${opt.name}`);
                     // console.log(newFeed);
 
@@ -62,7 +62,7 @@ export default class RSSLoader {
                     // but not this time, and it is not updated
                     this.on_error && this.on_error(errors);
                 })
-                .catch((error) => {
+                .catch(error => {
                     console.log(`RSSLoader error: ${error}`);
                     console.log(error);
 
@@ -85,9 +85,11 @@ export default class RSSLoader {
 const RSSURLParser = new Parser();
 
 // https://github.com/Redcxx/cors-proxy
-const corsProxyEndpoint = 'https://hauww8y4w1.execute-api.eu-west-2.amazonaws.com';
+const corsProxyEndpoint =
+    'https://hauww8y4w1.execute-api.eu-west-2.amazonaws.com';
 
 async function loadRSSFeed(url: string) {
-    const corsURL = corsProxyEndpoint + (isDevEnv() ? '/dev?url=' : '/prod?url=') + url;
+    const corsURL =
+        corsProxyEndpoint + (isDevEnv() ? '/dev?url=' : '/prod?url=') + url;
     return await RSSURLParser.parseURL(corsURL);
 }

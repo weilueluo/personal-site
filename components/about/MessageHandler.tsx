@@ -38,7 +38,7 @@ function isValidEmail(email: string) {
 }
 
 export async function sendMessage(userName: string, userEmail: string, userMessage: string): Promise<[MessageStatusType, string[]]> {
-    let errorMessage = [];
+    const errorMessage = [];
     
     if (isBlank(userMessage)) {
         errorMessage.push('Message is empty')
