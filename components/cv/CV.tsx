@@ -40,6 +40,10 @@ export default function CV(props) {
         // insert header into cv
         cv.insertBefore(header, cv.children[0]);
 
+
+        if (cv.children[1].tagName === 'SPAN') {
+            return;
+        }
         // add contact info section
         const phoneSpan: HTMLSpanElement = document.createElement('span');
         phoneSpan.textContent = '(+44) 07543295595'
