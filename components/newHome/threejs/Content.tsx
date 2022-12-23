@@ -60,7 +60,6 @@ export default function ThreeJsContent() {
                 noise={5}
             />
 
-
             <lightPositionContext.Provider value={lightPosition}>
                 <ThreeJsLights />
                 <Moon />

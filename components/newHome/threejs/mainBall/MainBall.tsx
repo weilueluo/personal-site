@@ -17,6 +17,7 @@ import {
     useMeshNodes,
 } from '../../../common/model';
 import { getAltScrollWithDelay } from '../../../common/scroll';
+import { lights_fragment_begin as customLightsFragBegin } from './lights_fragment_begin.glsl';
 
 function computeMaterial(
     sharedMat: MeshStandardMaterial,
@@ -31,40 +32,37 @@ function computeMaterial(
         // console.log(shader);
         shader.uniforms = UniformsUtils.merge([shader.uniforms, uniforms]);
 
+        // shader.fragmentShader = shader.fragmentShader.replace('#include <lights_fragment_begin>', customLightsFragBegin)
+
         shader.vertexShader = shader.vertexShader.replace(
             'void main() {',
             `
-        
         void main() {
-        
         `,
         );
 
         shader.fragmentShader = shader.fragmentShader.replace(
             'void main() {',
-            `
-        uniform vec3 meshPosition;
+            `uniform vec3 meshPosition;
         uniform float specularFactor;
+        uniform float colorFactor;
         void main() {`,
         );
 
         shader.fragmentShader = shader.fragmentShader.replace(
             'vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;',
-            `
-        vec3 outgoingLight = totalDiffuse + totalSpecular * specularFactor + totalEmissiveRadiance;
-        outgoingLight = mix(outgoingLight, meshPosition, 0.05);
+            `vec3 outgoingLight = totalDiffuse + totalSpecular * specularFactor + totalEmissiveRadiance;
+        outgoingLight = mix(outgoingLight, meshPosition, colorFactor);
         //outgoingLight = mix(outgoingLight, vec3(0.8), 0.3);
         //diffuseColor.a = 0.9;
         `,
         );
 
-        // console.log(shader.fragmentShader);
+        console.log(shader.fragmentShader);
 
         shader.fragmentShader = shader.fragmentShader.replace(
             'vec3 totalSpecular = reflectedLight.directSpecular + reflectedLight.indirectSpecular;',
-            `
-        vec3 totalSpecular = reflectedLight.directSpecular + reflectedLight.indirectSpecular;
-        
+            `vec3 totalSpecular = reflectedLight.directSpecular + reflectedLight.indirectSpecular;
         `,
         );
     };
@@ -85,6 +83,7 @@ function computeMaterials(meshNodes) {
         return computeMaterial(sharedMat, {
             meshPosition: { value: node.position },
             specularFactor: { value: 1 },
+            colorFactor: { value: 0.2 },
         });
     });
 }

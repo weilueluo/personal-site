@@ -40,7 +40,6 @@ export function ThreeJsPostEffects() {
             // texel=vec4(0.0);
             // `)
 
-            console.log(shader.fragmentShader);
         };
 
         console.log(godrayRef.current);
@@ -54,10 +53,10 @@ export function ThreeJsPostEffects() {
                 sun={sunRef.current}
                 blendFunction={BlendFunction.SCREEN}
                 samples={60}
-                density={0.95}
+                density={0.9}
                 decay={0.94}
-                weight={0.1}
-                exposure={1}
+                weight={0.2}
+                exposure={0.9}
                 clampMax={1}
                 // width={Resizer.AUTO_SIZE}
                 // height={Resizer.AUTO_SIZE}
@@ -69,6 +68,8 @@ export function ThreeJsPostEffects() {
 
     useFrame(state => {
         const scroll = getAltScroll();
+        const a = 0.1;
+        const alpha = MathUtils.clamp(a * (scroll * scroll), 0, 1);
         if (sunRef.current) {
             // const scale = Math.max(MathUtils.lerp(1, -10, scroll), 0.1);
             const scale = Math.max(MathUtils.lerp(1, -5, scroll), 0.1);
@@ -84,7 +85,7 @@ export function ThreeJsPostEffects() {
             // weight
             const uniforms = godrayRef.current.godRaysMaterial.uniforms;
             uniforms.clampMax.value = Math.max(
-                MathUtils.lerp(1, -7, scroll),
+                MathUtils.lerp(1, 0, scroll),
                 0,
             );
         }
@@ -92,26 +93,16 @@ export function ThreeJsPostEffects() {
         if (bloomRef.current) {
             // console.log(bloomRef.current);
             bloomRef.current.uniforms.get('intensity').value = Math.max(
-                MathUtils.lerp(1, 0, Math.max(-1 / (scroll + 1e-6) + 9, 0)),
+                MathUtils.lerp(1, 0, alpha),
                 0,
             );
         }
 
         if (matRef.current) {
             // console.log(matRef.current);
-            matRef.current.color.set(
-                tempColor.lerpColors(
-                    white,
-                    black,
-                    MathUtils.clamp(-1 / (scroll + 1e-6) + 9, 0, 1),
-                ),
-            );
+            matRef.current.color.set(tempColor.lerpColors(white, black, alpha));
             matRef.current.emissive.set(
-                tempColor.lerpColors(
-                    white,
-                    black,
-                    MathUtils.clamp(-1 / (scroll + 1e-6) + 9, 0, 1),
-                ),
+                tempColor.lerpColors(white, black, alpha),
             );
         }
     });
@@ -137,7 +128,7 @@ export function ThreeJsPostEffects() {
                 {godray}
             </EffectComposer>
             <mesh ref={handleSun}>
-                <sphereGeometry args={[5, 32, 16]} />
+                <sphereGeometry args={[5.5, 32, 16]} />
                 <meshStandardMaterial
                     ref={matRef}
                     emissive={black}

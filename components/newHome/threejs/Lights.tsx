@@ -26,7 +26,7 @@ export default function ThreeJsLights() {
 
     return (
         <>
-            <spotLight
+            {/* <spotLight
                 ref={lightRef}
                 position={lightPosition}
                 // color={0xffffff}
@@ -41,7 +41,7 @@ export default function ThreeJsLights() {
                 shadow-camera-bottom={-num}
                 castShadow
                 receiveShadow
-            />
+            /> */}
 
             {/* <ambientLight color={0xffffff} intensity={10} /> */}
         </>
