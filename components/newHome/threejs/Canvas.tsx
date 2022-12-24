@@ -22,6 +22,7 @@ export default function ThreeJsCanvas(props: CustomCanvasProps) {
                 position: 'fixed',
                 top: 0,
                 left: 0,
+                zIndex: -99
             }}
             camera={{
                 position: cameraPosition.toArray(),

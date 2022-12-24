@@ -1,6 +1,9 @@
 import { clamp } from './math';
 
 function getDesktopScrollPercent() {
+    if (typeof document == "undefined") {
+        return 0;
+    }
     const h = document.documentElement,
         b = document.body,
         st = 'scrollTop',

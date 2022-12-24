@@ -217,10 +217,10 @@ function PostEffect() {
             // texel=vec4(0.0);
             // `)
 
-            console.log(shader.fragmentShader);
+            // console.log(shader.fragmentShader);
         };
 
-        console.log(godrayRef.current);
+        // console.log(godrayRef.current);
     };
 
     useFrame(() => {

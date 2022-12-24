@@ -58,7 +58,7 @@ function computeMaterial(
         `,
         );
 
-        console.log(shader.fragmentShader);
+        // console.log(shader.fragmentShader);
 
         shader.fragmentShader = shader.fragmentShader.replace(
             'vec3 totalSpecular = reflectedLight.directSpecular + reflectedLight.indirectSpecular;',

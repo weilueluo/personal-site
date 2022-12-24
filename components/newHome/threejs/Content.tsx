@@ -66,7 +66,7 @@ export default function ThreeJsContent() {
                 <Lines />
             </lightPositionContext.Provider>
 
-            <ThreeJsPostEffects />
+            {/* <ThreeJsPostEffects /> */}
 
             <OrbitControls
                 // ref={controlRef}
