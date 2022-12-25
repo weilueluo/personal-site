@@ -6,7 +6,7 @@ export default function Hello() {
     const [titleStyle, setTitleStyle] = useState(getStyleByCurrentScroll());
 
     useEffect(() => {
-        const handleScroll = () => setTitleStyle(getStyleByCurrentScroll());;
+        const handleScroll = () => setTitleStyle(getStyleByCurrentScroll());
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
@@ -32,5 +32,5 @@ function getStyleByCurrentScroll() {
         opacity: 1 - 4 * scroll,
         transform: `translateZ(${scroll * 100}px)`,
         filter: `blur(${scroll * 50}px)`,
-    }
+    };
 }
