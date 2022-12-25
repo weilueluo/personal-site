@@ -39,10 +39,7 @@ export function ThreeJsPostEffects() {
             // .replace('texel=texture2D(inputBuffer,coord);', `
             // texel=vec4(0.0);
             // `)
-
         };
-
-        console.log(godrayRef.current);
     };
 
     const handleSun = useCallback(sun => {

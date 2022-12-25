@@ -1,0 +1,49 @@
+
+$button-gap: 4px
+$height: 30px
+$text-width: 75px  // need to adjust this according to content... I wish we can animate fit-content...
+$block-size: calc( $height - $button-gap * 2 )
+$button-width: calc( $block-size + $text-width + $button-gap * 2 )
+
+.toggleButton
+    height: $height
+    width: $button-width
+
+    text-transform: capitalize
+
+    border-radius: calc( $height / 2 )
+
+    position: relative
+
+    display: flex
+    flex-direction: row
+    align-items: center
+
+    padding: calc( $button-gap / 2 ) $button-gap
+
+    border: 0
+
+    background-color: black
+
+    overflow: hidden
+
+    filter: drop-shadow(0px 0px 5px black)
+
+.block
+    height: $block-size
+    width: $block-size
+    border-radius: 50%
+    background-color: white
+
+.text
+    width: $text-width
+    color: white
+    transition: width 0.5s cubic-bezier(0.5, 0.10, 0.1, 1)
+    white-space: nowrap
+    overflow: hidden
+    font-family: Nunito, monospace, sans-serif
+
+.on .offSpan,
+.off .onSpan
+    width: 0
+    overflow: hidden

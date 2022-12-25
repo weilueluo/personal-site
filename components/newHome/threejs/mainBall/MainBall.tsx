@@ -17,7 +17,6 @@ import {
     useMeshNodes,
 } from '../../../common/model';
 import { getAltScrollWithDelay } from '../../../common/scroll';
-import { lights_fragment_begin as customLightsFragBegin } from './lights_fragment_begin.glsl';
 
 function computeMaterial(
     sharedMat: MeshStandardMaterial,

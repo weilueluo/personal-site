@@ -12,6 +12,7 @@ import { ThreeJsPostEffects } from './PostEffects';
 import Lines from './lines/Lines';
 import { useFrame } from '@react-three/fiber';
 import { Rotator3D } from '../../common/rotate';
+import { PostEffectModeContext } from '../options/OptionsManager';
 
 const rotation1 = new Euler()
     .setFromQuaternion(new Quaternion().random())
@@ -21,19 +22,20 @@ const rotation2 = new Euler()
     .toArray() as unknown as number[];
 const tempVec3 = new Vector3(10, 10, 0);
 
-
-export default function ThreeJsContent() {
+export default function ThreeJsCanvasContent() {
     const lightPosition = tempVec3;
 
-    const rotator = useRef(new Rotator3D(0,0,8.5,0.01));
+    const rotator = useRef(new Rotator3D(0, 0, 8.5, 0.01));
 
-    useFrame(state => {
-        lightPosition.set(...rotator.current.next(0.003, 0.005))
-    })
+    useFrame(() => {
+        lightPosition.set(...rotator.current.next(0.003, 0.005));
+    });
 
     // const handleAxesHelper = useCallback( (axesHelper:  AxesHelper) => {
     //     axesHelper.setColors('red', 'blue', 'green');
     // }, [])
+
+    const usePostEffects = useContext(PostEffectModeContext);
 
     return (
         <>
@@ -66,7 +68,7 @@ export default function ThreeJsContent() {
                 <Lines />
             </lightPositionContext.Provider>
 
-            {/* <ThreeJsPostEffects /> */}
+            {usePostEffects && <ThreeJsPostEffects />}
 
             <OrbitControls
                 // ref={controlRef}

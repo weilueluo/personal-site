@@ -1,10 +1,10 @@
 import ThreeJsCanvas from "./Canvas";
-import ThreeJsContent from "./Content";
+import ThreeJsCanvasContent from "./Content";
 
-export default function ThreeJs() {
+export default function ThreeJsContent() {
     return (
         <ThreeJsCanvas>
-            <ThreeJsContent />
+            <ThreeJsCanvasContent />
         </ThreeJsCanvas>
     )
 }

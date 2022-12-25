@@ -6,11 +6,7 @@ export default function Hello() {
     const [titleStyle, setTitleStyle] = useState({
         opacity: 1,
         transform: 'none',
-        filter: `0px`
-    });
-
-    const [containerStyle, setContainerStyle] = useState({
-        perspective: 75,
+        filter: `0px`,
     });
 
     useEffect(() => {
@@ -19,7 +15,7 @@ export default function Hello() {
             setTitleStyle({
                 opacity: 1 - 4 * scroll,
                 transform: `translateZ(${scroll * 100}px)`,
-                filter: `blur(${scroll*10}px)`
+                filter: `blur(${scroll * 50}px)`,
             });
         };
         window.addEventListener('scroll', handleScroll);
@@ -27,10 +23,16 @@ export default function Hello() {
     }, []);
 
     return (
-        <div className={styles.container} style={containerStyle}>
-            <h1 className={styles.title} style={titleStyle}>
-                Hello I am Weilue
-            </h1>
-        </div>
+        titleStyle.opacity > 0 && (
+            <div
+                className={styles.container}
+                style={{
+                    perspective: 75,
+                }}>
+                <h1 className={styles.title} style={titleStyle}>
+                    Hello I am Weilue
+                </h1>
+            </div>
+        )
     );
 }
