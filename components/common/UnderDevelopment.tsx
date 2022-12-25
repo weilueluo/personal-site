@@ -3,7 +3,7 @@ import { useState } from 'react'
 import styles from "./UnderDevelopment.module.sass"
 
 export default function UnderDevelopment() {
-    const [visible, setVisible] = useState(true)
+    const [visible, setVisible] = useState(true);
 
     return (
         visible && <div className={styles["under-development-banner"]}>

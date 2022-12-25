@@ -24,13 +24,15 @@ export default function ThreeJsLights() {
         }
     })
 
+    const intensity = getDeviceDependent(1, 5);
+
     return (
         <>
             <spotLight
                 ref={lightRef}
                 position={lightPosition}
                 // color={0xffffff}
-                intensity={10}
+                intensity={intensity}
                 shadow-mapSize-height={mapSize}
                 shadow-mapSize-width={mapSize}
                 shadow-camera-near={0.01}

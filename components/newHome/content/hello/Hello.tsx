@@ -3,21 +3,10 @@ import { getAltScroll } from '../../../common/scroll';
 import styles from './Hello.module.sass';
 
 export default function Hello() {
-    const [titleStyle, setTitleStyle] = useState({
-        opacity: 1,
-        transform: 'none',
-        filter: `0px`,
-    });
+    const [titleStyle, setTitleStyle] = useState(getStyleByCurrentScroll());
 
     useEffect(() => {
-        const handleScroll = () => {
-            const scroll = getAltScroll();
-            setTitleStyle({
-                opacity: 1 - 4 * scroll,
-                transform: `translateZ(${scroll * 100}px)`,
-                filter: `blur(${scroll * 50}px)`,
-            });
-        };
+        const handleScroll = () => setTitleStyle(getStyleByCurrentScroll());;
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
@@ -35,4 +24,13 @@ export default function Hello() {
             </div>
         )
     );
+}
+
+function getStyleByCurrentScroll() {
+    const scroll = getAltScroll();
+    return {
+        opacity: 1 - 4 * scroll,
+        transform: `translateZ(${scroll * 100}px)`,
+        filter: `blur(${scroll * 50}px)`,
+    }
 }

@@ -1,6 +1,7 @@
 import { Canvas, RootState } from '@react-three/fiber';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ACESFilmicToneMapping, Vector3, sRGBEncoding } from 'three';
+import { getDeviceDependent } from '../../common/misc';
 import { BaseProps } from '../../types/react';
 
 export interface CustomCanvasProps extends BaseProps {
@@ -12,6 +13,16 @@ export default function ThreeJsCanvas(props: CustomCanvasProps) {
 
     const onCreated = useCallback((state: RootState) => {
         state.setDpr(window.devicePixelRatio);
+    }, []);
+
+    const [antialias, setAntialias] = useState(false);
+    const [physicallyCorrectLights, setPhysicallyCorrectLights] =
+        useState(false);
+
+    useEffect(() => {
+        const turnOn = getDeviceDependent(false, true);
+        setAntialias(turnOn);
+        setPhysicallyCorrectLights(turnOn);
     }, []);
 
     return (
@@ -30,10 +41,10 @@ export default function ThreeJsCanvas(props: CustomCanvasProps) {
                 far: 100,
             }}
             gl={{
-                antialias: true,
+                antialias: antialias,
                 outputEncoding: sRGBEncoding,
                 toneMapping: ACESFilmicToneMapping,
-                physicallyCorrectLights: true,
+                physicallyCorrectLights: physicallyCorrectLights,
             }}
             raycaster={{}}
             shadows={true}

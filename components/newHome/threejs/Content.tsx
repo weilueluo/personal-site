@@ -1,18 +1,19 @@
 import { OrbitControls, Sparkles } from '@react-three/drei';
-import { useCallback, useContext, useRef } from 'react';
-import { AxesHelper, Euler, Quaternion, Vector3 } from 'three';
+import { useFrame } from '@react-three/fiber';
+import { useContext, useRef } from 'react';
+import { Euler, Quaternion, Vector3 } from 'three';
 import { lightPositionContext } from '../../common/contexts';
+import { getDeviceDependent } from '../../common/misc';
+import { Rotator3D } from '../../common/rotate';
+import { PostEffectModeContext } from '../options/OptionsManager';
 import ThreeJsLights from './Lights';
+import { ThreeJsPostEffects } from './PostEffects';
 import GradientBackground from './gradientBackground/GradientBackground';
+import Lines from './lines/Lines';
 import MainBall from './mainBall//MainBall';
 import Moon from './moon/Moon';
 import ThreeRotateText from './rotateText/ThreeRotateText';
 import ThreeJsStats from './stats/Stats';
-import { ThreeJsPostEffects } from './PostEffects';
-import Lines from './lines/Lines';
-import { useFrame } from '@react-three/fiber';
-import { Rotator3D } from '../../common/rotate';
-import { PostEffectModeContext } from '../options/OptionsManager';
 
 const rotation1 = new Euler()
     .setFromQuaternion(new Quaternion().random())
@@ -25,38 +26,45 @@ const tempVec3 = new Vector3(10, 10, 0);
 export default function ThreeJsCanvasContent() {
     const lightPosition = tempVec3;
 
-    const rotator = useRef(new Rotator3D(0, 0, 8.5, 0.01));
-
-    useFrame(() => {
-        lightPosition.set(...rotator.current.next(0.003, 0.005));
-    });
-
     // const handleAxesHelper = useCallback( (axesHelper:  AxesHelper) => {
     //     axesHelper.setColors('red', 'blue', 'green');
     // }, [])
 
     const usePostEffects = useContext(PostEffectModeContext);
 
+    const outerBallRadius = getDeviceDependent(3.5, 6);
+    const innerBallRadius1 = outerBallRadius / 2
+    const innerBallRadius2 = outerBallRadius / 3
+    const godRayRadius = outerBallRadius - getDeviceDependent(0.1, 1);
+    const rotateTextRadius = outerBallRadius + getDeviceDependent(1, 1.5)
+    const rotateLightRadius = outerBallRadius + getDeviceDependent(2, 2.5)
+
+    // move light position around
+    const rotator = useRef(new Rotator3D(0, 0, rotateLightRadius, 0.01));
+    useFrame(() => {
+        lightPosition.set(...rotator.current.next(0.003, 0.005));
+    });
+
     return (
         <>
             <GradientBackground />
             <ThreeJsStats />
-            <MainBall ballRadius={6} float={true} />
-            <MainBall ballRadius={3} rotation={rotation1} delay={0.012} />
-            <MainBall ballRadius={2} rotation={rotation2} delay={0.01} />
+            <MainBall ballRadius={outerBallRadius} float={true} />
+            <MainBall ballRadius={innerBallRadius1} rotation={rotation1} delay={0.02} />
+            <MainBall ballRadius={innerBallRadius2} rotation={rotation2} delay={0.01} />
 
             {/* <axesHelper ref={handleAxesHelper} args={[100]} /> */}
             <ThreeRotateText
                 text={"Weilue's Place"}
-                radius={7.5}
+                radius={rotateTextRadius}
                 rotationZ={0}
                 fadeInOnScrollSpeed={-1}
             />
 
             <Sparkles
-                count={500}
-                scale={50}
-                size={20}
+                count={getDeviceDependent(350, 500)}
+                scale={getDeviceDependent(35, 50)}
+                size={getDeviceDependent(15, 20)}
                 speed={1}
                 opacity={0.75}
                 noise={5}
@@ -68,7 +76,7 @@ export default function ThreeJsCanvasContent() {
                 <Lines />
             </lightPositionContext.Provider>
 
-            {usePostEffects && <ThreeJsPostEffects />}
+            {usePostEffects && <ThreeJsPostEffects godRayRadius={godRayRadius} />}
 
             <OrbitControls
                 // ref={controlRef}

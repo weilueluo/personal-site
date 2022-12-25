@@ -1,10 +1,10 @@
 import { useContext } from 'react';
 import HTMLCSSContent from './content/Content';
-import HeightFiller from './heightFiller/HeightFiller';
 import ThreeJsLoaderProgress from './loaderProgress/LoaderProgress';
 import NavigationPanel from './navPanel/NavigationPanel';
 import OptionsManager, { ExploreModeContext } from './options/OptionsManager';
 import ThreeJsContent from './threejs/Threejs';
+import HeightFiller from './heightFiller/HeightFiller';
 
 export default function HomePage() {
     return (

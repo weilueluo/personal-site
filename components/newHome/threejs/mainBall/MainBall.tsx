@@ -28,23 +28,14 @@ function computeMaterial(
     // }
 
     mat.onBeforeCompile = shader => {
-        // console.log(shader);
         shader.uniforms = UniformsUtils.merge([shader.uniforms, uniforms]);
-
-        // shader.fragmentShader = shader.fragmentShader.replace('#include <lights_fragment_begin>', customLightsFragBegin)
-
-        shader.vertexShader = shader.vertexShader.replace(
-            'void main() {',
-            `
-        void main() {
-        `,
-        );
 
         shader.fragmentShader = shader.fragmentShader.replace(
             'void main() {',
             `uniform vec3 meshPosition;
         uniform float specularFactor;
         uniform float colorFactor;
+        uniform float scrollAmount;
         void main() {`,
         );
 
@@ -53,17 +44,17 @@ function computeMaterial(
             `vec3 outgoingLight = totalDiffuse + totalSpecular * specularFactor + totalEmissiveRadiance;
         outgoingLight = mix(outgoingLight, meshPosition, colorFactor);
         //outgoingLight = mix(outgoingLight, vec3(0.8), 0.3);
-        //diffuseColor.a = 0.9;
+        diffuseColor.a = 1.0 - scrollAmount;
         `,
         );
 
+        // shader.fragmentShader = shader.fragmentShader.replace(
+        //     '#include <output_fragment>',
+        //     `gl_FragColor = vec4( outgoingLight, 1.0 - scrollAmount );`,
+        // );
+
+        mat.userData.shader = shader;
         // console.log(shader.fragmentShader);
-
-        shader.fragmentShader = shader.fragmentShader.replace(
-            'vec3 totalSpecular = reflectedLight.directSpecular + reflectedLight.indirectSpecular;',
-            `vec3 totalSpecular = reflectedLight.directSpecular + reflectedLight.indirectSpecular;
-        `,
-        );
     };
 
     return mat;
@@ -77,12 +68,14 @@ function computeMaterials(meshNodes) {
         // metalness: 1,n
         depthWrite: true,
         depthTest: true,
+        transparent: true
     });
     return meshNodes.map(node => {
         return computeMaterial(sharedMat, {
             meshPosition: { value: node.position },
             specularFactor: { value: 1 },
-            colorFactor: { value: 0.2 },
+            colorFactor: { value: 0.1 },
+            scrollAmount: { value: 0.0 },
         });
     });
 }
@@ -140,6 +133,14 @@ export default function MainBall(props: MainBallProps) {
                         (Math.sin(time + aniProps.random * 37) + 1) / 2,
                     );
                     mesh.position.lerp(targetPosition, 0.075);
+                }
+
+                if (
+                    !Array.isArray(mesh.material) &&
+                    mesh.material.userData.shader
+                ) {
+                    const shader = mesh.material.userData.shader;
+                    shader.uniforms.scrollAmount.value = scroll;
                 }
             });
         }

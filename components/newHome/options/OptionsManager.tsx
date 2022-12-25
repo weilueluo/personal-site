@@ -1,11 +1,9 @@
 import { createContext, useReducer } from 'react';
+import { getDeviceDependent } from '../../common/misc';
 import { BaseProps } from '../../types/react';
-import {
-    ExploreModeConfig,
-    LightModeConfig,
-    PostEffectsModeConfig,
-} from './OptionConfig';
-import OptionsProvider, { ProviderProp } from './optionsProvider/OptionsProvider';
+import OptionsProvider, {
+    ProviderProp,
+} from './optionsProvider/OptionsProvider';
 import OptionsUI, { UIProp } from './optionsUI/OptionsUI';
 
 export const LightModeContext = createContext<boolean>(false);
@@ -13,17 +11,11 @@ export const ExploreModeContext = createContext<boolean>(false);
 export const PostEffectModeContext = createContext<boolean>(false);
 
 export default function OptionsManager(props: BaseProps) {
-    const [lightMode, lightModeToggle] = useReducer(
-        state => !state,
-        LightModeConfig.initState,
-    );
-    const [exploreMode, exploreModeToggle] = useReducer(
-        state => !state,
-        ExploreModeConfig.initState,
-    );
+    const [lightMode, lightModeToggle] = useReducer(state => !state, false);
+    const [exploreMode, exploreModeToggle] = useReducer(state => !state, false);
     const [postEffectMode, postEfftecModeToggle] = useReducer(
         state => !state,
-        PostEffectsModeConfig.initState,
+        getDeviceDependent(false, true),
     );
 
     const optionProps: (UIProp & ProviderProp)[] = [
@@ -56,7 +48,9 @@ export default function OptionsManager(props: BaseProps) {
 
     return (
         <>
-            <OptionsProvider providerProps={optionProps}>{props.children}</OptionsProvider>
+            <OptionsProvider providerProps={optionProps}>
+                {props.children}
+            </OptionsProvider>
             <OptionsUI uiProps={optionProps} />
         </>
     );

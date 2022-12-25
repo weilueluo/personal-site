@@ -11,12 +11,18 @@ import { BlendFunction, KernelSize } from 'postprocessing';
 import { useCallback, useRef, useState } from 'react';
 import { Color, MathUtils } from 'three';
 import { getAltScroll } from '../../common/scroll';
+import { getDeviceDependent } from '../../common/misc';
+import { BaseProps } from '../../types/react';
 
 const white = new Color(0xffffff);
 const black = new Color(0x000000);
 const tempColor = new Color();
 
-export function ThreeJsPostEffects() {
+export interface ThreeJsPostEffectsProps extends BaseProps {
+    godRayRadius: number
+}
+
+export function ThreeJsPostEffects(props: ThreeJsPostEffectsProps) {
     const sunRef = useRef<any>(null);
     const godrayRef = useRef<any>(null);
     const bloomRef = useRef<any>(null);
@@ -44,12 +50,13 @@ export function ThreeJsPostEffects() {
 
     const handleSun = useCallback(sun => {
         sunRef.current = sun;
+        const samples = getDeviceDependent(30, 60);
         setGodray(
             <GodRays
                 ref={handleGodray}
                 sun={sunRef.current}
                 blendFunction={BlendFunction.SCREEN}
-                samples={60}
+                samples={samples}
                 density={0.9}
                 decay={0.94}
                 weight={0.2}
@@ -125,7 +132,7 @@ export function ThreeJsPostEffects() {
                 {godray}
             </EffectComposer>
             <mesh ref={handleSun}>
-                <sphereGeometry args={[5.5, 32, 16]} />
+                <sphereGeometry args={[props.godRayRadius, 32, 16]} />
                 <meshStandardMaterial
                     ref={matRef}
                     emissive={black}
