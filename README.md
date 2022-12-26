@@ -27,4 +27,4 @@ npm run start
 - [ ] ...
 
 ### Feedback
-Just raise an issue :)
+You are more than welcome to raise an issue :D
