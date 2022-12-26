@@ -6,7 +6,7 @@ import OptionsProvider, {
 } from './optionsProvider/OptionsProvider';
 import OptionsUI, { UIProp } from './optionsUI/OptionsUI';
 
-export const LightModeContext = createContext<boolean>(false);
+export const LightModeContext = createContext<boolean>(true);
 export const ExploreModeContext = createContext<boolean>(false);
 export const PostEffectModeContext = createContext<boolean>(false);
 
@@ -34,15 +34,7 @@ export default function OptionsManager(props: BaseProps) {
             offName: 'effects off',
             toggle: postEfftecModeToggle,
             context: PostEffectModeContext,
-        },
-        // {
-        //     name: 'Light Mode',
-        //     value: lightMode,
-        //     onName: 'light',
-        //     offName: 'dark',
-        //     toggle: lightModeToggle,
-        //     context: LightModeContext,
-        // }
+        }
     ];
 
     const lightProp: (UIProp & ProviderProp) = {
