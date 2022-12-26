@@ -11,7 +11,7 @@ export const ExploreModeContext = createContext<boolean>(false);
 export const PostEffectModeContext = createContext<boolean>(false);
 
 export default function OptionsManager(props: BaseProps) {
-    const [lightMode, lightModeToggle] = useReducer(state => !state, false);
+    const [lightMode, lightModeToggle] = useReducer(state => {console.log('toggle'); return !state}, false);
     const [exploreMode, exploreModeToggle] = useReducer(state => !state, false);
     const [postEffectMode, postEfftecModeToggle] = useReducer(
         state => !state,
@@ -19,15 +19,6 @@ export default function OptionsManager(props: BaseProps) {
     );
 
     const optionProps: (UIProp & ProviderProp)[] = [
-        // TODO: support light mode
-        // {
-        //     name: 'Light Mode',
-        //     value: lightMode,
-        //     onName: 'light',
-        //     offName: 'dark',
-        //     toggle: lightModeToggle,
-        //     context: LightModeContext,
-        // },
         {
             name: 'Explore Mode',
             value: exploreMode,
@@ -44,14 +35,31 @@ export default function OptionsManager(props: BaseProps) {
             toggle: postEfftecModeToggle,
             context: PostEffectModeContext,
         },
+        // {
+        //     name: 'Light Mode',
+        //     value: lightMode,
+        //     onName: 'light',
+        //     offName: 'dark',
+        //     toggle: lightModeToggle,
+        //     context: LightModeContext,
+        // }
     ];
+
+    const lightProp: (UIProp & ProviderProp) = {
+        name: 'Light Mode',
+        value: lightMode,
+        onName: 'light',
+        offName: 'dark',
+        toggle: lightModeToggle,
+        context: LightModeContext,
+    }
 
     return (
         <>
-            <OptionsProvider providerProps={optionProps}>
+            <OptionsProvider providerProps={optionProps} lightProp={lightProp}>
+                <OptionsUI uiProps={optionProps} lightProp={lightProp} />
                 {props.children}
             </OptionsProvider>
-            <OptionsUI uiProps={optionProps} />
         </>
     );
 }

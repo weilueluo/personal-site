@@ -8,18 +8,17 @@ import {
     Vignette,
 } from '@react-three/postprocessing';
 import { BlendFunction, KernelSize } from 'postprocessing';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useContext, useRef, useState } from 'react';
 import { Color, MathUtils } from 'three';
 import { getAltScroll } from '../../common/scroll';
 import { getDeviceDependent } from '../../common/misc';
 import { BaseProps } from '../../types/react';
+import { LightModeContext } from '../options/OptionsManager';
 
 const white = new Color(0xffffff);
-const black = new Color(0x000000);
-const tempColor = new Color();
 
 export interface ThreeJsPostEffectsProps extends BaseProps {
-    godRayRadius: number
+    godRayRadius: number;
 }
 
 export function ThreeJsPostEffects(props: ThreeJsPostEffectsProps) {
@@ -29,46 +28,65 @@ export function ThreeJsPostEffects(props: ThreeJsPostEffectsProps) {
     const matRef = useRef<any>();
     const [godray, setGodray] = useState(null);
 
-    const handleGodray = godray => {
-        godrayRef.current = godray;
-        if (!godray) {
-            return;
-        }
-        godray.godRaysPass.fullscreenMaterial.onBeforeCompile = shader => {
-            shader.fragmentShader = shader.fragmentShader.replace(
-                '#include <dithering_fragment>',
-                `
-                //#include <dithering_fragment>
-                gl_FragColor = gl_FragColor * -50.;
-            `,
-            );
-            // .replace('texel=texture2D(inputBuffer,coord);', `
-            // texel=vec4(0.0);
-            // `)
-        };
-    };
+    const lightMode = useContext(LightModeContext);
 
-    const handleSun = useCallback(sun => {
-        sunRef.current = sun;
-        const samples = getDeviceDependent(30, 60);
-        setGodray(
-            <GodRays
-                ref={handleGodray}
-                sun={sunRef.current}
-                blendFunction={BlendFunction.SCREEN}
-                samples={samples}
-                density={0.9}
-                decay={0.94}
-                weight={0.2}
-                exposure={0.9}
-                clampMax={1}
-                // width={Resizer.AUTO_SIZE}
-                // height={Resizer.AUTO_SIZE}
-                kernelSize={KernelSize.LARGE}
-                blur={1}
-            />,
-        );
-    }, []);
+    const handleGodray = useCallback(
+        godray => {
+            godrayRef.current = godray;
+            if (!godray) {
+                return;
+            }
+            const mat = godray.godRaysPass.fullscreenMaterial;
+
+            mat.onBeforeCompile = shader => {
+                console.log('before compile');
+                
+                shader.fragmentShader = shader.fragmentShader.replace(
+                    'void main()',
+                    `
+                uniform float colorFactor;
+                void main()
+            `,
+                );
+
+                shader.fragmentShader = shader.fragmentShader.replace(
+                    '#include <dithering_fragment>',
+                    `
+                #include <dithering_fragment>
+                gl_FragColor = gl_FragColor * colorFactor;
+            `,
+                );
+                mat.uniforms.colorFactor = { value: lightMode ? 1.0 : -50.0 };
+                mat.customProgramCacheKey = () => (lightMode ? '1.0' : '-50.0');
+            };
+        },
+        [lightMode],
+    );
+
+    const handleSun = useCallback(
+        sun => {
+            sunRef.current = sun;
+            const samples = getDeviceDependent(30, 60);
+            setGodray(
+                <GodRays
+                    ref={handleGodray}
+                    sun={sunRef.current}
+                    blendFunction={BlendFunction.SCREEN}
+                    samples={samples}
+                    density={0.9}
+                    decay={0.94}
+                    weight={0.2}
+                    exposure={0.9}
+                    clampMax={1}
+                    // width={Resizer.AUTO_SIZE}
+                    // height={Resizer.AUTO_SIZE}
+                    kernelSize={KernelSize.LARGE}
+                    blur={1}
+                />,
+            );
+        },
+        [handleGodray],
+    );
 
     useFrame(state => {
         const scroll = getAltScroll();
@@ -88,10 +106,7 @@ export function ThreeJsPostEffects(props: ThreeJsPostEffectsProps) {
             // lightPosition
             // weight
             const uniforms = godrayRef.current.godRaysMaterial.uniforms;
-            uniforms.clampMax.value = Math.max(
-                MathUtils.lerp(1, 0, scroll),
-                0,
-            );
+            uniforms.clampMax.value = Math.max(MathUtils.lerp(1, 0, scroll), 0);
         }
 
         if (bloomRef.current) {
@@ -102,12 +117,8 @@ export function ThreeJsPostEffects(props: ThreeJsPostEffectsProps) {
             );
         }
 
-        if (matRef.current) {
-            // console.log(matRef.current);
-            matRef.current.color.set(tempColor.lerpColors(white, black, alpha));
-            matRef.current.emissive.set(
-                tempColor.lerpColors(white, black, alpha),
-            );
+        if (godrayRef) {
+            // console.log(godrayRef);
         }
     });
 
@@ -122,21 +133,21 @@ export function ThreeJsPostEffects(props: ThreeJsPostEffectsProps) {
                 />
                 <Bloom
                     ref={bloomRef}
-                    intensity={0.1}
+                    intensity={0.05}
                     luminanceThreshold={0}
                     luminanceSmoothing={0.75}
                     height={500}
                 />
                 <Noise opacity={0.05} />
-                <Vignette eskil={false} offset={0.1} darkness={1.1} />
+                <Vignette eskil={false} offset={0.1} darkness={1} />
                 {godray}
             </EffectComposer>
             <mesh ref={handleSun}>
                 <sphereGeometry args={[props.godRayRadius, 32, 16]} />
                 <meshStandardMaterial
                     ref={matRef}
-                    emissive={black}
-                    opacity={0.01}
+                    emissive={white}
+                    opacity={lightMode ? 1 : 0.01}
                 />
             </mesh>
         </>

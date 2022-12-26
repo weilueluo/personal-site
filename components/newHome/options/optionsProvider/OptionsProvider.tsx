@@ -1,5 +1,5 @@
-import { Context, ReactNode } from "react";
-import { BaseProps } from "../../../types/react";
+import { Context, ReactNode } from 'react';
+import { BaseProps } from '../../../types/react';
 
 export interface ProviderProp {
     context: Context<unknown>;
@@ -8,6 +8,7 @@ export interface ProviderProp {
 
 export interface ProviderProps extends BaseProps {
     providerProps: ProviderProp[];
+    lightProp: ProviderProp;
 }
 
 export default function OptionsProvider(props: ProviderProps) {
@@ -19,5 +20,10 @@ export default function OptionsProvider(props: ProviderProps) {
             </prop.context.Provider>
         );
     }
-    return node;
+
+    return (
+        <props.lightProp.context.Provider value={props.lightProp.value}>
+            {node}
+        </props.lightProp.context.Provider>
+    );
 }

@@ -44,7 +44,7 @@ function computeMaterial(
             `vec3 outgoingLight = totalDiffuse + totalSpecular * specularFactor + totalEmissiveRadiance;
         outgoingLight = mix(outgoingLight, meshPosition, colorFactor);
         //outgoingLight = mix(outgoingLight, vec3(0.8), 0.3);
-        diffuseColor.a = 1.0 - scrollAmount;
+        diffuseColor.a = 1.0 - max(scrollAmount * 2.0 - 0.5, 0.0);
         `,
         );
 

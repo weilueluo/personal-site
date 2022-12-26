@@ -1,6 +1,6 @@
 import { useFrame } from '@react-three/fiber';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { Mesh, ShaderMaterial, Vector3 } from 'three';
+import { MathUtils, Mesh, ShaderMaterial, Vector3 } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 
@@ -62,11 +62,13 @@ export default function RotateText(props: RotateTextProps) {
     //         })
     //     }
     // }, [arrReady, arrRef, props.initPhi])
+    let currRadius = props.radius;
 
     useFrame(state => {
         const altScroll = getAltScroll();
 
-        const radius = props.radius + props.expandOnScrollSpeed * altScroll;
+        const targetRadius = props.radius + props.expandOnScrollSpeed * altScroll;
+        currRadius = MathUtils.lerp(currRadius, targetRadius, 0.01)
         // const opacity = 1 - (props.expandOnScrollSpeed == 0 ? 0 : altScroll);
         const time = state.clock.getElapsedTime();
 
@@ -89,7 +91,7 @@ export default function RotateText(props: RotateTextProps) {
                 const mesh = arrRef.current[i];
                 const oldPosition = mesh.position.clone();
 
-                mesh.position.set(...polar2xyz(theta, phi, radius));
+                mesh.position.set(...polar2xyz(theta, phi, currRadius));
                 const newPosition = mesh.position.clone();
 
                 // calculate the up vector using cross product, assume we take small steps to find the right vectors for cross product
@@ -107,7 +109,7 @@ export default function RotateText(props: RotateTextProps) {
                 );
             }
 
-            theta += Math.atan2(offset, radius) + charSpacingAngle;
+            theta += Math.atan2(offset, currRadius) + charSpacingAngle;
         }
     });
 
@@ -124,6 +126,7 @@ const uniforms = {
     uFadeInOnScrollSpeed: { value: 0.0 },
     uLightPosition: { value: [0, 0, 0] },
     uPosition: { value: tempVec3 },
+    uColor: { value: [10,10,10] }
 };
 
 const sharedMaterial = new ShaderMaterial({
@@ -173,7 +176,7 @@ function computeMeshAndMaterial(characters, font, fontSize, handleMesh) {
 
 RotateText.defaultProps = {
     radius: 8.5,
-    expandOnScrollSpeed: 30,
+    expandOnScrollSpeed: 100,
     initOffset: 0,
     fadeInOnScrollSpeed: 0,
     position: new Vector3(0, 0, 0),

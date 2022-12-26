@@ -7,6 +7,7 @@ uniform float uFadeInOnScrollSpeed;
 uniform float uScrollAmount;
 uniform vec3 uLightPosition;
 uniform vec3 uPosition;
+uniform vec3 uColor;
 
 varying vec3 vNormal;
 varying vec3 vvNormal;
@@ -33,7 +34,7 @@ varying vec3 vvNormal;
 //     return vec3(quantize(values.x), quantize(values.y), quantize(values.z));
 // }
 
-const float MAX_OPACITY = .5;
+const float MAX_OPACITY = .8;
 
 void main() {
     float opacity = 1.0;
@@ -46,7 +47,7 @@ void main() {
 
     opacity *= MAX_OPACITY;
 
-    vec3 color = vec3(.5, .5, .5);// normalize(vvNormal * 0.5 + 0.5);
+    vec3 color = uColor / 255.;
 
     // shadow 
     float angle = dot(normalize(vNormal), normalize(uLightPosition - uPosition));

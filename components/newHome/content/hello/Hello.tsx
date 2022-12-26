@@ -19,7 +19,7 @@ export default function Hello() {
                     perspective: 75,
                 }}>
                 <h1 className={styles.title} style={titleStyle}>
-                    Hello I am Weilue
+                    Weilue's Place
                 </h1>
             </div>
         )

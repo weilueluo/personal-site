@@ -29,6 +29,14 @@ $button-width: calc( $block-size + $text-width + $button-gap * 2 )
 
     filter: drop-shadow(0px 0px 5px black)
 
+    &.disabled
+        filter: none
+        background-color: gray
+        color: gray
+        .block
+            background-color: darkgray
+
+
 .block
     height: $block-size
     width: $block-size
