@@ -11,7 +11,7 @@ export const ExploreModeContext = createContext<boolean>(false);
 export const PostEffectModeContext = createContext<boolean>(false);
 
 export default function OptionsManager(props: BaseProps) {
-    const [lightMode, lightModeToggle] = useReducer(state => {console.log('toggle'); return !state}, false);
+    const [lightMode, lightModeToggle] = useReducer(state => {console.log('toggle'); return !state}, true);
     const [exploreMode, exploreModeToggle] = useReducer(state => !state, false);
     const [postEffectMode, postEfftecModeToggle] = useReducer(
         state => !state,
