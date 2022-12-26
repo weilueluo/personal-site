@@ -16,7 +16,7 @@ import {
     useJsx,
     useMeshNodes,
 } from '../../../common/model';
-import { getAltScrollWithDelay } from '../../../common/scroll';
+import { getAltScroll, getAltScrollWithDelay } from '../../../common/scroll';
 
 function computeMaterial(
     sharedMat: MeshStandardMaterial,
@@ -85,6 +85,8 @@ export type MainBallProps = {
     rotation?: number[];
     delay?: number;
     float?: boolean;
+    rotate?: boolean;
+    rotateSpeed?: number;
 };
 
 const tempVec3 = new Vector3();
@@ -103,6 +105,7 @@ export default function MainBall(props: MainBallProps) {
     const ballRef = useRef<Group>();
     const sceneRef = useRef<Group>();
 
+    // scroll animations
     useFrame((state: RootState) => {
         if (sceneRef.current && animationProps !== null) {
             const scroll = getAltScrollWithDelay(props.delay || 0);
@@ -146,6 +149,7 @@ export default function MainBall(props: MainBallProps) {
         }
     });
 
+    // set rotation
     useEffect(() => {
         if (!ballRef.current) return;
         const rot = props.rotation || [0, 0, 0];
@@ -155,6 +159,18 @@ export default function MainBall(props: MainBallProps) {
     const handleBallRef = (ball: Group) => {
         ballRef.current = ball;
     };
+
+    const rotateSpeed = props.rotateSpeed || 1
+
+    // self rotation
+    useFrame(() => {
+        if (props.rotate && ballRef.current && getAltScroll() < 0.15) {
+            const ball = ballRef.current;
+            ball.rotation.x += 0.0005 * rotateSpeed;
+            ball.rotation.y += 0.00025 * rotateSpeed;
+            ball.rotation.z += 0.0001 * rotateSpeed;
+        }
+    })
 
     const centerOffset = useCenterOffset(gltf);
 

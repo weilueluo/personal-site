@@ -54,21 +54,13 @@ export default function RotateText(props: RotateTextProps) {
         });
     }, [fontSize, onArrItem]);
 
-    // useEffect(() => {
-    //     if (arrReady) {
-    //         console.log(arrRef.current);
-    //         arrRef.current.forEach(mesh => {
-    //             mesh.rotation.set(0,0,props.initPhi)
-    //         })
-    //     }
-    // }, [arrReady, arrRef, props.initPhi])
     let currRadius = props.radius;
 
     useFrame(state => {
         const altScroll = getAltScroll();
 
         const targetRadius = props.radius + props.expandOnScrollSpeed * altScroll;
-        currRadius = MathUtils.lerp(currRadius, targetRadius, 0.01)
+        currRadius = MathUtils.lerp(currRadius, targetRadius, 0.02);
         // const opacity = 1 - (props.expandOnScrollSpeed == 0 ? 0 : altScroll);
         const time = state.clock.getElapsedTime();
 

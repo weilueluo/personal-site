@@ -1,4 +1,4 @@
-import { OrbitControls, Sparkles } from '@react-three/drei';
+import { OrbitControls, Sparkles, Stars } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useContext, useRef } from 'react';
 import { Euler, Quaternion, Vector3 } from 'three';
@@ -33,11 +33,11 @@ export default function ThreeJsCanvasContent() {
     const usePostEffects = useContext(PostEffectModeContext);
 
     const outerBallRadius = getDeviceDependent(3.5, 6);
-    const innerBallRadius1 = outerBallRadius / 2
-    const innerBallRadius2 = outerBallRadius / 3
+    const innerBallRadius1 = outerBallRadius / 2;
+    const innerBallRadius2 = outerBallRadius / 3;
     const godRayRadius = outerBallRadius - getDeviceDependent(0.1, 1);
-    const rotateTextRadius = outerBallRadius + getDeviceDependent(1, 1.5)
-    const rotateLightRadius = outerBallRadius + getDeviceDependent(2, 2.5)
+    const rotateTextRadius = outerBallRadius + getDeviceDependent(1, 1.5);
+    const rotateLightRadius = outerBallRadius + getDeviceDependent(2, 2.5);
 
     // move light position around
     const rotator = useRef(new Rotator3D(0, 0, rotateLightRadius, 0.01));
@@ -49,9 +49,26 @@ export default function ThreeJsCanvasContent() {
         <>
             <GradientBackground />
             <ThreeJsStats />
-            <MainBall ballRadius={outerBallRadius} float={true} />
-            <MainBall ballRadius={innerBallRadius1} rotation={rotation1} delay={0.02} />
-            <MainBall ballRadius={innerBallRadius2} rotation={rotation2} delay={0.01} />
+            <MainBall
+                ballRadius={outerBallRadius}
+                float={true}
+                rotate={true}
+                rotateSpeed={1}
+            />
+            <MainBall
+                ballRadius={innerBallRadius1}
+                rotation={rotation1}
+                delay={0.02}
+                rotate={true}
+                rotateSpeed={0.5}
+            />
+            <MainBall
+                ballRadius={innerBallRadius2}
+                rotation={rotation2}
+                delay={0.01}
+                rotate={true}
+                rotateSpeed={0.25}
+            />
 
             {/* <axesHelper ref={handleAxesHelper} args={[100]} /> */}
             <ThreeRotateText
@@ -61,14 +78,16 @@ export default function ThreeJsCanvasContent() {
                 fadeInOnScrollSpeed={-1}
             />
 
-            <Sparkles
-                count={getDeviceDependent(350, 500)}
-                scale={getDeviceDependent(35, 50)}
-                size={getDeviceDependent(15, 20)}
-                speed={1}
-                opacity={0.75}
-                noise={5}
-            />
+            {usePostEffects && (
+                <Sparkles
+                    count={getDeviceDependent(250, 400)}
+                    scale={getDeviceDependent(35, 50)}
+                    size={getDeviceDependent(15, 20)}
+                    speed={1}
+                    opacity={0.5}
+                    noise={5}
+                />
+            )}
 
             <lightPositionContext.Provider value={lightPosition}>
                 <ThreeJsLights />
@@ -76,7 +95,19 @@ export default function ThreeJsCanvasContent() {
                 <Lines />
             </lightPositionContext.Provider>
 
-            {usePostEffects && <ThreeJsPostEffects godRayRadius={godRayRadius} />}
+            <Stars
+                radius={1}
+                depth={50}
+                count={usePostEffects ? 500 : 2000}
+                factor={4}
+                saturation={1}
+                fade
+                speed={1.2}
+            />
+
+            {usePostEffects && (
+                <ThreeJsPostEffects godRayRadius={godRayRadius} />
+            )}
 
             <OrbitControls
                 // ref={controlRef}
