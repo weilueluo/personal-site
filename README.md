@@ -1,8 +1,10 @@
 # Personal Website
-> Development in progress, you may have slow, flaky & white screen experience
 
-> Source code for https://weilueluo.com
+> :warning: Development in progress, be aware of potential slow, flaky & white screen experience.
 
+This repository contains source code for https://weilueluo.com.
+
+### Screenshot
 ![website screenshot](https://user-images.githubusercontent.com/39546701/209574676-94799146-f218-409e-9c15-eae51916fc92.png)
 
 ### Run Locally
@@ -15,8 +17,14 @@ npm run start
 ```
 
 ### Milestones
-- [x] main page https://weilueluo.com
+- [x] landing page https://weilueluo.com
 - [x] about page https://weilueluo.com/about.html
 - [x] rss page https://weilueluo.com/rss.html
-- [ ] waifu page (planning...)
+- [x] anime page https://weilueluo.com/anime.html
+- [x] refactor landing page
+- [ ] blog page
+- [ ] waifu page
 - [ ] ...
+
+### Feedback
+Just raise an issue :)
