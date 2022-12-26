@@ -11,10 +11,9 @@ export const ExploreModeContext = createContext<boolean>(false);
 export const PostEffectModeContext = createContext<boolean>(false);
 
 export default function OptionsManager(props: BaseProps) {
-    const [lightMode, lightModeToggle] = useReducer(state => {console.log('toggle'); return !state}, true);
-    const [exploreMode, exploreModeToggle] = useReducer(state => !state, false);
-    const [postEffectMode, postEfftecModeToggle] = useReducer(
-        state => !state,
+    const [lightMode, lightModeToggle] = useBinaryReducer(true);
+    const [exploreMode, exploreModeToggle] = useBinaryReducer(false);
+    const [postEffectMode, postEffectModeToggle] = useBinaryReducer(
         getDeviceDependent(false, true),
     );
 
@@ -32,19 +31,19 @@ export default function OptionsManager(props: BaseProps) {
             value: postEffectMode,
             onName: 'effects on',
             offName: 'effects off',
-            toggle: postEfftecModeToggle,
+            toggle: postEffectModeToggle,
             context: PostEffectModeContext,
-        }
+        },
     ];
 
-    const lightProp: (UIProp & ProviderProp) = {
+    const lightProp: UIProp & ProviderProp = {
         name: 'Light Mode',
         value: lightMode,
         onName: 'light',
         offName: 'dark',
         toggle: lightModeToggle,
         context: LightModeContext,
-    }
+    };
 
     return (
         <>
@@ -53,5 +52,13 @@ export default function OptionsManager(props: BaseProps) {
                 {props.children}
             </OptionsProvider>
         </>
+    );
+}
+
+function useBinaryReducer(initState) {
+    return useReducer(
+        state => !state,
+        initState,
+        state => state,
     );
 }

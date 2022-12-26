@@ -12,7 +12,11 @@ export interface ProviderProps extends BaseProps {
 }
 
 export default function OptionsProvider(props: ProviderProps) {
-    let node: ReactNode = <>{props.children}</>;
+    let node: ReactNode = (
+        <props.lightProp.context.Provider value={props.lightProp.value}>
+            {props.children}
+        </props.lightProp.context.Provider>
+    );
     for (const prop of props.providerProps) {
         node = (
             <prop.context.Provider value={prop.value}>
@@ -21,9 +25,5 @@ export default function OptionsProvider(props: ProviderProps) {
         );
     }
 
-    return (
-        <props.lightProp.context.Provider value={props.lightProp.value}>
-            {node}
-        </props.lightProp.context.Provider>
-    );
+    return node;
 }
