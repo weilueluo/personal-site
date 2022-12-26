@@ -8,23 +8,23 @@ export interface ToggleButtonProps extends BaseProps {
     offName: string;
     on: boolean;
     toggle?: () => unknown;
-    disable?: boolean
+    disabled?: boolean;
 }
 
 export default function ToggleButton(props: ToggleButtonProps) {
-
-    const disable = props.disable === undefined ? false : props.disable;
-    const onClick = useCallback(() => !disable && props.toggle && props.toggle(), [disable, props]);
+    const onClick = useCallback(
+        () => !props.disabled && props.toggle && props.toggle(),
+        [props],
+    );
+    
+    const buttonStyles = mergeStyles(
+        styles.toggleButton,
+        props.on ? styles.on : styles.off,
+        props.disabled && styles.disabled,
+    );
 
     return (
-        <button
-            className={mergeStyles(
-                styles.toggleButton,
-                !props.on && styles.off,
-                props.on && styles.on,
-                disable && styles.disabled
-            )}
-            onClick={onClick}>
+        <button className={buttonStyles} onClick={onClick}>
             <span className={mergeStyles(styles.text, styles.onSpan)}>
                 {props.onName}
             </span>

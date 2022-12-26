@@ -13,33 +13,44 @@ export interface UIProp {
 }
 
 export interface UIProps extends BaseProps {
-    uiProps: UIProp[];
     lightProp: UIProp;
+    exploreProp: UIProp;
+    postEffectProp: UIProp;
 }
 
 export default function OptionsUI(props: UIProps) {
-
     const postEffectsOn = useContext(PostEffectModeContext);
-
+    
     return (
         <ul className={styles.optionList}>
-            {props.uiProps.map(prop => (
-                <li key={prop.name}>
-                    <ToggleButton
-                        onName={prop.onName}
-                        offName={prop.offName}
-                        on={prop.value}
-                        toggle={prop.toggle}
-                    />
-                </li>
-            ))}
+            {/* explore button */}
+            <li key={props.exploreProp.name}>
+                <ToggleButton
+                    onName={props.exploreProp.onName}
+                    offName={props.exploreProp.offName}
+                    on={props.exploreProp.value}
+                    toggle={props.exploreProp.toggle}
+                    disabled={false}
+                />
+            </li>
+            {/* post effect button */}
+            <li key={props.postEffectProp.name}>
+                <ToggleButton
+                    onName={props.postEffectProp.onName}
+                    offName={props.postEffectProp.offName}
+                    on={props.postEffectProp.value}
+                    toggle={props.postEffectProp.toggle}
+                    disabled={false}
+                />
+            </li>
+            {/* light/dark button */}
             <li key={props.lightProp.name}>
                 <ToggleButton
                     onName={props.lightProp.onName}
                     offName={props.lightProp.offName}
                     on={props.lightProp.value}
                     toggle={props.lightProp.toggle}
-                    disable={!postEffectsOn}
+                    disabled={!postEffectsOn}
                 />
             </li>
         </ul>

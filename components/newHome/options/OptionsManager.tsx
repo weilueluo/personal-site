@@ -1,4 +1,4 @@
-import { createContext, useReducer } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { getDeviceDependent } from '../../common/misc';
 import { BaseProps } from '../../types/react';
 import OptionsProvider, {
@@ -11,30 +11,13 @@ export const ExploreModeContext = createContext<boolean>(false);
 export const PostEffectModeContext = createContext<boolean>(false);
 
 export default function OptionsManager(props: BaseProps) {
-    const [lightMode, lightModeToggle] = useBinaryReducer(true);
-    const [exploreMode, exploreModeToggle] = useBinaryReducer(false);
-    const [postEffectMode, postEffectModeToggle] = useBinaryReducer(
-        getDeviceDependent(false, true),
-    );
-
-    const optionProps: (UIProp & ProviderProp)[] = [
-        {
-            name: 'Explore Mode',
-            value: exploreMode,
-            onName: 'ThreeJs',
-            offName: 'HTML',
-            toggle: exploreModeToggle,
-            context: ExploreModeContext,
-        },
-        {
-            name: 'Post Effects Mode',
-            value: postEffectMode,
-            onName: 'effects on',
-            offName: 'effects off',
-            toggle: postEffectModeToggle,
-            context: PostEffectModeContext,
-        },
-    ];
+    const [lightMode, lightModeToggle] = useBinaryState(true);
+    const [exploreMode, exploreModeToggle] = useBinaryState(false);
+    const [postEffectMode, postEffectModeToggle, setPostEffect] =
+        useBinaryState(false);
+    useEffect(() => {
+        setPostEffect(getDeviceDependent(false, true));
+    }, [setPostEffect]);
 
     const lightProp: UIProp & ProviderProp = {
         name: 'Light Mode',
@@ -45,20 +28,46 @@ export default function OptionsManager(props: BaseProps) {
         context: LightModeContext,
     };
 
+    const exploreProp: UIProp & ProviderProp = {
+        name: 'Explore Mode',
+        value: exploreMode,
+        onName: 'ThreeJs',
+        offName: 'HTML',
+        toggle: exploreModeToggle,
+        context: ExploreModeContext,
+    };
+
+    const postEffectProp: UIProp & ProviderProp = {
+        name: 'Post Effects Mode',
+        value: postEffectMode,
+        onName: 'effects on',
+        offName: 'effects off',
+        toggle: postEffectModeToggle,
+        context: PostEffectModeContext,
+    };
+
     return (
         <>
-            <OptionsProvider providerProps={optionProps} lightProp={lightProp}>
-                <OptionsUI uiProps={optionProps} lightProp={lightProp} />
+            <OptionsProvider
+                exploreProp={exploreProp}
+                postEffectProp={postEffectProp}
+                lightProp={lightProp}>
+                <OptionsUI
+                    exploreProp={exploreProp}
+                    postEffectProp={postEffectProp}
+                    lightProp={lightProp}
+                />
                 {props.children}
             </OptionsProvider>
         </>
     );
 }
 
-function useBinaryReducer(initState) {
-    return useReducer(
-        state => !state,
-        initState,
-        state => state,
-    );
+function useBinaryState(
+    initState: boolean,
+): [boolean, () => unknown, (state: boolean) => void] {
+    const [state, setState] = useState(initState);
+    const toggle = () => setState(!state);
+
+    return [state, toggle, setState];
 }

@@ -1,4 +1,4 @@
-import { Context, ReactNode } from 'react';
+import { Context } from 'react';
 import { BaseProps } from '../../../types/react';
 
 export interface ProviderProp {
@@ -7,23 +7,19 @@ export interface ProviderProp {
 }
 
 export interface ProviderProps extends BaseProps {
-    providerProps: ProviderProp[];
     lightProp: ProviderProp;
+    exploreProp: ProviderProp;
+    postEffectProp: ProviderProp;
 }
 
 export default function OptionsProvider(props: ProviderProps) {
-    let node: ReactNode = (
-        <props.lightProp.context.Provider value={props.lightProp.value}>
-            {props.children}
-        </props.lightProp.context.Provider>
+    return (
+        <props.postEffectProp.context.Provider value={props.postEffectProp.value}>
+            <props.exploreProp.context.Provider value={props.exploreProp.value}>
+                <props.lightProp.context.Provider value={props.lightProp.value}>
+                    {props.children}
+                </props.lightProp.context.Provider>
+            </props.exploreProp.context.Provider>
+        </props.postEffectProp.context.Provider>
     );
-    for (const prop of props.providerProps) {
-        node = (
-            <prop.context.Provider value={prop.value}>
-                {node}
-            </prop.context.Provider>
-        );
-    }
-
-    return node;
 }

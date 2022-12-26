@@ -15,9 +15,6 @@ export function getDeviceDependent(mobileValue, desktopValue) {
 
 // https://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
 export function isMobileOrTablet() {
-    if (isServer()) {
-        return false;
-    }
     let check = false;
     (function (a) {
         if (
