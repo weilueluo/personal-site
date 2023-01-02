@@ -1,7 +1,7 @@
 import { clamp } from './math';
 
 function getDesktopScrollPercent() {
-    if (typeof document == "undefined") {
+    if (typeof document == 'undefined') {
         return 0;
     }
     const h = document.documentElement,
@@ -29,22 +29,24 @@ export function getScrollPercent() {
 }
 
 export function getAltScroll() {
-    const scroll = getScrollPercent() / 100;
+    return getScrollPercent() / 100;
 
-    let altScroll = scroll * 2;
-    if (altScroll > 1) {
-        altScroll = 2 - altScroll;
-    }
-    const maxScroll = 0.9999; // avoid flashing animation at 100%
-    altScroll = clamp(altScroll, 0, maxScroll);
+    // const scroll = getScrollPercent() / 100;
 
-    // make number stay at 0.9999 longer
-    const stay_duration = 0.15;
-    altScroll =
-        (Math.min(maxScroll, altScroll + stay_duration) - stay_duration) /
-        (1 - stay_duration);
+    // let altScroll = scroll * 2;
+    // if (altScroll > 1) {
+    //     altScroll = 2 - altScroll;
+    // }
+    // const maxScroll = 0.9999; // avoid flashing animation at 100%
+    // altScroll = clamp(altScroll, 0, maxScroll);
 
-    return altScroll;
+    // // make number stay at 0.9999 longer
+    // const stay_duration = 0.15;
+    // altScroll =
+    //     (Math.min(maxScroll, altScroll + stay_duration) - stay_duration) /
+    //     (1 - stay_duration);
+
+    // return altScroll;
 }
 
 export function getAltScrollWithDelay(delay: number) {

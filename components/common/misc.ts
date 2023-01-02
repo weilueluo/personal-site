@@ -72,3 +72,15 @@ export function stringFormat(str: string, ...replacements: string[]) {
 export function isServer() {
     return typeof window === 'undefined';
 }
+
+export function getMainBallRadius() {
+    return getDeviceDependent(5.0, 8.0)
+}
+
+export function getVisibleRadius() {
+    return 50.0;
+}
+
+export function getNScrollPages() {
+    return getDeviceDependent(2.0, 3.0);
+}
