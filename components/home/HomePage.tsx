@@ -5,6 +5,7 @@ import NavigationPanel from './navPanel/NavigationPanel';
 import OptionsManager, { ExploreModeContext } from './options/OptionsManager';
 import ThreeJsContent from './threejs/Threejs';
 import HeightFiller from './heightFiller/HeightFiller';
+import ManualScrolls from './manualScrolls/ManualScrolls';
 
 export default function HomePage() {
     return (
@@ -15,15 +16,13 @@ export default function HomePage() {
 }
 
 function HomePageContent() {
-    // allow to user to interact with threejs by removing the overlaying html
-    const exploreMode = useContext(ExploreModeContext);
     return (
         <>
             <ThreeJsContent />
             <ThreeJsLoaderProgress />
             <NavigationPanel />
             {/* <ManualScrolls /> */}
-            {!exploreMode && <HTMLCSSContent />}
+            <HTMLCSSContent />
             <HeightFiller />
         </>
     );

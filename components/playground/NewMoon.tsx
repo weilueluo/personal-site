@@ -2,8 +2,8 @@ import { useFrame } from '@react-three/fiber';
 import { Ref, forwardRef } from 'react';
 import { Matrix3, Mesh, ShaderMaterial } from 'three';
 import { getAltScroll } from '../common/scroll';
-import moon_fs from '../home/scene/shaders/moon_fs.glsl';
-import moon_vs from '../home/scene/shaders/moon_vs.glsl';
+import moon_fs from '../home/threejs/moon/moon_fs.glsl';
+import moon_vs from '../home/threejs/moon/moon_vs.glsl';
 
 const tempMat3 = new Matrix3();
 

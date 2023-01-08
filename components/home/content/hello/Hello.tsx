@@ -12,17 +12,15 @@ export default function Hello() {
     }, []);
 
     return (
-        titleStyle.opacity > 0 && (
-            <div
-                className={styles.container}
-                style={{
-                    perspective: 75,
-                }}>
-                <h1 className={styles.title} style={titleStyle}>
-                    Weilue&apos;s Place
-                </h1>
-            </div>
-        )
+        <div
+            className={styles.container}
+            style={{
+                perspective: 75,
+            }}>
+            <h1 className={styles.title} style={titleStyle}>
+                Weilue&apos;s Place
+            </h1>
+        </div>
     );
 }
 

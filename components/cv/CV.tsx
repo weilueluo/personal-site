@@ -20,14 +20,14 @@ export default function CV(props) {
         const viewInGithubButton: HTMLButtonElement = document.createElement('button');
         viewInGithubButton.textContent = 'View In Github';
         const viewInGithubLink: HTMLAnchorElement = document.createElement('a');
-        viewInGithubLink.href = 'https://github.com/Redcxx/cv/blob/master/resume.pdf'
+        viewInGithubLink.href = 'https://github.com/weilueluo/cv/blob/master/resume.pdf'
         viewInGithubLink.insertBefore(viewInGithubButton, null);
         // create download button
         const downloadButton: HTMLButtonElement = document.createElement('button');
         downloadButton.textContent = 'Download';
         const downloadLink: HTMLAnchorElement = document.createElement('a');
         downloadLink.insertBefore(downloadButton, null);
-        downloadLink.href = 'https://github.com/Redcxx/cv/raw/master/resume.pdf'
+        downloadLink.href = 'https://github.com/weilueluo/cv/raw/master/resume.pdf'
 
         // remove original header
         cv.children[0].remove();

@@ -31,8 +31,8 @@ export default function OptionsManager(props: BaseProps) {
     const exploreProp: UIProp & ProviderProp = {
         name: 'Explore Mode',
         value: exploreMode,
-        onName: 'ThreeJs',
-        offName: 'HTML',
+        onName: '3D',
+        offName: '2D',
         toggle: exploreModeToggle,
         context: ExploreModeContext,
     };

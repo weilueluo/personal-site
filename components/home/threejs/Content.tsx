@@ -78,7 +78,7 @@ export default function ThreeJsCanvasContent() {
                 fadeInOnScrollSpeed={-1}
             />
 
-            <CameraMovement />
+            {/* <CameraMovement /> */}
 
             <lightPositionContext.Provider value={lightPosition}>
                 <ThreeJsLights />
@@ -121,7 +121,7 @@ export default function ThreeJsCanvasContent() {
                 // minPolarAngle={polarAngle}
                 // maxPolarAngle={maxPolarAngle}
             />
-            <ThreeJsStats />
+            {/* <ThreeJsStats /> */}
                 
         </>
     );

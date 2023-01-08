@@ -14,6 +14,7 @@ import { getAltScroll } from '../../common/scroll';
 import { getDeviceDependent } from '../../common/misc';
 import { BaseProps } from '../../types/react';
 import { LightModeContext } from '../options/OptionsManager';
+import { lerp } from 'three/src/math/MathUtils';
 
 const white = new Color(0xffffff);
 
@@ -88,6 +89,8 @@ export function ThreeJsPostEffects(props: ThreeJsPostEffectsProps) {
         [handleGodray],
     );
 
+    const startOpacity = lightMode ? 1 : 0.01;
+
     useFrame(state => {
         const scroll = getAltScroll();
         const a = 0.1;
@@ -96,6 +99,7 @@ export function ThreeJsPostEffects(props: ThreeJsPostEffectsProps) {
             // const scale = Math.max(MathUtils.lerp(1, -10, scroll), 0.1);
             const scale = Math.max(MathUtils.lerp(1, -5, scroll), 0.1);
             sunRef.current.scale.set(scale, scale, scale);
+            sunRef.current.material.opacity = MathUtils.lerp(startOpacity, 0, scroll);
         }
         if (godrayRef.current) {
             // clampMax
@@ -147,7 +151,7 @@ export function ThreeJsPostEffects(props: ThreeJsPostEffectsProps) {
                 <meshStandardMaterial
                     ref={matRef}
                     emissive={white}
-                    opacity={lightMode ? 1 : 0.01}
+                    opacity={startOpacity}
                 />
             </mesh>
         </>

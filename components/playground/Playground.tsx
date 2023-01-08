@@ -1,4 +1,4 @@
-import { OrbitControls, Stats } from '@react-three/drei';
+import { OrbitControls, Stars, Stats } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import {
     Bloom,
@@ -21,17 +21,15 @@ import {
 import { Color, Light, MathUtils, Mesh, SpotLight, Vector3 } from 'three';
 import { lightPositionContext } from '../common/contexts';
 import { polar2xyz } from '../common/math';
-import { getDeviceDependent } from '../common/misc';
+import { getDeviceDependent, getNScrollPages } from '../common/misc';
 import { getAltScroll } from '../common/scroll';
 import panelStyles from '../home/StatsPanel.module.sass';
-import { MyCanvas } from '../home/ThreeJsHome';
-import GradientBackground from '../home/scene/GradientBackground';
-import Lines from '../home/scene/Lines';
-import Stars from '../home/scene/Stars';
-import ThreeSurroundingText from '../home/scene/ThreeSurroundingText';
-import { getNScrollPages } from '../home/scene/global';
-import ExperimentalContent from './ExperimentalContent';
 import { NewMoon } from './NewMoon';
+import { MyCanvas } from '../legacy/ThreeJsHome';
+import GradientBackground from '../legacy/scene/GradientBackground';
+import Lines from '../legacy/scene/Lines';
+import ThreeSurroundingText from '../legacy/scene/ThreeSurroundingText';
+import ExperimentalContent from './ExperimentalContent';
 
 const tempVector3 = new Vector3(10, -10, -10);
 
