@@ -1,8 +1,10 @@
 import { RootState, useFrame } from '@react-three/fiber';
-import { ReactNode, useEffect, useMemo, useRef } from 'react';
+import { ReactNode, useContext, useEffect, useMemo, useRef } from 'react';
 import {
     Box3,
     Group,
+    Matrix3,
+    Matrix4,
     Mesh,
     MeshStandardMaterial,
     Object3D,
@@ -17,6 +19,10 @@ import {
     useMeshNodes,
 } from '../../../common/model';
 import { getAltScroll, getAltScrollWithDelay } from '../../../common/scroll';
+import { lightPositionContext } from '../../../common/contexts';
+
+const ballRotMat3 = new Matrix3();
+const tempMat4 = new Matrix4()
 
 function computeMaterial(
     sharedMat: MeshStandardMaterial,
@@ -30,12 +36,28 @@ function computeMaterial(
     mat.onBeforeCompile = shader => {
         shader.uniforms = UniformsUtils.merge([shader.uniforms, uniforms]);
 
+        // shader.vertexShader = shader.vertexShader.replace('void main() {',
+        //     `
+        //     varying vec3 vvNormal;
+
+        //     void main() {
+        //         vvNormal = normal;
+        //     `
+        // )
+
         shader.fragmentShader = shader.fragmentShader.replace(
             'void main() {',
             `uniform vec3 meshPosition;
         uniform float specularFactor;
         uniform float colorFactor;
         uniform float scrollAmount;
+        uniform vec3 lightPosition;
+        uniform mat3 ballRotation;
+
+        vec3 applyShadow(vec3 color, vec3 lightPos) {
+            float angle = dot(normalize(lightPos), normalize(-vNormal)); // -normal so that light drop darkness instead of light
+            return color * angle;
+        }
         void main() {`,
         );
 
@@ -43,14 +65,20 @@ function computeMaterial(
             'vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;',
             `vec3 outgoingLight = totalDiffuse + totalSpecular * specularFactor + totalEmissiveRadiance;
         outgoingLight = mix(outgoingLight, meshPosition, colorFactor);
-        //outgoingLight = mix(outgoingLight, vec3(0.8), 0.3);
+        //outgoingLight = meshPosition;// * colorFactor;
+        // outgoingLight = applyShadow(outgoingLight, lightPosition);
+        //outgoingLight = lightPosition * 0.005;
         diffuseColor.a = 1.0 - max(scrollAmount * 2.0 - 0.5, 0.0);
+        
+        // vec3 color = applyShadow(meshPosition, lightPosition);
+        // float opacity = 1.0 - max(scrollAmount * 2.0 - 0.5, 0.0);
+        // gl_FragColor = vec4(color, opacity);
         `,
         );
 
         // shader.fragmentShader = shader.fragmentShader.replace(
         //     '#include <output_fragment>',
-        //     `gl_FragColor = vec4( outgoingLight, 1.0 - scrollAmount );`,
+        //     ``,
         // );
 
         mat.userData.shader = shader;
@@ -60,7 +88,7 @@ function computeMaterial(
     return mat;
 }
 
-function computeMaterials(meshNodes) {
+function computeMaterials(meshNodes, lightPosition: Vector3) {
     const sharedMat = new MeshStandardMaterial({
         color: 0x4278f5,
         // transparent: true,
@@ -76,6 +104,8 @@ function computeMaterials(meshNodes) {
             specularFactor: { value: 1 },
             colorFactor: { value: 0.1 },
             scrollAmount: { value: 0.0 },
+            lightPosition: { value: lightPosition },
+            ballRotation: { value: ballRotMat3 },
         });
     });
 }
@@ -97,8 +127,9 @@ export default function MainBall(props: MainBallProps) {
 
     // const material = useRef(new MeshStandardMaterial({ color: 0x2f2f2f }))
 
+    const lightPosition = useContext(lightPositionContext)
     const [meshNodes, otherNodes] = useMeshNodes(gltf);
-    const materials = useMemo(() => computeMaterials(meshNodes), [meshNodes]);
+    const materials = useMemo(() => computeMaterials(meshNodes, lightPosition), [meshNodes, lightPosition]);
     const meshJsx = useJsx(meshNodes, otherNodes, materials);
     const animationProps = useMeshAnimationProps(meshNodes);
 
@@ -109,8 +140,12 @@ export default function MainBall(props: MainBallProps) {
     useFrame((state: RootState) => {
         if (sceneRef.current && animationProps !== null) {
             const scroll = getAltScrollWithDelay(props.delay || 0);
-            // console.log(meshesMovementProps);
             const time = state.clock.getElapsedTime();
+            
+            if (ballRef.current) {
+                ballRotMat3.setFromMatrix4(tempMat4.makeRotationFromEuler(ballRef.current.rotation))
+            }
+
             sceneRef.current.children.forEach((mesh: Mesh) => {
                 const aniProps = animationProps[mesh.name];
                 if (!aniProps) {
@@ -144,6 +179,11 @@ export default function MainBall(props: MainBallProps) {
                 ) {
                     const shader = mesh.material.userData.shader;
                     shader.uniforms.scrollAmount.value = scroll;
+
+                    shader.uniforms.ballRotation.value = ballRotMat3;
+                    shader.uniforms.lightPosition.value.set(lightPosition.x, lightPosition.y, lightPosition.z);
+
+                    
                 }
             });
         }

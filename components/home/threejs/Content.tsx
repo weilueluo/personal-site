@@ -49,26 +49,6 @@ export default function ThreeJsCanvasContent() {
     return (
         <>
             <GradientBackground />
-            <MainBall
-                ballRadius={outerBallRadius}
-                float={true}
-                rotate={true}
-                rotateSpeed={1}
-            />
-            <MainBall
-                ballRadius={innerBallRadius1}
-                rotation={rotation1}
-                delay={0.02}
-                rotate={true}
-                rotateSpeed={0.5}
-            />
-            <MainBall
-                ballRadius={innerBallRadius2}
-                rotation={rotation2}
-                delay={0.01}
-                rotate={true}
-                rotateSpeed={0.25}
-            />
 
             {/* <axesHelper ref={handleAxesHelper} args={[100]} /> */}
             <ThreeRotateText
@@ -84,6 +64,26 @@ export default function ThreeJsCanvasContent() {
                 <ThreeJsLights />
                 <Moon />
                 <Lines />
+                <MainBall
+                    ballRadius={outerBallRadius}
+                    float={true}
+                    rotate={true}
+                    rotateSpeed={1}
+                />
+                <MainBall
+                    ballRadius={innerBallRadius1}
+                    rotation={rotation1}
+                    delay={0.02}
+                    rotate={true}
+                    rotateSpeed={0.5}
+                />
+                <MainBall
+                    ballRadius={innerBallRadius2}
+                    rotation={rotation2}
+                    delay={0.01}
+                    rotate={true}
+                    rotateSpeed={0.25}
+                />
             </lightPositionContext.Provider>
 
             <Stars
@@ -122,7 +122,6 @@ export default function ThreeJsCanvasContent() {
                 // maxPolarAngle={maxPolarAngle}
             />
             {/* <ThreeJsStats /> */}
-                
         </>
     );
 }

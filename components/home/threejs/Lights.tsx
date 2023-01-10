@@ -28,11 +28,11 @@ export default function ThreeJsLights() {
 
     return (
         <>
-            <spotLight
+            {/* <spotLight
                 ref={lightRef}
                 position={lightPosition}
                 // color={0xffffff}
-                intensity={intensity}
+                intensity={0}
                 shadow-mapSize-height={mapSize}
                 shadow-mapSize-width={mapSize}
                 shadow-camera-near={0.01}
@@ -43,7 +43,7 @@ export default function ThreeJsLights() {
                 shadow-camera-bottom={-num}
                 castShadow
                 receiveShadow
-            />
+            /> */}
 
             {/* <ambientLight color={0xffffff} intensity={10} /> */}
         </>
