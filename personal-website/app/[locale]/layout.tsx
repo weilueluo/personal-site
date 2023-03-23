@@ -1,6 +1,7 @@
 import './globals.css'
 import { useLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
+import Theme from '@/components/themes/Theme';
 
 
 export const metadata = {
@@ -24,11 +25,12 @@ export default async function RootLayout({
     notFound();
   }
 
-
   return (
     <html lang={locale}>
       <body>
-        {children}
+        <Theme>
+          {children}
+        </Theme>
       </body>
     </html>
   )

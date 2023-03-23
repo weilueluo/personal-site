@@ -2,6 +2,8 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from './page.module.css'
 import { useTranslations } from 'next-intl'
+import ToggleButton from '@/components/buttons/toggle'
+import ThemeButton from '@/components/themes/ThemeButton'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -12,10 +14,11 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <div className={styles.description}>
-      <h1 className="text-3xl font-bold underline">
+      <h1>
         {t('title')}
       </h1>
-        <p>
+      <ThemeButton />
+        <p className={styles.test}>
           Get started by editing&nbsp;
           <code className={styles.code}>app/page.tsx</code>
         </p>

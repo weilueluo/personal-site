@@ -1,0 +1,19 @@
+
+
+.button {
+  @apply flex h-fit w-fit flex-row items-center justify-around rounded-full;
+  @apply hover:shadow-black hover:shadow-lg transition-[box-shadow] duration-150;
+}
+
+.block {
+  @apply aspect-square w-6 rounded-full bg-white;
+}
+
+.name {
+  @apply mx-1 overflow-hidden text-center uppercase transition-[width,margin,min-width,max-width] duration-500;
+}
+
+.off .onName,
+.on .offName {
+  @apply m-0 w-0;
+}

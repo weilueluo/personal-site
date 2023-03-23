@@ -269,3 +269,7 @@
     transform: rotate(0deg);
   }
 }
+
+.test {
+  @apply text-white dark:text-green-500;
+}

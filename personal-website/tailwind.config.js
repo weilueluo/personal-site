@@ -1,13 +1,19 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: ['class', '[data-mode="dark"]'],
   content: [
-    "./app/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./libs/**/*.{ts,tsx}",
-    "./shared/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx,scss}",
+    "./components/**/*.{ts,tsx,scss}",
+    "./shared/**/*.{ts,tsx,scss}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      transitionProperty: {
+        height: 'height',
+        width: 'width',
+        margin: 'margin',
+      }
+    },
   },
   plugins: [],
 }
