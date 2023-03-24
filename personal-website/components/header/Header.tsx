@@ -8,6 +8,7 @@ import { IoLayers, IoLayersSharp } from "react-icons/io5";
 import { ImStack } from "react-icons/im";
 import { CgYinyang } from "react-icons/cg";
 import { HiAcademicCap } from "react-icons/hi";
+import { MdWork } from "react-icons/md";
 import { RiContactsBook2Fill, RiContactsBook2Line, RiFilePaper2Fill, RiFilePaper2Line } from "react-icons/ri";
 import { SiGithub } from "react-icons/si";
 import styles from './Header.module.scss';
@@ -41,6 +42,10 @@ export default function Header(props: BaseProps) {
           <li className={styles.item}>
             <IoLayers />
             RSS
+          </li>
+          <li className={styles.item}>
+            <MdWork />
+            CV
           </li>
         </ul>
       </nav>

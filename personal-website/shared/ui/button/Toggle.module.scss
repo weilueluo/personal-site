@@ -1,11 +1,12 @@
 
 .button {
-  @apply flex h-fit w-fit flex-row items-center justify-around rounded-full;
+  @apply flex h-fit w-fit flex-row items-center justify-around rounded-full p-2;
   @apply hover:shadow-black hover:shadow-lg transition-[box-shadow] duration-150;
 }
 
 .block {
   @apply aspect-square w-6 rounded-full bg-white;
+  @apply flex items-center justify-center;
 }
 
 .name {

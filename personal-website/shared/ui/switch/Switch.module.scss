@@ -1,0 +1,20 @@
+.switch {
+
+    @apply grid;
+
+  &.on > :nth-child(1),
+  &.off > :nth-child(2) {
+    @apply rotate-0 scale-100 opacity-100;
+  }
+
+  &.off > :nth-child(1),
+  &.on > :nth-child(2) {
+    @apply rotate-[-90deg] scale-0 opacity-0;
+  }
+
+  > * {
+    grid-area: 1/1;
+    @apply transition-all duration-500;
+  }
+
+}

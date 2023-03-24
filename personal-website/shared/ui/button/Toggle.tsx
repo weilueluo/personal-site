@@ -12,7 +12,6 @@ export interface ToggleButtonProps extends BaseProps {
     on?: boolean;
     disabled?: boolean;
     width?: string,
-    block?: React.ReactNode
 }
 
 
@@ -24,11 +23,11 @@ export default function ToggleButton(props: ToggleButtonProps) {
     const onClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => !disabled && props.toggle && props.toggle(event);
 
     return (
-        <button className={m(styles.button, props.on ? styles.on : styles.off, disabled && styles.disabled)} onClick={(e) => onClick(e)}>
+        <button className={m(styles.button, props.on ? styles.on : styles.off, disabled && styles.disabled)} onClick={onClick}>
             <span className={m(styles.name, styles.onName, buttonWidth)}>
                 {props.onName}
             </span>
-            <div className={styles.block}>{props.block}</div>
+            {props.children ?? <div className={styles.block}></div>}
             <span className={m(styles.name, styles.offName, buttonWidth)}>
                 {props.offName}
             </span>
