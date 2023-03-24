@@ -1,5 +1,4 @@
 
-
 .button {
   @apply flex h-fit w-fit flex-row items-center justify-around rounded-full;
   @apply hover:shadow-black hover:shadow-lg transition-[box-shadow] duration-150;
@@ -10,7 +9,7 @@
 }
 
 .name {
-  @apply mx-1 overflow-hidden text-center uppercase transition-[width,margin,min-width,max-width] duration-500;
+  @apply mx-1 overflow-hidden text-center uppercase transition-[width,margin,min-width,max-width] duration-150 ease-in;
 }
 
 .off .onName,

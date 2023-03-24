@@ -2,8 +2,7 @@
 
 import { m } from "@/shared/css";
 import { BaseProps } from "@/shared/types/react";
-import { MouseEventHandler, SyntheticEvent } from "react";
-import styles from './toggle.module.scss';
+import styles from './Toggle.module.scss';
 
 
 export interface ToggleButtonProps extends BaseProps {
@@ -12,7 +11,8 @@ export interface ToggleButtonProps extends BaseProps {
     toggle?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => unknown;
     on?: boolean;
     disabled?: boolean;
-    width?: string
+    width?: string,
+    block?: React.ReactNode
 }
 
 
@@ -28,7 +28,7 @@ export default function ToggleButton(props: ToggleButtonProps) {
             <span className={m(styles.name, styles.onName, buttonWidth)}>
                 {props.onName}
             </span>
-            <div className={styles.block}></div>
+            <div className={styles.block}>{props.block}</div>
             <span className={m(styles.name, styles.offName, buttonWidth)}>
                 {props.offName}
             </span>
