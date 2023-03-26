@@ -2,7 +2,7 @@
 
 import { m } from "@/shared/css";
 import { BaseProps } from "@/shared/types/react";
-import styles from './Toggle.module.scss';
+import styles from './BooleanButton.module.scss';
 
 
 export interface ToggleButtonProps extends BaseProps {

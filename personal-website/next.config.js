@@ -1,12 +1,11 @@
 /** @type {import('next').NextConfig} */
-const withNextIntl = require('next-intl/plugin')(
-  // This is the default (also the `src` folder is supported out of the box)
-  './i18n.ts'
-);
- 
-module.exports = withNextIntl({
-  // Other Next.js configuration ...
-  experimental: {
-    appDir: true
-  },
-});
+const i18n = require('./shared/i18n/settings.js');
+
+module.exports = {
+  experimental: { appDir: true },
+  
+  i18n: {
+    locales: i18n.LOCALES,
+    defaultLocale: i18n.DEFAULT_LOCALE,
+  }
+};

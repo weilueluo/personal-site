@@ -12,6 +12,8 @@ import { MdWork } from "react-icons/md";
 import { RiContactsBook2Fill, RiContactsBook2Line, RiFilePaper2Fill, RiFilePaper2Line } from "react-icons/ri";
 import { SiGithub } from "react-icons/si";
 import styles from './Header.module.scss';
+import ThemeButton from "../theme/ThemeButton";
+import LocaleButton from "../locale/LocaleButton";
 
 export default function Header(props: BaseProps) {
   return (
@@ -23,6 +25,12 @@ export default function Header(props: BaseProps) {
             <h3>LUOWEILUE</h3>
           </li>
         </ul>
+
+        <ul className={styles.list}>
+          <ThemeButton />
+          <LocaleButton />
+        </ul>
+
         <ul className={styles.list}>
           <li className={styles.item}>
             <SiGithub />

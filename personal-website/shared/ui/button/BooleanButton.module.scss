@@ -1,7 +1,7 @@
 
 .button {
   @apply flex h-fit w-fit flex-row items-center justify-around rounded-full p-2;
-  @apply hover:shadow-black hover:shadow-lg transition-[box-shadow] duration-150;
+  @apply hover:shadow-gray-600 hover:shadow-md transition-[box-shadow] duration-150;
 }
 
 .block {

@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { ImSun } from "react-icons/im";
 import { BsFillMoonStarsFill } from "react-icons/bs";
 import { useMountedState } from "react-use";
-import { ToggleButton } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
+import { BooleanButton } from "@/shared/ui/button";
 
 export default function ThemeButton() {
   const { theme, setTheme } = useTheme();
@@ -23,7 +23,7 @@ export default function ThemeButton() {
   }
 
   return (
-    <ToggleButton
+    <BooleanButton
       onName="dark"
       offName="light"
       width="w-12"
@@ -34,6 +34,6 @@ export default function ThemeButton() {
         <ImSun className="h-5 w-5" />
         <BsFillMoonStarsFill className="h-5 w-5" />
       </Switch>
-    </ToggleButton>
+    </BooleanButton>
   );
 }

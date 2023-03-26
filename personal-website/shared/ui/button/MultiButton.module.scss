@@ -1,0 +1,12 @@
+.container {
+    
+}
+
+.button {
+
+    @apply bg-gray-500;
+
+    &.active {
+        @apply bg-green-400;
+    }
+}

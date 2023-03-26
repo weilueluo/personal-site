@@ -1,8 +1,13 @@
 import './globals.css'
-import { useLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
-import Theme from '@/components/themes/Theme';
+import Theme from '@/components/theme/Theme';
+import { LOCALES } from '@/shared/i18n/settings';
 
+
+
+export async function generateStatticParams() {
+  return LOCALES.map(locale => {{ locale }});
+}
 
 export const metadata = {
   title: 'Create Next App',
@@ -18,15 +23,9 @@ export default async function RootLayout({
   params: { locale: string }
 }) {
 
-  const locale = useLocale();
-
-  // Show a 404 error if the user requests an unknown locale
-  if (params.locale !== locale) {
-    notFound();
-  }
 
   return (
-    <html lang={locale}>
+    <html lang={params.locale}>
       <body>
         <Theme>
           {children}

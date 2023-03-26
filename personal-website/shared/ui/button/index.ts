@@ -1,1 +1,1 @@
-export { default as ToggleButton } from './Toggle'
+export { default as BooleanButton } from './BooleanButton'

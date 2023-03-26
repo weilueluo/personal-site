@@ -1,6 +1,5 @@
 import { Header } from "@/components/header";
-import ThemeButton from "@/components/themes/ThemeButton";
-import { useTranslations } from "next-intl";
+import ThemeButton from "@/components/theme/ThemeButton";
 import { Inter } from "next/font/google";
 import Image from "next/image";
 import styles from "./page.module.css";
@@ -8,14 +7,13 @@ import styles from "./page.module.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const t = useTranslations("Index");
 
   return (
     <main className={styles.main}>
       <Header />
 
       <div className={styles.description}>
-        <h1>{t("title")}</h1>
+        <h1>Hello</h1>
         <ThemeButton />
         <p className={styles.test}>
           Get started by editing&nbsp;

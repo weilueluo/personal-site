@@ -20,4 +20,4 @@ indent_size = 4
 # domain specific properties
 curly_bracket_next_line = false
 indent_brace_style = K&R
-wildcard_import_limit = 9999
+wildcard_import_limit = 9999  # do not collapse into wildcard

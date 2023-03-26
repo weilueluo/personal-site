@@ -1,4 +1,6 @@
 // prettier.config.js or .prettierrc.js
 module.exports = {
-    editorConfig: true
+    editorConfig: true,
+    bracketSameLine: true,
+    printWidth: 100
 };
