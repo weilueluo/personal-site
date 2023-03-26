@@ -1,62 +1,73 @@
+import LocaleButton from "@/components/locale/LocaleButton";
+import ThemeButton from "@/components/theme/ThemeButton";
 import { m } from "@/shared/css";
 import { L_FONT } from "@/shared/fonts";
-import { BaseProps } from "@/shared/types/react";
-import { FaApple } from "react-icons/fa";
-import { GiChewedHeart, GiClover, GiRss } from "react-icons/gi";
-import { AiOutlineContacts } from "react-icons/ai";
-import { IoLayers, IoLayersSharp } from "react-icons/io5";
-import { ImStack } from "react-icons/im";
-import { CgYinyang } from "react-icons/cg";
+import { getTranslation } from "@/shared/i18n";
+import { GiClover } from "react-icons/gi";
 import { HiAcademicCap } from "react-icons/hi";
+import { IoLayers } from "react-icons/io5";
 import { MdWork } from "react-icons/md";
-import { RiContactsBook2Fill, RiContactsBook2Line, RiFilePaper2Fill, RiFilePaper2Line } from "react-icons/ri";
+import { RiContactsBook2Fill, RiFilePaper2Fill } from "react-icons/ri";
 import { SiGithub } from "react-icons/si";
-import styles from './Header.module.scss';
-import ThemeButton from "../theme/ThemeButton";
-import LocaleButton from "../locale/LocaleButton";
+import styles from "./Header.module.scss";
 
-export default function Header(props: BaseProps) {
-  return (
-    <header className={m(styles.header, L_FONT.className)}>
-      <nav className={styles.nav}>
-        <ul className={styles.list}>
-          <li className={styles.item}>
-            <HiAcademicCap />
-            <h3>LUOWEILUE</h3>
-          </li>
-        </ul>
+export default async function Header({ locale }: { locale: string }) {
+    const msg = await getTranslation(locale, "header");
 
-        <ul className={styles.list}>
-          <ThemeButton />
-          <LocaleButton />
-        </ul>
+    return (
+        <header className={m(styles.header, L_FONT.className)}>
+            <nav className={styles.nav}>
+                <ul className={styles.list}>
+                    <li className={styles.item}>
+                        <HiAcademicCap />
+                        <h3>LUOWEILUE</h3>
+                    </li>
+                </ul>
 
-        <ul className={styles.list}>
-          <li className={styles.item}>
-            <SiGithub />
-            Source
-          </li>
-          <li className={styles.item}>
-            <RiFilePaper2Fill /> Blogs
-          </li>
-          <li className={styles.item}>
-            <RiContactsBook2Fill />
-            Contact
-          </li>
-          <li className={styles.item}>
-            <GiClover />
-            Anime
-          </li>
-          <li className={styles.item}>
-            <IoLayers />
-            RSS
-          </li>
-          <li className={styles.item}>
-            <MdWork />
-            CV
-          </li>
-        </ul>
-      </nav>
-    </header>
-  );
+                <ul className={styles.list}>
+                    <a>
+                        <li className={styles.item}>
+                            <SiGithub />
+                            {msg["source"]}
+                        </li>
+                    </a>
+                    <a>
+                        <li className={styles.item}>
+                            <RiFilePaper2Fill />
+                            {msg["blogs"]}
+                        </li>
+                    </a>
+                    <a>
+                        <li className={styles.item}>
+                            <RiContactsBook2Fill />
+                            {msg["contact"]}
+                        </li>
+                    </a>
+                    <a>
+                        <li className={styles.item}>
+                            <GiClover />
+                            {msg["anime"]}
+                        </li>
+                    </a>
+                    <a>
+                        <li className={styles.item}>
+                            <IoLayers />
+                            {msg["rss"]}
+                        </li>
+                    </a>
+                    <a>
+                        <li className={styles.item}>
+                            <MdWork />
+                            {msg["cv"]}
+                        </li>
+                    </a>
+                </ul>
+
+                <ul className={styles.list}>
+                    <ThemeButton />
+                    <LocaleButton />
+                </ul>
+            </nav>
+        </header>
+    );
 }

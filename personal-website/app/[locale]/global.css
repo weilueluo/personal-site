@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@layer components {
+  .hover-shadow {
+    @apply hover:shadow-gray-600 transition-[box-shadow] hover:shadow-md duration-150;
+  }
+}
+
+a:hover {
+  cursor: pointer;
+}
+
 :root {
   --max-width: 1100px;
   --border-radius: 12px;

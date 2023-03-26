@@ -1,7 +1,7 @@
-import React from "react";
 
 
-export interface BaseProps {
-    children?: React.ReactNode,
-    style?: React.CSSProperties
+export interface BaseParams {
+    locale: string
 }
+
+export default {}

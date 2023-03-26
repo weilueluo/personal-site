@@ -1,0 +1,13 @@
+{
+    "Index": {
+        "title": "你好 世界！"
+    },
+    "header": {
+        "source": "源码",
+        "blogs": "博客",
+        "contact": "联系",
+        "anime": "动漫",
+        "rss": "聚合",
+        "cv": "简历"
+    }
+}

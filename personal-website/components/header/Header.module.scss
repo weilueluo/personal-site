@@ -1,23 +1,23 @@
+
 .header {
     @apply w-full;
 }
 .nav {
-    @apply w-full flex flex-row justify-around;
+    @apply w-full flex flex-row justify-between;
 }
 
 .item {
-
-    @apply flex flex-row items-center gap-2;
+    @apply flex flex-row items-center gap-2 p-2 rounded-full;
+    @apply hover:shadow-gray-600 transition-[box-shadow] hover:shadow-md duration-150;
 
     svg {
         @apply w-6 h-6;
     }
-
 }
 
 .list {
 
-    @apply flex flex-row justify-between items-center gap-6;
+    @apply flex flex-row justify-between items-center gap-2;
     // display: flex;
     // flex-direction: row;
     // justify-content: space-between;

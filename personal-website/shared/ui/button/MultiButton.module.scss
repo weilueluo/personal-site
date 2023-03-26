@@ -1,12 +1,16 @@
 .container {
-    
-}
+    @apply flex h-fit w-fit flex-row gap-3 px-1 py-2 rounded-full;
+    @apply hover:shadow-gray-600 transition-[box-shadow] hover:shadow-md duration-150;
 
-.button {
+    > * {
+        @apply w-fit border-2 px-1 border-transparent;
+        @apply transition-all duration-75;
 
-    @apply bg-gray-500;
-
-    &.active {
-        @apply bg-green-400;
+        &[data-active=true] {
+            @apply rounded-full bg-black text-white;
+        }
+        &:hover {
+            @apply rounded-full border-black border-2;
+        }
     }
 }

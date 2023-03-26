@@ -1,22 +1,20 @@
 .switch {
-
     @apply grid;
 
-  &.on > :nth-child(1),
-  &.off > :nth-child(2) {
-    @apply rotate-0 scale-100 opacity-100;
-  }
+    &.on > :nth-child(1),
+    &.off > :nth-child(2) {
+        @apply rotate-0 scale-100 opacity-100;
+    }
 
-  &.off > :nth-child(1) {
-    @apply rotate-[90deg] scale-0 opacity-0;
-  }
-  &.on > :nth-child(2) {
-    @apply rotate-[-90deg] scale-0 opacity-0;
-  }
+    &.off > :nth-child(1) {
+        @apply rotate-[90deg] scale-0 opacity-0;
+    }
+    &.on > :nth-child(2) {
+        @apply rotate-[-90deg] scale-0 opacity-0;
+    }
 
-  > * {
-    grid-area: 1/1;
-    @apply transition-all duration-500 delay-75;
-  }
-
+    > * {
+        grid-area: 1/1;
+        @apply transition-all delay-75 duration-500;
+    }
 }

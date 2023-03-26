@@ -1,0 +1,13 @@
+{
+    "Index": {
+        "title": "Hello World!"
+    },
+    "header": {
+        "source": "Source",
+        "blogs": "Blogs",
+        "contact": "Contact",
+        "anime": "Anime",
+        "rss": "RSS",
+        "cv": "CV"
+    }
+}
