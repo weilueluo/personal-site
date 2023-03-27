@@ -2,6 +2,7 @@ import { match } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { NextRequest } from "next/server";
+import { cache } from "react";
 import { COOKIE_KEYS } from "../cookies";
 import { DEFAULT_LOCALE, LOCALES } from "./settings";
 
@@ -11,17 +12,14 @@ export async function getTranslation(locale: string, index: string | undefined =
 }
 
 async function fetchMessages(locale: string, index: string | undefined = undefined) {
-    let json = await import(`/public/messages/${locale}.json`);
+    let json: any = await getLocaleMessages(locale);
     if (index) {
         json = json[index]
     }
     return json;
 }
 
-export function useLocale(): string {
-    const locale = getLocaleFromPathname(usePathname());
-    return locale
-}
+const getLocaleMessages = cache((locale: string): Promise<object> => import(`/public/messages/${locale}.json`))
 
 export function useSetLocale(): (locale: string) => unknown {
     const localeLessPath = useLocaleLessPathname();

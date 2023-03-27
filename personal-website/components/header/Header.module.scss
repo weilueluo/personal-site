@@ -6,7 +6,7 @@
     @apply w-full flex flex-row justify-between;
 }
 
-.item {
+.link {
     @apply flex flex-row items-center gap-2 p-2 rounded-full;
     @apply hover:shadow-gray-600 transition-[box-shadow] hover:shadow-md duration-150;
 

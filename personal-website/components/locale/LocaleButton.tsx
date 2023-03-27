@@ -1,27 +1,14 @@
 "use client";
-import { m } from "@/shared/css";
-import { useLocale, useSetLocale } from "@/shared/i18n";
+import { useSetLocale } from "@/shared/i18n";
 import { LOCALES } from "@/shared/i18n/settings";
 import MultiButton from "@/shared/ui/button/MultiButton";
-import Image from "next/image";
 import styles from "./LocaleButton.module.scss";
-import { FiFlag } from "react-icons/fi";
 
-// import zhFlag from '/public/assets/icons/zh.svg';
-// import enFlag from '/public/assets/icons/en.svg';
-// import jpFlag from '/public/assets/icons/jp.svg';
-
-export default function LocaleButton() {
-    const currentLocale = useLocale();
+export default function LocaleButton({ locale }: {locale: string}) {
+    const currentLocale = locale;
     const setLocale = useSetLocale();
 
-    const buttons = LOCALES
-    // .sort((a, b) => {
-    //     if (a === currentLocale) return 1;
-    //     if (b === currentLocale) return -1;
-    //     return 0;
-    // })
-    .map((locale) => (
+    const buttons = LOCALES.map((locale) => (
         <LocaleLink
             key={locale}
             name={locale}

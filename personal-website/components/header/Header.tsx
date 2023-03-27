@@ -3,6 +3,8 @@ import ThemeButton from "@/components/theme/ThemeButton";
 import { m } from "@/shared/css";
 import { L_FONT } from "@/shared/fonts";
 import { getTranslation } from "@/shared/i18n";
+import { GITHUB_REPO_URL } from "@/shared/settings";
+import Link from "next/link";
 import { GiClover } from "react-icons/gi";
 import { HiAcademicCap } from "react-icons/hi";
 import { IoLayers } from "react-icons/io5";
@@ -19,53 +21,55 @@ export default async function Header({ locale }: { locale: string }) {
             <nav className={styles.nav}>
                 <ul className={styles.list}>
                     <li className={styles.item}>
-                        <HiAcademicCap />
-                        <h3>LUOWEILUE</h3>
+                        <Link href={`/${locale}`} className={styles.link}>
+                            <HiAcademicCap />
+                            <h3>LUOWEILUE</h3>
+                        </Link>
                     </li>
                 </ul>
 
                 <ul className={styles.list}>
-                    <a>
-                        <li className={styles.item}>
+                    <li className={styles.item}>
+                        <Link href={GITHUB_REPO_URL} className={styles.link}>
                             <SiGithub />
-                            {msg["source"]}
-                        </li>
-                    </a>
-                    <a>
-                        <li className={styles.item}>
+                            {msg.source}
+                        </Link>
+                    </li>
+                    <li className={styles.item}>
+                        <Link href={`/${locale}/blogs`} className={styles.link}>
                             <RiFilePaper2Fill />
-                            {msg["blogs"]}
-                        </li>
-                    </a>
-                    <a>
-                        <li className={styles.item}>
+                            {msg.blogs}
+                        </Link>
+                    </li>
+                    <li className={styles.item}>
+                        <Link href={`/${locale}/contact`} className={styles.link}>
                             <RiContactsBook2Fill />
-                            {msg["contact"]}
-                        </li>
-                    </a>
-                    <a>
-                        <li className={styles.item}>
+                            {msg.contact}
+                        </Link>
+                    </li>
+                    <li className={styles.item}>
+                        <Link href={`/${locale}/anime`} className={styles.link}>
                             <GiClover />
-                            {msg["anime"]}
-                        </li>
-                    </a>
-                    <a>
-                        <li className={styles.item}>
+                            {msg.anime}
+                        </Link>
+                    </li>
+                    <li className={styles.item}>
+                        <Link href={`/${locale}/rss`} className={styles.link}>
                             <IoLayers />
-                            {msg["rss"]}
-                        </li>
-                    </a>
-                    <a>
-                        <li className={styles.item}>
+                            {msg.rss}
+                        </Link>
+                    </li>
+                    <li className={styles.item}>
+                        <Link href={`/${locale}/cv`} className={styles.link}>
                             <MdWork />
-                            {msg["cv"]}
-                        </li>
-                    </a>
+                            {msg.cv}
+                        </Link>
+                    </li>
                 </ul>
 
                 <ul className={styles.list}>
                     <ThemeButton />
-                    <LocaleButton />
+                    <LocaleButton locale={locale} />
                 </ul>
             </nav>
         </header>
