@@ -1,1 +1,1 @@
-export { default as BooleanButton } from './BooleanButton'
+export { default as Button } from './Button'

@@ -1,0 +1,14 @@
+
+.button {
+  @apply flex h-fit w-fit flex-row items-center justify-around rounded-full p-2;
+  @apply hover:shadow-gray-600 transition-[box-shadow] hover:shadow-md duration-150;
+
+  // > * {
+  //   @apply mx-0 max-w-0 overflow-hidden text-center uppercase transition-all duration-150;
+
+  //   @apply [&[data-active=true]]:mx-1 [&[data-active=true]]:max-w-[6rem]
+  // }
+}
+
+
+

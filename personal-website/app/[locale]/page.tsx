@@ -21,6 +21,7 @@ export default async function Page({ params }: { params: { locale: string } }) {
         <main className={styles.main}>
             {/* @ts-expect-error Async Server Component */}
             <Header locale={params.locale} />
+
             <h1>{msgs.Index.title}</h1>
             <div className={styles.description}>
                 <ThemeButton />
