@@ -1,4 +1,4 @@
-import Theme from "@/components/theme/Theme";
+import ThemeProvider from "@/components/theme/Theme";
 import { DEFAULT_LOCALE } from "@/shared/i18n/settings";
 import React, { ReactNode } from "react";
 import "./global.css";
@@ -18,7 +18,7 @@ export default function RootLayout({
     return (
         <html lang={params?.locale ?? DEFAULT_LOCALE}>
             <body>
-                <Theme>{children}</Theme>
+                <ThemeProvider>{children}</ThemeProvider>
             </body>
         </html>
     );

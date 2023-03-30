@@ -11,7 +11,7 @@
 // }
 
 .text {
-    @apply overflow-hidden uppercase transition-all duration-1000;
+    @apply overflow-hidden uppercase transition-all duration-200;
     @apply w-0;
 }
 
@@ -25,7 +25,7 @@
 
     > * {
         grid-area: 1/1;
-        @apply transition-all duration-500 delay-150;
+        @apply transition-all duration-300 delay-150;
         @apply opacity-0 scale-0;
 
          > * {

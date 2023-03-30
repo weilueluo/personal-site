@@ -26,64 +26,53 @@ const SYSTEM_THEME = "system";
 const THEMES = [DARK_THEME, LIGHT_THEME, SYSTEM_THEME];
 const DEFAULT_THEME = SYSTEM_THEME;
 
-export default function ThemeButton() {
-    const { theme: userTheme, setTheme, systemTheme } = useTheme();
+const themeToIconMap: {[theme: string]: ReactNode} = {
+    [DARK_THEME]: <BsFillMoonStarsFill className={styles.icon} />,
+    [LIGHT_THEME]: <ImSun className={styles.icon} />,
+    [SYSTEM_THEME]: <BsGearWideConnected className={styles.icon} />,
+};
 
-    // when we use setCurrTheme, it will set the actual theme underlying, so we make it the interface for ui
-    const [currTheme, setCurrTheme] = useState<string>(DEFAULT_THEME);
-    useEffect(() => {
-        startTransition(() => {
-            if (currTheme === SYSTEM_THEME) {
-                setTheme(systemTheme ?? DEFAULT_THEME);
-            } else {
-                setTheme(currTheme);
-            }
-        });
-    }, [currTheme]);
+export default function ThemeButton() {
+    let { theme, setTheme, resolvedTheme } = useTheme();
+    
+    // on server render, it is undefined
+    if (!theme) {
+        theme = SYSTEM_THEME;
+    }
 
     // handle the ui
-    const getNextTheme = (currTheme: string) =>
-        THEMES[(THEMES.indexOf(currTheme) + 1) % THEMES.length];
-    const themeToIconMap = useRef<{ [theme: string]: ReactNode }>({
-        [DARK_THEME]: <BsFillMoonStarsFill className={styles.icon} />,
-        [LIGHT_THEME]: <ImSun className={styles.icon} />,
-        [SYSTEM_THEME]: <BsGearWideConnected className={styles.icon} />,
-    });
+    const getNextTheme = (currTheme: string) => THEMES[(THEMES.indexOf(currTheme) + 1) % THEMES.length]
 
     const [leftActive, setLeftActive] = useState(false);
-    const [leftTheme, setLeftTheme] = useState(getNextTheme(currTheme));
-    const [rightTheme, setRightTheme] = useState(currTheme);
-    const [leftIcon, setLeftIcon] = useState<ReactNode>(themeToIconMap.current[leftTheme]);
-    const [rightIcon, setRightIcon] = useState<ReactNode>(themeToIconMap.current[rightTheme]);
+    const [leftTheme, setLeftTheme] = useState(getNextTheme(theme));
+    const [rightTheme, setRightTheme] = useState(theme);
+    const [leftIcon, setLeftIcon] = useState<ReactNode>(themeToIconMap[leftTheme]);
+    const [rightIcon, setRightIcon] = useState<ReactNode>(themeToIconMap[rightTheme]);
 
     const switchTheme = (nextTheme: string) => {
         // set the hidden item to have the next theme text first before showing the ui
         if (leftActive) {
             setRightTheme(nextTheme);
             setLeftActive(false);
-            setRightIcon(themeToIconMap.current[nextTheme]);
+            setRightIcon(themeToIconMap[nextTheme]);
         } else {
             setLeftTheme(nextTheme);
             setLeftActive(true);
-            setLeftIcon(themeToIconMap.current[nextTheme]);
+            setLeftIcon(themeToIconMap[nextTheme]);
         }
 
         // invoke animation to show the hidden item
-        setCurrTheme(nextTheme);
+        setTheme(nextTheme);
     };
 
-    // set the right theme on mount, because the initial theme is from server,
-    // which is definitely wrong because server does not know the theme until it reaches client
+    const onClick = () => switchTheme(getNextTheme(theme!));
 
-    useEffectOnce(() => switchTheme(userTheme ?? systemTheme ?? DEFAULT_THEME));
-
-    const mounted = useMountedState();
-    if (!mounted) {
+    if (!useMountedState()) {
         return null; // avoid hydration errors because theme is undefined at server
     }
 
     return (
-        <Button onClick={() => switchTheme(getNextTheme(currTheme))}>
+        <Button onClick={onClick}>
             <span className={styles.text} data-active={leftActive}>
                 {leftTheme}
             </span>
