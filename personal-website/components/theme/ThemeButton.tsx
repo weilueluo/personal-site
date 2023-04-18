@@ -1,23 +1,16 @@
 "use client";
 
-import { m } from "@/shared/css";
 import { Button } from "@/shared/ui/button";
-import { Switch } from "@/shared/ui/switch";
-import { useTheme } from "next-themes";
 import {
     ReactNode,
-    startTransition,
-    useCallback,
-    useEffect,
-    useRef,
-    useState,
-    useTransition,
+    useState
 } from "react";
 import { BsFillMoonStarsFill, BsGearWideConnected } from "react-icons/bs";
 import { ImSun } from "react-icons/im";
-import { IoReorderFour } from "react-icons/io5";
-import { useEffectOnce, useMountedState } from "react-use";
+import { useMountedState } from "react-use";
 import styles from "./ThemeButton.module.scss";
+import { UnResolvedTheme, useTheme } from "@/shared/themes";
+import { tm } from "@/shared/utils";
 
 const DARK_THEME = "dark";
 const LIGHT_THEME = "light";
@@ -33,39 +26,31 @@ const themeToIconMap: {[theme: string]: ReactNode} = {
 };
 
 export default function ThemeButton() {
-    let { theme, setTheme, resolvedTheme } = useTheme();
+    let { unResolvedTheme, setTheme, nextTheme } = useTheme();
     
-    // on server render, it is undefined
-    if (!theme) {
-        theme = SYSTEM_THEME;
-    }
-
-    // handle the ui
-    const getNextTheme = (currTheme: string) => THEMES[(THEMES.indexOf(currTheme) + 1) % THEMES.length]
-
     const [leftActive, setLeftActive] = useState(false);
-    const [leftTheme, setLeftTheme] = useState(getNextTheme(theme));
-    const [rightTheme, setRightTheme] = useState(theme);
+    const [leftTheme, setLeftTheme] = useState(nextTheme());
+    const [rightTheme, setRightTheme] = useState(unResolvedTheme);
     const [leftIcon, setLeftIcon] = useState<ReactNode>(themeToIconMap[leftTheme]);
     const [rightIcon, setRightIcon] = useState<ReactNode>(themeToIconMap[rightTheme]);
 
-    const switchTheme = (nextTheme: string) => {
+    const switchTheme = (theme: UnResolvedTheme) => {
         // set the hidden item to have the next theme text first before showing the ui
         if (leftActive) {
-            setRightTheme(nextTheme);
+            setRightTheme(theme);
             setLeftActive(false);
-            setRightIcon(themeToIconMap[nextTheme]);
+            setRightIcon(themeToIconMap[theme]);
         } else {
-            setLeftTheme(nextTheme);
+            setLeftTheme(theme);
             setLeftActive(true);
-            setLeftIcon(themeToIconMap[nextTheme]);
+            setLeftIcon(themeToIconMap[theme]);
         }
 
         // invoke animation to show the hidden item
-        setTheme(nextTheme);
+        setTheme(theme);
     };
 
-    const onClick = () => switchTheme(getNextTheme(theme!));
+    const onClick = () => switchTheme(nextTheme());
 
     if (!useMountedState()) {
         return null; // avoid hydration errors because theme is undefined at server
@@ -78,7 +63,7 @@ export default function ThemeButton() {
             </span>
 
             <div
-                className={m(
+                className={tm(
                     styles.iconContainer,
                     leftActive ? styles.leftActive : styles.rightActive
                 )}>

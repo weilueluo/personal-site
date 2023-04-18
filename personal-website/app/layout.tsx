@@ -1,4 +1,3 @@
-import ThemeProvider from "@/components/theme/Theme";
 import { DEFAULT_LOCALE } from "@/shared/i18n/settings";
 import React, { ReactNode } from "react";
 import "./global.css";
@@ -16,10 +15,14 @@ export default function RootLayout({
     params: { locale: string };
 }) {
     return (
-        <html lang={params?.locale ?? DEFAULT_LOCALE}>
-            <body>
-                <ThemeProvider>{children}</ThemeProvider>
-            </body>
-        </html>
+        <React.StrictMode>
+            <html lang={params?.locale ?? DEFAULT_LOCALE}>
+                <body>
+                    <main className=" max-w-screen min-h-screen p-6 md:p-24">
+                        {children}
+                    </main>
+                </body>
+            </html>
+        </React.StrictMode>
     );
 }

@@ -1,4 +1,4 @@
-import { m } from "@/shared/css";
+import { tm } from "@/shared/utils";
 import styles from "./MultiButton.module.scss";
 import React, { ReactNode } from "react";
 
@@ -10,5 +10,5 @@ export interface MultiButtonProps {
 
 export default function MultiButton({children, width, onToggle}: MultiButtonProps) {
 
-    return <div className={m(styles.container, width)}>{children}</div>;
+    return <div className={tm(styles.container, width)}>{children}</div>;
 }

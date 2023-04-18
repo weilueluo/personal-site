@@ -2,7 +2,6 @@
 import { useSetLocale } from "@/shared/i18n";
 import { LOCALES } from "@/shared/i18n/settings";
 import MultiButton from "@/shared/ui/button/MultiButton";
-import styles from "./LocaleButton.module.scss";
 
 export default function LocaleButton({ locale }: {locale: string}) {
     const currentLocale = locale;
@@ -32,7 +31,7 @@ const LocaleLink = (
     const active = name === current;
 
     return (
-        <button data-active={active} className={styles.button} {...others}>
+        <button data-active={active} className="uppercase flex flex-row items-center justify-center" {...others}>
             {/* {active ? (
                 <Image
                     src={`/assets/icons/${name}.svg`}
