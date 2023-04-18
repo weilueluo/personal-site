@@ -1,9 +1,9 @@
 "use client";
 import { useSetLocale } from "@/shared/i18n";
 import { LOCALES } from "@/shared/i18n/settings";
-import MultiButton from "@/shared/ui/button/MultiButton";
+import MultiButton from "../ui/MultiButton";
 
-export default function LocaleButton({ locale }: {locale: string}) {
+export default function LocaleButton({ locale }: { locale: string }) {
     const currentLocale = locale;
     const setLocale = useSetLocale();
 
@@ -31,7 +31,10 @@ const LocaleLink = (
     const active = name === current;
 
     return (
-        <button data-active={active} className="uppercase flex flex-row items-center justify-center" {...others}>
+        <button
+            data-active={active}
+            className="flex flex-row items-center justify-center uppercase"
+            {...others}>
             {/* {active ? (
                 <Image
                     src={`/assets/icons/${name}.svg`}

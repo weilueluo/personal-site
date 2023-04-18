@@ -21,11 +21,11 @@
 
 
 .iconContainer  {
-    @apply grid;
+    @apply grid w-5 h-5;
 
     > * {
         grid-area: 1/1;
-        @apply transition-all duration-300 delay-150;
+        @apply transition-all duration-500;
         @apply opacity-0 scale-0;
 
          > * {

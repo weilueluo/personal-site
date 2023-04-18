@@ -11,7 +11,6 @@ export interface UseTheme {
     unResolvedTheme: UnResolvedTheme;
     resolvedTheme: ResolvedTheme;
     setTheme: (theme: UnResolvedTheme) => void;
-    nextTheme: () => UnResolvedTheme;
 }
 
 // constants
@@ -22,7 +21,6 @@ const ThemeContext = React.createContext<UseTheme>({
     resolvedTheme: DEFAULT_RESOLVED_THEME,
     unResolvedTheme: DEFAULT_RESOLVED_THEME,
     setTheme: () => {},
-    nextTheme: () => DEFAULT_RESOLVED_THEME,
 });
 
 // functions to export
@@ -70,10 +68,8 @@ export default function ThemeProvider({
         setLocalStorageTheme(newTheme); // we need local storage to persistent cookie long term, but it does not get send to server
     };
 
-    const nextTheme = () => THEMES[(THEMES.indexOf(unResolvedTheme) + 1) % THEMES.length];
-
     return (
-        <ThemeContext.Provider value={{ resolvedTheme, unResolvedTheme, setTheme, nextTheme }}>
+        <ThemeContext.Provider value={{ resolvedTheme, unResolvedTheme, setTheme }}>
             {children}
         </ThemeContext.Provider>
     );

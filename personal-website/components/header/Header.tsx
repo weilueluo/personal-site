@@ -26,14 +26,12 @@ const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(
             "self-center flex flex-row items-center gap-2 p-2 rounded-xl hover:shadow-gray-600 transition-[box-shadow] hover:shadow-md duration-150"
         );
         const linkIconClassName = tm("w-6 h-6");
-        const listClassName = tm(
-            "flex-row justify-center items-center flex gap-2 grow flex-wrap"
-        );
-        const listItemClassName = tm("");
+        const listClassName = tm("flex-row justify-center items-center flex grow flex-wrap");
+        const listItemClassName = tm("m-1");
 
         return (
             <header className={tm("w-full", L_FONT.className)} ref={ref} {...props}>
-                <nav className="flex w-full flex-row flex-wrap justify-between">
+                <nav className="flex w-full flex-row flex-wrap justify-between gap-4">
                     <ul className={listClassName}>
                         <li className={listItemClassName}>
                             <Link href={`/${locale}`} className={linkClassName}>
