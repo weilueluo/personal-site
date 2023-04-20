@@ -1,5 +1,4 @@
 import Header from "@/components/header/Header";
-import { useTheme } from "@/shared/themes";
 import { tm } from "@/shared/utils";
 import { GetServerSideProps } from "next";
 
