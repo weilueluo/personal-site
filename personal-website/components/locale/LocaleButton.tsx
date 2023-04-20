@@ -1,53 +1,47 @@
 "use client";
-import { useSetLocale } from "@/shared/i18n";
-import { LOCALES } from "@/shared/i18n/settings";
+import React from "react";
 import MultiButton from "../ui/MultiButton";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
-export default function LocaleButton({ locale }: { locale: string }) {
-    const currentLocale = locale;
-    const setLocale = useSetLocale();
+export interface LocaleButtonProps extends React.ComponentPropsWithoutRef<"div"> {}
 
-    const buttons = LOCALES.map((locale) => (
-        <LocaleLink
-            key={locale}
-            name={locale}
-            current={currentLocale}
-            onClick={() => setLocale(locale)}
-        />
-    ));
+const LocaleButton = React.forwardRef<React.ElementRef<"div">, LocaleButtonProps>(
+    ({ className, ...otherProps }, ref) => {
+        const { locale: currentLocale, locales, pathname } = useRouter();
 
-    return <MultiButton>{buttons}</MultiButton>;
-}
+        const buttons = (locales ?? []).map((locale) => (
+            <Link
+                key={locale}
+                href={pathname}
+                locale={locale}
+                data-active={locale === currentLocale}
+                className="flex flex-row items-center justify-center uppercase">
+                <span>{locale}</span>
+            </Link>
+        ));
 
-const LocaleLink = (
-    props: {
-        name: string;
-        current: string | undefined;
-        onClick: () => unknown;
-    } & JSX.IntrinsicElements["button"]
-) => {
-    const { name, current, ...others } = props;
+        return (
+            <MultiButton ref={ref} className={className} {...otherProps}>
+                {buttons}
+            </MultiButton>
+        );
+    }
+);
 
-    const active = name === current;
+LocaleButton.displayName = "LocaleButton";
 
-    return (
-        <button
-            data-active={active}
-            className="flex flex-row items-center justify-center uppercase"
-            {...others}>
-            {/* {active ? (
-                <Image
-                    src={`/assets/icons/${name}.svg`}
-                    height="128"
-                    width="128"
-                    alt={`${name} Flag`}
-                    className={styles.image}
-                />
-            ) : (
-                name
-            )} */}
-            <span>{name}</span>
-            {/* {active && <FiFlag />} */}
-        </button>
-    );
-};
+// interface LocalLinkProps extends React.ComponentPropsWithoutRef<typeof Link> {
+//     locale: string;
+//     current: string | undefined;
+// }
+
+// const LocaleLink = ({ locale, current, ...props }: LocalLinkProps) => {
+//     const active = locale === current;
+
+//     return (
+
+//     );
+// };
+
+export default LocaleButton;

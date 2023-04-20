@@ -10,7 +10,7 @@ export interface MultiButtonProps extends React.ComponentPropsWithoutRef<"div"> 
 const MultiButton = React.forwardRef<React.ElementRef<"div">, MultiButtonProps>(
     ({ children, className, width, ...otherProps }, ref) => {
         return (
-            <div className={tm(styles.container, width)} {...otherProps} ref={ref}>
+            <div className={tm(styles.container, width, className)} {...otherProps} ref={ref}>
                 {children}
             </div>
         );

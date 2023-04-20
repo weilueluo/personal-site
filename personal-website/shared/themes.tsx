@@ -1,3 +1,6 @@
+"use client";
+
+import { NextApiRequestCookies } from "next/dist/server/api-utils";
 import React, { useContext, useEffect, useState } from "react";
 import { useEffectOnce } from "react-use";
 import { Nullable } from "./types/utils";
@@ -20,7 +23,9 @@ export const THEMES: UnResolvedTheme[] = ["system", "light", "dark"];
 const ThemeContext = React.createContext<UseTheme>({
     resolvedTheme: DEFAULT_RESOLVED_THEME,
     unResolvedTheme: DEFAULT_RESOLVED_THEME,
-    setTheme: () => {},
+    setTheme: () => {
+        console.log(`ThemeContext: setTheme() initialize`);
+    },
 });
 
 // functions to export
@@ -30,7 +35,7 @@ export default function ThemeProvider({
     defaultTheme = undefined,
 }: {
     children: React.ReactNode;
-    cookies: string | undefined;
+    cookies: NextApiRequestCookies;
     defaultTheme?: UnResolvedTheme;
 }) {
     // cookies theme > local storage theme > provided default theme > builtin default theme
@@ -43,7 +48,7 @@ export default function ThemeProvider({
     const systemTheme = useSystemTheme();
     const [unResolvedTheme, setUnResolvedTheme] = useState<UnResolvedTheme>(initialTheme);
     const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() =>
-        resolve(unResolvedTheme, systemTheme),
+        resolve(unResolvedTheme, systemTheme)
     );
 
     useEffect(() => {
@@ -55,10 +60,12 @@ export default function ThemeProvider({
     }, [systemTheme, unResolvedTheme]);
 
     useEffect(() => {
+        // console.log(`ThemeProvider: resolvedTheme=${resolvedTheme}`);
+
         if (typeof document !== "undefined") {
-            const bodyClassList = document.querySelector("body")?.classList;
+            const bodyClassList = document.querySelector("html")?.classList;
             THEMES.forEach((theme) => bodyClassList?.remove(theme)); // remove old theme
-            document.querySelector("body")?.classList.add(resolvedTheme); // add new theme
+            bodyClassList?.add(resolvedTheme); // add new theme
         }
     }, [resolvedTheme]);
 
@@ -111,8 +118,8 @@ function useSystemTheme(): ResolvedTheme {
     return systemTheme;
 }
 
-function getCookiesTheme(cookies: string | undefined): Nullable<UnResolvedTheme> {
-    return cookieToObj(cookies)[THEME_KEY] as Nullable<UnResolvedTheme>;
+function getCookiesTheme(cookies: NextApiRequestCookies): Nullable<UnResolvedTheme> {
+    return cookies[THEME_KEY] as Nullable<UnResolvedTheme>;
 }
 
 function setClientSideCookieTheme(theme: UnResolvedTheme, days = 0) {

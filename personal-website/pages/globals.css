@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .hover-shadow {
+        @apply transition-[box-shadow] duration-150 hover:shadow-md hover:shadow-gray-600;
+    }
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html,
+body {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+body {
+    @apply bg-slate-300 dark:bg-slate-600;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}

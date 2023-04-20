@@ -2,7 +2,7 @@
 
 import { UnResolvedTheme, useTheme } from "@/shared/themes";
 import { tm } from "@/shared/utils";
-import { ReactNode, Suspense, useState } from "react";
+import React, { ReactNode, Suspense, useState } from "react";
 import { BsFillMoonStarsFill, BsGearWideConnected } from "react-icons/bs";
 import { ImSun } from "react-icons/im";
 import { useMountedState } from "react-use";
@@ -14,7 +14,6 @@ const LIGHT_THEME = "light";
 const SYSTEM_THEME = "system";
 
 const THEMES: UnResolvedTheme[] = [DARK_THEME, LIGHT_THEME, SYSTEM_THEME];
-const DEFAULT_THEME = SYSTEM_THEME;
 
 const themeToIconMap: { [theme: string]: ReactNode } = {
     [DARK_THEME]: <BsFillMoonStarsFill className={styles.icon} />,
@@ -22,8 +21,10 @@ const themeToIconMap: { [theme: string]: ReactNode } = {
     [SYSTEM_THEME]: <BsGearWideConnected className={styles.icon} />,
 };
 
-export default function ThemeButton() {
-    let { unResolvedTheme, setTheme } = useTheme();
+
+
+const ThemeButton = React.forwardRef<React.ElementRef<"button">, React.ComponentPropsWithoutRef<"button">>(({className, ...otherProps}, ref) => {
+    const { unResolvedTheme, setTheme } = useTheme();
 
     const getNextTheme = (currTheme: UnResolvedTheme) =>
         THEMES[(THEMES.indexOf(currTheme) + 1) % THEMES.length];
@@ -48,6 +49,8 @@ export default function ThemeButton() {
         }
 
         // invoke animation to show the hidden item
+        console.log(`ThemeButton: switchTheme(${theme})`);
+        
         setTheme(theme);
     };
 
@@ -61,8 +64,8 @@ export default function ThemeButton() {
     }
 
     return (
-        <Suspense fallback={<>temp button</>}>
-            <Button onClick={onClick}>
+        <Suspense fallback={<>loading...</>}>
+            <Button ref={ref} onClick={onClick} {...otherProps}>
                 <span className={styles.text} data-active={leftActive}>
                     {leftTheme}
                 </span>
@@ -82,4 +85,7 @@ export default function ThemeButton() {
             </Button>
         </Suspense>
     );
-}
+});
+
+
+export default ThemeButton;

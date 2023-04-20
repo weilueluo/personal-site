@@ -1,16 +1,16 @@
 .container {
-    @apply flex h-fit w-fit flex-row gap-3 px-1 py-2 rounded-xl;
-    @apply hover:shadow-gray-600 transition-[box-shadow] hover:shadow-md duration-150;
+    @apply flex h-fit w-fit flex-row gap-3 rounded-xl px-1 py-2;
+    // @apply transition-[box-shadow] duration-150 hover:shadow-md hover:shadow-gray-600;
 
     > * {
-        @apply w-fit border-2 px-1 border-transparent rounded-xl;
+        @apply w-fit rounded-xl border-2 border-transparent px-1;
         @apply transition-all duration-75;
 
-        &[data-active=true] {
+        &[data-active="true"] {
             @apply bg-black text-white;
         }
-        &:hover:not([data-active=true]) {
-            @apply bg-slate-600 text-white border-2;
+        &:hover:not([data-active="true"]) {
+            @apply border-2 bg-slate-600 text-white;
         }
     }
 }
