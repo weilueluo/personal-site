@@ -3,6 +3,7 @@ import TranslationProvider from "@/shared/translation";
 import { AppProps } from "next/app";
 import { NextApiRequestCookies } from "next/dist/server/api-utils";
 import "./globals.css";
+import SceneProvider from "@/components/three/scene";
 
 interface MyAppProps {
     messages: Record<string, string>;

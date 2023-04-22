@@ -119,7 +119,7 @@ function useSystemTheme(): ResolvedTheme {
 }
 
 function getCookiesTheme(cookies: NextApiRequestCookies): Nullable<UnResolvedTheme> {
-    return cookies[THEME_KEY] as Nullable<UnResolvedTheme>;
+    return cookies && cookies[THEME_KEY] as Nullable<UnResolvedTheme>;
 }
 
 function setClientSideCookieTheme(theme: UnResolvedTheme, days = 0) {
