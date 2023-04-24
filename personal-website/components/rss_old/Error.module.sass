@@ -1,0 +1,10 @@
+$max-line: 10
+.stack
+    // clip max height stuff
+    max-height: calc( $max-line * 1.5 )rem
+    overflow: hidden
+    text-overflow: ellipsis
+    display: -webkit-box
+    -webkit-line-clamp: $max-line
+    line-clamp: $max-line
+    -webkit-box-orient: vertical

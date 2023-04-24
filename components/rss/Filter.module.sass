@@ -1,0 +1,48 @@
+@use '/components/common/css/colors'
+@use '/components/common/css/button'
+@use './common'
+    
+.panels-container
+    width: 100%
+    max-width: 100%
+    
+    display: flex
+    flex-direction: column
+    align-items: center
+
+.panel
+    width: common.$content-width
+    max-width: 100%
+
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+
+
+.title
+    @include button.button
+    background-color: transparent
+    
+    text-align: center
+
+
+
+.filter
+    list-style: none
+
+    &.active
+        .filter-button
+            background-color: colors.$locked-color
+
+.filters
+    padding-left: 0
+    display: flex
+    flex-direction: row
+    gap: 1rem
+    flex-wrap: wrap
+    justify-content: center
+
+.filter-button
+    @include button.button
+    

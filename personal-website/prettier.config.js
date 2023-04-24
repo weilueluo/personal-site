@@ -2,5 +2,5 @@
 module.exports = {
     editorConfig: true,
     bracketSameLine: true,
-    printWidth: 100
+    printWidth: 120
 };
