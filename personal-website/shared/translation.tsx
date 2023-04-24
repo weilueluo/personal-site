@@ -1,22 +1,29 @@
-import React, { useContext } from "react";
+import { useRouter } from "next/router";
+import React, { useContext, useEffect, useState } from "react";
 
 const TranslationContext = React.createContext({ messages: {} as Record<string, string> });
 
-export default function TranslationProvider({ children, messages }: { children: React.ReactNode; messages: any }) {
+export default function TranslationProvider({
+    children,
+    messages: initialMessages,
+}: {
+    children: React.ReactNode;
+    messages: any;
+}) {
+    const { locale } = useRouter();
 
-    // keep messages in state so that between transitions, the old messages are still available
-    // console.log( "messages", messages);
-    
-    const [messagesState, _] = React.useState(messages);  
+    const [messages, setMessages] = useState(initialMessages);
 
-    return <TranslationContext.Provider value={{ messages: messagesState }}>{children}</TranslationContext.Provider>;
+    useEffect(() => {
+        import(`../public/messages/${locale ?? "en"}.json`).then((messages) => setMessages(messages.default));
+    }, [locale]);
+
+    return <TranslationContext.Provider value={{ messages }}>{children}</TranslationContext.Provider>;
 }
 
-export function useMessages({ index = undefined }: { index?: string | undefined }) {
+export function useMessages(index: string | undefined = undefined) {
     const { messages } = useContext(TranslationContext);
-    return {
-        messages: index ? messages[index] : messages,
-    };
+    return index ? messages[index] : messages;
 }
 
 export function getMessagesKey(locale: string) {

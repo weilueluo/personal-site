@@ -93,7 +93,7 @@ export function isDevEnv() {
 export const restartAnimations = (element: Element): void => {
     for (const animation of document.getAnimations()) {
         if (element.contains((animation.effect as KeyframeEffect).target)) {
-            console.log(animation);
+            // console.log(animation);
             animation.cancel();
             animation.play();
         }

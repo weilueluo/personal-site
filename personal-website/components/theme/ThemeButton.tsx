@@ -49,7 +49,7 @@ const ThemeButton = React.forwardRef<React.ElementRef<"button">, React.Component
         }
 
         // invoke animation to show the hidden item
-        console.log(`ThemeButton: switchTheme(${theme})`);
+        // console.log(`ThemeButton: switchTheme(${theme})`);
         
         setTheme(theme);
     };

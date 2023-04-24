@@ -6,7 +6,7 @@ export const RSS_URLS: string[] = [
     'https://store.steampowered.com/feeds/news/?l=english',
 
     // hanime
-    'https://rsshub.app/hanime/video',
+    // 'https://rsshub.app/hanime/video',
 
     // // zhihu hotlist
     // 'https://rsshub.app/zhihu/hotlist',

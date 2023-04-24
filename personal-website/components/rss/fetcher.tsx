@@ -8,7 +8,7 @@ const corsProxyEndpoint = "https://hauww8y4w1.execute-api.eu-west-2.amazonaws.co
 
 export async function rssFetcher(url: string) {
     const corsURL = corsProxyEndpoint + (isDevEnv() ? "/dev?url=" : "/prod?url=") + url;
-    console.log(`fetching ${corsURL}...`);
+    // console.log(`fetching ${corsURL}...`);
     
     return await parser.parseURL(corsURL);
 }

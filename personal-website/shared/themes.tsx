@@ -23,9 +23,7 @@ export const THEMES: UnResolvedTheme[] = ["system", "light", "dark"];
 const ThemeContext = React.createContext<UseTheme>({
     resolvedTheme: DEFAULT_RESOLVED_THEME,
     unResolvedTheme: DEFAULT_RESOLVED_THEME,
-    setTheme: () => {
-        console.log(`ThemeContext: setTheme() initialize`);
-    },
+    setTheme: () => {},
 });
 
 // functions to export
@@ -99,7 +97,7 @@ function useSystemTheme(): ResolvedTheme {
     useEffectOnce(() => {
         const handleEvent = (event: MediaQueryListEvent) => {
             const newTheme = event.matches ? "light" : "dark";
-            console.log(`MediaQueryListEvent=${event}`);
+            // console.log(`MediaQueryListEvent=${event}`);
 
             setSystemTheme(newTheme);
         };
