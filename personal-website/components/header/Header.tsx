@@ -97,6 +97,8 @@ const LinkIcon = forwardRef<HTMLAnchorElement, ComponentPropsWithoutRef<"a">>((p
     );
 });
 
+LinkIcon.displayName = "LinkIcon";
+
 Header.displayName = "Header";
 
 export default Header;

@@ -56,7 +56,7 @@ function RSSState({ url }: { url: string }) {
         setFeeds((draft) => {
             draft[url] = { data, error, isLoading, isValidating };
         });
-    }, [data, error, isLoading, isValidating]);
+    }, [data, error, isLoading, isValidating, setFeeds, url]);
 
     return <></>;
 }

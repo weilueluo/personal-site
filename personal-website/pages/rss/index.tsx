@@ -59,10 +59,10 @@ function TestRSS() {
                 const data = feed.data;
 
                 if (feed.isLoading) {
-                    return <span>loading</span>;
+                    return <span key={url}>loading</span>;
                 }
                 if (feed.error) {
-                    return <span>error: {feed.error}</span>;
+                    return <span key={url}>error: {feed.error}</span>;
                 }
 
                 return (

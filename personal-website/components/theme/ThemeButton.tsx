@@ -87,5 +87,7 @@ const ThemeButton = React.forwardRef<React.ElementRef<"button">, React.Component
     );
 });
 
+ThemeButton.displayName = "ThemeButton";
+
 
 export default ThemeButton;

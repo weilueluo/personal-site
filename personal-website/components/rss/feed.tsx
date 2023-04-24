@@ -91,4 +91,6 @@ const FeedItem = React.forwardRef<React.ElementRef<"li">, FeedItemProps>(({ item
     );
 });
 
+FeedItem.displayName = "FeedItem";
+
 export default Feed;
