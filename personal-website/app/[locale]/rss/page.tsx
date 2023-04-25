@@ -1,11 +1,15 @@
+"use client";
+
 import Loading from "@/components/loading";
-import Dog from "@/components/three/objects/dog";
+import CanvasLayout from "@/components/three/layout";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import TestRSS from "./test";
 
-const Common = dynamic(() => import("@/components/three/common"), { ssr: false });
 const Room = dynamic(() => import("@/components/three/objects/room"), { ssr: false });
+const Common = dynamic(() => import("@/components/three/common"), {
+    ssr: false,
+});
 const View = dynamic(() => import("@/components/three/view"), {
     ssr: false,
     loading: () => <Loading />,
@@ -17,21 +21,21 @@ export default function RSSPage() {
     // }, []);
 
     return (
-        <>
-            <div>
-                <h3>Hello RSS Feed</h3>
+        <CanvasLayout>
+            <div className="grid place-items-center">
+                <h3 className=" text-xl font-semibold">RSS Feed</h3>
             </div>
 
             <TestRSS />
 
-            <div className="flex h-full w-full items-center justify-center">
+            {/* <div className="flex w-full items-center justify-center">
                 <View className="hover-shadow-inset h-96 w-96" orbit>
                     <Suspense fallback={null}>
-                        <Dog position={[0, 0, 1]} rotation={[0.65, 0.0, 0]} />
+                        <Room scale={0.1} position={[0, 0, 1]} rotation={[0.65, 0.0, 0]} />
                         <Common />
                     </Suspense>
                 </View>
-            </div>
+            </div> */}
 
             {/* <div className="flex flex-row flex-wrap">
                 {RSS_URLS.map((url) => (
@@ -40,6 +44,6 @@ export default function RSSPage() {
                     </ErrorBoundary>
                 ))}
             </div> */}
-        </>
+        </CanvasLayout>
     );
 }

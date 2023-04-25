@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 
-export const TranslationContext = React.createContext({ messages: {} as Record<string, string> });
+export const TranslationContext = React.createContext<{ messages: any }>({ messages: {} });
 
 export default function TranslationProvider({
     children,
@@ -17,7 +17,9 @@ export default function TranslationProvider({
     const [messages, setMessages] = useState(initialMessages);
 
     useEffect(() => {
-        import(`../public/messages/${locale ?? "en"}.json`).then((messages) => setMessages(messages.default));
+        import(`../public/messages/${locale ?? "en"}.json`, { assert: { type: "json" } }).then((messages) =>
+            setMessages(messages.default)
+        );
     }, [locale]);
 
     return <TranslationContext.Provider value={{ messages }}>{children}</TranslationContext.Provider>;

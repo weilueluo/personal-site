@@ -3,17 +3,17 @@ import React, { useContext, useEffect } from "react";
 import { Output } from "rss-parser";
 import useSWR from "swr";
 import { Updater, useImmer } from "use-immer";
-import { RSS_URLS } from "./config";
+import { RSSConfig, RSS_URLS as RSS_CONFIGS } from "./config";
 import { rssFetcher } from "./fetcher";
 
 const RSSContext = React.createContext<RSSProviderValue>(null!);
 
-export interface FeedResult {
+export type FeedResult = {
     data?: Output<{}>;
     error: any;
     isLoading: boolean;
     isValidating: boolean;
-}
+} & RSSConfig;
 
 export type Feeds = Record<string, FeedResult>;
 
@@ -32,8 +32,8 @@ export function RSSProvider({ children }: { children: React.ReactNode }) {
     return (
         <RSSContext.Provider value={{ feeds, setFeeds }}>
             {children}
-            {RSS_URLS.map((url) => (
-                <RSSState key={url} url={url} />
+            {RSS_CONFIGS.map((rssConfig) => (
+                <RSSState key={rssConfig.title} config={rssConfig} />
             ))}
         </RSSContext.Provider>
     );
@@ -47,16 +47,16 @@ export function useRSS(): UseFeeds {
     };
 }
 
-function RSSState({ url }: { url: string }) {
-    const { data, error, isLoading, isValidating } = useSWR(url, rssFetcher);
+function RSSState({ config }: { config: RSSConfig }) {
+    const { data, error, isLoading, isValidating } = useSWR(config.url, rssFetcher);
 
     const { setFeeds } = React.useContext(RSSContext);
 
     useEffect(() => {
         setFeeds((draft) => {
-            draft[url] = { data, error, isLoading, isValidating };
+            draft[config.title] = { data, error, isLoading, isValidating, ...config };
         });
-    }, [data, error, isLoading, isValidating, setFeeds, url]);
+    }, [data, error, isLoading, isValidating, setFeeds, config]);
 
     return <></>;
 }

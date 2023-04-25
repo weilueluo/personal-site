@@ -1,5 +1,5 @@
 import Header from "@/components/header/Header";
-import CanvasLayout from "@/components/three/layout";
+import Separator from "@/components/ui/Separator";
 import ThemeProvider from "@/shared/themes";
 import TranslationProvider from "@/shared/translation";
 import { cookies } from "next/headers";
@@ -21,11 +21,12 @@ export default async function Layout({ children, params }: { children: React.Rea
         <ThemeProvider cookies={cookies()}>
             <TranslationProvider messages={messages}>
                 <html lang={locale}>
-                    <body>
-                        <CanvasLayout>
+                    <body className="grid place-items-center">
+                        <main className="max-w-screen relative flex h-fit min-h-screen w-[57em] flex-col bg-sky-200 p-6 md:px-24 md:py-4">
                             <Header />
+                            <Separator className="mb-2" />
                             {children}
-                        </CanvasLayout>
+                        </main>
                     </body>
                 </html>
             </TranslationProvider>

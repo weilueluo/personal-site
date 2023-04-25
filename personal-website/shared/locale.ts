@@ -1,4 +1,3 @@
-import path from "path";
 import { DEFAULT_LOCALE, LOCALES } from "./constants";
 
 export function replaceLocale(path: string, oldLocale: string, newLocale: string) {
@@ -17,23 +16,20 @@ export function replaceLocale(path: string, oldLocale: string, newLocale: string
 // currentPath: with locale prefix
 // newPath: without locale prefix
 export function getPathWithLocale(currentPath: string, newPath: string) {
+    // console.log(`currentPath`, currentPath);
+    // console.log(`newPath`, newPath);
+
     const isRoot = newPath.startsWith("/");
     if (!isRoot) {
         return currentPath + '/' + newPath;
     }
 
     for (const locale of LOCALES) {
-        const localePrefix1 = `/${locale}/`;
-        if (currentPath.startsWith(localePrefix1)) {
-            return  `/${locale}${newPath}`;
-        }
-
-        const localePrefix2 = `/${locale}`;
-        if (currentPath == localePrefix2) {
-            return  `/${locale}${newPath}`;
+        if (currentPath.startsWith(`/${locale}/`) || currentPath == `/${locale}`) {
+            return newPath === '/' ? `/${locale}` : `/${locale}${newPath}`;
         }
     }
 
     // currentPath == '/'
-    return `/${DEFAULT_LOCALE}${newPath}`;
+    return newPath === '/' ? `/${DEFAULT_LOCALE}` : `/${DEFAULT_LOCALE}${newPath}`;
 }

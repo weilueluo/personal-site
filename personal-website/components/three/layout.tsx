@@ -8,16 +8,15 @@ const CanvasLayout = ({ children }: { children: React.ReactNode }) => {
     const ref = useRef<HTMLDivElement>(null!);
 
     return (
-        <main
+        <div
             ref={ref}
             style={{
                 position: "relative",
-                width: " 100%",
+                width: "100%",
                 height: "100%",
                 overflow: "auto",
                 touchAction: "auto",
             }}
-            className="max-w-screen relative flex h-screen w-full flex-col p-6 md:p-24"
             >
             {children}
             <Scene
@@ -32,7 +31,7 @@ const CanvasLayout = ({ children }: { children: React.ReactNode }) => {
                 eventSource={ref}
                 eventPrefix="client"
             />
-        </main>
+        </div>
     );
 };
 

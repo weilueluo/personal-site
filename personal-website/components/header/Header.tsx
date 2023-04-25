@@ -23,12 +23,13 @@ export interface HeaderProps extends ComponentPropsWithoutRef<"header"> {}
 const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ className, ...props }, ref) => {
     const { locale } = useParams();
     const pathname = usePathname();
-    const messages: any = useMessages("header");
+    const messages = useMessages("header");
     const linkClassName = tm("self-center flex flex-row items-center gap-2 p-2 hover-shadow");
     const linkIconClassName = tm("w-6 h-6");
     const listItemClassName = tm("mx-1");
-    const activeClassName = tm("shadow-inset-sm");
+    const activeClassName = tm("[&:not(:hover)]:shadow-inset-sm");
 
+    const homePath = getPathWithLocale(pathname, "/");
     const blogsPath = getPathWithLocale(pathname, "/blogs");
     const contactPath = getPathWithLocale(pathname, "/contact");
     const animePath = getPathWithLocale(pathname, "/anime");
@@ -36,6 +37,7 @@ const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ clas
     const cvPath = getPathWithLocale(pathname, "/cv");
 
     // console.log(`pathname=${pathname}`);
+    // console.log(`homePath=${homePath}`);
     // console.log(`blogsPath=${blogsPath}`);
     // console.log(`contactPath=${contactPath}`);
     // console.log(`animePath=${animePath}`);
@@ -43,15 +45,17 @@ const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ clas
     // console.log(`cvPath=${cvPath}`);
 
     return (
-        <header className={tm("w-full", L_FONT.className)} ref={ref} {...props}>
+        <header className={tm("w-full")} ref={ref} {...props}>
             <nav className="flex w-full flex-row flex-wrap justify-between gap-4">
                 <List className="flex-row">
-                    <li className={tm(listItemClassName, pathname == "/" && activeClassName)}>
-                        <Link href={"/"} locale={locale} className={linkClassName}>
+                    <ThemeButton className={listItemClassName} />
+                    <li className={tm(listItemClassName, (pathname === "/" || pathname === homePath) && activeClassName)}>
+                        <Link href={homePath} locale={locale} className={linkClassName}>
                             <HiAcademicCap className={linkIconClassName} />
                             <h3>LUOWEILUE</h3>
                         </Link>
                     </li>
+                    <LocaleButton className={tm(listItemClassName, "px-2")} />
                 </List>
 
                 <List className="flex-row">
@@ -93,10 +97,10 @@ const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ clas
                     </li>
                 </List>
 
-                <List className="flex-row">
+                {/* <List className="flex-row">
                     <ThemeButton className={listItemClassName} />
                     <LocaleButton className={tm(listItemClassName, "shadow-inset-sm px-2")} />
-                </List>
+                </List> */}
             </nav>
         </header>
     );

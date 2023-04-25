@@ -3,14 +3,15 @@
     // @apply transition-[box-shadow] duration-150 hover:shadow-md hover:shadow-gray-600;
 
     > * {
-        @apply w-fit rounded-xl border-2 border-transparent px-1;
-        @apply transition-all duration-75;
+        @apply w-fit rounded-xl border-2 border-transparent py-1 px-3;
+        @apply transition-[box-shadow] duration-150;
 
-        &[data-active="true"] {
-            @apply bg-black text-white;
+        &[data-active="true"]:not(:hover) {
+            // @apply bg-black text-white;
+            box-shadow: inset 0 2px 3px -1px rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgb(0, 0, 0, 0.4);
         }
-        &:hover:not([data-active="true"]) {
-            @apply border-2 bg-slate-600 text-white;
+        &:hover {
+            @apply border-2 cursor-pointer shadow-md shadow-gray-600;
         }
     }
 }
