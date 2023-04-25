@@ -1,6 +1,6 @@
 "use client";
 
-import { NextApiRequestCookies } from "next/dist/server/api-utils";
+import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import React, { useContext, useEffect, useState } from "react";
 import { useEffectOnce } from "react-use";
 import { Nullable } from "./types/utils";
@@ -18,7 +18,7 @@ export interface UseTheme {
 
 // constants
 const THEME_KEY = "x-theme"; // for local storage and cookie
-const DEFAULT_RESOLVED_THEME = "dark";
+const DEFAULT_RESOLVED_THEME = "light";
 export const THEMES: UnResolvedTheme[] = ["system", "light", "dark"];
 const ThemeContext = React.createContext<UseTheme>({
     resolvedTheme: DEFAULT_RESOLVED_THEME,
@@ -33,21 +33,15 @@ export default function ThemeProvider({
     defaultTheme = undefined,
 }: {
     children: React.ReactNode;
-    cookies: NextApiRequestCookies;
+    cookies: ReadonlyRequestCookies;
     defaultTheme?: UnResolvedTheme;
 }) {
     // cookies theme > local storage theme > provided default theme > builtin default theme
-    const initialTheme =
-        getCookiesTheme(cookies) ||
-        getLocalStorageTheme() ||
-        defaultTheme ||
-        DEFAULT_RESOLVED_THEME;
+    const initialTheme = getCookiesTheme(cookies) || getLocalStorageTheme() || defaultTheme || DEFAULT_RESOLVED_THEME;
 
     const systemTheme = useSystemTheme();
     const [unResolvedTheme, setUnResolvedTheme] = useState<UnResolvedTheme>(initialTheme);
-    const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() =>
-        resolve(unResolvedTheme, systemTheme)
-    );
+    const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() => resolve(unResolvedTheme, systemTheme));
 
     useEffect(() => {
         if (unResolvedTheme === "system") {
@@ -74,9 +68,7 @@ export default function ThemeProvider({
     };
 
     return (
-        <ThemeContext.Provider value={{ resolvedTheme, unResolvedTheme, setTheme }}>
-            {children}
-        </ThemeContext.Provider>
+        <ThemeContext.Provider value={{ resolvedTheme, unResolvedTheme, setTheme }}>{children}</ThemeContext.Provider>
     );
 }
 
@@ -102,22 +94,29 @@ function useSystemTheme(): ResolvedTheme {
             setSystemTheme(newTheme);
         };
         if (typeof window !== "undefined" && window.matchMedia) {
-            window
-                .matchMedia("(prefers-color-scheme: light)")
-                .addEventListener("change", handleEvent);
+            window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", handleEvent);
 
-            return () =>
-                window
-                    .matchMedia("(prefers-color-scheme: light)")
-                    .removeEventListener("change", handleEvent);
+            return () => window.matchMedia("(prefers-color-scheme: light)").removeEventListener("change", handleEvent);
         }
     });
 
     return systemTheme;
 }
 
-function getCookiesTheme(cookies: NextApiRequestCookies): Nullable<UnResolvedTheme> {
-    return cookies && cookies[THEME_KEY] as Nullable<UnResolvedTheme>;
+function getCookiesTheme(cookies: ReadonlyRequestCookies): Nullable<UnResolvedTheme> {
+    // console.log(`getCookiesTheme: cookies=${JSON.stringify(cookies)}`);
+    
+    let theme: Nullable<UnResolvedTheme>;
+    if (cookies) {  
+        for (const cookie of cookies) {
+            // console.log(`getCookiesTheme: cookie=${JSON.stringify(cookie)}`);
+            if (cookie[0] == THEME_KEY) {
+                theme = cookie[1].value as UnResolvedTheme;
+            }
+        }
+    }
+    // console.log(`getCookiesTheme: theme=${JSON.stringify(theme)}`);
+    return theme    
 }
 
 function setClientSideCookieTheme(theme: UnResolvedTheme, days = 0) {

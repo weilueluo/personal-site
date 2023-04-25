@@ -1,20 +1,27 @@
 "use client";
+import { DEFAULT_LOCALE, LOCALES } from "@/shared/constants";
+import { replaceLocale } from "@/shared/locale";
+import Link from "next/link";
+import { useParams, usePathname } from "next/navigation";
 import React from "react";
 import MultiButton from "../ui/MultiButton";
-import { useRouter } from "next/router";
-import Link from "next/link";
 
 export interface LocaleButtonProps extends React.ComponentPropsWithoutRef<"div"> {}
 
 const LocaleButton = React.forwardRef<React.ElementRef<"div">, LocaleButtonProps>(
     ({ className, ...otherProps }, ref) => {
-        const { locale: currentLocale, locales, pathname } = useRouter();
+        const currentLocale = useParams().locale || DEFAULT_LOCALE;
+        const pathname = usePathname();
 
-        const buttons = (locales ?? []).map((locale) => (
+        // console.log(pathname + " " + currentLocale);
+        // for (const locale of LOCALES) {
+        //     console.log(locale, replaceLocale(pathname, currentLocale, locale, DEFAULT_LOCALE));
+        // }
+
+        const buttons = (LOCALES ?? []).map((locale) => (
             <Link
                 key={locale}
-                href={pathname}
-                locale={locale}
+                href={replaceLocale(pathname, currentLocale, locale)}
                 data-active={locale === currentLocale}
                 className="flex flex-row items-center justify-center uppercase">
                 <span>{locale}</span>

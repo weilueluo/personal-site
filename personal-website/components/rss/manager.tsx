@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+"use client";
+import React, { useContext, useEffect } from "react";
 import { Output } from "rss-parser";
 import useSWR from "swr";
 import { Updater, useImmer } from "use-immer";
 import { RSS_URLS } from "./config";
 import { rssFetcher } from "./fetcher";
-import { ErrorBoundary } from "react-error-boundary";
 
 const RSSContext = React.createContext<RSSProviderValue>(null!);
 
@@ -40,7 +40,7 @@ export function RSSProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useRSS(): UseFeeds {
-    const { feeds } = React.useContext(RSSContext);
+    const { feeds } = useContext(RSSContext);
 
     return {
         feeds,

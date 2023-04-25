@@ -1,36 +1,18 @@
-import dynamic from "next/dynamic";
-import React, { ReactNode, useRef } from "react";
+"use client"
 
-const Scene = dynamic(() => import("./canvas"), { ssr: false });
+import { Preload } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import tunnel from 'tunnel-rat'
 
-const SceneLayout = ({ children }: { children: React.ReactNode }) => {
-    const ref = useRef<HTMLDivElement>(null!);
+export const r3f = tunnel()
 
+export default function Scene({ ...props }) {
+    // Everything defined in here will persist between route changes, only children are swapped
     return (
-        <div
-            ref={ref}
-            style={{
-                position: "relative",
-                width: " 100%",
-                height: "100%",
-                overflow: "auto",
-                touchAction: "auto",
-            }}>
-            {children}
-            <Scene
-                style={{
-                    position: "fixed",
-                    top: 0,
-                    left: 0,
-                    width: "100vw",
-                    height: "100vh",
-                    pointerEvents: "none",
-                }}
-                eventSource={ref}
-                eventPrefix="client"
-            />
-        </div>
+        <Canvas {...props}>
+            {/* @ts-ignore */}
+            <r3f.Out />
+            <Preload all />
+        </Canvas>
     );
-};
-
-export default SceneLayout;
+}

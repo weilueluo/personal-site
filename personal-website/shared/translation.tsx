@@ -1,7 +1,9 @@
-import { useRouter } from "next/router";
+"use client";
+
+import { useParams } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 
-const TranslationContext = React.createContext({ messages: {} as Record<string, string> });
+export const TranslationContext = React.createContext({ messages: {} as Record<string, string> });
 
 export default function TranslationProvider({
     children,
@@ -10,7 +12,7 @@ export default function TranslationProvider({
     children: React.ReactNode;
     messages: any;
 }) {
-    const { locale } = useRouter();
+    const { locale } = useParams();
 
     const [messages, setMessages] = useState(initialMessages);
 
