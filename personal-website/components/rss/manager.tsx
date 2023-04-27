@@ -11,7 +11,9 @@ enableMapSet();
 
 // type for result of using swr to fetch rss feed
 
-export type CustomFeedItem = {};
+export type CustomFeedItem = {
+    lastBuildDate?: string;  // github has this
+};
 export type FeedResponse = Output<CustomFeedItem>;
 export type Feed = Omit<FeedResponse, "items"> & { config: RSSConfig } & { item: Item } & CustomFeedItem;
 

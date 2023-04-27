@@ -154,7 +154,7 @@ function FeedData({ feedData }: { feedData: Feed }) {
                         {timeSince(
                             new Date(),
                             new Date(
-                                feedData.item.isoDate || feedData.item.pubDate || feedData.item.lastBuildDate || ""
+                                feedData.item.isoDate || feedData.item.pubDate || feedData.lastBuildDate || ""
                             )
                         )}{" "}
                         ago
