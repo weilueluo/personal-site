@@ -2,6 +2,7 @@ import Header from "@/components/header/Header";
 import Separator from "@/components/ui/Separator";
 import ThemeProvider from "@/shared/themes";
 import TranslationProvider from "@/shared/translation";
+import { enableMapSet } from "immer";
 import { cookies } from "next/headers";
 import "./global.css";
 

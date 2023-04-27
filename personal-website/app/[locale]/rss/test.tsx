@@ -1,13 +1,12 @@
 "use client";
 
-import { FeedResult, RSSProvider, useRSS } from "@/components/rss/manager";
+import { Feed, FeedInfo, RSSProvider, useRSS } from "@/components/rss/manager";
 import Separator from "@/components/ui/Separator";
 import { timeSince, tm } from "@/shared/utils";
 import { sanitize } from "dompurify";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { Item, Output } from "rss-parser";
 import { useImmer } from "use-immer";
 
 export default function TestRSS() {
@@ -29,42 +28,42 @@ type TitleToActive = {
 };
 
 function RSS() {
-    const { feeds } = useRSS();
+    const { feeds, feedInfo, rssConfigs } = useRSS();
 
-    const feedData = Object.values(feeds);
+    // const feedData = Object.values(feeds);
 
     // title stuff
-    const initialTitleToActive: TitleToActive = feedData.reduce((acc, feed) => {
-        acc[feed.title] = false;
-        return acc;
-    }, {} as TitleToActive);
+    const initialTitleToActive = useCallback(
+        () =>
+            rssConfigs.reduce((acc, config) => {
+                acc[config.title] = false;
+                return acc;
+            }, {} as TitleToActive),
+        [rssConfigs]
+    );
     const [titleToActive, setTitleToActive] = useImmer<TitleToActive>(initialTitleToActive);
     const toggleTitleActive = useCallback(
         (title: string) =>
             setTitleToActive((draft) => {
                 draft[title] = !draft[title];
             }),
-        []
+        [setTitleToActive]
     );
 
     // feeds stuff
     // const [activeFeeds, setActiveFeeds] = useState<FeedResult[]>([]);
     useEffect(() => {
         // set active feeds
-        const activeFeeds = feedData.filter((feed) => titleToActive[feed.title]);
-        // setActiveFeeds(activeFeeds);
-        const activeFeedData = activeFeeds.flatMap((feed) => {
-            const { items, ...rest } = feed?.data || {};
-            return (items || []).map((item) => ({ ...item, ...rest }));
-        });
-        setActiveFeedData(activeFeedData);
-    }, [titleToActive]);
+        const activeFeeds = feeds.filter((feed) => titleToActive[feed.config.title]);
+
+        setActiveFeedData(activeFeeds);
+    }, [titleToActive, feeds]);
 
     // console.log("titleToActive", titleToActive);
 
     // console.log("activeFeeds", activeFeeds);
 
-    const [activeFeedData, setActiveFeedData] = useState<(Item & Omit<Output<{}>, "items">)[]>([]);
+    const [activeFeedData, setActiveFeedData] = useState<Feed[]>([]);
     // useEffect(() => {
 
     // }, [activeFeeds]);
@@ -74,18 +73,22 @@ function RSS() {
     return (
         <>
             <ul className="my-2 flex h-fit flex-row flex-wrap">
-                {feedData.map((feed) => (
+                {Array.from(feedInfo).map(([title, info]) => (
                     <TitleButton
-                        key={feed.title}
-                        feed={feed}
-                        active={titleToActive[feed.title]}
-                        onClick={() => toggleTitleActive(feed.title)}
+                        key={title}
+                        title={title}
+                        active={titleToActive[title]}
+                        info={info}
+                        onClick={() => toggleTitleActive(title)}
                     />
                 ))}
             </ul>
             <ul>
                 {activeFeedData.map((feedData) => (
-                    <FeedData key={`${feedData.guid}_${feedData.title}_${feedData.link}`} feedData={feedData} />
+                    <FeedData
+                        key={`${feedData.item.guid}_${feedData.item.title}_${feedData.item.link}`}
+                        feedData={feedData}
+                    />
                 ))}
             </ul>
             {/* <Separator className="h-3 mb-3" /> */}
@@ -118,39 +121,51 @@ function RSS() {
     );
 }
 
-function TitleButton({ feed, active, ...rest }: { feed: FeedResult; active: boolean }) {
+function TitleButton({
+    title,
+    active,
+    info,
+    ...rest
+}: {
+    title: string;
+    active: boolean;
+    info: FeedInfo;
+    onClick: () => void;
+}) {
     return (
-        <button
-            key={feed.title}
-            className={tm("hover-shadow mx-1 w-fit px-2 py-2", active && "shadow-inset-sm")}
-            {...rest}>
-            {feed.title}
+        <button key={title} className={tm("hover-shadow mx-1 w-fit px-2 py-2", active && "shadow-inset-sm")} {...rest}>
+            <h3>{title}</h3>
+            <span>{`${info.error ? info.error : info.status}`}</span>
         </button>
     );
 }
 
-function FeedData({ feedData }: { feedData: Item & Omit<Output<{}>, "items"> }) {
+function FeedData({ feedData }: { feedData: Feed }) {
     return (
         <li
-            key={`${feedData.guid}_${feedData.title}_${feedData.link}`}
+            key={`${feedData.item.guid}_${feedData.item.title}_${feedData.item.link}`}
             className="mx-2 my-3 rounded-md border border-black p-2">
             <details>
                 <summary>
-                    <h3>{feedData?.title}</h3>
-                    <span>
+                    <h3>{feedData.item.title}</h3>
+                    <span className="italic text-sm">
+                        {feedData.config.title}
+                        {" - "}
                         {timeSince(
                             new Date(),
-                            new Date(feedData.isoDate || feedData.pubDate || feedData.lastBuildDate || "")
+                            new Date(
+                                feedData.item.isoDate || feedData.item.pubDate || feedData.item.lastBuildDate || ""
+                            )
                         )}{" "}
                         ago
                     </span>
-                    <p>{feedData.summary}</p>
-                    <Link href={feedData?.link || "#"} className="hover:underline">
-                        {feedData?.link}
+                    <p>{feedData.item.summary}</p>
+                    <Link href={feedData.item?.link || "#"} className="hover:underline">
+                        {feedData.item?.link}
                     </Link>
                 </summary>
                 <Separator className="mb-2 h-2" />
-                <p dangerouslySetInnerHTML={{ __html: sanitize(feedData.content || "") }}></p>
+                <p dangerouslySetInnerHTML={{ __html: sanitize(feedData.item.content || "") }}></p>
             </details>
         </li>
     );
