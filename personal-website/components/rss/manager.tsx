@@ -1,5 +1,4 @@
 "use client";
-import { enableMapSet } from "immer";
 import React, { useCallback, useContext, useEffect, useRef } from "react";
 import { Item, Output } from "rss-parser";
 import useSWR from "swr";
@@ -7,12 +6,10 @@ import { useImmer } from "use-immer";
 import { RSSConfig, RSS_CONFIGS } from "./config";
 import { rssFetcher } from "./fetcher";
 
-enableMapSet();
-
 // type for result of using swr to fetch rss feed
 
 export type CustomFeedItem = {
-    lastBuildDate?: string;  // github has this
+    lastBuildDate?: string; // github has this
 };
 export type FeedResponse = Output<CustomFeedItem>;
 export type Feed = Omit<FeedResponse, "items"> & { config: RSSConfig } & { item: Item } & CustomFeedItem;
@@ -48,8 +45,8 @@ export interface RSSProviderValue {
 
 export interface UseFeeds {
     feeds: Feed[];
-    feedInfo: FeedInfoMap;
-    rssConfigs: RSSConfig[];
+    info: FeedInfoMap;
+    configs: RSSConfig[];
 }
 
 const RSSContext = React.createContext<RSSProviderValue>(null!);
@@ -63,7 +60,6 @@ export function RSSProvider({ children }: { children: React.ReactNode }) {
 
     const addFeeds = useCallback(
         (config: RSSConfig, rawFeedResponse: RawFeedResponse) => {
-            // map raw feed response to flat feed
             if (rawFeedResponse.error) {
                 setFeedStatus((draft) => {
                     draft.set(config.title, { status: FeedStatus.ERROR, error: rawFeedResponse.error });
@@ -113,12 +109,12 @@ export function RSSProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useRSS(): UseFeeds {
-    const { feeds, feedInfo: feedStatus, rssConfigs } = useContext(RSSContext);
+    const { feeds, feedInfo, rssConfigs } = useContext(RSSContext);
 
     return {
         feeds,
-        feedInfo: feedStatus,
-        rssConfigs,
+        info: feedInfo,
+        configs: rssConfigs,
     };
 }
 

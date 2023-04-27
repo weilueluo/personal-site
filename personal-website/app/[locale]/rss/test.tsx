@@ -28,7 +28,7 @@ type TitleToActive = {
 };
 
 function RSS() {
-    const { feeds, feedInfo, rssConfigs } = useRSS();
+    const { feeds, info: feedInfo, configs: rssConfigs } = useRSS();
 
     // const feedData = Object.values(feeds);
 

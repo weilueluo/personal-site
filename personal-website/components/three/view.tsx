@@ -3,18 +3,19 @@
 import { OrbitControls, View as ViewImpl } from "@react-three/drei";
 import { forwardRef, useImperativeHandle, useRef } from "react";
 import { r3f } from "./scene";
+import { tm } from "@/shared/utils";
 
 export interface ViewProps extends React.ComponentPropsWithoutRef<"div"> {
     orbit?: boolean;
 }
 
-const View = forwardRef(({ children, orbit, ...props }: ViewProps, ref) => {
+const View = forwardRef(({ children, orbit, className, ...props }: ViewProps, ref) => {
     const localRef = useRef(null!);
     useImperativeHandle(ref, () => localRef.current);
 
     return (
         <>
-            <div ref={localRef} {...props} />
+            <div ref={localRef} className={tm("max-w-full max-h-full" ,className)} {...props} />
             <r3f.In>
                 <ViewImpl track={localRef}>
                     {children}

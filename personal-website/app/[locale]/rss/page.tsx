@@ -1,9 +1,8 @@
 "use client";
 
-import Loading from "@/components/loading";
 import CanvasLayout from "@/components/three/layout";
+import Loading from "@/components/ui/loading";
 import dynamic from "next/dynamic";
-import { Suspense } from "react";
 import TestRSS from "./test";
 
 const Room = dynamic(() => import("@/components/three/objects/room"), { ssr: false });
