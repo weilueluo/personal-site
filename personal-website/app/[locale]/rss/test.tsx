@@ -1,12 +1,20 @@
 "use client";
 
-import { Feed, FeedInfo, RSSProvider, useRSS } from "@/components/rss/manager";
+import { Feed, FeedInfo, FeedStatus, RSSProvider, useRSS, useSingleRSS } from "@/components/rss/manager";
+import { rssUtils } from "@/components/rss/utils";
 import Separator from "@/components/ui/Separator";
+import Tooltip from "@/components/ui/Tooltip";
 import { timeSince, tm } from "@/shared/utils";
 import { sanitize } from "dompurify";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { AiFillCheckCircle, AiOutlineLoading3Quarters } from "react-icons/ai";
+import { CgFormatSeparator, CgSpinnerTwoAlt } from "react-icons/cg";
+import { ImSpinner9 } from "react-icons/im";
+import { IoRefreshCircle } from "react-icons/io5";
+import { MdOutlineError } from "react-icons/md";
+import { TbTruckLoading } from "react-icons/tb";
 import { useImmer } from "use-immer";
 
 export default function TestRSS() {
@@ -28,9 +36,7 @@ type TitleToActive = {
 };
 
 function RSS() {
-    const { feeds, info: feedInfo, configs: rssConfigs } = useRSS();
-
-    // const feedData = Object.values(feeds);
+    const { feeds, infoMap: feedInfo, configs: rssConfigs } = useRSS();
 
     // title stuff
     const initialTitleToActive = useCallback(
@@ -78,17 +84,13 @@ function RSS() {
                         key={title}
                         title={title}
                         active={titleToActive[title]}
-                        info={info}
                         onClick={() => toggleTitleActive(title)}
                     />
                 ))}
             </ul>
             <ul>
-                {activeFeedData.map((feedData) => (
-                    <FeedData
-                        key={`${feedData.item.guid}_${feedData.item.title}_${feedData.item.link}`}
-                        feedData={feedData}
-                    />
+                {activeFeedData.sort((a, b) => a.date <= b.date ? 1 : -1).map((feedData) => (
+                    <FeedData key={`${rssUtils.hash(feedData)}`} feedData={feedData} />
                 ))}
             </ul>
             {/* <Separator className="h-3 mb-3" /> */}
@@ -121,43 +123,51 @@ function RSS() {
     );
 }
 
-function TitleButton({
-    title,
-    active,
-    info,
-    ...rest
-}: {
-    title: string;
-    active: boolean;
-    info: FeedInfo;
-    onClick: () => void;
-}) {
+const STATUS_2_ICON = {
+    [FeedStatus.COMPLETED]: <AiFillCheckCircle className="inline-block" />,
+    [FeedStatus.ERROR]: <MdOutlineError className="inline-block" color="#8E354A" />,
+    [FeedStatus.LOADING]: <ImSpinner9 className="inline-block animate-spin" />,
+    [FeedStatus.PROCESSING]: <CgFormatSeparator className="inline-block" />,
+    [FeedStatus.VALIDATING]: <ImSpinner9 className="inline-block animate-spin" />,
+};
+
+function TitleButton({ title, active, ...rest }: { title: string; active: boolean; onClick: () => void }) {
+    const { feeds, info, config } = useSingleRSS(title);
     return (
-        <button key={title} className={tm("hover-shadow mx-1 w-fit px-2 py-2", active && "shadow-inset-sm")} {...rest}>
-            <h3>{title}</h3>
-            <span>{`${info.error ? info.error : info.status}`}</span>
+        <button
+            key={title}
+            className={tm(
+                "hover-shadow mx-1 flex w-fit flex-row items-center gap-1 px-2 py-2",
+                active && "shadow-inset-sm"
+            )}
+            {...rest}>
+            <div className="flex h-full w-fit flex-row items-center justify-center gap-1 rounded-md px-1">
+                <span>{title}</span>
+                <Tooltip.Container>
+                    <span className="grid h-full place-items-center">{STATUS_2_ICON[info.status]}</span>
+                    <Tooltip.Content className="w-fit whitespace-nowrap text-sm">
+                        {info.status === FeedStatus.ERROR ? info.error?.message : `amount=${info.amount}`}
+                    </Tooltip.Content>
+                </Tooltip.Container>
+                {/* {info.status === FeedStatus.COMPLETED && <span>{info.amount}</span>} */}
+            </div>
         </button>
     );
 }
 
 function FeedData({ feedData }: { feedData: Feed }) {
+    const now = new Date();
     return (
         <li
             key={`${feedData.item.guid}_${feedData.item.title}_${feedData.item.link}`}
-            className="mx-2 my-3 rounded-md border border-black p-2">
+            className="mx-2 my-3 rounded-md border border-black p-2 hover:cursor-pointer">
             <details>
                 <summary>
                     <h3>{feedData.item.title}</h3>
-                    <span className="italic text-sm">
+                    <span className="text-sm italic">
                         {feedData.config.title}
                         {" - "}
-                        {timeSince(
-                            new Date(),
-                            new Date(
-                                feedData.item.isoDate || feedData.item.pubDate || feedData.lastBuildDate || ""
-                            )
-                        )}{" "}
-                        ago
+                        {timeSince(now, feedData.date)} ago
                     </span>
                     <p>{feedData.item.summary}</p>
                     <Link href={feedData.item?.link || "#"} className="hover:underline">

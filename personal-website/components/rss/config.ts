@@ -30,6 +30,10 @@ export const RSS_CONFIGS: RSSConfig[] = [
         title: 'Wangyin Blog',
         url: 'https://rsshub.app/blogs/wangyin'
     },
+    {
+        title: 'Error RSS',
+        url: 'https://rsshub.app/blogs/error'
+    },
 
     // 'https://rsshub.app/hanime/video',
     // 'https://rsshub.app/zhihu/hotlist',

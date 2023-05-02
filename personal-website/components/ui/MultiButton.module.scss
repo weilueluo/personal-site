@@ -3,7 +3,7 @@
     // @apply transition-[box-shadow] duration-150 hover:shadow-md hover:shadow-gray-600;
 
     > * {
-        @apply w-fit rounded-xl border-2 border-transparent px-3 py-1;
+        @apply w-fit rounded-xl border-transparent px-3 py-1;
         @apply transition-[box-shadow] duration-150;
 
         &[data-active="true"]:not(:hover) {

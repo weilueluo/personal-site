@@ -4,11 +4,11 @@
 
 @layer components {
     .hover-shadow {
-        @apply rounded-xl transition-[box-shadow] duration-150 hover:shadow-md hover:shadow-gray-600 hover:cursor-pointer
+        @apply rounded-xl transition-[box-shadow] duration-150 hover:cursor-pointer hover:shadow-md hover:shadow-gray-600;
     }
 
     .hover-shadow-inset {
-        @apply rounded-xl transition-[box-shadow] duration-150  hover:shadow-gray-600 hover:cursor-pointer;
+        @apply rounded-xl transition-[box-shadow] duration-150  hover:cursor-pointer hover:shadow-gray-600;
     }
 
     .shadow-inset-md {
@@ -24,6 +24,13 @@
     .hover-shadow-inset:hover {
         @apply shadow-inset-md;
     }
+}
+
+details > summary {
+    list-style: none;
+}
+details > summary::-webkit-details-marker {
+    display: none;
 }
 
 a:hover {

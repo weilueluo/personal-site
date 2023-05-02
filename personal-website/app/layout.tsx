@@ -24,7 +24,7 @@ export default async function Layout({ children, params }: { children: React.Rea
                 <html lang={locale}>
                     <body className="grid place-items-center">
                         <Init />
-                        <main className="max-w-screen relative flex h-fit min-h-screen w-[57em] max-w-[100vw] flex-col bg-sky-200 p-6 md:px-24 md:py-4">
+                        <main className="max-w-screen relative flex h-fit min-h-screen w-[57em] max-w-[100vw] flex-col bg-[#9E7A7A] p-6 md:px-24 md:py-4">
                             <Header />
                             <Separator className="mb-2" />
                             {children}
