@@ -43,14 +43,14 @@ export interface RSSProviderValue {
     mutateMap: MutateMap;
 }
 
-export interface UseFeeds {
+export interface UseRSS {
     feeds: Feed[];
     infoMap: FeedInfoMap;
     configs: RSSConfig[];
     mutateMap: MutateMap;
 }
 
-export interface UseSingleFeeds {
+export interface UseSingleRSS {
     feeds: Feed[];
     info: FeedInfo;
     config: RSSConfig;
@@ -64,7 +64,7 @@ const initMutateMap = new Map(RSS_CONFIGS.map((config) => [config.title, () => u
 
 export function RSSProvider({ children }: { children: React.ReactNode }) {
     const [feeds, setFeeds] = useImmer<Feed[]>([]);
-    const [feedStatus, setFeedStatus] = useImmer<FeedInfoMap>(initFeedStatus);
+    const [feedInfo, setFeedInfo] = useImmer<FeedInfoMap>(initFeedStatus);
     const rssConfigs = useRef(RSS_CONFIGS);
     const [mutateMap, setMutateMap] = useImmer<MutateMap>(initMutateMap);
 
@@ -73,28 +73,28 @@ export function RSSProvider({ children }: { children: React.ReactNode }) {
             const amount = rawFeedResponse?.data?.items?.length || 0;
             setMutateMap((draft) => draft.set(config.title, rawFeedResponse.mutate));
             if (rawFeedResponse.error) {
-                setFeedStatus((draft) => {
+                setFeedInfo((draft) => {
                     draft.set(config.title, { status: FeedStatus.ERROR, error: rawFeedResponse.error, amount });
                 });
                 return;
             }
 
             if (rawFeedResponse.isLoading) {
-                setFeedStatus((draft) => {
+                setFeedInfo((draft) => {
                     draft.set(config.title, { status: FeedStatus.LOADING, amount });
                 });
                 return;
             }
 
             if (rawFeedResponse.isValidating) {
-                setFeedStatus((draft) => {
+                setFeedInfo((draft) => {
                     draft.set(config.title, { status: FeedStatus.VALIDATING, amount });
                 });
                 return;
             }
 
             if (rawFeedResponse.data) {
-                setFeedStatus((draft) => {
+                setFeedInfo((draft) => {
                     draft.set(config.title, { status: FeedStatus.PROCESSING, amount });
                 });
                 const { items: feedItems, ...feedMetadata } = rawFeedResponse.data;
@@ -106,17 +106,17 @@ export function RSSProvider({ children }: { children: React.ReactNode }) {
                     });
                     return draft;
                 });
-                setFeedStatus((draft) => {
+                setFeedInfo((draft) => {
                     draft.set(config.title, { status: FeedStatus.COMPLETED, amount });
                 });
             }
         },
-        [setFeedStatus, setFeeds, setMutateMap]
+        [setFeedInfo, setFeeds, setMutateMap]
     );
 
     return (
         <RSSContext.Provider
-            value={{ feeds, addFeeds, feedInfo: feedStatus, rssConfigs: rssConfigs.current, mutateMap }}>
+            value={{ feeds, addFeeds, feedInfo: feedInfo, rssConfigs: rssConfigs.current, mutateMap }}>
             {children}
             {rssConfigs.current.map((rssConfig) => (
                 <RSSState key={rssConfig.title} config={rssConfig} />
@@ -125,7 +125,7 @@ export function RSSProvider({ children }: { children: React.ReactNode }) {
     );
 }
 
-export function useSingleRSS(title: string): UseSingleFeeds {
+export function useSingleRSS(title: string): UseSingleRSS {
     let { feeds, feedInfo, rssConfigs, mutateMap } = useContext(RSSContext);
     feeds = feeds.filter((feed) => feed.title === title);
     const configs = rssConfigs.filter((config) => config.title === title);
@@ -149,7 +149,7 @@ export function useSingleRSS(title: string): UseSingleFeeds {
     };
 }
 
-export function useRSS(): UseFeeds {
+export function useRSS(): UseRSS {
     const { feeds, feedInfo, rssConfigs, mutateMap } = useContext(RSSContext);
 
     return {

@@ -15,9 +15,6 @@ export default async function Layout({ children, params }: { children: React.Rea
 
     const messages = (await import(`../public/messages/${locale}.json`)).default;
 
-    // console.log("messages", typeof messages);
-    // console.log("messages", messages);
-
     return (
         <ThemeProvider cookies={cookies()}>
             <TranslationProvider messages={messages}>
