@@ -24,6 +24,10 @@
     .hover-shadow-inset:hover {
         @apply shadow-inset-md;
     }
+
+    .hover-subtext {
+        @apply italic text-gray-600 hover:cursor-pointer hover:text-black hover:underline;
+    }
 }
 
 details > summary {

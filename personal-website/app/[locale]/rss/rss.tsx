@@ -76,10 +76,8 @@ export default function RSS() {
                 {isLoading ? (
                     <GiHandTruck className=" animate-in animate-out fade-in fade-out slide-in-from-left-8 slide-out-to-right-8 duration-1000 running repeat-infinite" />
                 ) : hasMoreFeeds ? (
-                    <span
-                        className="hover-shadow mb-2 px-2 py-1 hover:cursor-pointer"
-                        onClick={() => setDisplayAmount(displayAmount + 20)}>
-                        click to view 20 more (current: {displayAmount}/{activeFeeds.length})
+                    <span className="hover-subtext mb-2 px-2 py-1" onClick={() => setDisplayAmount(displayAmount + 20)}>
+                        click to view 20 more ({displayAmount}/{activeFeeds.length})
                     </span>
                 ) : (
                     <span className="italic">~ displayed all {displayFeeds.length} feeds ~</span>
@@ -111,7 +109,7 @@ function FeedTitle({ title, ...rest }: { title: string }) {
             <div className="mx-1 flex h-full w-fit flex-row items-center gap-1">
                 <span className="flex h-full text-sm">
                     {isFetchingFeed
-                        ? `-`
+                        ? `...`
                         : info.status === FeedStatus.ERROR
                         ? info.error?.message
                         : `${info.amount} feeds`}
@@ -176,27 +174,35 @@ function FeedData({ feedData }: { feedData: Feed }) {
                     )} */}
                     {/* title, source, date, etc */}
                     <div>
+                        {/* first row: title */}
                         <Link
                             href={feedData.item?.link || "#"}
                             target="_blank"
                             className="w-fit hover:cursor-pointer hover:underline">
-                            <h3 className="flex w-fit flex-row items-center gap-2 font-bold">
+                            <h3 className="flex w-fit flex-row items-center gap-1 font-bold">
                                 {feedData.item.title}
                                 <ImNewTab className="inline-block" />
                             </h3>
                         </Link>
-                        <span className="text-sm italic text-gray-600">
+                        {/* second row */}
+                        <span className="text-sm text-gray-600">
                             <Link
                                 href={feedData.config.homeUrl}
-                                className="inline-flex flex-row items-center hover:cursor-pointer hover:underline"
+                                className="hover-subtext inline-flex flex-row items-center italic hover:cursor-pointer hover:underline"
                                 target="_blank">
                                 {`${feedData.config.title}`}
-                                <ImNewTab className="ml-1 inline-block" />
+                                {/* <ImNewTab className="ml-1 inline-block" /> */}
                             </Link>
-                            {" - "}
-                            <span onClick={dateOnClick} className="hover-shadow p-1">
-                                {date}
-                            </span>
+                            {date && (
+                                <>
+                                    <span className="px-1">{" | "}</span>
+                                    <span
+                                        onClick={dateOnClick}
+                                        className="hover-subtext pr-1 italic hover:cursor-default hover:underline">
+                                        {date}
+                                    </span>
+                                </>
+                            )}
                         </span>
                     </div>
                 </div>
