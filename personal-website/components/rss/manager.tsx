@@ -116,8 +116,7 @@ export function RSSProvider({ children }: { children: React.ReactNode }) {
     );
 
     return (
-        <RSSContext.Provider
-            value={{ feeds, addFeeds, feedInfo: feedInfo, rssConfigs: rssConfigs.current, mutateMap }}>
+        <RSSContext.Provider value={{ feeds, addFeeds, feedInfo: feedInfo, rssConfigs: rssConfigs.current, mutateMap }}>
             {children}
             {rssConfigs.current.map((rssConfig) => (
                 <RSSState key={rssConfig.title} config={rssConfig} />

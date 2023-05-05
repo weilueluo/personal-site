@@ -6,16 +6,14 @@ import Separator from "@/components/ui/Separator";
 import { timeSince, tm } from "@/shared/utils";
 import { sanitize } from "dompurify";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AiFillCheckCircle, AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { CgFormatSeparator } from "react-icons/cg";
+import { GiHandTruck } from "react-icons/gi";
 import { ImNewTab, ImSpinner9 } from "react-icons/im";
 import { IoMdRefreshCircle } from "react-icons/io";
 import { MdOutlineError } from "react-icons/md";
 import { useSingleUserFeedConfigs, useUserRSSConfigs } from "./user-config";
-import { GiHandTruck } from "react-icons/gi";
-import Image from "next/image";
-import { BsFillCaretDownFill, BsFillCaretRightFill } from "react-icons/bs";
 
 export default function RSS() {
     const { feeds, infoMap, configs: rssConfigs } = useRSS();
@@ -204,7 +202,7 @@ function FeedData({ feedData }: { feedData: Feed }) {
                 </div>
 
                 {/* details */}
-                <div onClick={detailsOnClick} className="hover:cursor-pointer flex flex-row">
+                <div onClick={detailsOnClick} className="flex flex-row hover:cursor-pointer">
                     {!showDetails && (
                         <div>
                             <div className="line-clamp-3 animate-in slide-in-from-bottom-4">

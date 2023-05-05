@@ -1,6 +1,6 @@
-import { RSSConfig as RSSConfig } from "@/components/rss/config";
+import { RSSConfig } from "@/components/rss/config";
 import { useRSS } from "@/components/rss/manager";
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext } from "react";
 import { useImmer } from "use-immer";
 
 export interface FeedConfigs {
@@ -9,7 +9,7 @@ export interface FeedConfigs {
 export type PerFeedConfigs = { [title: string]: FeedConfigs };
 
 export interface FeedItemConfigs {}
-export type PerFeedItemConfigs = { [uniqueId: string]: FeedItemConfigs }
+export type PerFeedItemConfigs = { [uniqueId: string]: FeedItemConfigs };
 
 export interface GlobalConfigs {
     showRawDate: boolean;
@@ -61,7 +61,7 @@ export function UserRSSConfigsProvider({ children }: { children: React.ReactNode
     const setActive = useCallback(
         (feedTitle: string, active: boolean) => {
             setUserConfigs((draft) => {
-                if (feedTitle in draft) {
+                if (feedTitle in draft.perFeedConfigs) {
                     draft.perFeedConfigs[feedTitle].active = active;
                 } else {
                     console.error(`feed title not found to update active status: ${feedTitle}`);
@@ -71,14 +71,19 @@ export function UserRSSConfigsProvider({ children }: { children: React.ReactNode
         [setUserConfigs]
     );
 
-    const setShowRawDate = useCallback((showRawDate: boolean) => {
-        setUserConfigs(draft => {
-            draft.globalConfigs.showRawDate = !draft.globalConfigs.showRawDate;
-        })
-    }, [setUserConfigs])
+    const setShowRawDate = useCallback(
+        (showRawDate: boolean) => {
+            setUserConfigs((draft) => {
+                draft.globalConfigs.showRawDate = !draft.globalConfigs.showRawDate;
+            });
+        },
+        [setUserConfigs]
+    );
 
     return (
-        <UserRSSConfigsContext.Provider value={{ userConfigs, setActive, setShowRawDate }}>{children}</UserRSSConfigsContext.Provider>
+        <UserRSSConfigsContext.Provider value={{ userConfigs, setActive, setShowRawDate }}>
+            {children}
+        </UserRSSConfigsContext.Provider>
     );
 }
 
@@ -92,6 +97,6 @@ export function useSingleUserFeedConfigs(title: string): SingleUserFeedConfigs {
     return {
         active,
         setActive,
-        setShowRawDate
+        setShowRawDate,
     };
 }
