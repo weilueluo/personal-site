@@ -2,33 +2,35 @@
 
 export type RSSConfig = {
     title: string,
-    url: string
+    url: string,
+    homeUrl: string,
 }
 
 export const RSS_CONFIGS: RSSConfig[] = [
     {
         title: 'Steam News',
-        url: 'https://store.steampowered.com/feeds/news/?l=english'
+        url: 'https://store.steampowered.com/feeds/news/?l=english',
+        homeUrl: 'https://store.steampowered.com'
     },
     {
         title: 'Weibo Hot',
-        url: 'https://rsshub.app/weibo/search/hot'
+        url: 'https://rsshub.app/weibo/search/hot',
+        homeUrl: 'https://weibo.com'
     },
     {
         title: 'CSDN News',
-        url: 'https://rsshub.app/csdn/blog/csdngeeknews'
+        url: 'https://rsshub.app/csdn/blog/csdngeeknews',
+        homeUrl: 'https://www.bbc.com/news'
     },
     {
         title: 'BBC News',
-        url: 'https://rsshub.app/bbc'
+        url: 'https://rsshub.app/bbc',
+        homeUrl: 'https://www.csdn.net'
     },
     {
         title: 'Github Trending',
-        url: 'https://rsshub.app/github/trending/daily/any/en'
-    },
-    {
-        title: 'Wangyin Blog',
-        url: 'https://rsshub.app/blogs/wangyin'
+        url: 'https://rsshub.app/github/trending/daily/any/en',
+        homeUrl: 'https://github.com'
     },
 
     // for testing only

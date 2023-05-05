@@ -10,7 +10,7 @@ import { rssFetcher } from "./fetcher";
 
 export type CustomFeedItem = {
     lastBuildDate?: string; // github has this
-    date: Date;
+    date?: Date;
 };
 export type FeedResponse = Output<CustomFeedItem>;
 export type Feed = Omit<FeedResponse, "items"> & { config: RSSConfig } & { item: Item } & CustomFeedItem;
@@ -101,7 +101,8 @@ export function RSSProvider({ children }: { children: React.ReactNode }) {
                 setFeeds((draft) => {
                     draft = draft.filter((feed) => feed.config.title !== config.title); // remove existing feeds
                     (feedItems || []).forEach((item) => {
-                        const date = new Date(item.isoDate || item.pubDate || item.lastBuildDate || "")
+                        const dateStr = item.isoDate || item.pubDate || item.lastBuildDate;
+                        const date = dateStr ? new Date(dateStr) : undefined;
                         draft.push({ item, config, date, ...feedMetadata }); // add new feeds
                     });
                     return draft;

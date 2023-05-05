@@ -6,14 +6,16 @@ import Separator from "@/components/ui/Separator";
 import { timeSince, tm } from "@/shared/utils";
 import { sanitize } from "dompurify";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AiFillCheckCircle, AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { CgFormatSeparator } from "react-icons/cg";
-import { ImSpinner9 } from "react-icons/im";
+import { ImNewTab, ImSpinner9 } from "react-icons/im";
 import { IoMdRefreshCircle } from "react-icons/io";
 import { MdOutlineError } from "react-icons/md";
 import { useSingleUserFeedConfigs, useUserRSSConfigs } from "./user-config";
 import { GiHandTruck } from "react-icons/gi";
+import Image from "next/image";
+import { BsFillCaretDownFill, BsFillCaretRightFill } from "react-icons/bs";
 
 export default function RSS() {
     const { feeds, infoMap, configs: rssConfigs } = useRSS();
@@ -21,8 +23,16 @@ export default function RSS() {
 
     useEffect(() => {
         const activeFeeds = feeds
-            .filter((feed) => userConfigs[feed.config.title].active)
-            .sort((a, b) => (a.date <= b.date ? 1 : -1));
+            .filter((feed) => userConfigs.perFeedConfigs[feed.config.title].active)
+            .sort((a, b) => {
+                if (a.date === undefined) {
+                    return 1;
+                } else if (b.date === undefined) {
+                    return -1;
+                } else {
+                    return a.date <= b.date ? 1 : -1;
+                }
+            });
         setActiveFeeds(activeFeeds);
     }, [userConfigs, feeds]);
 
@@ -56,17 +66,17 @@ export default function RSS() {
                         <FeedTitle key={title} title={title} />
                     ))}
                 </ul>
-                <Separator />
+                {/* <Separator /> */}
             </>
 
-            <ul>
+            <ul className="mt-8">
                 {displayFeeds.map((feedData) => (
                     <FeedData key={`${rssUtils.hash(feedData)}`} feedData={feedData} />
                 ))}
             </ul>
             <div className="flex justify-center">
                 {isLoading ? (
-                    <GiHandTruck className=" animate-in animate-out slide-in-from-left-8 slide-out-to-right-8 duration-1000 running repeat-infinite fade-in fade-out" />
+                    <GiHandTruck className=" animate-in animate-out fade-in fade-out slide-in-from-left-8 slide-out-to-right-8 duration-1000 running repeat-infinite" />
                 ) : hasMoreFeeds ? (
                     <span
                         className="hover-shadow mb-2 px-2 py-1 hover:cursor-pointer"
@@ -96,27 +106,19 @@ function FeedTitle({ title, ...rest }: { title: string }) {
 
     return (
         <div className={tm("flex h-fit flex-row items-center justify-between gap-1 rounded-md")} {...rest}>
-            <div className="flex h-fit flex-row items-center justify-center gap-1 rounded-md px-1">
+            <div className="flex h-fit flex-row items-center justify-center gap-1 rounded-md">
                 <span>{title}</span>
             </div>
 
             <div className="mx-1 flex h-full w-fit flex-row items-center gap-1">
                 <span className="flex h-full text-sm">
-                    {isFetchingFeed ? `-` : info.status === FeedStatus.ERROR ? info.error?.message : `${info.amount}`}
+                    {isFetchingFeed
+                        ? `-`
+                        : info.status === FeedStatus.ERROR
+                        ? info.error?.message
+                        : `${info.amount} feeds`}
                 </span>
                 <span className="grid h-full place-items-center px-2">{STATUS_2_ICON[info.status]}</span>
-                {/* <Tooltip.Container>
-                    <span className="grid h-full place-items-center">{STATUS_2_ICON[info.status]}</span>
-                    <Tooltip.Content className="w-fit whitespace-nowrap text-sm">
-                        {info.status === FeedStatus.ERROR ? info.error?.message : `amount=${info.amount}`}
-                    </Tooltip.Content>
-                </Tooltip.Container> */}
-
-                <span
-                    className={tm("hover-shadow rounded-md px-2 py-1 text-sm", active && "shadow-inset-sm")}
-                    onClick={() => setActive(title, !active)}>
-                    {active ? <AiFillEye size={"1.2em"} /> : <AiFillEyeInvisible size={"1.2em"} />}
-                </span>
 
                 <span
                     className={tm(
@@ -126,33 +128,113 @@ function FeedTitle({ title, ...rest }: { title: string }) {
                     onClick={() => mutate()}>
                     <IoMdRefreshCircle size={"1.2em"} />
                 </span>
+
+                <span
+                    className={tm("hover-shadow rounded-md px-2 py-1 text-sm", active && "shadow-inset-sm")}
+                    onClick={() => setActive(title, !active)}>
+                    {active ? <AiFillEye size={"1.2em"} /> : <AiFillEyeInvisible size={"1.2em"} />}
+                </span>
             </div>
         </div>
     );
 }
 
 function FeedData({ feedData }: { feedData: Feed }) {
-    const now = new Date();
+    const [showDetails, setShowDetails] = useState(false);
+    const detailsOnClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        setShowDetails((v) => !v);
+    };
+    const { setShowRawDate, userConfigs } = useUserRSSConfigs();
+    const content = feedData.item.summary || feedData.item.contentSnippet || feedData.item.content;
+    const sanitizedContent = content ? sanitize(content) : undefined;
+
+    const date = userConfigs.globalConfigs.showRawDate
+        ? feedData.date?.toDateString()
+        : feedData.date && `${timeSince(new Date(), feedData.date)} ago`;
+    const dateOnClick = (e: React.MouseEvent<HTMLSpanElement>) => {
+        e.stopPropagation();
+        setShowRawDate(!userConfigs.globalConfigs.showRawDate);
+    };
+
     return (
         <li
             key={rssUtils.hash(feedData)}
-            className="mx-2 my-3 break-all rounded-md border border-black p-2 hover:cursor-pointer">
-            <details>
-                <summary>
-                    <h3>{feedData.item.title}</h3>
-                    <span className="text-sm italic">
-                        {feedData.config.title}
-                        {" - "}
-                        {timeSince(now, feedData.date)} ago
-                    </span>
-                    <p>{feedData.item.summary}</p>
-                    <Link href={feedData.item?.link || "#"} className="hover:underline">
-                        {feedData.item?.link}
-                    </Link>
-                </summary>
-                <Separator className="mb-2 h-2" />
-                <p dangerouslySetInnerHTML={{ __html: sanitize(feedData.item.content || "") }}></p>
-            </details>
+            className={tm("my-3 break-all rounded-md border border-transparent p-2", showDetails && "border-black")}>
+            <div className="animate-in slide-in-from-bottom-4">
+                {/* summary */}
+                <div className="flex flex-row">
+                    {/* 
+                    {feedData.image && (
+                        <div className=" min-h-full">
+                            <Image
+                                src={feedData.image?.url || "#"}
+                                alt={feedData.image?.title || `image from ${feedData.config.title}`}
+                                width={48}
+                                height={48}
+                                className=" object-cover"
+                            />
+                        </div>
+                    )} */}
+                    {/* title, source, date, etc */}
+                    <div>
+                        <Link
+                            href={feedData.item?.link || "#"}
+                            target="_blank"
+                            className="w-fit hover:cursor-pointer hover:underline">
+                            <h3 className="flex w-fit flex-row items-center gap-2 font-bold">
+                                {feedData.item.title}
+                                <ImNewTab className="inline-block" />
+                            </h3>
+                        </Link>
+                        <span className="text-sm italic text-gray-600">
+                            <Link
+                                href={feedData.config.homeUrl}
+                                className="inline-flex flex-row items-center hover:cursor-pointer hover:underline"
+                                target="_blank">
+                                {`${feedData.config.title}`}
+                                <ImNewTab className="ml-1 inline-block" />
+                            </Link>
+                            {" - "}
+                            <span onClick={dateOnClick} className="hover-shadow p-1">
+                                {date}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+                {/* details */}
+                <div onClick={detailsOnClick} className="hover:cursor-pointer flex flex-row">
+                    {!showDetails && (
+                        <div>
+                            <div className="line-clamp-3 animate-in slide-in-from-bottom-4">
+                                {sanitizedContent ? (
+                                    <p dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+                                ) : (
+                                    <p className="italic">~empty content~</p>
+                                )}
+                            </div>
+                            {/* <div className="w-fill text-right">
+                                <span className="text-sm italic text-gray-600">(click to expand)</span>
+                            </div> */}
+                        </div>
+                    )}
+
+                    {showDetails && (
+                        <div className="animate-in slide-in-from-top-4">
+                            <Separator className="mb-2 h-2" />
+                            {sanitizedContent ? (
+                                <p
+                                    dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+                                    className="max-h-64 overflow-y-scroll"
+                                />
+                            ) : (
+                                <p className="italic">~empty content~</p>
+                            )}
+                        </div>
+                    )}
+                </div>
+            </div>
         </li>
     );
 }
