@@ -53,10 +53,10 @@ export default function RSS() {
 
     return (
         <>
-            <div className="grid place-items-center">
+            {/* <div className="grid place-items-center">
                 <h3 className="text-xl font-semibold">RSS Feed</h3>
                 <Separator className="h-3" />
-            </div>
+            </div> */}
 
             <>
                 <ul className="my-2 flex h-fit w-full flex-col gap-2">
@@ -64,7 +64,7 @@ export default function RSS() {
                         <FeedTitle key={title} title={title} />
                     ))}
                 </ul>
-                {/* <Separator /> */}
+                <Separator className="h-3"/>
             </>
 
             <ul className="mt-8">
