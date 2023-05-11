@@ -1,9 +1,9 @@
 .container {
-    @apply flex h-fit w-fit max-w-full flex-row flex-wrap gap-3 rounded-xl px-1 py-2;
+    @apply flex h-fit w-fit max-w-full flex-row flex-wrap gap-2 rounded-xl p-1;
     // @apply transition-[box-shadow] duration-150 hover:shadow-md hover:shadow-gray-600;
 
     > * {
-        @apply w-fit rounded-xl px-3 py-2;
+        @apply w-fit rounded-xl px-3 py-1;
         @apply transition-[box-shadow] duration-150;
 
         &[data-active="true"]:not(:hover) {

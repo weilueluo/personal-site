@@ -1,5 +1,5 @@
-import React, { PropsWithoutRef, useState } from "react";
 import Image, { ImageProps } from "next/image";
+import { useState } from "react";
 
 export type ProgressiveImageProps = Omit<ImageProps, "src"> & {
     srcs: (string | undefined)[];

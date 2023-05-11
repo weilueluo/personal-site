@@ -18,12 +18,12 @@ export const RSS_CONFIGS: RSSConfig[] = [
     {
         title: "CSDN News",
         url: "https://rsshub.app/csdn/blog/csdngeeknews",
-        homeUrl: "https://www.bbc.com/news",
+        homeUrl: "https://www.csdn.net",
     },
     {
         title: "BBC News",
         url: "https://rsshub.app/bbc",
-        homeUrl: "https://www.csdn.net",
+        homeUrl: "https://www.bbc.com/news",
     },
     {
         title: "Github Trending",

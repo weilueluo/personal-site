@@ -4,15 +4,13 @@ import { RSSProvider } from "@/components/rss/manager";
 import CanvasLayout from "@/components/three/layout";
 import { ErrorBoundary } from "react-error-boundary";
 import RSS from "./rss";
-import { UserRSSConfigsProvider } from "./user-config";
+import { UserRSSConfigsProvider } from "../../../components/rss/user-config";
 
 export default function RSSPage() {
     return (
-        <CanvasLayout>
-            <RSSLayout>
-                <RSS />
-            </RSSLayout>
-        </CanvasLayout>
+        <RSSLayout>
+            <RSS />
+        </RSSLayout>
     );
 }
 

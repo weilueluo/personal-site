@@ -3,7 +3,7 @@ import { VariantProps, cva } from "cva";
 import React, { ComponentPropsWithoutRef } from "react";
 
 
-const listVariant = cva("flex justify-center items-center grow flex-wrap gap-2");
+const listVariant = cva("flex justify-center items-center grow flex-wrap gap-1");
 
 export interface ListProps extends ComponentPropsWithoutRef<"ul">, VariantProps<typeof listVariant> {
 }

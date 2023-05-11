@@ -10,7 +10,7 @@ const Button = React.forwardRef<React.ElementRef<"button">, ButtonProps>(
         return (
             <button
                 className={tm(
-                    "flex h-fit w-fit flex-row items-center justify-around rounded-xl p-2 transition-[box-shadow] duration-150 hover:shadow-md hover:shadow-gray-600",
+                    "flex h-fit w-fit flex-row items-center justify-around rounded-xl py-1 px-2 transition-[box-shadow] duration-150 hover:shadow-md hover:shadow-gray-600",
                     className
                 )}
                 ref={ref}

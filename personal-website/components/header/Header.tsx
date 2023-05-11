@@ -3,7 +3,6 @@
 import LocaleButton from "@/components/locale/LocaleButton";
 import ThemeButton from "@/components/theme/ThemeButton";
 import { GITHUB_REPO_URL } from "@/shared/constants";
-import { L_FONT } from "@/shared/fonts";
 import { getPathWithLocale } from "@/shared/locale";
 import { useMessages } from "@/shared/translation";
 import { tm } from "@/shared/utils";
@@ -24,7 +23,7 @@ const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ clas
     const { locale } = useParams();
     const pathname = usePathname();
     const messages = useMessages("header");
-    const linkClassName = tm("self-center flex flex-row items-center gap-2 p-2 hover-shadow");
+    const linkClassName = tm("self-center flex flex-row items-center gap-1 py-1 px-2 hover-shadow");
     const linkIconClassName = tm("w-6 h-6");
     const listItemClassName = tm("mx-1");
     const activeClassName = tm("[&:not(:hover)]:shadow-inset-sm");
@@ -46,16 +45,20 @@ const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ clas
 
     return (
         <header className={tm("w-full")} ref={ref} {...props}>
-            <nav className="flex w-full flex-row flex-wrap justify-between gap-4">
+            <nav className="flex w-full flex-row flex-wrap justify-between gap-2">
                 <List className="flex-row">
                     <ThemeButton className={listItemClassName} />
-                    <li className={tm(listItemClassName, (pathname === "/" || pathname === homePath) && activeClassName)}>
+                    <li
+                        className={tm(
+                            listItemClassName,
+                            (pathname === "/" || pathname === homePath) && activeClassName
+                        )}>
                         <Link href={homePath} locale={locale} className={linkClassName}>
                             <HiAcademicCap className={linkIconClassName} />
                             <h3>LUOWEILUE</h3>
                         </Link>
                     </li>
-                    <LocaleButton className={tm(listItemClassName, "px-2")} />
+                    <LocaleButton className={tm("px-1")} />
                 </List>
 
                 <List className="flex-row">
@@ -96,11 +99,6 @@ const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ clas
                         </Link>
                     </li>
                 </List>
-
-                {/* <List className="flex-row">
-                    <ThemeButton className={listItemClassName} />
-                    <LocaleButton className={tm(listItemClassName, "shadow-inset-sm px-2")} />
-                </List> */}
             </nav>
         </header>
     );
