@@ -46,19 +46,19 @@ const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ clas
     return (
         <header className={tm("w-full")} ref={ref} {...props}>
             <nav className="flex w-full flex-row flex-wrap justify-between gap-2">
-                <List className="flex-row">
-                    <ThemeButton className={listItemClassName} />
+                <List className="flex-row gap-6">
                     <li
                         className={tm(
                             listItemClassName,
                             (pathname === "/" || pathname === homePath) && activeClassName
                         )}>
                         <Link href={homePath} locale={locale} className={linkClassName}>
-                            <HiAcademicCap className={linkIconClassName} />
-                            <h3>LUOWEILUE</h3>
+                            {/* <HiAcademicCap className={linkIconClassName} /> */}
+                            <h3>HOME</h3>
                         </Link>
                     </li>
                     <LocaleButton className={tm("px-1")} />
+                    <ThemeButton className={listItemClassName} />
                 </List>
 
                 <List className="flex-row">

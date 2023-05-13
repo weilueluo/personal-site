@@ -1,8 +1,8 @@
 import CanvasLayout from "@/components/three/layout";
-import Loading from "@/components/ui/loading";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import Title from "./title";
+import Loading from "@/components/ui/loading/spinner";
 
 const Room = dynamic(() => import("@/components/three/objects/room"), { ssr: false });
 const Common = dynamic(() => import("@/components/three/common"), { ssr: false });

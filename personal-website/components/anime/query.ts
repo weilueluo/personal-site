@@ -1,3 +1,5 @@
+// this files write on top of graphql.ts to provide concrete fetch methods to query anilist api
+
 import {
     AnilistGraphqlQuery,
     Character,
@@ -67,6 +69,17 @@ async function fetchAnilist<T>(query: string): Promise<T> {
 export interface Page<T> {
     pageInfo?: PageInfoItem;
     data?: T;
+}
+
+export async function fetchSearchPage(page: number, search: string): Promise<Page<SectionMedia[]>> {
+    const graphqlQuery = AnilistGraphqlQuery.fetchSearch(search, page);
+
+    const response = await fetchAnilist<RawPage<Media<MediaItem>>>(graphqlQuery);
+
+    return {
+        pageInfo: response?.Page?.pageInfo,
+        data: response?.Page?.media,
+    };
 }
 
 export async function fetchFavouritesPage(page_ = 1): Promise<Page<SectionMedia[]>> {

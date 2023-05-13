@@ -4,7 +4,8 @@ import { replaceLocale } from "@/shared/locale";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import React from "react";
-import MultiButton from "../ui/MultiButton";
+import styles from "./LocaleButton.module.scss";
+import { tm } from "@/shared/utils";
 
 export interface LocaleButtonProps extends React.ComponentPropsWithoutRef<"div"> {}
 
@@ -29,9 +30,9 @@ const LocaleButton = React.forwardRef<React.ElementRef<"div">, LocaleButtonProps
         ));
 
         return (
-            <MultiButton ref={ref} className={className} {...otherProps}>
+            <div ref={ref} className={tm(className, styles.container)} {...otherProps}>
                 {buttons}
-            </MultiButton>
+            </div>
         );
     }
 );

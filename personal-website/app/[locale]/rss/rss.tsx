@@ -36,8 +36,6 @@ export default function RSS() {
 
     const [activeFeeds, setActiveFeeds] = useState<Feed[]>([]);
 
-    // const [showTitle, setShowTitle] = useState(false);
-
     const [displayAmount, setDisplayAmount] = useState(20);
     const [hasMoreFeeds, setHasMoreFeeds] = useState(true);
     const [displayFeeds, setDisplayFeeds] = useState<Feed[]>([]);

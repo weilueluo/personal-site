@@ -329,6 +329,7 @@ const medias = (id: number) =>
     `media(id:${id}){
     ${mediaFields}
 }`;
+const mediasSearch = (search: string) => `media(search:\"${search}\"){${mediaFields}}`
 
 export interface Media<T> {
     media: T[];
@@ -394,5 +395,8 @@ export class AnilistGraphqlQuery {
     }
     public static fetchFavouriteAnimes(userID: number, page: number) {
         return query(page_(usersFavouritesAnimeNodes(userID, page)));
+    }
+    public static fetchSearch(searchString: string, page: number) {
+        return query(page_(mediasSearch(searchString), page));
     }
 }
