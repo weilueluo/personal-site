@@ -1,6 +1,7 @@
+import { FilterItem } from "./search";
 
 export const MY_USER_ID = 6044692;
-export const PAGE_SIZE = 4;
+export const PAGE_SIZE = 12;
 
 ////////////////////////////////////// query
 
@@ -26,7 +27,7 @@ export interface PageInfoItem {
 }
 
 ///////////////////////////////////////////////// page
-const page_ = (s: string, page_ = 1, perPage = PAGE_SIZE) =>
+const page_ = (s: string, page_: number | string = 1, perPage = PAGE_SIZE) =>
     `Page(page:${page_}, perPage:${perPage}){
     ${pageInfo}
     ${s}
@@ -188,7 +189,7 @@ export interface Character {
 }
 
 /////////////////////////////////////////////////
-const characters = (page: number) =>
+const characters = (page: number | string) =>
     `characters(page: ${page}){
     edges{
         ${characterFields}
@@ -232,7 +233,7 @@ export interface Staff {
 }
 
 /////////////////////////////////////////////////
-const staffs = (page: number) =>
+const staffs = (page: number | string) =>
     `staff(page: ${page}){
     edges{
         ${staffFields}
@@ -285,7 +286,7 @@ type AnimeSeason = "WINTER" | "SPRING" | "SUMMER" | "FALL";
 /////////////////////////////////////////////////
 export type MEDIALIST_STATUS = "CURRENT" | "PLANNING" | "COMPLETED" | "DROPPED" | "PAUSED" | "REPEATING";
 
-const mediaList = (userID: number, status: MEDIALIST_STATUS) =>
+const mediaList = (userID: number | string, status: MEDIALIST_STATUS) =>
     `mediaList(userId:${userID}, type:ANIME${status ? `,status_in:[${status}]` : ""}){
     id
     status
@@ -303,7 +304,7 @@ export interface MediaList {
 }
 
 /////////////////////////////////////////////////
-const usersFavouritesAnimeNodes = (id: number, page: number) =>
+const usersFavouritesAnimeNodes = (id: number | string, page: number | string) =>
     `users(id:${id}){
     favourites(page:1){
         anime(page:${page},perPage:${PAGE_SIZE}){
@@ -325,11 +326,24 @@ export interface UsersFavouritesAnime {
     }[];
 }
 
-const medias = (id: number) =>
+const medias = (id: number | string) =>
     `media(id:${id}){
     ${mediaFields}
 }`;
-const mediasSearch = (search: string) => `media(search:\"${search}\"){${mediaFields}}`
+const mediasSearch = (search?: string, filterItems?: FilterItem[]) => {
+
+    const searchQuery = search ? `search:"${search}"` : "";
+
+    const genres = (filterItems || []).filter((item) => item.type === "genre").map((item) => `"${item.name}"`);
+    const genreQuery = genres.length > 0 ? `genre_in:[${genres.join(",")}]` : "";
+
+    const tags = (filterItems || []).filter((item) => item.type === "tag").map((item) => `"${item.name}"`);
+    const tagQuery = tags.length > 0 ? `tag_in:[${tags.join(",")}]` : "";
+
+    const queries = [searchQuery, genreQuery, tagQuery].join(",");
+
+    return `media(${queries}){${mediaFields}}`
+}
 
 export interface Media<T> {
     media: T[];
@@ -366,37 +380,68 @@ export interface MediaItem extends SectionMedia {
     relations?: Relations;
 }
 
-const mediasCharacterOnly = (id: number, page: number) =>
+const mediasCharacterOnly = (id: number | string, page: number | string) =>
     `media(id:${id}){
     ${characters(page)}
 }`;
 
 export type MediaCharactersOnly = Media<CharactersItem>;
 
-const mediasStaffsOnly = (id: number, page: number) =>
+const mediasStaffsOnly = (id: number | string, page: number | string) =>
     `media(id:${id}){
     ${staffs(page)}
 }`;
 
+///////////////////////////////////////////// genres
+const genreCollection = "GenreCollection";
+export interface GenreCollection {
+    GenreCollection: string[];
+};
+
+/////////////////////////////////////////////
+const mediaTagCollection = `MediaTagCollection {
+    name
+    description
+    category
+    isAdult
+}`
+export interface MediaTag {
+    name: string,
+    description: string,
+    category: string,
+    isAdult: boolean
+}
+export interface MediaTagCollection {
+    MediaTagCollection: MediaTag[];
+};
+
+///////////////////////////////////////////// filter
+const filters = `${genreCollection}
+${mediaTagCollection}`
+export type Filters = MediaTagCollection & GenreCollection;
+
 ///////////////////////////////////////////// client
 
 export class AnilistGraphqlQuery {
-    public static fetchMedia(animeID: number): string {
+    public static fetchMedia(animeID: number | string): string {
         return query(page_(medias(animeID)));
     }
-    public static fetchMediaList(userID: number, page: number, status: MEDIALIST_STATUS) {
+    public static fetchMediaList(userID: number | string, page: number | string, status: MEDIALIST_STATUS) {
         return query(page_(mediaList(userID, status), page));
     }
-    public static fetchMediaCharacters(animeID: number, page: number) {
+    public static fetchMediaCharacters(animeID: number | string, page: number | string) {
         return query(page_(mediasCharacterOnly(animeID, page)));
     }
-    public static fetchMediaStaffs(animeID: number, page: number) {
+    public static fetchMediaStaffs(animeID: number | string, page: number | string) {
         return query(page_(mediasStaffsOnly(animeID, page)));
     }
-    public static fetchFavouriteAnimes(userID: number, page: number) {
+    public static fetchFavouriteAnimes(userID: number | string, page: number | string) {
         return query(page_(usersFavouritesAnimeNodes(userID, page)));
     }
-    public static fetchSearch(searchString: string, page: number) {
-        return query(page_(mediasSearch(searchString), page));
+    public static fetchSearch(searchString: string | string, page: number | string, filterItems: FilterItem[]) {
+        return query(page_(mediasSearch(searchString, filterItems), page));
+    }
+    public static fetchFilters() {
+        return query(filters)
     }
 }

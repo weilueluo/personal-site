@@ -1,46 +1,172 @@
 "use client";
-import { favouriteAnimeFetcher, getAnilistKey } from "@/components/anime/fetcher";
-import { AnilistGraphqlQuery, SectionMedia } from "@/components/anime/graphql";
-import { Page, fetchSearchPage } from "@/components/anime/query";
+import { SectionMedia } from "@/components/anime/graphql";
+import {
+    AnimeSearchProvider,
+    FilterItem,
+    FilterType,
+    useAnimeFilters,
+    useAnimeSearch,
+} from "@/components/anime/search";
 import ProgressiveImage from "@/components/ui/Image";
 import { tm } from "@/shared/utils";
-import { useCallback, useEffect, useState, useTransition } from "react";
-import useSWRInfinite from "swr/infinite";
+import React, { useEffect, useState, useTransition } from "react";
 import { FaSearch } from "react-icons/fa";
+import { TbAdjustmentsHorizontal } from "react-icons/tb";
+import { VscLoading } from "react-icons/vsc";
+import { useDebounce } from "react-use";
+import { useImmer } from "use-immer";
 
 export default function Anime() {
     // return <CardList getKey={getFavouriteAnimeKey} fetcher={favouriteAnimeFetcher} title="Favourites" />;
     const [searchTerm, setSearchTerm] = useState<string>("naruto");
+    const [debounceSearchTerm, setDebounceSearchTerm] = useState<string>(searchTerm);
+    useDebounce(() => startTransition(() => setDebounceSearchTerm(searchTerm)), 500, [searchTerm]);
     const [isPending, startTransition] = useTransition();
-    const handleSearchTermChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        startTransition(() => {
-            setSearchTerm(e.target.value);
+    const handleSearchStringChange = (e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value);
+
+    useEffect(() => {
+        console.log("searchTerm", searchTerm);
+    }, [searchTerm]);
+    useEffect(() => {
+        console.log("debounceSearchTerm", debounceSearchTerm);
+    }, [debounceSearchTerm]);
+
+    return (
+        <AnimeSearchProvider searchString={debounceSearchTerm}>
+            <SearchBar handleSearchStringChange={handleSearchStringChange} isPending={isPending} />
+            <SearchResult isPending={isPending} />
+        </AnimeSearchProvider>
+    );
+}
+
+const initFilterItems = (names: string[], type: FilterType) => {
+    const filterItems = names.map((name) => ({
+        name,
+        active: false,
+        type,
+    }));
+    return filterItems;
+};
+
+function SearchBar({
+    handleSearchStringChange,
+    isPending,
+}: {
+    handleSearchStringChange: (e: React.ChangeEvent<HTMLInputElement>) => unknown;
+    isPending: boolean;
+}) {
+    const [showFilter, setShowFilter] = useState(false);
+    const onClickShowFilter = () => setShowFilter(!showFilter);
+    const {
+        data: onlineFilters,
+        isLoading,
+        error,
+        isValidating,
+        setActiveFilters: setActualActiveFilters,
+    } = useAnimeFilters();
+
+    // filters
+
+    const [allFilters, setAllFilters] = useImmer<FilterItem[]>([]);
+    useEffect(() => {
+        const newGenreFilters = initFilterItems(onlineFilters?.GenreCollection || [], "genre");
+        const newTagFilters = initFilterItems(onlineFilters?.MediaTagCollection.map((item) => item.name) || [], "tag");
+        setAllFilters([...newGenreFilters, ...newTagFilters]);
+    }, [onlineFilters, setAllFilters]);
+
+    const [genreFilters, setGenreFilters] = useImmer<FilterItem[]>([]);
+    const [tagFilters, setTagFilters] = useImmer<FilterItem[]>([]);
+
+    useEffect(() => {
+        setGenreFilters(() => {
+            return allFilters.filter((item) => item.type === "genre");
+        });
+        setTagFilters(() => {
+            return allFilters.filter((item) => item.type === "tag");
+        });
+    }, [allFilters, setGenreFilters, setTagFilters]);
+
+    const filterOnClick = (clickedItem: FilterItem) => {
+        setAllFilters((draft) => {
+            const index = draft.findIndex((item) => item.type === clickedItem.type && item.name === clickedItem.name);
+            draft[index].active = !draft[index].active;
         });
     };
-
-    const searchFetcher = useCallback(
-        async (pageKey: Promise<number>) => {
-            const page = await pageKey;
-            return fetchSearchPage(page, searchTerm);
-        },
-        [searchTerm]
-    );
+    const [activeFilters, setActiveFilters] = useState<FilterItem[]>([]);
+    useEffect(() => {
+        const newActiveFilter: FilterItem[] = allFilters.filter((item) => item.active);
+        setActiveFilters(newActiveFilter);
+        setActualActiveFilters(newActiveFilter);
+    }, [allFilters, setActualActiveFilters]);
 
     return (
         <>
-            <div className="flex h-12 w-full flex-row gap-4">
-                <input
-                    className="h-full grow border-b border-transparent bg-transparent px-4 py-2 focus:border-black focus:outline-none"
-                    placeholder="search term"
-                    onChange={handleSearchTermChange}
-                />
-                <button className="hover-shadow grid h-full w-12 place-items-center">
-                    <FaSearch size={"1.2em"} />
-                </button>
+            <div>
+                <div className="flex h-12 w-full flex-row rounded-md bg-gray-500 text-white caret-white">
+                    <div className="grid h-full w-12 place-items-center text-black">
+                        <FaSearch size={"1.2em"} />
+                    </div>
+                    <input
+                        className="h-full grow bg-transparent py-1 focus:outline-none"
+                        placeholder="search term"
+                        onChange={handleSearchStringChange}
+                    />
+                    <div
+                        className="m-2 grid w-12 place-items-center rounded-md hover:bg-gray-400"
+                        onClick={onClickShowFilter}>
+                        <TbAdjustmentsHorizontal size={"1.2em"} />
+                    </div>
+                </div>
+
+                <div className="my-2">
+                    <FilterPanel title={""} filterItems={activeFilters} toggleSelection={filterOnClick} />
+                </div>
+
+                {showFilter && (
+                    <div className="rounded-md border border-black p-2">
+                        <div>
+                            <FilterPanel title="Genres" filterItems={genreFilters} toggleSelection={filterOnClick} />
+                            <FilterPanel title="Tags" filterItems={tagFilters} toggleSelection={filterOnClick} />
+                        </div>
+                    </div>
+                )}
             </div>
-            <div>{`isPending=${isPending.toString()}`}</div>
-            <CardList getKey={getAnilistKey} fetcher={searchFetcher} title="Search" />
         </>
+    );
+}
+
+function FilterPanel({
+    title,
+    filterItems,
+    toggleSelection,
+}: {
+    title: string;
+    filterItems: FilterItem[];
+    toggleSelection: (item: FilterItem) => void;
+}) {
+    return (
+        <div>
+            <span>{title}</span>
+            <div className="flex max-h-48 flex-row flex-wrap gap-2 overflow-y-auto text-sm">
+                {filterItems.map((item) => (
+                    <FilterLabel key={item.name} item={item} toggleSelection={toggleSelection} />
+                ))}
+            </div>
+        </div>
+    );
+}
+
+function FilterLabel({ item, toggleSelection }: { item: FilterItem; toggleSelection: (item: FilterItem) => void }) {
+    return (
+        <span
+            key={item.name}
+            className={tm(
+                "rounded-md bg-blue-100 px-2 py-1 hover:cursor-pointer hover:bg-orange-200",
+                item.active && "bg-orange-400"
+            )}
+            onClick={() => toggleSelection(item)}>
+            {item.name}
+        </span>
     );
 }
 
@@ -51,17 +177,8 @@ enum CardListState {
     IDLE = "IDLE",
     COMPLETED = "COMPLETED",
 }
-function CardList({ getKey, fetcher, title }: { getKey: any; fetcher: any; title?: string }) {
-    const { data, error, isLoading, isValidating, size, setSize, mutate } = useSWRInfinite<Page<SectionMedia[]>>(
-        getKey,
-        fetcher,
-        {
-        }
-    );
-
-    // useEffect(() => {
-    //     mutate();
-    // }, [fetcher, mutate]);
+function SearchResult({ isPending }: { isPending: boolean }) {
+    const { data, error, isLoading, isValidating, size, setSize } = useAnimeSearch();
 
     // combine data on receive
     const [mergedData, setMergedData] = useState<SectionMedia[]>([]);
@@ -96,32 +213,27 @@ function CardList({ getKey, fetcher, title }: { getKey: any; fetcher: any; title
         }
     }, [state]);
 
-    if (error) {
-        console.error(error);
-    }
-
     useEffect(() => {
-        console.log("data", data);
-    }, [data]);
+        if (error) console.error(error);
+    }, [error]);
 
     const [collapse, setCollapse] = useState(false);
 
     return (
         <>
             <div className="my-2 flex flex-row justify-between">
-                <h3 className=" text-xl font-bold capitalize">
-                    {title} - {`state=${state}`}
-                </h3>
+                <h3 className=" text-xl font-bold capitalize">Search - {`state=${state}`}</h3>
 
                 <button className=" hover-shadow px-2 py-1" onClick={() => setCollapse((v) => !v)}>
                     {collapse ? "expand" : "collpase"}
                 </button>
             </div>
-            <div>
+            <div className="relative">
                 <ul
                     className={tm(
                         collapse && "flex w-full flex-row gap-2 overflow-x-auto",
-                        !collapse && "grid grid-cols-5"
+                        !collapse && "grid grid-cols-5",
+                        state === CardListState.LOADING && "grayscale"
                     )}>
                     {!data && Array.from(Array(3).keys()).map((i) => <PlaceholderCard key={i} />)}
                     {/* {!mergedData && Array(5).map((_, i) => <PlaceholderCard key={i} />)} */}
@@ -129,14 +241,19 @@ function CardList({ getKey, fetcher, title }: { getKey: any; fetcher: any; title
                         <Card key={data.id} data={data} />
                     ))}
                 </ul>
-                <div>
+                {state === CardListState.LOADING && (
+                    <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
+                        <VscLoading size={"2em"} color="white" className=" animate-spin" />
+                    </div>
+                )}
+                {/* <div>
                     <button
                         className="hover-shadow px-2 py-1"
                         onClick={() => setSize(size + 1)}
                         disabled={state === CardListState.COMPLETED}>
                         {buttonText}
                     </button>
-                </div>
+                </div> */}
             </div>
         </>
     );

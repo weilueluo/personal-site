@@ -4,6 +4,7 @@ import {
     AnilistGraphqlQuery,
     Character,
     Characters,
+    GenreCollection,
     MEDIALIST_STATUS,
     Media,
     MediaItem,
@@ -14,8 +15,10 @@ import {
     SectionMedia,
     Staff,
     Staffs,
-    UsersFavouritesAnime,
+    Filters,
+    UsersFavouritesAnime
 } from "./graphql";
+import { FilterItem } from "./search";
 
 export const INIT_PAGE_INFO: PageInfoItem = {
     total: undefined,
@@ -71,8 +74,17 @@ export interface Page<T> {
     data?: T;
 }
 
-export async function fetchSearchPage(page: number, search: string): Promise<Page<SectionMedia[]>> {
-    const graphqlQuery = AnilistGraphqlQuery.fetchSearch(search, page);
+
+export async function fetchFilters(): Promise<Filters> {
+    const graphqlQuery = AnilistGraphqlQuery.fetchFilters();
+
+    const response = await fetchAnilist<Filters>(graphqlQuery);
+
+    return response;
+}
+
+export async function fetchSearchPage(page: number | string, search: string, filters: FilterItem[]): Promise<Page<SectionMedia[]>> {
+    const graphqlQuery = AnilistGraphqlQuery.fetchSearch(search, page, filters);
 
     const response = await fetchAnilist<RawPage<Media<MediaItem>>>(graphqlQuery);
 
@@ -82,7 +94,7 @@ export async function fetchSearchPage(page: number, search: string): Promise<Pag
     };
 }
 
-export async function fetchFavouritesPage(page_ = 1): Promise<Page<SectionMedia[]>> {
+export async function fetchFavouritesPage(page_: number | string = 1): Promise<Page<SectionMedia[]>> {
     const graphqlQuery = AnilistGraphqlQuery.fetchFavouriteAnimes(MY_USER_ID, page_);
 
     const response = await fetchAnilist<RawPage<UsersFavouritesAnime>>(graphqlQuery);
