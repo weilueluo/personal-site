@@ -1,5 +1,6 @@
 // this files write on top of graphql.ts to provide concrete fetch methods to query anilist api
 
+import { TypeFilter } from "./fast-filters";
 import {
     AnilistGraphqlQuery,
     Character,
@@ -19,6 +20,7 @@ import {
     UsersFavouritesAnime
 } from "./graphql";
 import { FilterItem } from "./search";
+import { GenreFilterItem, TagFilterItem } from "./slow-filters";
 
 export const INIT_PAGE_INFO: PageInfoItem = {
     total: undefined,
@@ -83,8 +85,8 @@ export async function fetchFilters(): Promise<Filters> {
     return response;
 }
 
-export async function fetchSearchPage(page: number | string, search: string, filters: FilterItem[]): Promise<Page<SectionMedia[]>> {
-    const graphqlQuery = AnilistGraphqlQuery.fetchSearch(search, page, filters);
+export async function fetchSearchPage(page: number | string, search: string, genreFilers: GenreFilterItem[], tagFilters: TagFilterItem[], typeFilter: TypeFilter): Promise<Page<SectionMedia[]>> {
+    const graphqlQuery = AnilistGraphqlQuery.fetchSearch(search, page, genreFilers, tagFilters, typeFilter);
 
     const response = await fetchAnilist<RawPage<Media<MediaItem>>>(graphqlQuery);
 

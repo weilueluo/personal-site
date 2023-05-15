@@ -1,24 +1,20 @@
 "use client";
-import { SectionMedia } from "@/components/anime/graphql";
-import {
-    AnimeSearchProvider,
-    FilterItem,
-    FilterType,
-    useAnimeFilters,
-    useAnimeSearch,
-} from "@/components/anime/search";
+import { AnimeFastFiltersProvider, useAnimeFastFilters } from "@/components/anime/fast-filters";
+import { PageInfoItem, SectionMedia } from "@/components/anime/graphql";
+import { AnimeSearchProvider, FilterItem, useAnimeSearch } from "@/components/anime/search";
+import AnimeSlowFiltersProvider, { useAnimeSlowFilters } from "@/components/anime/slow-filters";
 import ProgressiveImage from "@/components/ui/Image";
 import { tm } from "@/shared/utils";
 import React, { useEffect, useState, useTransition } from "react";
 import { FaSearch } from "react-icons/fa";
+import { HiSwitchHorizontal } from "react-icons/hi";
 import { TbAdjustmentsHorizontal } from "react-icons/tb";
 import { VscLoading } from "react-icons/vsc";
 import { useDebounce } from "react-use";
-import { useImmer } from "use-immer";
 
 export default function Anime() {
     // return <CardList getKey={getFavouriteAnimeKey} fetcher={favouriteAnimeFetcher} title="Favourites" />;
-    const [searchTerm, setSearchTerm] = useState<string>("naruto");
+    const [searchTerm, setSearchTerm] = useState<string>("");
     const [debounceSearchTerm, setDebounceSearchTerm] = useState<string>(searchTerm);
     useDebounce(() => startTransition(() => setDebounceSearchTerm(searchTerm)), 500, [searchTerm]);
     const [isPending, startTransition] = useTransition();
@@ -32,21 +28,16 @@ export default function Anime() {
     }, [debounceSearchTerm]);
 
     return (
-        <AnimeSearchProvider searchString={debounceSearchTerm}>
-            <SearchBar handleSearchStringChange={handleSearchStringChange} isPending={isPending} />
-            <SearchResult isPending={isPending} />
-        </AnimeSearchProvider>
+        <AnimeFastFiltersProvider>
+            <AnimeSlowFiltersProvider>
+                <AnimeSearchProvider searchString={debounceSearchTerm}>
+                    <SearchBar handleSearchStringChange={handleSearchStringChange} isPending={isPending} />
+                    <SearchResult />
+                </AnimeSearchProvider>
+            </AnimeSlowFiltersProvider>
+        </AnimeFastFiltersProvider>
     );
 }
-
-const initFilterItems = (names: string[], type: FilterType) => {
-    const filterItems = names.map((name) => ({
-        name,
-        active: false,
-        type,
-    }));
-    return filterItems;
-};
 
 function SearchBar({
     handleSearchStringChange,
@@ -55,94 +46,72 @@ function SearchBar({
     handleSearchStringChange: (e: React.ChangeEvent<HTMLInputElement>) => unknown;
     isPending: boolean;
 }) {
+    const {
+        genreFilters,
+        genreFilterOnClick,
+        tagFilters,
+        tagFilterOnClick,
+        activeSlowFilters,
+        activeSlowFilterOnClick,
+    } = useAnimeSlowFilters();
+    const { typeFilter, typeFilterOnClick } = useAnimeFastFilters();
+
+    // fast filters
     const [showFilter, setShowFilter] = useState(false);
     const onClickShowFilter = () => setShowFilter(!showFilter);
-    const {
-        data: onlineFilters,
-        isLoading,
-        error,
-        isValidating,
-        setActiveFilters: setActualActiveFilters,
-    } = useAnimeFilters();
-
-    // filters
-
-    const [allFilters, setAllFilters] = useImmer<FilterItem[]>([]);
-    useEffect(() => {
-        const newGenreFilters = initFilterItems(onlineFilters?.GenreCollection || [], "genre");
-        const newTagFilters = initFilterItems(onlineFilters?.MediaTagCollection.map((item) => item.name) || [], "tag");
-        setAllFilters([...newGenreFilters, ...newTagFilters]);
-    }, [onlineFilters, setAllFilters]);
-
-    const [genreFilters, setGenreFilters] = useImmer<FilterItem[]>([]);
-    const [tagFilters, setTagFilters] = useImmer<FilterItem[]>([]);
-
-    useEffect(() => {
-        setGenreFilters(() => {
-            return allFilters.filter((item) => item.type === "genre");
-        });
-        setTagFilters(() => {
-            return allFilters.filter((item) => item.type === "tag");
-        });
-    }, [allFilters, setGenreFilters, setTagFilters]);
-
-    const filterOnClick = (clickedItem: FilterItem) => {
-        setAllFilters((draft) => {
-            const index = draft.findIndex((item) => item.type === clickedItem.type && item.name === clickedItem.name);
-            draft[index].active = !draft[index].active;
-        });
-    };
-    const [activeFilters, setActiveFilters] = useState<FilterItem[]>([]);
-    useEffect(() => {
-        const newActiveFilter: FilterItem[] = allFilters.filter((item) => item.active);
-        setActiveFilters(newActiveFilter);
-        setActualActiveFilters(newActiveFilter);
-    }, [allFilters, setActualActiveFilters]);
 
     return (
-        <>
-            <div>
-                <div className="flex h-12 w-full flex-row rounded-md bg-gray-500 text-white caret-white">
-                    <div className="grid h-full w-12 place-items-center text-black">
-                        <FaSearch size={"1.2em"} />
-                    </div>
-                    <input
-                        className="h-full grow bg-transparent py-1 focus:outline-none"
-                        placeholder="search term"
-                        onChange={handleSearchStringChange}
-                    />
-                    <div
-                        className="m-2 grid w-12 place-items-center rounded-md hover:bg-gray-400"
-                        onClick={onClickShowFilter}>
-                        <TbAdjustmentsHorizontal size={"1.2em"} />
-                    </div>
+        <div className="flex flex-col gap-2">
+            <div className="flex h-10 w-full flex-row rounded-md bg-gray-500 text-white caret-white">
+                <div className="grid h-full w-12 place-items-center text-black">
+                    <FaSearch />
                 </div>
-
-                <div className="my-2">
-                    <FilterPanel title={""} filterItems={activeFilters} toggleSelection={filterOnClick} />
+                <input
+                    className="h-full grow bg-transparent py-1 focus:outline-none"
+                    placeholder="search term"
+                    onChange={handleSearchStringChange}
+                />
+                <div
+                    className="m-2 grid w-12 place-items-center rounded-md hover:bg-gray-400"
+                    onClick={onClickShowFilter}>
+                    <TbAdjustmentsHorizontal />
                 </div>
-
-                {showFilter && (
-                    <div className="rounded-md border border-black p-2">
-                        <div>
-                            <FilterPanel title="Genres" filterItems={genreFilters} toggleSelection={filterOnClick} />
-                            <FilterPanel title="Tags" filterItems={tagFilters} toggleSelection={filterOnClick} />
-                        </div>
-                    </div>
-                )}
             </div>
-        </>
+
+            <div>
+                <FilterPanel title={""} filterItems={activeSlowFilters} toggleSelection={activeSlowFilterOnClick} />
+            </div>
+
+            <div className="flex flex-row gap-2">
+                <span>Quick Filter</span>
+                <span
+                    className=" flex flex-row items-center rounded-md border px-2 gap-1 capitalize hover:cursor-pointer hover:bg-orange-300"
+                    onClick={typeFilterOnClick}>
+                    {typeFilter.name.toLowerCase()}
+                    <HiSwitchHorizontal className=" inline-block" size="0.9em" />
+                </span>
+            </div>
+
+            {showFilter && (
+                <div className="rounded-md border border-black p-2">
+                    <div>
+                        <FilterPanel title="Genres" filterItems={genreFilters} toggleSelection={genreFilterOnClick} />
+                        <FilterPanel title="Tags" filterItems={tagFilters} toggleSelection={tagFilterOnClick} />
+                    </div>
+                </div>
+            )}
+        </div>
     );
 }
 
-function FilterPanel({
+function FilterPanel<T extends FilterItem>({
     title,
     filterItems,
     toggleSelection,
 }: {
     title: string;
-    filterItems: FilterItem[];
-    toggleSelection: (item: FilterItem) => void;
+    filterItems: T[];
+    toggleSelection: (item: T) => void;
 }) {
     return (
         <div>
@@ -156,7 +125,7 @@ function FilterPanel({
     );
 }
 
-function FilterLabel({ item, toggleSelection }: { item: FilterItem; toggleSelection: (item: FilterItem) => void }) {
+function FilterLabel<T extends FilterItem>({ item, toggleSelection }: { item: T; toggleSelection: (item: T) => void }) {
     return (
         <span
             key={item.name}
@@ -177,12 +146,16 @@ enum CardListState {
     IDLE = "IDLE",
     COMPLETED = "COMPLETED",
 }
-function SearchResult({ isPending }: { isPending: boolean }) {
+function SearchResult() {
     const { data, error, isLoading, isValidating, size, setSize } = useAnimeSearch();
 
     // combine data on receive
     const [mergedData, setMergedData] = useState<SectionMedia[]>([]);
-    useEffect(() => setMergedData(data?.flatMap((data) => data.data || []) || []), [data]);
+    const [pageInfo, setPageInfo] = useState<PageInfoItem | undefined>(undefined);
+    useEffect(() => {
+        setMergedData(data?.flatMap((data) => data.data || []) || []);
+        setPageInfo(data?.[data.length - 1]?.pageInfo);
+    }, [data]);
 
     // state for the whole card list
     const [state, setState] = useState<CardListState>(CardListState.IDLE);
@@ -222,7 +195,7 @@ function SearchResult({ isPending }: { isPending: boolean }) {
     return (
         <>
             <div className="my-2 flex flex-row justify-between">
-                <h3 className=" text-xl font-bold capitalize">Search - {`state=${state}`}</h3>
+                <h3 className=" text-xl font-bold capitalize">Search {`[state=${state}]`}</h3>
 
                 <button className=" hover-shadow px-2 py-1" onClick={() => setCollapse((v) => !v)}>
                     {collapse ? "expand" : "collpase"}
@@ -246,14 +219,15 @@ function SearchResult({ isPending }: { isPending: boolean }) {
                         <VscLoading size={"2em"} color="white" className=" animate-spin" />
                     </div>
                 )}
-                {/* <div>
+                <div className="flex w-full justify-center">
                     <button
                         className="hover-shadow px-2 py-1"
                         onClick={() => setSize(size + 1)}
                         disabled={state === CardListState.COMPLETED}>
                         {buttonText}
+                        {pageInfo && ` (${mergedData.length}/${pageInfo.total})`}
                     </button>
-                </div> */}
+                </div>
             </div>
         </>
     );

@@ -1,11 +1,11 @@
 import React, { useCallback, useContext, useEffect } from "react";
-import useSWR, { SWRResponse } from "swr";
 import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite";
-import { getAnilistKey } from "./fetcher";
-import { Filters, SectionMedia } from "./graphql";
-import { Page, fetchFilters, fetchSearchPage } from "./query";
+import { useAnimeFastFilters } from "./fast-filters";
+import { SectionMedia } from "./graphql";
+import { Page, fetchSearchPage } from "./query";
+import { GenreFilterItem, TagFilterItem, useAnimeSlowFilters } from "./slow-filters";
 
-export type FilterType = "genre" | "tag";
+export type FilterType = "genre" | "tag" | "type";
 
 export interface FilterItem {
     name: string;
@@ -13,39 +13,77 @@ export interface FilterItem {
     type: FilterType;
 }
 
+export interface AnimeTypeFilterItem extends FilterItem {
+    name: "ANIME" | "MANGA";
+    active: boolean;
+}
+
 interface SearchContextValue {
     swrAnimeResponse: SWRInfiniteResponse<Page<SectionMedia[]>>;
-    swrFilterResponse: SWRResponse<Filters>;
-    setActiveFilters: (filterItems: FilterItem[]) => void;
 }
 
 const SearchContext = React.createContext<SearchContextValue>(null!);
 
 export function AnimeSearchProvider({ searchString, children }: { searchString: string; children: React.ReactNode }) {
-    const [activeFilters, setActiveFilters] = React.useState<FilterItem[]>([]);
+    const { genreFilters, tagFilters } = useAnimeSlowFilters();
+    const { typeFilter } = useAnimeFastFilters();
 
-    const searchFetcher = useCallback(
-        async (pageKey: Promise<number>) => {
-            const page = await pageKey;
-            return fetchSearchPage(page, searchString, activeFilters);
+    const [activeGenreFilters, setActiveGenreFilters] = React.useState<GenreFilterItem[]>([]);
+    useEffect(() => {
+        setActiveGenreFilters(genreFilters.filter((item) => item.active));
+    }, [genreFilters]);
+
+    const [activeTagFilters, setActiveTagFilters] = React.useState<TagFilterItem[]>([]);
+    useEffect(() => {
+        setActiveTagFilters(tagFilters.filter((item) => item.active));
+    }, [tagFilters]);
+
+    const getSearchKey = useCallback(
+        (prevPage: number, prevData: Page<SectionMedia[]>) => {
+            const params = {
+                searchString,
+                activeGenreFilters,
+                activeTagFilters,
+                typeFilter,
+            };
+
+            if (prevData && !prevData.pageInfo?.hasNextPage) {
+                return null;
+            }
+
+            if (prevPage === 0) {
+                return {
+                    ...params,
+                    page: 1,
+                };
+            } else {
+                return {
+                    ...params,
+                    page: prevPage + 1,
+                };
+            }
         },
-        [activeFilters, searchString]
+        [searchString, activeGenreFilters, activeTagFilters, typeFilter]
     );
 
-    const swrAnimeResponse = useSWRInfinite<Page<SectionMedia[]>>(getAnilistKey, searchFetcher);
+    const searchFetcher = (params: {
+        searchString: string;
+        activeGenreFilters: GenreFilterItem[];
+        activeTagFilters: TagFilterItem[];
+        typeFilter: AnimeTypeFilterItem;
+        page: number;
+    }) => {
+        const { page, activeGenreFilters, activeTagFilters, searchString, typeFilter } = params;
 
-    useEffect(() => {
-        swrAnimeResponse.mutate();
-    }, [searchString, activeFilters]);
+        return fetchSearchPage(page, searchString, activeGenreFilters, activeTagFilters, typeFilter);
+    };
 
-    const swrGenreResponse = useSWR("anime-genre-collection", fetchFilters);
+    const swrAnimeResponse = useSWRInfinite<Page<SectionMedia[]>>(getSearchKey, searchFetcher);
 
     return (
         <SearchContext.Provider
             value={{
                 swrAnimeResponse,
-                swrFilterResponse: swrGenreResponse,
-                setActiveFilters,
             }}>
             {children}
         </SearchContext.Provider>
@@ -54,12 +92,4 @@ export function AnimeSearchProvider({ searchString, children }: { searchString: 
 
 export function useAnimeSearch() {
     return useContext(SearchContext).swrAnimeResponse;
-}
-
-export function useAnimeFilters() {
-    const { swrFilterResponse, setActiveFilters } = useContext(SearchContext);
-    return {
-        ...swrFilterResponse,
-        setActiveFilters,
-    };
 }

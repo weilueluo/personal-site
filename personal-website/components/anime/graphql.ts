@@ -1,7 +1,9 @@
-import { FilterItem } from "./search";
+import { type } from "os";
+import { TypeFilter } from "./fast-filters";
+import { GenreFilterItem, TagFilterItem } from "./slow-filters";
 
 export const MY_USER_ID = 6044692;
-export const PAGE_SIZE = 12;
+export const PAGE_SIZE = 15;
 
 ////////////////////////////////////// query
 
@@ -326,23 +328,29 @@ export interface UsersFavouritesAnime {
     }[];
 }
 
+
+/////////////////////////////////////////////////
+
 const medias = (id: number | string) =>
     `media(id:${id}){
     ${mediaFields}
 }`;
-const mediasSearch = (search?: string, filterItems?: FilterItem[]) => {
+const mediasSearch = (search?: string, genreFilters?: GenreFilterItem[], tagFilters?: TagFilterItem[], typeFilter?: TypeFilter) => {
 
-    const searchQuery = search ? `search:"${search}"` : "";
+    const searchQuery = search ? `search:"${search}"` : undefined;
 
-    const genres = (filterItems || []).filter((item) => item.type === "genre").map((item) => `"${item.name}"`);
-    const genreQuery = genres.length > 0 ? `genre_in:[${genres.join(",")}]` : "";
+    const genres = (genreFilters || []).filter(item => item.active).map((item) => `"${item.name}"`);
+    const genreQuery = genres.length > 0 ? `genre_in:[${genres.join(",")}]` : undefined;
 
-    const tags = (filterItems || []).filter((item) => item.type === "tag").map((item) => `"${item.name}"`);
-    const tagQuery = tags.length > 0 ? `tag_in:[${tags.join(",")}]` : "";
+    const tags = (tagFilters || []).filter(item => item.active).map((item) => `"${item.name}"`);
+    const tagQuery = tags.length > 0 ? `tag_in:[${tags.join(",")}]` : undefined;
 
-    const queries = [searchQuery, genreQuery, tagQuery].join(",");
+    const typeQuery = (typeFilter && typeFilter.name.toLowerCase() !== 'any') ? `type:${typeFilter.name.toUpperCase()}` : undefined;
 
-    return `media(${queries}){${mediaFields}}`
+    const queryItems = [searchQuery, genreQuery, tagQuery, typeQuery].filter(item => !!item).join(",");
+    const mediaQuery = queryItems.length > 0 ? `media(${queryItems})` : "media";
+
+    return `${mediaQuery}{${mediaFields}}`
 }
 
 export interface Media<T> {
@@ -438,8 +446,8 @@ export class AnilistGraphqlQuery {
     public static fetchFavouriteAnimes(userID: number | string, page: number | string) {
         return query(page_(usersFavouritesAnimeNodes(userID, page)));
     }
-    public static fetchSearch(searchString: string | string, page: number | string, filterItems: FilterItem[]) {
-        return query(page_(mediasSearch(searchString, filterItems), page));
+    public static fetchSearch(searchString: string | string, page: number | string, genreFilters: GenreFilterItem[], tagFilters: TagFilterItem[], typeFilter: TypeFilter) {
+        return query(page_(mediasSearch(searchString, genreFilters, tagFilters, typeFilter), page));
     }
     public static fetchFilters() {
         return query(filters)
