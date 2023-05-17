@@ -47,6 +47,12 @@ a:hover {
     margin: 0;
 }
 
+html {
+    /* give space for scrollbar, so that when it appears, it does not cause layout shift */
+    /* https://stackoverflow.com/questions/1417934/how-to-prevent-scrollbar-from-repositioning-web-page */
+    margin-right: calc(-1 * (100vw - 100%));
+}
+
 html,
 body {
     max-width: 100vw;

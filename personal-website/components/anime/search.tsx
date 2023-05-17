@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect } from "react";
 import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite";
-import { useAnimeFastFilters } from "./fast-filters";
+import { CountryFilter, SortFilter, TypeFilter, useAnimeFastFilters } from "./fast-filters";
 import { SectionMedia } from "./graphql";
 import { Page, fetchSearchPage } from "./query";
 import { GenreFilterItem, TagFilterItem, useAnimeSlowFilters } from "./slow-filters";
@@ -13,11 +13,6 @@ export interface FilterItem {
     type: FilterType;
 }
 
-export interface AnimeTypeFilterItem extends FilterItem {
-    name: "ANIME" | "MANGA";
-    active: boolean;
-}
-
 interface SearchContextValue {
     swrAnimeResponse: SWRInfiniteResponse<Page<SectionMedia[]>>;
 }
@@ -26,7 +21,7 @@ const SearchContext = React.createContext<SearchContextValue>(null!);
 
 export function AnimeSearchProvider({ searchString, children }: { searchString: string; children: React.ReactNode }) {
     const { genreFilters, tagFilters } = useAnimeSlowFilters();
-    const { typeFilter } = useAnimeFastFilters();
+    const { typeFilter, sortFilter, countryFilter } = useAnimeFastFilters();
 
     const [activeGenreFilters, setActiveGenreFilters] = React.useState<GenreFilterItem[]>([]);
     useEffect(() => {
@@ -45,6 +40,8 @@ export function AnimeSearchProvider({ searchString, children }: { searchString: 
                 activeGenreFilters,
                 activeTagFilters,
                 typeFilter,
+                sortFilter,
+                countryFilter,
             };
 
             if (prevData && !prevData.pageInfo?.hasNextPage) {
@@ -63,19 +60,30 @@ export function AnimeSearchProvider({ searchString, children }: { searchString: 
                 };
             }
         },
-        [searchString, activeGenreFilters, activeTagFilters, typeFilter]
+        [searchString, activeGenreFilters, activeTagFilters, typeFilter, sortFilter, countryFilter]
     );
 
     const searchFetcher = (params: {
         searchString: string;
         activeGenreFilters: GenreFilterItem[];
         activeTagFilters: TagFilterItem[];
-        typeFilter: AnimeTypeFilterItem;
+        typeFilter: TypeFilter;
+        sortFilter: SortFilter;
+        countryFilter: CountryFilter;
         page: number;
     }) => {
-        const { page, activeGenreFilters, activeTagFilters, searchString, typeFilter } = params;
+        const { page, activeGenreFilters, activeTagFilters, searchString, typeFilter, sortFilter, countryFilter } =
+            params;
 
-        return fetchSearchPage(page, searchString, activeGenreFilters, activeTagFilters, typeFilter);
+        return fetchSearchPage(
+            page,
+            searchString,
+            activeGenreFilters,
+            activeTagFilters,
+            typeFilter,
+            sortFilter,
+            countryFilter
+        );
     };
 
     const swrAnimeResponse = useSWRInfinite<Page<SectionMedia[]>>(getSearchKey, searchFetcher);

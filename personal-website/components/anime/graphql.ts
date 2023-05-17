@@ -1,9 +1,8 @@
-import { type } from "os";
-import { TypeFilter } from "./fast-filters";
+import { CountryFilter, SortFilter, TypeFilter } from "./fast-filters";
 import { GenreFilterItem, TagFilterItem } from "./slow-filters";
 
 export const MY_USER_ID = 6044692;
-export const PAGE_SIZE = 15;
+export const PAGE_SIZE = 30;
 
 ////////////////////////////////////// query
 
@@ -335,7 +334,7 @@ const medias = (id: number | string) =>
     `media(id:${id}){
     ${mediaFields}
 }`;
-const mediasSearch = (search?: string, genreFilters?: GenreFilterItem[], tagFilters?: TagFilterItem[], typeFilter?: TypeFilter) => {
+const mediasSearch = (search?: string, genreFilters?: GenreFilterItem[], tagFilters?: TagFilterItem[], typeFilter?: TypeFilter, sortFilter?: SortFilter, countryFilter?: CountryFilter) => {
 
     const searchQuery = search ? `search:"${search}"` : undefined;
 
@@ -346,8 +345,11 @@ const mediasSearch = (search?: string, genreFilters?: GenreFilterItem[], tagFilt
     const tagQuery = tags.length > 0 ? `tag_in:[${tags.join(",")}]` : undefined;
 
     const typeQuery = (typeFilter && typeFilter.name.toLowerCase() !== 'any') ? `type:${typeFilter.name.toUpperCase()}` : undefined;
+    const countryQuery = (countryFilter && countryFilter.name.toLowerCase() !== 'any') ? `countryOfOrigin:${countryFilter.name.toUpperCase()}` : undefined;
 
-    const queryItems = [searchQuery, genreQuery, tagQuery, typeQuery].filter(item => !!item).join(",");
+    const sortQuery = sortFilter ? `sort:[${sortFilter.name.toUpperCase()}]` : undefined;
+
+    const queryItems = [searchQuery, genreQuery, tagQuery, typeQuery, sortQuery, countryQuery].filter(item => !!item).join(",");
     const mediaQuery = queryItems.length > 0 ? `media(${queryItems})` : "media";
 
     return `${mediaQuery}{${mediaFields}}`
@@ -446,8 +448,8 @@ export class AnilistGraphqlQuery {
     public static fetchFavouriteAnimes(userID: number | string, page: number | string) {
         return query(page_(usersFavouritesAnimeNodes(userID, page)));
     }
-    public static fetchSearch(searchString: string | string, page: number | string, genreFilters: GenreFilterItem[], tagFilters: TagFilterItem[], typeFilter: TypeFilter) {
-        return query(page_(mediasSearch(searchString, genreFilters, tagFilters, typeFilter), page));
+    public static fetchSearch(searchString: string | string, page: number | string, genreFilters: GenreFilterItem[], tagFilters: TagFilterItem[], typeFilter: TypeFilter, sortFilter: SortFilter, countryFilter: CountryFilter) {
+        return query(page_(mediasSearch(searchString, genreFilters, tagFilters, typeFilter, sortFilter, countryFilter), page));
     }
     public static fetchFilters() {
         return query(filters)
