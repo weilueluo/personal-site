@@ -46,7 +46,7 @@ async function fetchAnilist<T>(query: string): Promise<T> {
         method: "POST",
         headers: HEADERS,
         body: JSON.stringify({
-            query: query,
+            query,
         }),
     };
 

@@ -349,8 +349,6 @@ const mediasSearch = (search?: string, genreFilters?: GenreFilterItem[], tagFilt
 
     const sortQuery = sortFilter ? `sort:[${sortFilter.name.toUpperCase()}]` : undefined;
 
-    console.log("myFavouriteFilter", myFavouriteFilter);
-
     const favouriteQuery = (myFavouriteFilter?.mediaIds && myFavouriteFilter.mediaIds.length > 0) ? `id_in:[${myFavouriteFilter.mediaIds.join(",")}]` : undefined;
 
     const queryItems = [searchQuery, genreQuery, tagQuery, typeQuery, sortQuery, countryQuery, favouriteQuery].filter(item => !!item).join(",");

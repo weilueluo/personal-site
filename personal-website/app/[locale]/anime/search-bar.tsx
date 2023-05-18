@@ -14,8 +14,12 @@ import { useAnimeSlowFilters } from "@/components/anime/slow-filters";
 import dropdown from "@/components/ui/dropdown";
 import { tm } from "@/shared/utils";
 import { ComponentPropsWithoutRef, useState } from "react";
-import { FaSearch } from "react-icons/fa";
-import { MdExpandMore, MdRadioButtonChecked, MdRadioButtonUnchecked } from "react-icons/md";
+import { BsCheckSquareFill } from "react-icons/bs";
+import { FaCheckCircle, FaSearch } from "react-icons/fa";
+import { ImCheckboxChecked, ImCheckboxUnchecked, ImRadioChecked2, ImRadioUnchecked } from "react-icons/im";
+import { IoCheckboxSharp } from "react-icons/io5";
+import { MdExpandMore, MdOutlineRadioButtonChecked, MdOutlineRadioButtonUnchecked, MdRadioButtonChecked, MdRadioButtonUnchecked } from "react-icons/md";
+import { RiCheckboxBlankFill, RiCheckboxBlankLine } from "react-icons/ri";
 import { TbAdjustmentsHorizontal } from "react-icons/tb";
 
 export default function SearchBar() {
@@ -151,7 +155,11 @@ function BooleanQuickFilter({ name, active, ...rest }: BooleanQuickFilterProps) 
             className="rounded-md, flex flex-row items-center justify-center rounded-md bg-gray-500 px-2 py-1 capitalize text-gray-100 hover:cursor-pointer hover:bg-gray-400"
             {...rest}>
             {name.toLowerCase().replaceAll("_", " ")}
-            {active ? <MdRadioButtonChecked className="ml-2" /> : <MdRadioButtonUnchecked className="ml-2" />}
+            {active ? (
+                <MdOutlineRadioButtonChecked className="ml-2 text-gray-300" size="1.2em" />
+            ) : (
+                <MdOutlineRadioButtonUnchecked className="ml-2 text-gray-300"  size="1.2em" />
+            )}{" "}
         </span>
     );
 }
