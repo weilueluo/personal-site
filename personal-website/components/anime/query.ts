@@ -10,6 +10,8 @@ import {
     Media,
     MediaItem,
     MediaList,
+    MediaListCollection,
+    MediaListCollectionList,
     MediaListItem,
     PageInfoItem,
     Page as RawPage,
@@ -74,6 +76,25 @@ export interface Page<T> {
     data?: T;
 }
 
+
+export async function fetchMyAnimeCollection(chunk: number): Promise<Page<MediaListCollectionList[]>> {
+    const graphqlQuery = AnilistGraphqlQuery.fetchMyAnimeCollection(MY_USER_ID, chunk, "ANIME", 500);
+
+    const response = await fetchAnilist<MediaListCollection>(graphqlQuery);
+
+    const pageInfo: PageInfoItem = {
+        total: undefined,
+        perPage: 500,
+        currentPage: chunk,
+        lastPage: undefined,
+        hasNextPage: response.MediaListCollection.hasNextChunk,
+    }
+
+    return {
+        pageInfo: pageInfo,
+        data: response?.MediaListCollection?.lists,
+    };
+}
 
 export async function fetchFilters(): Promise<Filters> {
     const graphqlQuery = AnilistGraphqlQuery.fetchFilters();

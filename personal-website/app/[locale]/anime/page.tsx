@@ -11,6 +11,7 @@ import {
     useAnimeFastFilters,
 } from "@/components/anime/fast-filters";
 import { PageInfoItem, SectionMedia } from "@/components/anime/graphql";
+import { MyAnimeCollectionProvider } from "@/components/anime/my-collection";
 import { AnimeSearchProvider, FilterItem, useAnimeSearch } from "@/components/anime/search";
 import AnimeSlowFiltersProvider, { useAnimeSlowFilters } from "@/components/anime/slow-filters";
 import ProgressiveImage from "@/components/ui/Image";
@@ -40,14 +41,16 @@ export default function Anime() {
     }, [debounceSearchTerm]);
 
     return (
-        <AnimeFastFiltersProvider>
-            <AnimeSlowFiltersProvider>
-                <AnimeSearchProvider searchString={debounceSearchTerm}>
-                    <SearchBar handleSearchStringChange={handleSearchStringChange} />
-                    <SearchResult />
-                </AnimeSearchProvider>
-            </AnimeSlowFiltersProvider>
-        </AnimeFastFiltersProvider>
+        <MyAnimeCollectionProvider>
+            <AnimeFastFiltersProvider>
+                <AnimeSlowFiltersProvider>
+                    <AnimeSearchProvider searchString={debounceSearchTerm}>
+                        <SearchBar handleSearchStringChange={handleSearchStringChange} />
+                        <SearchResult />
+                    </AnimeSearchProvider>
+                </AnimeSlowFiltersProvider>
+            </AnimeFastFiltersProvider>
+        </MyAnimeCollectionProvider>
     );
 }
 
@@ -254,7 +257,7 @@ function SearchResult() {
             if (state === CardListState.COMPLETED || state === CardListState.LOADING) {
                 return;
             }
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 2) {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
                 setSize(size + 1);
             }
         };
@@ -273,7 +276,7 @@ function SearchResult() {
         <>
             <div className="my-2 flex flex-row justify-between">
                 <h3 className="text-xl font-bold capitalize">
-                    Search
+                    Search Result
                     {state === CardListState.LOADING && (
                         <VscLoading className="mx-2 inline-block animate-spin align-middle" />
                     )}
@@ -337,7 +340,7 @@ function Card({ data }: { data: SectionMedia }) {
 function PlaceholderCard() {
     return (
         <div>
-            <div className="max-w-36 w-36">
+            <div className="max-w-36 w-36 animate-in zoom-in-0">
                 <div className="h-52 rounded-md bg-gray-400" />
                 <span className="inline-block h-4 w-full rounded-md bg-gray-400"></span>
             </div>

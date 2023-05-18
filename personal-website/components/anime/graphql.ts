@@ -1,4 +1,4 @@
-import { CountryFilter, SortFilter, TypeFilter } from "./fast-filters";
+import { CountryFilter, SortFilter, TypeFilter, TypeFilterName } from "./fast-filters";
 import { GenreFilterItem, TagFilterItem } from "./slow-filters";
 
 export const MY_USER_ID = 6044692;
@@ -430,6 +430,44 @@ const filters = `${genreCollection}
 ${mediaTagCollection}`
 export type Filters = MediaTagCollection & GenreCollection;
 
+
+///////////////////////////////////////////// my anime collection
+const mediaListCollectionFields = `hasNextChunk lists {
+    name
+    status
+    entries {
+        media {${mediaFields}}
+    }
+}`
+export type MediaListStatus = "CURRENT" | "PLANNING" | "COMPLETED" | "DROPPED" | "PAUSED" | "REPEATING";
+export interface MediaListCollectionList {
+    name: string;
+    status: MediaListStatus;
+    entries: {
+        media: MediaItem
+    }
+}
+export interface MediaListCollectionFields {
+    hasNextChunk: boolean;
+    lists: MediaListCollectionList[];
+}
+
+const mediaListCollection = (userId: string | number, type?: TypeFilterName, perChunk?: number | string, chunk?: number | string) => {
+
+    const userIdQuery = `userId:${userId}`;
+    const typeQuery = (type && type.toLowerCase() !== 'any') ? `type:${type.toUpperCase()}` : undefined;
+    const perChunkQuery = `perChunk:${perChunk ? perChunk : 500}`;  // 500 is the upper limit
+    const chunkQuery = `chunk:${chunk ? chunk : 1}`;
+
+    const queryItems = [userIdQuery, typeQuery, perChunkQuery, chunkQuery].filter(item => !!item).join(",");
+    const mediaListCollectionQuery = queryItems.length > 0 ? `MediaListCollection(${queryItems})` : "MediaListCollection";
+
+    return `${mediaListCollectionQuery}{${mediaListCollectionFields}}`
+}
+export interface MediaListCollection {
+    MediaListCollection: MediaListCollectionFields
+}
+
 ///////////////////////////////////////////// client
 
 export class AnilistGraphqlQuery {
@@ -453,5 +491,8 @@ export class AnilistGraphqlQuery {
     }
     public static fetchFilters() {
         return query(filters)
+    }
+    public static fetchMyAnimeCollection(userID: number | string, chunk: number | string, type: TypeFilterName, perChunk: number | string) {
+        return query(mediaListCollection(userID, type, perChunk, chunk))
     }
 }
