@@ -1,5 +1,7 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 import { useImmer } from "use-immer";
+import { useMyAnimeCollection } from "./my-collection";
 
 export type TypeFilterName = "ANIME" | "MANGA" | "ANY";
 export type SortFilterName =
@@ -16,6 +18,7 @@ export type SortFilterName =
     | "TRENDING"
     | "TRENDING_DESC";
 export type CountryFilterName = "JP" | "CN" | "ANY";
+export type MyFavoriteFilterName = "FAVOURITES";
 
 export interface TypeFilter {
     name: TypeFilterName;
@@ -25,6 +28,10 @@ export interface SortFilter {
 }
 export interface CountryFilter {
     name: CountryFilterName;
+}
+export interface MyFavoriteFilter {
+    name: MyFavoriteFilterName;
+    mediaIds: number[] | undefined;
 }
 
 export const TYPE_FILTER_VALUES: TypeFilterName[] = ["ANIME", "MANGA", "ANY"];
@@ -58,6 +65,10 @@ export const SORT_FILTER: SortFilter = {
 export const COUNTRY_FILTER: CountryFilter = {
     name: "JP",
 };
+export const MY_FAVORITE_FILTER: MyFavoriteFilter = {
+    name: "FAVOURITES",
+    mediaIds: [],
+};
 
 export interface AnimeFastFilterContext {
     typeFilter: TypeFilter;
@@ -66,6 +77,9 @@ export interface AnimeFastFilterContext {
     setSortFilter: (sort: SortFilterName) => void;
     countryFilter: CountryFilter;
     setCountryFilter: (country: CountryFilterName) => void;
+    myFavouriteFilter: MyFavoriteFilter;
+    setMyFavouriteFilter: (active: boolean) => void;
+    favouriteActive: boolean;
 }
 
 const FastFilterContext = React.createContext<AnimeFastFilterContext>(null!);
@@ -104,6 +118,20 @@ export function AnimeFastFiltersProvider({ children }: { children: React.ReactNo
         });
     };
 
+    const { favourites } = useMyAnimeCollection();
+    const [myFavouriteFilter, setMyFavouriteFilter_] = useImmer<MyFavoriteFilter>(MY_FAVORITE_FILTER);
+    const [favouriteActive, setFavouriteActive] = useState(false);
+    const setMyFavouriteFilter = (active: boolean) => {
+        setMyFavouriteFilter_((draft) => {
+            if (active) {
+                draft.mediaIds = favourites;
+            } else {
+                draft.mediaIds = [];
+            }
+            setFavouriteActive(active);
+        });
+    };
+
     return (
         <FastFilterContext.Provider
             value={{
@@ -113,6 +141,9 @@ export function AnimeFastFiltersProvider({ children }: { children: React.ReactNo
                 setSortFilter,
                 countryFilter,
                 setCountryFilter,
+                myFavouriteFilter,
+                setMyFavouriteFilter,
+                favouriteActive,
             }}>
             {children}
         </FastFilterContext.Provider>

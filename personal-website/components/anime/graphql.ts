@@ -1,4 +1,4 @@
-import { CountryFilter, SortFilter, TypeFilter, TypeFilterName } from "./fast-filters";
+import { CountryFilter, MyFavoriteFilter, SortFilter, TypeFilter, TypeFilterName } from "./fast-filters";
 import { GenreFilterItem, TagFilterItem } from "./slow-filters";
 
 export const MY_USER_ID = 6044692;
@@ -334,7 +334,7 @@ const medias = (id: number | string) =>
     `media(id:${id}){
     ${mediaFields}
 }`;
-const mediasSearch = (search?: string, genreFilters?: GenreFilterItem[], tagFilters?: TagFilterItem[], typeFilter?: TypeFilter, sortFilter?: SortFilter, countryFilter?: CountryFilter) => {
+const mediasSearch = (search?: string, genreFilters?: GenreFilterItem[], tagFilters?: TagFilterItem[], typeFilter?: TypeFilter, sortFilter?: SortFilter, countryFilter?: CountryFilter, myFavouriteFilter?: MyFavoriteFilter) => {
 
     const searchQuery = search ? `search:"${search}"` : undefined;
 
@@ -349,7 +349,11 @@ const mediasSearch = (search?: string, genreFilters?: GenreFilterItem[], tagFilt
 
     const sortQuery = sortFilter ? `sort:[${sortFilter.name.toUpperCase()}]` : undefined;
 
-    const queryItems = [searchQuery, genreQuery, tagQuery, typeQuery, sortQuery, countryQuery].filter(item => !!item).join(",");
+    console.log("myFavouriteFilter", myFavouriteFilter);
+
+    const favouriteQuery = (myFavouriteFilter?.mediaIds && myFavouriteFilter.mediaIds.length > 0) ? `id_in:[${myFavouriteFilter.mediaIds.join(",")}]` : undefined;
+
+    const queryItems = [searchQuery, genreQuery, tagQuery, typeQuery, sortQuery, countryQuery, favouriteQuery].filter(item => !!item).join(",");
     const mediaQuery = queryItems.length > 0 ? `media(${queryItems})` : "media";
 
     return `${mediaQuery}{${mediaFields}}`
@@ -436,7 +440,7 @@ const mediaListCollectionFields = `hasNextChunk lists {
     name
     status
     entries {
-        media {${mediaFields}}
+        media {id}
     }
 }`
 export type MediaListStatus = "CURRENT" | "PLANNING" | "COMPLETED" | "DROPPED" | "PAUSED" | "REPEATING";
@@ -444,8 +448,10 @@ export interface MediaListCollectionList {
     name: string;
     status: MediaListStatus;
     entries: {
-        media: MediaItem
-    }
+        media: {
+            id: number
+        }
+    }[];
 }
 export interface MediaListCollectionFields {
     hasNextChunk: boolean;
@@ -486,8 +492,8 @@ export class AnilistGraphqlQuery {
     public static fetchFavouriteAnimes(userID: number | string, page: number | string) {
         return query(page_(usersFavouritesAnimeNodes(userID, page)));
     }
-    public static fetchSearch(searchString: string | string, page: number | string, genreFilters: GenreFilterItem[], tagFilters: TagFilterItem[], typeFilter: TypeFilter, sortFilter: SortFilter, countryFilter: CountryFilter) {
-        return query(page_(mediasSearch(searchString, genreFilters, tagFilters, typeFilter, sortFilter, countryFilter), page));
+    public static fetchSearch(searchString: string | string, page: number | string, genreFilters: GenreFilterItem[], tagFilters: TagFilterItem[], typeFilter: TypeFilter, sortFilter: SortFilter, countryFilter: CountryFilter, myFavouriteFilter: MyFavoriteFilter) {
+        return query(page_(mediasSearch(searchString, genreFilters, tagFilters, typeFilter, sortFilter, countryFilter, myFavouriteFilter), page));
     }
     public static fetchFilters() {
         return query(filters)

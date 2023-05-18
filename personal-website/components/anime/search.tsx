@@ -1,6 +1,8 @@
-import React, { useCallback, useContext, useEffect } from "react";
+"use client";
+import React, { startTransition, useCallback, useContext, useEffect, useState } from "react";
+import { useDebounce } from "react-use";
 import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite";
-import { CountryFilter, SortFilter, TypeFilter, useAnimeFastFilters } from "./fast-filters";
+import { CountryFilter, MyFavoriteFilter, SortFilter, TypeFilter, useAnimeFastFilters } from "./fast-filters";
 import { SectionMedia } from "./graphql";
 import { Page, fetchSearchPage } from "./query";
 import { GenreFilterItem, TagFilterItem, useAnimeSlowFilters } from "./slow-filters";
@@ -15,13 +17,17 @@ export interface FilterItem {
 
 interface SearchContextValue {
     swrAnimeResponse: SWRInfiniteResponse<Page<SectionMedia[]>>;
+    setSearchString: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const SearchContext = React.createContext<SearchContextValue>(null!);
 
-export function AnimeSearchProvider({ searchString, children }: { searchString: string; children: React.ReactNode }) {
+export function AnimeSearchProvider({ children }: { children: React.ReactNode }) {
+    const [searchString, setSearchString] = useState<string>("");
+    const [debouncedSearchString, setDebouncedSearchString] = useState<string>("");
+    useDebounce(() => startTransition(() => setDebouncedSearchString(searchString)), 500, [searchString]);
     const { genreFilters, tagFilters } = useAnimeSlowFilters();
-    const { typeFilter, sortFilter, countryFilter } = useAnimeFastFilters();
+    const { typeFilter, sortFilter, countryFilter, myFavouriteFilter } = useAnimeFastFilters();
 
     const [activeGenreFilters, setActiveGenreFilters] = React.useState<GenreFilterItem[]>([]);
     useEffect(() => {
@@ -36,12 +42,13 @@ export function AnimeSearchProvider({ searchString, children }: { searchString: 
     const getSearchKey = useCallback(
         (prevPage: number, prevData: Page<SectionMedia[]>) => {
             const params = {
-                searchString,
+                debouncedSearchString,
                 activeGenreFilters,
                 activeTagFilters,
                 typeFilter,
                 sortFilter,
                 countryFilter,
+                myFavouriteFilter,
             };
 
             if (prevData && !prevData.pageInfo?.hasNextPage) {
@@ -60,7 +67,15 @@ export function AnimeSearchProvider({ searchString, children }: { searchString: 
                 };
             }
         },
-        [searchString, activeGenreFilters, activeTagFilters, typeFilter, sortFilter, countryFilter]
+        [
+            debouncedSearchString,
+            activeGenreFilters,
+            activeTagFilters,
+            typeFilter,
+            sortFilter,
+            countryFilter,
+            myFavouriteFilter,
+        ]
     );
 
     const searchFetcher = (params: {
@@ -70,10 +85,19 @@ export function AnimeSearchProvider({ searchString, children }: { searchString: 
         typeFilter: TypeFilter;
         sortFilter: SortFilter;
         countryFilter: CountryFilter;
+        myFavouriteFilter: MyFavoriteFilter;
         page: number;
     }) => {
-        const { page, activeGenreFilters, activeTagFilters, searchString, typeFilter, sortFilter, countryFilter } =
-            params;
+        const {
+            page,
+            activeGenreFilters,
+            activeTagFilters,
+            searchString,
+            typeFilter,
+            sortFilter,
+            countryFilter,
+            myFavouriteFilter,
+        } = params;
 
         return fetchSearchPage(
             page,
@@ -82,7 +106,8 @@ export function AnimeSearchProvider({ searchString, children }: { searchString: 
             activeTagFilters,
             typeFilter,
             sortFilter,
-            countryFilter
+            countryFilter,
+            myFavouriteFilter
         );
     };
 
@@ -92,6 +117,7 @@ export function AnimeSearchProvider({ searchString, children }: { searchString: 
         <SearchContext.Provider
             value={{
                 swrAnimeResponse,
+                setSearchString,
             }}>
             {children}
         </SearchContext.Provider>
@@ -99,5 +125,10 @@ export function AnimeSearchProvider({ searchString, children }: { searchString: 
 }
 
 export function useAnimeSearch() {
-    return useContext(SearchContext).swrAnimeResponse;
+    const context = useContext(SearchContext);
+
+    return {
+        ...context.swrAnimeResponse,
+        setSearchString: context.setSearchString,
+    };
 }
