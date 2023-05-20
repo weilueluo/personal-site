@@ -1,25 +1,22 @@
 "use client";
 import {
-    useAnimeFastFilters,
-    TypeFilterName,
-    TYPE_FILTER_VALUES,
-    SortFilterName,
-    SORT_FILTER_VALUES,
-    CountryFilterName,
-    COUNTRY_FILTER_VALUES,
     COUNTRT_FILTER_DISPLAY_NAMES,
+    COUNTRY_FILTER_VALUES,
+    CountryFilterName,
+    SORT_FILTER_VALUES,
+    SortFilterName,
+    TYPE_FILTER_VALUES,
+    TypeFilterName,
+    useAnimeFastFilters,
 } from "@/components/anime/fast-filters";
 import { FilterItem, useAnimeSearch } from "@/components/anime/search";
 import { useAnimeSlowFilters } from "@/components/anime/slow-filters";
+import Separator from "@/components/ui/Separator";
 import dropdown from "@/components/ui/dropdown";
 import { tm } from "@/shared/utils";
-import { ComponentPropsWithoutRef, useState } from "react";
-import { BsCheckSquareFill } from "react-icons/bs";
-import { FaCheckCircle, FaSearch } from "react-icons/fa";
-import { ImCheckboxChecked, ImCheckboxUnchecked, ImRadioChecked2, ImRadioUnchecked } from "react-icons/im";
-import { IoCheckboxSharp } from "react-icons/io5";
-import { MdExpandMore, MdOutlineRadioButtonChecked, MdOutlineRadioButtonUnchecked, MdRadioButtonChecked, MdRadioButtonUnchecked } from "react-icons/md";
-import { RiCheckboxBlankFill, RiCheckboxBlankLine } from "react-icons/ri";
+import { ComponentPropsWithoutRef, useEffect, useState } from "react";
+import { FaSearch } from "react-icons/fa";
+import { MdExpandMore, MdOutlineRadioButtonChecked, MdOutlineRadioButtonUnchecked } from "react-icons/md";
 import { TbAdjustmentsHorizontal } from "react-icons/tb";
 
 export default function SearchBar() {
@@ -40,49 +37,67 @@ export default function SearchBar() {
         countryFilter,
         setCountryFilter,
         myFavouriteFilter,
-        setMyFavouriteFilter,
-        favouriteActive,
+        setFavouriteFilter,
     } = useAnimeFastFilters();
 
     // fast filters
     const [showFilter, setShowFilter] = useState(false);
     const onClickShowFilter = () => setShowFilter(!showFilter);
 
+    // show adult tag filter only if hentai genre is selected
+    const [tagFiltersNoHentai, setTagFiltersNoHentai] = useState(() =>
+        tagFilters.filter((tag) => tag.isAdult === false)
+    );
+    useEffect(() => {
+        setTagFiltersNoHentai(tagFilters.filter((tag) => tag.isAdult === false));
+    }, [tagFilters]);
+    const [displayTagFilters, setDisplayTagFilters] = useState(tagFiltersNoHentai);
+    useEffect(() => {
+        if (activeSlowFilters.some((filter) => filter.name.toLowerCase() === "hentai")) {
+            setDisplayTagFilters(tagFilters);
+        } else {
+            setDisplayTagFilters(tagFiltersNoHentai);
+        }
+    }, [activeSlowFilters, tagFilters, tagFiltersNoHentai]);
+
     const { setSearchString } = useAnimeSearch();
 
     return (
         <div className="flex flex-col gap-2">
-            <div className="flex h-10 w-full flex-row rounded-md bg-gray-500 text-white caret-white">
-                <div className="grid h-full w-12 place-items-center text-black">
+            <div className="flex h-10 max-h-full w-full flex-row rounded-md bg-gray-500 text-white caret-white">
+                <div className="grid h-full w-12 shrink place-items-center text-black">
                     <FaSearch />
                 </div>
                 <input
-                    className="h-full grow bg-transparent py-1 focus:outline-none"
+                    className="grow bg-transparent py-1 focus:outline-none"
                     placeholder="search term"
                     onChange={(e) => setSearchString(e.target.value)}
                 />
                 <div
-                    className="m-2 grid w-12 place-items-center rounded-md bg-gray-600 hover:bg-gray-400"
+                    className={tm(
+                        "m-2 grid w-12 shrink place-items-center rounded-md hover:cursor-pointer",
+                        !showFilter && "bg-gray-600 text-gray-300 hover:bg-gray-400",
+                        showFilter && "bg-gray-300 text-gray-600 hover:bg-gray-400"
+                    )}
                     onClick={onClickShowFilter}>
                     <TbAdjustmentsHorizontal />
                 </div>
             </div>
 
-            <div>
-                <FilterPanel title={""} filterItems={activeSlowFilters} toggleSelection={activeSlowFilterOnClick} />
-            </div>
+            {activeSlowFilters.length > 0 && (
+                <FilterPanel filterItems={activeSlowFilters} toggleSelection={activeSlowFilterOnClick} />
+            )}
 
-            <div className="flex flex-row gap-2">
-                {/* <span>Quick Filter</span> */}
+            <div className="flex flex-row flex-wrap gap-2">
+                <BooleanQuickFilter
+                    name={myFavouriteFilter.name}
+                    onClick={() => setFavouriteFilter(!myFavouriteFilter.active)}
+                    active={myFavouriteFilter.active}
+                />
                 <QuickFilter
                     name={typeFilter.name}
                     onNameClick={(name) => setTypeFilter(name as TypeFilterName)}
                     names={TYPE_FILTER_VALUES}
-                />
-                <QuickFilter
-                    name={sortFilter.name}
-                    onNameClick={(name) => setSortFilter(name as SortFilterName)}
-                    names={SORT_FILTER_VALUES}
                 />
                 <QuickFilter
                     name={countryFilter.name}
@@ -90,24 +105,22 @@ export default function SearchBar() {
                     names={COUNTRY_FILTER_VALUES}
                     displayMap={COUNTRT_FILTER_DISPLAY_NAMES}
                 />
-                <BooleanQuickFilter
-                    name={myFavouriteFilter.name}
-                    onClick={() => setMyFavouriteFilter(!favouriteActive)}
-                    active={favouriteActive}
+                <QuickFilter
+                    name={sortFilter.name}
+                    onNameClick={(name) => setSortFilter(name as SortFilterName)}
+                    names={SORT_FILTER_VALUES}
                 />
             </div>
 
             {showFilter && (
-                <div className="rounded-md border border-black p-2">
-                    <div>
-                        <FilterPanel title="Genres" filterItems={genreFilters} toggleSelection={genreFilterOnClick} />
-                        <FilterPanel
-                            title="Tags"
-                            filterItems={tagFilters}
-                            toggleSelection={tagFilterOnClick}
-                            many={true}
-                        />
-                    </div>
+                <div className="flex flex-col gap-4 rounded-md border border-black p-2">
+                    <FilterPanel title="Genres" filterItems={genreFilters} toggleSelection={genreFilterOnClick} />
+                    <FilterPanel
+                        title="Tags"
+                        filterItems={displayTagFilters}
+                        toggleSelection={tagFilterOnClick}
+                        many={true}
+                    />
                 </div>
             )}
         </div>
@@ -158,7 +171,7 @@ function BooleanQuickFilter({ name, active, ...rest }: BooleanQuickFilterProps) 
             {active ? (
                 <MdOutlineRadioButtonChecked className="ml-2 text-gray-300" size="1.2em" />
             ) : (
-                <MdOutlineRadioButtonUnchecked className="ml-2 text-gray-300"  size="1.2em" />
+                <MdOutlineRadioButtonUnchecked className="ml-2 text-gray-300" size="1.2em" />
             )}{" "}
         </span>
     );
@@ -170,16 +183,21 @@ function FilterPanel<T extends FilterItem>({
     toggleSelection,
     many = false,
 }: {
-    title: string;
+    title?: string;
     filterItems: T[];
     toggleSelection: (item: T) => void;
     many?: boolean;
 }) {
     return (
         <div className="max-h-fit">
-            <span>{title}</span>
+            {title && (
+                <>
+                    <span className="font-bold">{title}</span>
+                    <Separator className="mb-3 h-1" />
+                </>
+            )}
             <div className={tm(many && "resize-y overflow-y-auto")}>
-                <div className={tm("flex flex-row flex-wrap gap-2 text-sm", many && "h-48")}>
+                <div className={tm("flex flex-row flex-wrap gap-2 text-sm", many && " h-72")}>
                     {filterItems.map((item) => (
                         <FilterLabel key={item.name} item={item} toggleSelection={toggleSelection} />
                     ))}
@@ -194,8 +212,10 @@ function FilterLabel<T extends FilterItem>({ item, toggleSelection }: { item: T;
         <span
             key={item.name}
             className={tm(
-                "h-fit rounded-md bg-blue-100 px-2 py-1 hover:cursor-pointer hover:bg-orange-200",
-                item.active && "bg-orange-400"
+                "h-fit rounded-md bg-gray-500 px-2 py-1 text-gray-300 hover:cursor-pointer",
+                item.active && "bg-gray-600 hover:bg-gray-500",
+                !item.active && "bg-gray-500 hover:bg-gray-600",
+                !item.active && item.isAdult && "bg-gray-400 hover:bg-gray-600"
             )}
             onClick={() => toggleSelection(item)}>
             {item.name}

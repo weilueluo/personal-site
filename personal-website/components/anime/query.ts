@@ -1,10 +1,10 @@
 // this files write on top of graphql.ts to provide concrete fetch methods to query anilist api
 
-import { CountryFilter, MyFavoriteFilter, SortFilter, TypeFilter } from "./fast-filters";
 import {
     AnilistGraphqlQuery,
     Character,
     Characters,
+    FetchSearchParams,
     Filters,
     MEDIALIST_STATUS,
     Media,
@@ -20,7 +20,6 @@ import {
     Staffs,
     UsersFavouritesAnime
 } from "./graphql";
-import { GenreFilterItem, TagFilterItem } from "./slow-filters";
 
 export const INIT_PAGE_INFO: PageInfoItem = {
     total: undefined,
@@ -40,7 +39,7 @@ const HEADERS = {
 };
 
 async function fetchAnilist<T>(query: string): Promise<T> {
-    console.log("Fetching Anilist data");
+    console.log("Fetching Anilist data", query);
 
     const options = {
         method: "POST",
@@ -106,8 +105,8 @@ export async function fetchFilters(): Promise<Filters> {
     return response;
 }
 
-export async function fetchSearchPage(page: number | string, search: string, genreFilers: GenreFilterItem[], tagFilters: TagFilterItem[], typeFilter: TypeFilter, sortFilter: SortFilter, countryFilter: CountryFilter, myFavouriteFilter: MyFavoriteFilter): Promise<Page<SectionMedia[]>> {
-    const graphqlQuery = AnilistGraphqlQuery.fetchSearch(search, page, genreFilers, tagFilters, typeFilter, sortFilter, countryFilter, myFavouriteFilter);
+export async function fetchSearchPage(FetchSearchParams: FetchSearchParams): Promise<Page<SectionMedia[]>> {
+    const graphqlQuery = AnilistGraphqlQuery.fetchSearch(FetchSearchParams);
 
     const response = await fetchAnilist<RawPage<Media<MediaItem>>>(graphqlQuery);
 

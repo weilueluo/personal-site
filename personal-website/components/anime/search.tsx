@@ -2,8 +2,9 @@
 import React, { startTransition, useCallback, useContext, useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite";
-import { CountryFilter, MyFavoriteFilter, SortFilter, TypeFilter, useAnimeFastFilters } from "./fast-filters";
-import { SectionMedia } from "./graphql";
+import { useAnimeFastFilters } from "./fast-filters";
+import { FetchSearchParams, PageInfoItem, SectionMedia } from "./graphql";
+import { useMyAnimeCollection } from "./my-collection";
 import { Page, fetchSearchPage } from "./query";
 import { GenreFilterItem, TagFilterItem, useAnimeSlowFilters } from "./slow-filters";
 
@@ -13,10 +14,13 @@ export interface FilterItem {
     name: string;
     active: boolean;
     type: FilterType;
+    isAdult?: boolean;
 }
 
 interface SearchContextValue {
     swrAnimeResponse: SWRInfiniteResponse<Page<SectionMedia[]>>;
+    mergedData: SectionMedia[];
+    pageInfo: PageInfoItem | undefined;
     setSearchString: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -39,16 +43,19 @@ export function AnimeSearchProvider({ children }: { children: React.ReactNode })
         setActiveTagFilters(tagFilters.filter((item) => item.active));
     }, [tagFilters]);
 
+    const { favourites } = useMyAnimeCollection();
+    const [favIdsToFilter, setFavIdsToFilter] = useState<Set<number> | undefined>(undefined);
+
     const getSearchKey = useCallback(
-        (prevPage: number, prevData: Page<SectionMedia[]>) => {
+        (prevPage: number, prevData: Page<SectionMedia[]>): FetchSearchParams | null => {
             const params = {
-                debouncedSearchString,
+                searchString: debouncedSearchString,
                 activeGenreFilters,
                 activeTagFilters,
                 typeFilter,
                 sortFilter,
                 countryFilter,
-                myFavouriteFilter,
+                favIdsToFilter,
             };
 
             if (prevData && !prevData.pageInfo?.hasNextPage) {
@@ -74,49 +81,58 @@ export function AnimeSearchProvider({ children }: { children: React.ReactNode })
             typeFilter,
             sortFilter,
             countryFilter,
-            myFavouriteFilter,
+            favIdsToFilter,
         ]
     );
 
-    const searchFetcher = (params: {
-        searchString: string;
-        activeGenreFilters: GenreFilterItem[];
-        activeTagFilters: TagFilterItem[];
-        typeFilter: TypeFilter;
-        sortFilter: SortFilter;
-        countryFilter: CountryFilter;
-        myFavouriteFilter: MyFavoriteFilter;
-        page: number;
-    }) => {
-        const {
-            page,
-            activeGenreFilters,
-            activeTagFilters,
-            searchString,
-            typeFilter,
-            sortFilter,
-            countryFilter,
-            myFavouriteFilter,
-        } = params;
+    const searchFetcher = useCallback((params: FetchSearchParams) => {
+        return fetchSearchPage(params);
+    }, []);
 
-        return fetchSearchPage(
-            page,
-            searchString,
-            activeGenreFilters,
-            activeTagFilters,
-            typeFilter,
-            sortFilter,
-            countryFilter,
-            myFavouriteFilter
-        );
-    };
+    const swrAnimeResponse = useSWRInfinite<Page<SectionMedia[]>>(getSearchKey, searchFetcher, {
+        revalidateFirstPage: false,
+    });
 
-    const swrAnimeResponse = useSWRInfinite<Page<SectionMedia[]>>(getSearchKey, searchFetcher);
+    const { data } = swrAnimeResponse;
+    const [mergedData, setMergedData] = useState<SectionMedia[]>([]);
+    const [pageInfo, setPageInfo] = useState<PageInfoItem | undefined>(undefined);
+
+    useEffect(() => {
+        // sometimes we get duplicate anime back... fix it
+        const newMergedData = data?.flatMap((data) => data.data || []) || [];
+        const newDataIds = new Set();
+        const uniqueMergedData: SectionMedia[] = [];
+        newMergedData.forEach((item) => {
+            if (item.id && !newDataIds.has(item.id)) {
+                newDataIds.add(item.id);
+                uniqueMergedData.push(item);
+            }
+        });
+
+        setMergedData(uniqueMergedData);
+
+        // fix page info's total count by unique merged data
+        const newPageInfo = data?.[data.length - 1]?.pageInfo;
+        if (newPageInfo && !newPageInfo?.hasNextPage) {
+            newPageInfo.total = uniqueMergedData.length;
+        }
+        setPageInfo(newPageInfo);
+    }, [data]);
+
+    useEffect(() => {
+        if (myFavouriteFilter.active) {
+            setFavIdsToFilter(favourites);
+        } else {
+            setFavIdsToFilter(undefined);
+        }
+    }, [favourites, myFavouriteFilter]);
 
     return (
         <SearchContext.Provider
             value={{
                 swrAnimeResponse,
+                mergedData,
+                pageInfo,
                 setSearchString,
             }}>
             {children}
@@ -125,10 +141,5 @@ export function AnimeSearchProvider({ children }: { children: React.ReactNode })
 }
 
 export function useAnimeSearch() {
-    const context = useContext(SearchContext);
-
-    return {
-        ...context.swrAnimeResponse,
-        setSearchString: context.setSearchString,
-    };
+    return useContext(SearchContext);
 }

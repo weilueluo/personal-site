@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { useImmer } from "use-immer";
 import { useMyAnimeCollection } from "./my-collection";
@@ -31,7 +31,7 @@ export interface CountryFilter {
 }
 export interface MyFavoriteFilter {
     name: MyFavoriteFilterName;
-    mediaIds: number[] | undefined;
+    active: boolean;
 }
 
 export const TYPE_FILTER_VALUES: TypeFilterName[] = ["ANIME", "MANGA", "ANY"];
@@ -65,10 +65,6 @@ export const SORT_FILTER: SortFilter = {
 export const COUNTRY_FILTER: CountryFilter = {
     name: "JP",
 };
-export const MY_FAVORITE_FILTER: MyFavoriteFilter = {
-    name: "FAVOURITES",
-    mediaIds: [],
-};
 
 export interface AnimeFastFilterContext {
     typeFilter: TypeFilter;
@@ -78,8 +74,7 @@ export interface AnimeFastFilterContext {
     countryFilter: CountryFilter;
     setCountryFilter: (country: CountryFilterName) => void;
     myFavouriteFilter: MyFavoriteFilter;
-    setMyFavouriteFilter: (active: boolean) => void;
-    favouriteActive: boolean;
+    setFavouriteFilter: (active: boolean) => void;
 }
 
 const FastFilterContext = React.createContext<AnimeFastFilterContext>(null!);
@@ -118,17 +113,13 @@ export function AnimeFastFiltersProvider({ children }: { children: React.ReactNo
         });
     };
 
-    const { favourites } = useMyAnimeCollection();
-    const [myFavouriteFilter, setMyFavouriteFilter_] = useImmer<MyFavoriteFilter>(MY_FAVORITE_FILTER);
-    const [favouriteActive, setFavouriteActive] = useState(false);
-    const setMyFavouriteFilter = (active: boolean) => {
+    const [myFavouriteFilter, setMyFavouriteFilter_] = useImmer<MyFavoriteFilter>({
+        name: "FAVOURITES",
+        active: true,
+    });
+    const setFavouriteFilter = (active: boolean) => {
         setMyFavouriteFilter_((draft) => {
-            if (active) {
-                draft.mediaIds = favourites;
-            } else {
-                draft.mediaIds = [];
-            }
-            setFavouriteActive(active);
+            draft.active = active;
         });
     };
 
@@ -142,8 +133,7 @@ export function AnimeFastFiltersProvider({ children }: { children: React.ReactNo
                 countryFilter,
                 setCountryFilter,
                 myFavouriteFilter,
-                setMyFavouriteFilter,
-                favouriteActive,
+                setFavouriteFilter,
             }}>
             {children}
         </FastFilterContext.Provider>

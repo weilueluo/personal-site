@@ -13,7 +13,7 @@ export async function MyAnimeCollectionProvider({ children }: { children: React.
     return (
         <MyAnimeCollectionContextProvider
             value={{
-                favourites: Array.from(favSet),
+                favourites: favSet,
             }}>
             {children}
         </MyAnimeCollectionContextProvider>

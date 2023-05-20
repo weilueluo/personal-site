@@ -3,11 +3,11 @@
 import React from "react";
 
 export interface MyAnimeCollectionContext {
-    favourites: number[];
+    favourites: Set<number>;
 }
 
 export const MyAnimeCollectionContext = React.createContext<MyAnimeCollectionContext>({
-    favourites: [],
+    favourites: new Set<number>(),
 });
 
 export function MyAnimeCollectionContextProvider({

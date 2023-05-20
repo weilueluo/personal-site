@@ -12,13 +12,7 @@ export interface Query<T> {
 }
 
 ///////////////////////////////////////////////// pageinfo
-const pageInfo = `pageInfo{
-    total
-    perPage
-    currentPage
-    lastPage
-    hasNextPage
-}`;
+const pageInfo = `pageInfo{total perPage currentPage lastPage hasNextPage}`;
 export interface PageInfoItem {
     total?: number;
     perPage?: number;
@@ -29,10 +23,7 @@ export interface PageInfoItem {
 
 ///////////////////////////////////////////////// page
 const page_ = (s: string, page_: number | string = 1, perPage = PAGE_SIZE) =>
-    `Page(page:${page_}, perPage:${perPage}){
-    ${pageInfo}
-    ${s}
-}`;
+    `Page(page:${page_}, perPage:${perPage}){${pageInfo} ${s}}`;
 export interface PageInfo {
     pageInfo: PageInfoItem;
 }
@@ -41,11 +32,7 @@ export interface Page<T> {
 }
 
 ///////////////////////////////////////////////// title
-const title = `title{
-    romaji
-    english
-    native
-}`;
+const title = `title{romaji english native}`;
 type Title = {
     romaji?: string;
     english?: string;
@@ -53,9 +40,7 @@ type Title = {
 };
 
 ///////////////////////////////////////////////// date
-const dateFields = `year
-month
-day`;
+const dateFields = `year month day`;
 type Date = {
     year?: number;
     month?: number;
@@ -63,10 +48,7 @@ type Date = {
 };
 
 ///////////////////////////////////////////////// cover image
-const coverImage = `coverImage{
-    medium
-    large
-}`;
+const coverImage = `coverImage{medium large}`;
 type CoverImage = {
     medium?: string;
     large?: string;
@@ -74,13 +56,7 @@ type CoverImage = {
 type Image = CoverImage;
 
 ///////////////////////////////////////////////// section media: media but only contains necessary items for showing it in the anime landing page
-const sectionMediaFields = `id
-${title}
-siteUrl
-startDate{
-    ${dateFields}
-}
-${coverImage}`;
+const sectionMediaFields = `id ${title} siteUrl startDate{${dateFields}} ${coverImage}`;
 export interface SectionMedia {
     id: number;
     title?: Title;
@@ -90,19 +66,7 @@ export interface SectionMedia {
 }
 
 ///////////////////////////////////////////////// relations
-const relations = `relations{
-    edges{
-        id
-        relationType
-        node{
-            id
-            siteUrl
-            ${title}
-            ${coverImage}
-        }
-    }
-    ${pageInfo}
-}`;
+const relations = `relations{edges{id relationType node{id siteUrl ${title} ${coverImage}}} ${pageInfo}}`;
 type Relation = {
     id: number;
     relationType: string;
@@ -119,52 +83,19 @@ type Relations = {
 };
 
 ///////////////////////////////////////////////// name
-const name = `name{
-    full
-    native
-    alternative
-}`;
+const name = `name{full native alternative}`;
 type Name = {
     full?: string;
     native?: string;
     alternative?: string[];
 };
 
-const yearMonthday = `year
-month
-day`;
+const yearMonthday = `year month day`;
 
-const mediumLargeFields = `medium
-large`;
+const mediumLargeFields = `medium large`;
 
 ///////////////////////////////////////////////// characters
-const characterFields = `id
-role
-node{
-    id
-    ${name}
-    image{
-        medium
-        large
-    }
-    description
-    gender
-    dateOfBirth{
-        ${yearMonthday}
-    }
-    bloodType
-    siteUrl
-}
-voiceActors (language: JAPANESE, sort: ROLE){
-    id
-    ${name}
-    description
-    image{
-        ${mediumLargeFields}
-    }
-    gender
-    age
-}`;
+const characterFields = `id role node{id ${name} image{medium large} description gender dateOfBirth{${yearMonthday}} bloodType siteUrl} voiceActors (language: JAPANESE, sort: ROLE){id ${name} description image{ ${mediumLargeFields}} gender age}`;
 type VoiceActor = {
     id: number;
     name?: Name;
@@ -190,13 +121,7 @@ export interface Character {
 }
 
 /////////////////////////////////////////////////
-const characters = (page: number | string) =>
-    `characters(page: ${page}){
-    edges{
-        ${characterFields}
-    }
-    ${pageInfo}
-}`;
+const characters = (page: number | string) => `characters(page: ${page}){edges{${characterFields}} ${pageInfo}}`;
 export interface Characters {
     characters: CharactersItem;
 }
@@ -206,19 +131,7 @@ export interface CharactersItem {
 }
 
 ///////////////////////////////////////////////// staff
-const staffFields = `id
-role
-node{
-    id
-    ${name}
-    image{
-        ${mediumLargeFields}
-    }
-    description
-    gender
-    age
-    siteUrl
-}`;
+const staffFields = `id role node{id ${name} image{${mediumLargeFields}} description gender age siteUrl}`;
 export interface Staff {
     id: number;
     role?: string;
@@ -234,13 +147,7 @@ export interface Staff {
 }
 
 /////////////////////////////////////////////////
-const staffs = (page: number | string) =>
-    `staff(page: ${page}){
-    edges{
-        ${staffFields}
-    }
-    ${pageInfo}
-}`;
+const staffs = (page: number | string) => `staff(page: ${page}){edges{${staffFields}} ${pageInfo}}`;
 export interface Staffs {
     staff: StaffsItem;
 }
@@ -250,35 +157,7 @@ export interface StaffsItem {
 }
 
 ///////////////////////////////////////////////// media
-const mediaFields = `${sectionMediaFields}
-trailer{
-    id
-    site
-    thumbnail
-}
-description
-status
-season
-seasonYear
-episodes
-synonyms
-meanScore
-bannerImage
-genres
-hashtag
-tags{
-    name
-    description
-}
-nextAiringEpisode{
-    id
-    airingAt
-    timeUntilAiring
-    episode
-}
-${relations}
-${characters(1)}
-${staffs(1)}`;
+const mediaFields = `${sectionMediaFields} trailer{id site thumbnail} description status season seasonYear episodes synonyms meanScore bannerImage genres hashtag tags{name description} nextAiringEpisode{id airingAt timeUntilAiring episode} ${relations} ${characters(1)} ${staffs(1)}`;
 
 type AnimeStatus = "FINISHED" | "RELEASING" | "NOT_YET_RELEASED" | "CANCELLED" | "HIATUS";
 
@@ -288,13 +167,7 @@ type AnimeSeason = "WINTER" | "SPRING" | "SUMMER" | "FALL";
 export type MEDIALIST_STATUS = "CURRENT" | "PLANNING" | "COMPLETED" | "DROPPED" | "PAUSED" | "REPEATING";
 
 const mediaList = (userID: number | string, status: MEDIALIST_STATUS) =>
-    `mediaList(userId:${userID}, type:ANIME${status ? `,status_in:[${status}]` : ""}){
-    id
-    status
-    media{
-        ${sectionMediaFields}
-    }
-}`;
+    `mediaList(userId:${userID}, type:ANIME${status ? `,status_in:[${status}]` : ""}){id status media{${sectionMediaFields}}}`;
 export interface MediaListItem {
     id: number;
     status?: MEDIALIST_STATUS;
@@ -306,16 +179,7 @@ export interface MediaList {
 
 /////////////////////////////////////////////////
 const usersFavouritesAnimeNodes = (id: number | string, page: number | string) =>
-    `users(id:${id}){
-    favourites(page:1){
-        anime(page:${page},perPage:${PAGE_SIZE}){
-            nodes{
-                ${sectionMediaFields}
-            }
-            ${pageInfo}
-        }
-    }
-}`;
+    `users(id:${id}){favourites(page:1){anime(page:${page},perPage:${PAGE_SIZE}){nodes{${sectionMediaFields}} ${pageInfo}}}}`;
 export interface UsersFavouritesAnime {
     users?: {
         favourites?: {
@@ -334,14 +198,23 @@ const medias = (id: number | string) =>
     `media(id:${id}){
     ${mediaFields}
 }`;
-const mediasSearch = (search?: string, genreFilters?: GenreFilterItem[], tagFilters?: TagFilterItem[], typeFilter?: TypeFilter, sortFilter?: SortFilter, countryFilter?: CountryFilter, myFavouriteFilter?: MyFavoriteFilter) => {
+const mediasSearch = (mediaSearchParams: Omit<FetchSearchParams, "page">) => {
 
-    const searchQuery = search ? `search:"${search}"` : undefined;
+    const {
+        searchString,
+        activeGenreFilters,
+        activeTagFilters,
+        typeFilter,
+        sortFilter,
+        countryFilter,
+        favIdsToFilter } = mediaSearchParams;
 
-    const genres = (genreFilters || []).filter(item => item.active).map((item) => `"${item.name}"`);
+    const searchQuery = searchString ? `search:"${searchString}"` : undefined;
+
+    const genres = (activeGenreFilters || []).filter(item => item.active).map((item) => `"${item.name}"`);
     const genreQuery = genres.length > 0 ? `genre_in:[${genres.join(",")}]` : undefined;
 
-    const tags = (tagFilters || []).filter(item => item.active).map((item) => `"${item.name}"`);
+    const tags = (activeTagFilters || []).filter(item => item.active).map((item) => `"${item.name}"`);
     const tagQuery = tags.length > 0 ? `tag_in:[${tags.join(",")}]` : undefined;
 
     const typeQuery = (typeFilter && typeFilter.name.toLowerCase() !== 'any') ? `type:${typeFilter.name.toUpperCase()}` : undefined;
@@ -349,7 +222,7 @@ const mediasSearch = (search?: string, genreFilters?: GenreFilterItem[], tagFilt
 
     const sortQuery = sortFilter ? `sort:[${sortFilter.name.toUpperCase()}]` : undefined;
 
-    const favouriteQuery = (myFavouriteFilter?.mediaIds && myFavouriteFilter.mediaIds.length > 0) ? `id_in:[${myFavouriteFilter.mediaIds.join(",")}]` : undefined;
+    const favouriteQuery = (favIdsToFilter) ? `id_in:[${[...favIdsToFilter].join(",")}]` : undefined;
 
     const queryItems = [searchQuery, genreQuery, tagQuery, typeQuery, sortQuery, countryQuery, favouriteQuery].filter(item => !!item).join(",");
     const mediaQuery = queryItems.length > 0 ? `media(${queryItems})` : "media";
@@ -411,12 +284,7 @@ export interface GenreCollection {
 };
 
 /////////////////////////////////////////////
-const mediaTagCollection = `MediaTagCollection {
-    name
-    description
-    category
-    isAdult
-}`
+const mediaTagCollection = `MediaTagCollection{name description category isAdult}`
 export interface MediaTag {
     name: string,
     description: string,
@@ -434,13 +302,7 @@ export type Filters = MediaTagCollection & GenreCollection;
 
 
 ///////////////////////////////////////////// my anime collection
-const mediaListCollectionFields = `hasNextChunk lists {
-    name
-    status
-    entries {
-        media {id}
-    }
-}`
+const mediaListCollectionFields = `hasNextChunk lists {name status entries {media {id}}}`
 export type MediaListStatus = "CURRENT" | "PLANNING" | "COMPLETED" | "DROPPED" | "PAUSED" | "REPEATING";
 export interface MediaListCollectionList {
     name: string;
@@ -474,6 +336,17 @@ export interface MediaListCollection {
 
 ///////////////////////////////////////////// client
 
+export interface FetchSearchParams {
+    searchString: string;
+    activeGenreFilters: GenreFilterItem[];
+    activeTagFilters: TagFilterItem[];
+    typeFilter: TypeFilter;
+    sortFilter: SortFilter;
+    countryFilter: CountryFilter;
+    favIdsToFilter: Set<number> | undefined;
+    page: number;
+}
+
 export class AnilistGraphqlQuery {
     public static fetchMedia(animeID: number | string): string {
         return query(page_(medias(animeID)));
@@ -490,8 +363,9 @@ export class AnilistGraphqlQuery {
     public static fetchFavouriteAnimes(userID: number | string, page: number | string) {
         return query(page_(usersFavouritesAnimeNodes(userID, page)));
     }
-    public static fetchSearch(searchString: string | string, page: number | string, genreFilters: GenreFilterItem[], tagFilters: TagFilterItem[], typeFilter: TypeFilter, sortFilter: SortFilter, countryFilter: CountryFilter, myFavouriteFilter: MyFavoriteFilter) {
-        return query(page_(mediasSearch(searchString, genreFilters, tagFilters, typeFilter, sortFilter, countryFilter, myFavouriteFilter), page));
+    public static fetchSearch(FetchSearchParams: FetchSearchParams) {
+        const { page, ...rest } = FetchSearchParams;
+        return query(page_(mediasSearch(rest), page));
     }
     public static fetchFilters() {
         return query(filters)
