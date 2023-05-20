@@ -6,7 +6,7 @@ import { fetchFilters } from "./query";
 import { FilterItem } from "./search";
 
 export interface GenreFilterItem extends FilterItem {}
-export interface TagFilterItem extends FilterItem, MediaTag {}
+export interface TagFilterItem extends Omit<FilterItem, "isAdult">, MediaTag {}
 
 interface AnimeSlowFilterContext {
     genreFilters: GenreFilterItem[];
