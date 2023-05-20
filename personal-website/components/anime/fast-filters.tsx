@@ -1,7 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { useImmer } from "use-immer";
-import { useMyAnimeCollection } from "./collections";
 
 export type TypeFilterName = "ANIME" | "MANGA" | "ANY";
 export type SortFilterName =
@@ -115,7 +114,7 @@ export function AnimeFastFiltersProvider({ children }: { children: React.ReactNo
 
     const [myFavouriteFilter, setMyFavouriteFilter_] = useImmer<MyFavoriteFilter>({
         name: "FAVOURITES",
-        active: true,
+        active: false,
     });
     const setFavouriteFilter = (active: boolean) => {
         setMyFavouriteFilter_((draft) => {

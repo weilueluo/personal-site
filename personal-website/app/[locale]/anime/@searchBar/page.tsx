@@ -89,12 +89,12 @@ export default function SearchBar() {
     return (
         <div className="flex flex-col gap-2">
             <div className="flex h-10 max-h-full w-full flex-row rounded-md bg-gray-500 text-white caret-white">
-                <div className="grid h-full w-12 shrink place-items-center text-black">
+                <div className="grid h-full w-12 shrink place-items-center text-gray-300">
                     <FaSearch />
                 </div>
                 <input
-                    className="grow bg-transparent py-1 focus:outline-none"
-                    placeholder="search term"
+                    className="grow bg-transparent py-1 focus:outline-none font-semibold"
+                    placeholder="do you want to search something?"
                     onChange={(e) => setSearchString(e.target.value)}
                 />
                 <div
