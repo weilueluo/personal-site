@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useImmer } from "use-immer";
-import { useMyAnimeCollection } from "./my-collection";
+import { useMyAnimeCollection } from "./collections";
 
 export type TypeFilterName = "ANIME" | "MANGA" | "ANY";
 export type SortFilterName =

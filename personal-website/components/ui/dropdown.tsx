@@ -1,5 +1,5 @@
 import { tm } from "@/shared/utils";
-import React, { ComponentPropsWithoutRef, useState } from "react";
+import React, { ComponentPropsWithoutRef, useEffect, useState } from "react";
 
 import styles from "./dropdown.module.scss";
 
@@ -13,12 +13,26 @@ const Container = React.forwardRef<HTMLDivElement, DropdownProps>((props, ref) =
 
     const [open, setOpen] = useState(false);
 
+    // if user clicked
+    useEffect(() => {
+        const onClick = () => {
+            if (open) {
+                setOpen(false);
+            }
+        };
+        window.addEventListener("click", onClick);
+        return () => window.removeEventListener("click", onClick);
+    });
+
     return (
         <div
             ref={ref}
             className={tm(styles.container, open && styles.open, "hover:cursor-pointer", className)}
             {...rest}
-            onClick={() => setOpen(!open)}>
+            onClick={(e) => {
+                setOpen(!open);
+                e.stopPropagation(); // prevent global onClick from firing, it will set open back to false
+            }}>
             {children}
         </div>
     );

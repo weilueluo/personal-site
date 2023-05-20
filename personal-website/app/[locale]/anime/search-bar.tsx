@@ -25,6 +25,9 @@ export default function SearchBar() {
         genreFilterOnClick,
         tagFilters,
         tagFilterOnClick,
+        adultFilter,
+        adultFilterOnClick,
+        setClearAllFilter,
         activeSlowFilters,
         activeSlowFilterOnClick,
     } = useAnimeSlowFilters();
@@ -53,12 +56,33 @@ export default function SearchBar() {
     }, [tagFilters]);
     const [displayTagFilters, setDisplayTagFilters] = useState(tagFiltersNoHentai);
     useEffect(() => {
-        if (activeSlowFilters.some((filter) => filter.name.toLowerCase() === "hentai")) {
+        if (adultFilter.active) {
             setDisplayTagFilters(tagFilters);
         } else {
             setDisplayTagFilters(tagFiltersNoHentai);
         }
-    }, [activeSlowFilters, tagFilters, tagFiltersNoHentai]);
+    }, [adultFilter, tagFilters, tagFiltersNoHentai]);
+
+    // show hentai genre only if adult tag is selected
+    const [genreFiltersNoHentai, setGenreFiltersNoHentai] = useState(() =>
+        genreFilters.filter((genre) => genre.isAdult === false)
+    );
+    useEffect(() => {
+        setGenreFiltersNoHentai(genreFilters.filter((genre) => genre.isAdult === false));
+    }, [genreFilters]);
+    const [displayGenreFilters, setDisplayGenreFilters] = useState(genreFiltersNoHentai);
+    useEffect(() => {
+        if (adultFilter.active) {
+            setDisplayGenreFilters(genreFilters);
+        } else {
+            setDisplayGenreFilters(genreFiltersNoHentai);
+        }
+    }, [adultFilter, genreFilters, genreFiltersNoHentai]);
+
+    // clear all filter label
+    useEffect(() => {
+        setClearAllFilter(activeSlowFilters.filter((item) => item.type !== "clearAll").length >= 3);
+    }, [activeSlowFilters, setClearAllFilter]);
 
     const { setSearchString } = useAnimeSearch();
 
@@ -84,10 +108,6 @@ export default function SearchBar() {
                 </div>
             </div>
 
-            {activeSlowFilters.length > 0 && (
-                <FilterPanel filterItems={activeSlowFilters} toggleSelection={activeSlowFilterOnClick} />
-            )}
-
             <div className="flex flex-row flex-wrap gap-2">
                 <BooleanQuickFilter
                     name={myFavouriteFilter.name}
@@ -112,9 +132,21 @@ export default function SearchBar() {
                 />
             </div>
 
+            {(activeSlowFilters.length > 0 || showFilter) && (
+                <div className=" flex flex-row items-center">
+                    <h3 className="my-1 mr-2 font-bold">Active Filters</h3>
+                    <FilterPanel filterItems={activeSlowFilters} toggleSelection={activeSlowFilterOnClick} />
+                </div>
+            )}
+
             {showFilter && (
                 <div className="flex flex-col gap-4 rounded-md border border-black p-2">
-                    <FilterPanel title="Genres" filterItems={genreFilters} toggleSelection={genreFilterOnClick} />
+                    <FilterPanel title="Misc" filterItems={[adultFilter]} toggleSelection={adultFilterOnClick} />
+                    <FilterPanel
+                        title="Genres"
+                        filterItems={displayGenreFilters}
+                        toggleSelection={genreFilterOnClick}
+                    />
                     <FilterPanel
                         title="Tags"
                         filterItems={displayTagFilters}
@@ -144,11 +176,11 @@ function QuickFilter<T extends string>({
                 {displayMap ? displayMap[name] : name.toLowerCase().replaceAll("_", " ")}
                 <MdExpandMore className="ml-2 inline-block rounded-md bg-gray-600" size="1.2em" />
             </span>
-            <dropdown.List className="bg-gray-500 text-gray-100">
+            <dropdown.List className="bg-gray-500 text-gray-100 min-w-full">
                 {names.map((name) => (
                     <div
                         key={name}
-                        className="rounded-md px-2 capitalize hover:bg-gray-400"
+                        className="rounded-md px-2 capitalize hover:bg-gray-400 min-w-full"
                         onClick={() => onNameClick(name)}>
                         {displayMap ? displayMap[name] : name.toLowerCase().replaceAll("_", " ")}
                     </div>
@@ -215,7 +247,9 @@ function FilterLabel<T extends FilterItem>({ item, toggleSelection }: { item: T;
                 "h-fit rounded-md bg-gray-500 px-2 py-1 text-gray-300 hover:cursor-pointer",
                 item.active && "bg-gray-600 hover:bg-gray-500",
                 !item.active && "bg-gray-500 hover:bg-gray-600",
-                !item.active && item.isAdult && "bg-gray-400 hover:bg-gray-600"
+                !item.active && item.isAdult && "bg-gray-400 hover:bg-gray-600",
+                item.type === "clearAll" &&
+                    "bg-gray-400 animate-in fade-in-0 slide-in-from-left-8 duration-200 hover:bg-gray-600"
             )}
             onClick={() => toggleSelection(item)}>
             {item.name}

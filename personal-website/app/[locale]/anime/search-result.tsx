@@ -87,7 +87,7 @@ export default function SearchResult() {
 
 function Card({ data }: { data: SectionMedia }) {
     return (
-        <div>
+        <div className="group hover:cursor-pointer">
             <div className="max-w-36 w-24 animate-in fade-in-50 slide-in-from-top-6 duration-150 sm:w-36">
                 <div className="relative h-36 w-full sm:h-52">
                     <ProgressiveImage
@@ -96,10 +96,10 @@ function Card({ data }: { data: SectionMedia }) {
                         sizes="(min-width: 1024px) 480px, 320px"
                         alt="image"
                         className="rounded-md object-cover object-center"
-                        fallback={<div className="h-52 w-36 rounded-md bg-gray-500" />}
+                        fallback={<div className="h-36 w-24 rounded-md bg-gray-500 sm:h-52 sm:w-36" />}
                     />
                 </div>
-                <span className="line-clamp-4 break-all">
+                <span className="line-clamp-4 break-all font-semibold group-hover:text-purple-600">
                     {data.title?.english || data.title?.romaji || data.title?.native}
                 </span>
             </div>
@@ -110,8 +110,8 @@ function Card({ data }: { data: SectionMedia }) {
 function PlaceholderCard() {
     return (
         <div>
-            <div className="max-w-36 w-36 animate-in slide-in-from-top-6 duration-150">
-                <div className="h-52 rounded-md bg-gray-400" />
+            <div className="max-w-36 w-24 animate-in slide-in-from-top-6 duration-150 sm:w-36">
+                <div className="h-36 rounded-md bg-gray-400 sm:h-52" />
                 <span className="inline-block h-4 w-full rounded-md bg-gray-400"></span>
             </div>
         </div>

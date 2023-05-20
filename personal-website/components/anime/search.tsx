@@ -4,11 +4,11 @@ import { useDebounce } from "react-use";
 import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite";
 import { useAnimeFastFilters } from "./fast-filters";
 import { FetchSearchParams, PageInfoItem, SectionMedia } from "./graphql";
-import { useMyAnimeCollection } from "./my-collection";
+import { useMyAnimeCollection } from "./collections";
 import { Page, fetchSearchPage } from "./query";
 import { GenreFilterItem, TagFilterItem, useAnimeSlowFilters } from "./slow-filters";
 
-export type FilterType = "genre" | "tag" | "type";
+export type FilterType = "genre" | "tag" | "type" | "adult" | "clearAll";
 
 export interface FilterItem {
     name: string;
@@ -28,8 +28,6 @@ const SearchContext = React.createContext<SearchContextValue>(null!);
 
 export function AnimeSearchProvider({ children }: { children: React.ReactNode }) {
     const [searchString, setSearchString] = useState<string>("");
-    const [debouncedSearchString, setDebouncedSearchString] = useState<string>("");
-    useDebounce(() => startTransition(() => setDebouncedSearchString(searchString)), 500, [searchString]);
     const { genreFilters, tagFilters } = useAnimeSlowFilters();
     const { typeFilter, sortFilter, countryFilter, myFavouriteFilter } = useAnimeFastFilters();
 
@@ -46,43 +44,53 @@ export function AnimeSearchProvider({ children }: { children: React.ReactNode })
     const { favourites } = useMyAnimeCollection();
     const [favIdsToFilter, setFavIdsToFilter] = useState<Set<number> | undefined>(undefined);
 
+    const [debouncedParams, setDebouncedParams] = useState<FetchSearchParams>({
+        searchString,
+        activeGenreFilters,
+        activeTagFilters,
+        typeFilter,
+        sortFilter,
+        countryFilter,
+        favIdsToFilter,
+        page: 1,
+    });
+    useDebounce(
+        () =>
+            startTransition(() =>
+                setDebouncedParams({
+                    searchString,
+                    activeGenreFilters,
+                    activeTagFilters,
+                    typeFilter,
+                    sortFilter,
+                    countryFilter,
+                    favIdsToFilter,
+                    page: 1,
+                })
+            ),
+        500,
+        [searchString, activeGenreFilters, activeTagFilters, typeFilter, sortFilter, countryFilter, favIdsToFilter]
+    );
+
     const getSearchKey = useCallback(
         (prevPage: number, prevData: Page<SectionMedia[]>): FetchSearchParams | null => {
-            const params = {
-                searchString: debouncedSearchString,
-                activeGenreFilters,
-                activeTagFilters,
-                typeFilter,
-                sortFilter,
-                countryFilter,
-                favIdsToFilter,
-            };
-
             if (prevData && !prevData.pageInfo?.hasNextPage) {
                 return null;
             }
 
             if (prevPage === 0) {
                 return {
-                    ...params,
+                    ...debouncedParams,
                     page: 1,
                 };
             } else {
                 return {
-                    ...params,
+                    ...debouncedParams,
                     page: prevPage + 1,
                 };
             }
         },
-        [
-            debouncedSearchString,
-            activeGenreFilters,
-            activeTagFilters,
-            typeFilter,
-            sortFilter,
-            countryFilter,
-            favIdsToFilter,
-        ]
+        [debouncedParams]
     );
 
     const searchFetcher = useCallback((params: FetchSearchParams) => {

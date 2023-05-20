@@ -56,12 +56,11 @@ type CoverImage = {
 type Image = CoverImage;
 
 ///////////////////////////////////////////////// section media: media but only contains necessary items for showing it in the anime landing page
-const sectionMediaFields = `id ${title} siteUrl startDate{${dateFields}} ${coverImage}`;
+const sectionMediaFields = `id ${title} siteUrl ${coverImage}`;
 export interface SectionMedia {
     id: number;
     title?: Title;
     siteUrl?: string;
-    startDate?: Date;
     coverImage?: CoverImage;
 }
 
@@ -157,7 +156,7 @@ export interface StaffsItem {
 }
 
 ///////////////////////////////////////////////// media
-const mediaFields = `${sectionMediaFields} trailer{id site thumbnail} description status season seasonYear episodes synonyms meanScore bannerImage genres hashtag tags{name description} nextAiringEpisode{id airingAt timeUntilAiring episode} ${relations} ${characters(1)} ${staffs(1)}`;
+const mediaFields = `${sectionMediaFields} trailer{id site thumbnail} startDate{${dateFields}} description status season seasonYear episodes synonyms meanScore bannerImage genres hashtag tags{name description} nextAiringEpisode{id airingAt timeUntilAiring episode} ${relations} ${characters(1)} ${staffs(1)}`;
 
 type AnimeStatus = "FINISHED" | "RELEASING" | "NOT_YET_RELEASED" | "CANCELLED" | "HIATUS";
 
@@ -227,7 +226,7 @@ const mediasSearch = (mediaSearchParams: Omit<FetchSearchParams, "page">) => {
     const queryItems = [searchQuery, genreQuery, tagQuery, typeQuery, sortQuery, countryQuery, favouriteQuery].filter(item => !!item).join(",");
     const mediaQuery = queryItems.length > 0 ? `media(${queryItems})` : "media";
 
-    return `${mediaQuery}{${mediaFields}}`
+    return `${mediaQuery}{${sectionMediaFields}}`
 }
 
 export interface Media<T> {
@@ -240,6 +239,7 @@ export interface MediaItem extends SectionMedia {
         site?: string;
         thumbnail: string;
     };
+    startDate?: Date;
     description?: string;
     status?: AnimeStatus;
     season?: AnimeSeason;

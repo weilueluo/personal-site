@@ -39,7 +39,7 @@ const HEADERS = {
 };
 
 async function fetchAnilist<T>(query: string): Promise<T> {
-    console.log("Fetching Anilist data", query);
+    console.log("Fetching Anilist data");
 
     const options = {
         method: "POST",
