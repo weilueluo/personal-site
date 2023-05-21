@@ -99,7 +99,7 @@ function Card({ data }: { data: SectionMedia }) {
                         fallback={<div className="h-36 w-24 rounded-md bg-gray-500 sm:h-52 sm:w-36" />}
                     />
                 </div>
-                <span className="line-clamp-4 break-all font-semibold group-hover:text-purple-600">
+                <span className="line-clamp-4 break-words font-semibold group-hover:text-purple-600">
                     {data.title?.english || data.title?.romaji || data.title?.native}
                 </span>
             </div>
