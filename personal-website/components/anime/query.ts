@@ -80,8 +80,6 @@ export async function fetchMyAnimeCollection(chunk: number): Promise<Page<MediaL
     const graphqlQuery = AnilistGraphqlQuery.fetchMyAnimeCollection(MY_USER_ID, chunk, "ANIME", 500);
 
     const response = await fetchAnilist<MediaListCollection>(graphqlQuery);
-    console.log("fetchMyAnimeCollectionResponse", response);
-
 
     const pageInfo: PageInfoItem = {
         total: undefined,

@@ -3,7 +3,9 @@ import { SectionMedia } from "@/components/anime/graphql";
 import { useAnimeSearch } from "@/components/anime/search";
 import ProgressiveImage from "@/components/ui/Image";
 import { tm } from "@/shared/utils";
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React, { ComponentPropsWithoutRef, useEffect, useState } from "react";
 import { VscLoading } from "react-icons/vsc";
 
 export default function SearchResult() {
@@ -42,8 +44,11 @@ export default function SearchResult() {
 
     const [collapse, setCollapse] = useState(false);
 
+    const pathname = usePathname();
+
     return (
         <>
+            {/* loading header */}
             <div className="my-2 flex flex-row justify-between">
                 <h3 className="text-xl font-bold capitalize">
                     Results
@@ -56,18 +61,24 @@ export default function SearchResult() {
                     {collapse ? "expand" : "collpase"}
                 </button>
             </div>
+
+            {/* content */}
             <div className="relative">
+                {/* image cards */}
                 <ul
                     className={tm(
                         collapse && "flex w-full flex-row gap-2 overflow-x-auto",
                         !collapse && "my-grid-cols-3 md:my-grid-cols-4 lg:my-grid-cols-5 grid justify-between"
                     )}>
-                    {!mergedData && Array.from(Array(15).keys()).map((i) => <PlaceholderCard key={i} />)}
+                    {(swrAnimeResponse.isLoading || swrAnimeResponse.isValidating) && Array.from(Array(15).keys()).map((i) => <PlaceholderCard key={i} />)}
                     {mergedData.map((data) => (
-                        <Card key={data.id} data={data} />
+                        <Link href={`${pathname}/${data.id}`} key={data.id} prefetch={false}>
+                            <Card data={data} />
+                        </Link>
                     ))}
                 </ul>
 
+                {/* load more info / button */}
                 <div className="flex w-full justify-center">
                     <button
                         className="hover-shadow px-2 py-1"
@@ -85,9 +96,13 @@ export default function SearchResult() {
     );
 }
 
-function Card({ data }: { data: SectionMedia }) {
+interface CardProps extends ComponentPropsWithoutRef<"div"> {
+    data: SectionMedia;
+}
+const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
+    const { data, className } = props;
     return (
-        <div className="group hover:cursor-pointer">
+        <div ref={ref} className={tm("group hover:cursor-pointer", className)}>
             <div className="max-w-36 w-24 animate-in fade-in-50 slide-in-from-top-6 duration-150 sm:w-36">
                 <div className="relative h-36 w-full sm:h-52">
                     <ProgressiveImage
@@ -105,7 +120,8 @@ function Card({ data }: { data: SectionMedia }) {
             </div>
         </div>
     );
-}
+});
+Card.displayName = "Card";
 
 function PlaceholderCard() {
     return (

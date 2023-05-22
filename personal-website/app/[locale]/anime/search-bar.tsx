@@ -93,7 +93,7 @@ export default function SearchBar() {
                     <FaSearch />
                 </div>
                 <input
-                    className="grow bg-transparent py-1 focus:outline-none font-semibold"
+                    className="grow bg-transparent py-1 font-semibold focus:outline-none"
                     placeholder="do you want to search something?"
                     onChange={(e) => setSearchString(e.target.value)}
                 />
@@ -176,11 +176,11 @@ function QuickFilter<T extends string>({
                 {displayMap ? displayMap[name] : name.toLowerCase().replaceAll("_", " ")}
                 <MdExpandMore className="ml-2 inline-block rounded-md bg-gray-600" size="1.2em" />
             </span>
-            <dropdown.List className="bg-gray-500 text-gray-100 min-w-full">
+            <dropdown.List className="min-w-full bg-gray-500 text-gray-100">
                 {names.map((name) => (
                     <div
                         key={name}
-                        className="rounded-md px-2 capitalize hover:bg-gray-400 min-w-full"
+                        className="min-w-full rounded-md px-2 capitalize hover:bg-gray-400"
                         onClick={() => onNameClick(name)}>
                         {displayMap ? displayMap[name] : name.toLowerCase().replaceAll("_", " ")}
                     </div>

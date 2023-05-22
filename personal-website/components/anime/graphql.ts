@@ -1,4 +1,4 @@
-import { CountryFilter, MyFavoriteFilter, SortFilter, TypeFilter, TypeFilterName } from "./fast-filters";
+import { CountryFilter, SortFilter, TypeFilter, TypeFilterName } from "./fast-filters";
 import { GenreFilterItem, TagFilterItem } from "./slow-filters";
 
 export const MY_USER_ID = 6044692;
@@ -66,7 +66,7 @@ export interface SectionMedia {
 
 ///////////////////////////////////////////////// relations
 const relations = `relations{edges{id relationType node{id siteUrl ${title} ${coverImage}}} ${pageInfo}}`;
-type Relation = {
+export type Relation = {
     id: number;
     relationType: string;
     node: {
@@ -76,7 +76,7 @@ type Relation = {
         siteUrl?: string;
     };
 };
-type Relations = {
+export type Relations = {
     edges?: Relation[];
     pageInfo: PageInfoItem;
 };
@@ -206,7 +206,7 @@ const mediasSearch = (mediaSearchParams: Omit<FetchSearchParams, "page">) => {
         typeFilter,
         sortFilter,
         countryFilter,
-        favIdsToFilter } = mediaSearchParams;
+        idsToFilter } = mediaSearchParams;
 
     const searchQuery = searchString ? `search:"${searchString}"` : undefined;
 
@@ -221,9 +221,9 @@ const mediasSearch = (mediaSearchParams: Omit<FetchSearchParams, "page">) => {
 
     const sortQuery = sortFilter ? `sort:[${sortFilter.name.toUpperCase()}]` : undefined;
 
-    const favouriteQuery = (favIdsToFilter) ? `id_in:[${[...favIdsToFilter].join(",")}]` : undefined;
+    const filterIdsQuery = (idsToFilter) ? `id_in:[${[...idsToFilter].join(",")}]` : undefined;
 
-    const queryItems = [searchQuery, genreQuery, tagQuery, typeQuery, sortQuery, countryQuery, favouriteQuery].filter(item => !!item).join(",");
+    const queryItems = [searchQuery, genreQuery, tagQuery, typeQuery, sortQuery, countryQuery, filterIdsQuery].filter(item => !!item).join(",");
     const mediaQuery = queryItems.length > 0 ? `media(${queryItems})` : "media";
 
     return `${mediaQuery}{${sectionMediaFields}}`
@@ -261,7 +261,7 @@ export interface MediaItem extends SectionMedia {
         episode: number;
     };
     characters?: CharactersItem;
-    staff?: Staffs;
+    staff?: StaffsItem;
     relations?: Relations;
 }
 
@@ -343,7 +343,7 @@ export interface FetchSearchParams {
     typeFilter: TypeFilter;
     sortFilter: SortFilter;
     countryFilter: CountryFilter;
-    favIdsToFilter: Set<number> | undefined;
+    idsToFilter: Set<number> | undefined;
     page: number;
 }
 

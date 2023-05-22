@@ -2,9 +2,9 @@
 import React, { startTransition, useCallback, useContext, useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite";
+import { useMyAnimeCollection } from "./collections";
 import { useAnimeFastFilters } from "./fast-filters";
 import { FetchSearchParams, PageInfoItem, SectionMedia } from "./graphql";
-import { useMyAnimeCollection } from "./collections";
 import { Page, fetchSearchPage } from "./query";
 import { GenreFilterItem, TagFilterItem, useAnimeSlowFilters } from "./slow-filters";
 
@@ -42,7 +42,7 @@ export function AnimeSearchProvider({ children }: { children: React.ReactNode })
     }, [tagFilters]);
 
     const { favourites } = useMyAnimeCollection();
-    const [favIdsToFilter, setFavIdsToFilter] = useState<Set<number> | undefined>(undefined);
+    const [idsToFilter, setIdsToFilter] = useState<Set<number> | undefined>(undefined);
 
     const [debouncedParams, setDebouncedParams] = useState<FetchSearchParams>({
         searchString,
@@ -51,7 +51,7 @@ export function AnimeSearchProvider({ children }: { children: React.ReactNode })
         typeFilter,
         sortFilter,
         countryFilter,
-        favIdsToFilter,
+        idsToFilter,
         page: 1,
     });
     useDebounce(
@@ -64,12 +64,12 @@ export function AnimeSearchProvider({ children }: { children: React.ReactNode })
                     typeFilter,
                     sortFilter,
                     countryFilter,
-                    favIdsToFilter,
+                    idsToFilter,
                     page: 1,
                 })
             ),
         500,
-        [searchString, activeGenreFilters, activeTagFilters, typeFilter, sortFilter, countryFilter, favIdsToFilter]
+        [searchString, activeGenreFilters, activeTagFilters, typeFilter, sortFilter, countryFilter, idsToFilter]
     );
 
     const getSearchKey = useCallback(
@@ -129,9 +129,9 @@ export function AnimeSearchProvider({ children }: { children: React.ReactNode })
 
     useEffect(() => {
         if (myFavouriteFilter.active) {
-            setFavIdsToFilter(favourites);
+            setIdsToFilter(favourites);
         } else {
-            setFavIdsToFilter(undefined);
+            setIdsToFilter(undefined);
         }
     }, [favourites, myFavouriteFilter]);
 

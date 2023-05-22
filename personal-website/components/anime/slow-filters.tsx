@@ -117,17 +117,6 @@ export default function AnimeSlowFiltersProvider({ children }: { children: React
         }
     };
 
-    // init filters on mount
-    // useEffect(() => {
-    //     fetchFilters().then((data) => {
-    //         setGenreFilters(
-    //             data.GenreCollection.
-    //         );
-    //         setTagFilters(
-    //             data.MediaTagCollection
-    //         );
-    //     });
-    // }, [setGenreFilters, setTagFilters]);
 
     return (
         <AnimeSlowFilterContext.Provider
