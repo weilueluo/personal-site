@@ -94,14 +94,15 @@ const yearMonthday = `year month day`;
 const mediumLargeFields = `medium large`;
 
 ///////////////////////////////////////////////// characters
-const characterFields = `id role node{id ${name} image{medium large} description gender dateOfBirth{${yearMonthday}} bloodType siteUrl} voiceActors (language: JAPANESE, sort: ROLE){id ${name} description image{ ${mediumLargeFields}} gender age}`;
-type VoiceActor = {
+const characterFields = `id role node{id ${name} image{medium large} description gender dateOfBirth{${yearMonthday}} bloodType siteUrl} voiceActors (language: JAPANESE, sort: ROLE){id ${name} description image{ ${mediumLargeFields}} gender age siteUrl}`;
+export type VoiceActor = {
     id: number;
     name?: Name;
     description?: string;
     image?: Image;
     gender?: string;
     age?: number;
+    siteUrl?: string;
 };
 export interface Character {
     id: number;

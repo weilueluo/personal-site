@@ -1,35 +1,44 @@
+"use client";
+import { tm } from "@/shared/utils";
 import Image, { ImageProps } from "next/image";
 import { useState } from "react";
 
-export type ProgressiveImageProps = Omit<ImageProps, "src"> & {
+export type ProgressiveImageProps = Omit<ImageProps, "src" | "loading"> & {
     srcs: (string | undefined)[];
+    loading?: JSX.Element;
     fallback?: JSX.Element;
 };
 
 const ProgressiveImage = (props: ProgressiveImageProps) => {
-    let { srcs, alt, fallback, ...rest } = props;
-    srcs = srcs.filter((src) => !!src); // filter falsy url
+    let { srcs: srcs_, alt, loading, fallback, className, ...rest } = props;
+    const srcs = srcs_.filter((src) => !!src) as string[]; // filter falsy url
+
     const [imIndex, setImIndex] = useState(0);
+    const [loaded, setLoaded] = useState(false);
 
     if (srcs.length <= 0) {
-        console.warn(`no proper image source given: ${srcs}`);
+        console.warn(`Progressive Image: No proper image source given: ${srcs}`);
+        return fallback || null;
     }
 
-    const [loaded, setLoaded] = useState(false);
     return (
         <>
-            {!loaded && fallback}
-            <Image
-                src={srcs[imIndex] || "#"}
-                onLoadingComplete={() => {
-                    setLoaded(true);
-                    if (imIndex < srcs.length - 1) {
-                        setImIndex(imIndex + 1);
-                    }
-                }}
-                alt={alt}
-                {...rest}
-            />
+            <div className={tm("relative", className)}>
+                {!loaded && (loading || null)}
+
+                <Image
+                    className={"object-cover object-center"}
+                    src={srcs[imIndex]}
+                    onLoadingComplete={() => {
+                        setLoaded(true);
+                        if (imIndex < srcs.length - 1) {
+                            setImIndex(imIndex + 1);
+                        }
+                    }}
+                    alt={alt}
+                    {...rest}
+                />
+            </div>
         </>
     );
 };

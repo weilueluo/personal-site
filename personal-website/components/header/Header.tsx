@@ -46,7 +46,7 @@ const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ clas
     return (
         <header className={tm("w-full")} ref={ref} {...props}>
             <nav className="flex w-full flex-row flex-wrap justify-between gap-2">
-                <List className="flex-row gap-6">
+                <List className="flex-row gap-2 md:gap-6">
                     <li
                         className={tm(
                             listItemClassName,

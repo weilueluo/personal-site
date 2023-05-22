@@ -104,16 +104,14 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
     return (
         <div ref={ref} className={tm("group hover:cursor-pointer", className)}>
             <div className="max-w-36 w-24 animate-in fade-in-50 slide-in-from-top-6 duration-150 sm:w-36">
-                <div className="relative h-36 w-full sm:h-52">
                     <ProgressiveImage
                         srcs={[data.coverImage?.medium, data.coverImage?.large]}
                         fill={true}
                         sizes="(min-width: 1024px) 480px, 320px"
                         alt="image"
-                        className="rounded-md object-cover object-center"
-                        fallback={<div className="h-36 w-24 rounded-md bg-gray-500 sm:h-52 sm:w-36" />}
+                        className="rounded-md relative h-36 w-full sm:h-52 overflow-hidden"
+                        loading={<div className="h-36 w-24 rounded-md bg-gray-500 sm:h-52 sm:w-36" />}
                     />
-                </div>
                 <span className="line-clamp-4 break-words font-semibold group-hover:text-purple-600">
                     {data.title?.english || data.title?.romaji || data.title?.native}
                 </span>
