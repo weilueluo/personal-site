@@ -1,7 +1,12 @@
-import React, { ComponentPropsWithoutRef, ElementRef } from "react";
+"use client"
+
+import React, { ComponentPropsWithoutRef, ElementRef, useState } from "react";
 import { Character, Relation, Staff, VoiceActor } from "../graphql/graphql";
 import { useAnimeDetails } from "./context";
-import { Card, Section, Cards } from "./primitives";
+import { Card, Section, Cards, Label } from "./primitives";
+import Link from "next/link";
+import ProgressiveImage from "@/components/ui/Image";
+import LoadingItem from "@/components/ui/loading/loading";
 
 function RelationCard({ data }: { data: Relation }) {
     const title = data.relationType?.replace("_", " ");
@@ -115,12 +120,79 @@ export function Trailer() {
         <Section title="Trailer" className="h-fit">
             <div className="relative h-0 pb-[56.25%]">
                 <iframe
-                    className="absolute left-0 top-0 h-full w-full animate-in slide-in-from-right-4 fade-in-0"
+                    className="absolute left-0 top-0 h-full w-full animate-in fade-in-0 slide-in-from-right-4"
                     src={videoSource}
                     title="YouTube video player"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen={true}></iframe>
             </div>
         </Section>
+    ) : null;
+}
+
+export function Title() {
+    const data = useAnimeDetails();
+
+    const titles = [data?.title?.english, data?.title?.native, data?.title?.romaji].filter((title) => !!title);
+    const mainTitle = titles[0];
+    const subTitles = [...new Set(titles.slice(1).filter((title) => title !== mainTitle))];
+
+    const url = data?.siteUrl;
+
+    const [showOtherNames, setShowOtherNames] = useState(false);
+    const synonyms = data?.synonyms || [];
+
+    return (
+        <div className="flex flex-col flex-wrap gap-2">
+            <Link href={url || "#"} target="_blank">
+                <h1 className="text-2xl font-bold hover:cursor-pointer hover:underline">{mainTitle}</h1>
+            </Link>
+            <div className="flex flex-row flex-wrap gap-2 text-sm">
+                {subTitles.map((title) => (
+                    <Label url={url} key={title} className=" bg-slate-200 hover:cursor-pointer hover:underline">
+                        {title}
+                    </Label>
+                ))}
+                {showOtherNames &&
+                    synonyms.map((title) => (
+                        <Label url={url} key={title} className=" bg-slate-200 hover:cursor-pointer hover:underline">
+                            {title}
+                        </Label>
+                    ))}
+                {synonyms && synonyms.length > 0 && (
+                    <Label
+                        key={"otherName"}
+                        className=" bg-slate-200 hover:cursor-pointer hover:underline"
+                        onClick={() => setShowOtherNames(!showOtherNames)}>
+                        {showOtherNames ? "hide" : "show more..."}
+                    </Label>
+                )}
+            </div>
+        </div>
+    );
+}
+
+export function Description() {
+    const data = useAnimeDetails();
+
+    return data?.description ? (
+        <p dangerouslySetInnerHTML={{ __html: data.description }} className=" font-semibold" />
+    ) : null;
+}
+
+export function CoverImage() {
+    const data = useAnimeDetails();
+
+    return data?.coverImage ? (
+        <div className="w-full">
+            <ProgressiveImage
+                srcs={[data?.coverImage?.medium, data?.coverImage?.large]}
+                fill={true}
+                sizes="(min-width: 1024px) 480px, 320px"
+                alt="image"
+                className="hidden h-56 overflow-hidden rounded-md md:block"
+                loading={<LoadingItem className="h-56 w-full" />}
+            />
+        </div>
     ) : null;
 }

@@ -1,7 +1,6 @@
-import { timeSinceSeconds, tm } from "@/shared/utils";
-import React, { ElementRef, ComponentPropsWithoutRef } from "react";
+import { timeSinceSeconds } from "@/shared/utils";
 import { useAnimeDetails } from "./context";
-import { FullLabel, Labels, Label } from "./primitives";
+import { FullLabel, Label, Labels } from "./primitives";
 
 export function Status() {
     const data = useAnimeDetails();

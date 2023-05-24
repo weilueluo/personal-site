@@ -5,6 +5,8 @@ import AnimeSlowFiltersProvider from "@/components/anime/slow-filters";
 import SearchBar from "./search-bar";
 import SearchResult from "./search-result";
 
+// TODO: fix: do not use async server component
+
 export default function Page() {
     return (
         // @ts-ignore async server component

@@ -48,7 +48,7 @@ Card.displayName = "Card";
 export const Cards = React.forwardRef<ElementRef<"div">, ComponentPropsWithoutRef<"div">>(
     ({ children, className, ...rest }, ref) => {
         return (
-            <div className={tm("flex flex-row gap-2 overflow-x-auto overflow-y-hidden animate-in slide-in-from-right-4 fade-in-0", className)} ref={ref} {...rest}>
+            <div className={tm("flex flex-row gap-2 overflow-x-auto overflow-y-hidden", className)} ref={ref} {...rest}>
                 {children}
             </div>
         );
@@ -76,7 +76,7 @@ Section.displayName = "Section";
 export const FullLabel = React.forwardRef<ElementRef<"div">, ComponentPropsWithoutRef<"div">>(
     ({ children, className, ...rest }, ref) => {
         return (
-            <div ref={ref} className={tm("w-full rounded-md text-center font-semibold animate-in slide-in-from-top-4 fade-in-0", className)} {...rest}>
+            <div ref={ref} className={tm("w-full rounded-md text-center font-semibold", className)} {...rest}>
                 {children}
             </div>
         );
@@ -94,7 +94,7 @@ export interface LabelProps extends ComponentPropsWithoutRef<"span"> {
 export const Label = React.forwardRef<ElementRef<"span">, LabelProps>(({ children, className, url, ...rest }, ref) => {
     const label = (
         <span
-            className={tm("whitespace-nowrap rounded-md px-2 font-semibold md:whitespace-normal animate-in slide-in-from-left-4 fade-in-0", className)}
+            className={tm("whitespace-nowrap rounded-md px-2 font-semibold md:whitespace-normal", className)}
             ref={ref}
             {...rest}>
             {children}

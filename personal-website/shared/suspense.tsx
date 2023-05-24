@@ -20,8 +20,6 @@ export function suspensify<T>(promise: Promise<T>) {
         }
     );
 
-    console.log("suspensify init end", promise, suspender);
-
     const read = () => {
         switch (status) {
             case "pending":
