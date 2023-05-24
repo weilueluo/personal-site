@@ -1,5 +1,5 @@
 import React, { ComponentPropsWithoutRef, ElementRef } from "react";
-import { Character, Relation, Staff, VoiceActor } from "../graphql";
+import { Character, Relation, Staff, VoiceActor } from "../graphql/graphql";
 import { useAnimeDetails } from "./context";
 import { Card, Section, Cards } from "./primitives";
 

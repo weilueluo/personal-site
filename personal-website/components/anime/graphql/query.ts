@@ -59,13 +59,13 @@ async function fetchAnilist<T>(query: string, options = {}): Promise<T> {
                         throw new Error(JSON.stringify(json.errors))
                     }
                     if (json.status >= 400) {
-                        throw new Error(json.message);
+                        throw new Error(JSON.stringify(json));
                     }
                     return json.data;
                 })
                 .then((data) => {
                     console.log("Received Anilist data");
-                    // console.log(data);
+                    console.log(data);
                     return data;
                 })
         );

@@ -1,11 +1,14 @@
+"use client";
 import { AnimeDetailsProvider } from "@/components/anime/[id]/context";
 import AnimeDetails from "@/components/anime/[id]/details";
+import { fetchAnilistMedia } from "@/components/anime/graphql/query";
+import { suspensify } from "@/shared/suspense";
+
 export default async function Page({ params }: { params: { id: number } }) {
-    // return <Loading />;
+    const animeDetails = suspensify(fetchAnilistMedia(params.id));
 
     return (
-        // @ts-ignore async server component
-        <AnimeDetailsProvider animeId={params.id}>
+        <AnimeDetailsProvider animeDetails={animeDetails}>
             <AnimeDetails />
         </AnimeDetailsProvider>
     );

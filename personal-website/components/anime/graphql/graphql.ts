@@ -1,5 +1,5 @@
-import { CountryFilter, SortFilter, TypeFilter, TypeFilterName } from "./fast-filters";
-import { GenreFilterItem, TagFilterItem } from "./slow-filters";
+import { CountryFilter, SortFilter, TypeFilter, TypeFilterName } from "../fast-filters";
+import { GenreFilterItem, TagFilterItem } from "../slow-filters";
 
 export const MY_USER_ID = 6044692;
 export const PAGE_SIZE = 30;
@@ -156,8 +156,23 @@ export interface StaffsItem {
     pageInfo?: PageInfoItem;
 }
 
+///////////////////////////////////////////////// external links
+const externalLinks = `externalLinks{id url site type language icon color}`;
+export interface ExternalLink {
+    id: number;
+    url?: string;
+    site?: string;
+    type?: string;
+    language?: string;
+    icon?: string;
+    color?: string;
+}
+export interface ExternalLinks {
+    externalLinks: ExternalLink[];
+}
+
 ///////////////////////////////////////////////// media
-const mediaFields = `${sectionMediaFields} trailer{id site thumbnail} startDate{${dateFields}} description status season seasonYear episodes synonyms meanScore bannerImage genres hashtag tags{name description} nextAiringEpisode{id airingAt timeUntilAiring episode} ${relations} ${characters(1)} ${staffs(1)}`;
+const mediaFields = `${sectionMediaFields} trailer{id site thumbnail} startDate{${dateFields}} description status season seasonYear episodes synonyms meanScore bannerImage genres hashtag tags{name description} nextAiringEpisode{id airingAt timeUntilAiring episode} ${relations} ${characters(1)} ${staffs(1)} ${externalLinks}`;
 
 type AnimeStatus = "FINISHED" | "RELEASING" | "NOT_YET_RELEASED" | "CANCELLED" | "HIATUS";
 
@@ -264,6 +279,7 @@ export interface MediaItem extends SectionMedia {
     characters?: CharactersItem;
     staff?: StaffsItem;
     relations?: Relations;
+    externalLinks?: ExternalLink[];
 }
 
 const mediasCharacterOnly = (id: number | string, page: number | string) =>

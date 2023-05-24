@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { MediaTag } from "./graphql";
+import { MediaTag } from "./graphql/graphql";
 
 export interface MyAnimeCollectionContext {
     favourites: Set<number>;

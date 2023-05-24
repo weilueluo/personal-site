@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { useImmer } from "use-immer";
 import { useTagsAndGenres } from "./collections";
-import { MediaTag } from "./graphql";
+import { MediaTag } from "./graphql/graphql";
 import { FilterItem } from "./search";
 
 export interface ClearAllFilter extends FilterItem {}

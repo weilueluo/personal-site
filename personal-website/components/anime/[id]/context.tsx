@@ -1,19 +1,19 @@
 "use client";
 import React, { useContext } from "react";
-import useSWR from "swr";
-import { MediaItem } from "../graphql";
-import { fetchAnilistMedia } from "../query";
+import { MediaItem } from "../graphql/graphql";
 
 type AnimeDetailsContextValue = MediaItem | undefined;
 
 const AnimeDetailsContext = React.createContext<AnimeDetailsContextValue>(undefined!);
 
-export async function AnimeDetailsProvider(props: { animeId: number; children: React.ReactNode }) {
-    // console.log("AnimeDetailsProvider", props);
-
-    const { animeId, children } = props;
-    const data = await fetchAnilistMedia(animeId);
-
+export function AnimeDetailsProvider({
+    animeDetails,
+    children,
+}: {
+    animeDetails: { read: () => MediaItem | undefined };
+    children: React.ReactNode;
+}) {
+    const data = animeDetails.read();
     return <AnimeDetailsContext.Provider value={data}>{children}</AnimeDetailsContext.Provider>;
 }
 

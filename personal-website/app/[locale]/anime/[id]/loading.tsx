@@ -1,9 +1,8 @@
-import Separator from "@/components/ui/Separator";
 import LoadingItem from "@/components/ui/loading/loading";
 import { tm } from "@/shared/utils";
 import React from "react";
 
-export default function loading() {
+export default function Loading() {
     return (
         <div className="flex flex-col gap-4">
             <div>
@@ -12,10 +11,10 @@ export default function loading() {
             {/* banner image */}
             <LoadingItem className="h-40 w-full" />
 
-            <div className="flex flex-col md:grid grid-cols-4 grid-rows-1 gap-4">
+            <div className="flex grid-cols-4 grid-rows-1 flex-col gap-4 md:grid">
                 {/* side panel */}
                 <div className="flex flex-col gap-4">
-                    <div className="h-56 w-full rounded-md bg-gray-500 hidden md:block" />
+                    <div className="hidden h-56 w-full rounded-md bg-gray-500 md:block" />
                     <div className="flex flex-col gap-2">
                         <LoadingItem className="h-6 w-full bg-green-400" />
                         <LoadingItem className="h-6 w-full bg-[rgba(57,119,219,0.8)]" />
@@ -29,7 +28,7 @@ export default function loading() {
                 <div className="col-start-2 col-end-[-1] flex flex-col gap-4">
                     <div className="flex flex-col gap-2">
                         <LoadingItem className="h-8 w-36" />
-                        <div className="flex flex-row gap-2 flex-wrap">
+                        <div className="flex flex-row flex-wrap gap-2">
                             <LoadingItem className="h-6 w-24  bg-slate-200" />
                             <LoadingItem className="h-6 w-24  bg-slate-200" />
                             <LoadingItem className="h-6 w-24  bg-slate-300" />
@@ -56,7 +55,7 @@ export default function loading() {
 
 function Labels({ className }: { className?: string }) {
     return (
-        <div className="flex flex-row md:flex-wrap gap-2 pb-2 overflow-x-auto">
+        <div className="flex flex-row gap-2 overflow-x-auto pb-2 md:flex-wrap">
             {Array.from({ length: 9 }, (_, i) => (
                 <LoadingItem className={tm("h-6 w-12", className)} key={i} />
             ))}

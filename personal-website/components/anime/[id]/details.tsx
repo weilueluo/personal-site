@@ -1,4 +1,3 @@
-"use client";
 import ProgressiveImage from "@/components/ui/Image";
 import LoadingItem from "@/components/ui/loading/loading";
 import Link from "next/link";
@@ -12,14 +11,12 @@ import { Characters, Relations, Staffs, Trailer } from "./sections";
 export default function AnimeDetails() {
     const data = useAnimeDetails();
 
-    // console.log("anime details", data);
-
     if (!data) {
-        return <span>Failed to fetch anime data</span>;
+        throw new Error("Failed to fetch anime data");
     }
 
     return (
-        <div className="flex flex-col md:gap-4">
+        <div className="flex flex-col gap-2 md:gap-4">
             <div>
                 <BackButton />
             </div>
@@ -29,7 +26,7 @@ export default function AnimeDetails() {
                 fill={true}
                 sizes="(min-width: 1024px) 1024px, 768px"
                 alt="image"
-                className=" h-40 w-full overflow-hidden rounded-md animate-in slide-in-from-top-4 fade-in-0"
+                className=" h-40 w-full overflow-hidden rounded-md"
                 loading={<div className="h-40 w-full rounded-md bg-gray-500" />}
             />
 
@@ -92,7 +89,7 @@ function Title() {
                 {synonyms && synonyms.length > 0 && (
                     <Label
                         key={"otherName"}
-                        className=" bg-slate-200 animate-in fade-in-0 slide-in-from-left-4 hover:cursor-pointer hover:underline"
+                        className=" bg-slate-200 hover:cursor-pointer hover:underline"
                         onClick={() => setShowOtherNames(!showOtherNames)}>
                         {showOtherNames ? "hide" : "show more..."}
                     </Label>
@@ -106,7 +103,7 @@ function Description() {
     const data = useAnimeDetails();
 
     return data?.description ? (
-        <p dangerouslySetInnerHTML={{ __html: data.description }} className=" font-semibold animate-in slide-in-from-bottom-4 fade-in-0" />
+        <p dangerouslySetInnerHTML={{ __html: data.description }} className=" font-semibold" />
     ) : null;
 }
 
@@ -120,7 +117,7 @@ function CoverImage() {
                 fill={true}
                 sizes="(min-width: 1024px) 480px, 320px"
                 alt="image"
-                className="hidden h-56 overflow-hidden rounded-md md:block animate-in slide-in-from-left-4 fade-in-0"
+                className="hidden h-56 overflow-hidden rounded-md md:block"
                 loading={<LoadingItem className="h-56 w-full" />}
             />
         </div>

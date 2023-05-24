@@ -4,9 +4,9 @@ import { useDebounce } from "react-use";
 import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite";
 import { useMyAnimeCollection } from "./collections";
 import { useAnimeFastFilters } from "./fast-filters";
-import { FetchSearchParams, PageInfoItem, SectionMedia } from "./graphql";
-import { Page, fetchSearchPage } from "./query";
+import { FetchSearchParams, PageInfoItem, SectionMedia } from "./graphql/graphql";
 import { GenreFilterItem, TagFilterItem, useAnimeSlowFilters } from "./slow-filters";
+import { Page, fetchSearchPage } from "./graphql/query";
 
 export type FilterType = "genre" | "tag" | "type" | "adult" | "clearAll";
 

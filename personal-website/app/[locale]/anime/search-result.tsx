@@ -1,5 +1,5 @@
 "use client";
-import { SectionMedia } from "@/components/anime/graphql";
+import { SectionMedia } from "@/components/anime/graphql/graphql";
 import { useAnimeSearch } from "@/components/anime/search";
 import ProgressiveImage from "@/components/ui/Image";
 import { tm } from "@/shared/utils";
@@ -70,7 +70,8 @@ export default function SearchResult() {
                         collapse && "flex w-full flex-row gap-2 overflow-x-auto",
                         !collapse && "my-grid-cols-3 md:my-grid-cols-4 lg:my-grid-cols-5 grid justify-between"
                     )}>
-                    {(swrAnimeResponse.isLoading || swrAnimeResponse.isValidating) && Array.from(Array(15).keys()).map((i) => <PlaceholderCard key={i} />)}
+                    {(swrAnimeResponse.isLoading || swrAnimeResponse.isValidating) &&
+                        Array.from(Array(15).keys()).map((i) => <PlaceholderCard key={i} />)}
                     {mergedData.map((data) => (
                         <Link href={`${pathname}/${data.id}`} key={data.id} prefetch={false}>
                             <Card data={data} />
@@ -104,14 +105,14 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
     return (
         <div ref={ref} className={tm("group hover:cursor-pointer", className)}>
             <div className="max-w-36 w-24 animate-in fade-in-50 slide-in-from-top-6 duration-150 sm:w-36">
-                    <ProgressiveImage
-                        srcs={[data.coverImage?.medium, data.coverImage?.large]}
-                        fill={true}
-                        sizes="(min-width: 1024px) 480px, 320px"
-                        alt="image"
-                        className="rounded-md relative h-36 w-full sm:h-52 overflow-hidden"
-                        loading={<div className="h-36 w-24 rounded-md bg-gray-500 sm:h-52 sm:w-36" />}
-                    />
+                <ProgressiveImage
+                    srcs={[data.coverImage?.medium, data.coverImage?.large]}
+                    fill={true}
+                    sizes="(min-width: 1024px) 480px, 320px"
+                    alt="image"
+                    className="relative h-36 w-full overflow-hidden rounded-md sm:h-52"
+                    loading={<div className="h-36 w-24 rounded-md bg-gray-500 sm:h-52 sm:w-36" />}
+                />
                 <span className="line-clamp-4 break-words font-semibold group-hover:text-purple-600">
                     {data.title?.english || data.title?.romaji || data.title?.native}
                 </span>
