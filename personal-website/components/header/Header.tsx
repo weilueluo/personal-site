@@ -1,32 +1,26 @@
 "use client";
 
-import LocaleButton from "@/components/locale/LocaleButton";
 import ThemeButton from "@/components/theme/ThemeButton";
-import { GITHUB_REPO_URL } from "@/shared/constants";
-import { getPathWithLocale } from "@/shared/locale";
+import { DEFAULT_LOCALE, GITHUB_REPO_URL, LOCALES } from "@/shared/constants";
+import { getPathWithLocale, replaceLocale } from "@/shared/locale";
 import { useMessages } from "@/shared/translation";
-import { tm } from "@/shared/utils";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import React, { ComponentPropsWithoutRef, forwardRef } from "react";
 import { GiClover } from "react-icons/gi";
-import { HiAcademicCap } from "react-icons/hi";
-import { IoLayers } from "react-icons/io5";
+import { ImHome } from "react-icons/im";
+import { IoLanguage, IoLayers, IoNavigateCircle } from "react-icons/io5";
 import { MdWork } from "react-icons/md";
 import { RiContactsBook2Fill, RiFilePaper2Fill } from "react-icons/ri";
 import { SiGithub } from "react-icons/si";
-import List from "../ui/List";
+import dropdown from "../ui/dropdown";
+import { tm } from "@/shared/utils";
 
 export interface HeaderProps extends ComponentPropsWithoutRef<"header"> {}
 
 const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ className, ...props }, ref) => {
-    const { locale } = useParams();
     const pathname = usePathname();
     const messages = useMessages("header");
-    const linkClassName = tm("self-center flex flex-row items-center gap-1 py-1 px-2 hover-shadow");
-    const linkIconClassName = tm("w-6 h-6");
-    const listItemClassName = tm("mx-1");
-    const activeClassName = tm("[&:not(:hover)]:shadow-inset-sm");
 
     const homePath = getPathWithLocale(pathname, "/");
     const blogsPath = getPathWithLocale(pathname, "/blogs");
@@ -43,78 +37,103 @@ const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ clas
     // console.log(`rssPath=${rssPath}`);
     // console.log(`cvPath=${cvPath}`);
 
-    return (
-        <header className={tm("w-full")} ref={ref} {...props}>
-            <nav className="flex w-full flex-row flex-wrap justify-between gap-2">
-                <List className="flex-row gap-2 md:gap-6">
-                    <li
-                        className={tm(
-                            listItemClassName,
-                            (pathname === "/" || pathname === homePath) && activeClassName
-                        )}>
-                        <Link href={homePath} locale={locale} className={linkClassName}>
-                            {/* <HiAcademicCap className={linkIconClassName} /> */}
-                            <h3>HOME</h3>
-                        </Link>
-                    </li>
-                    <LocaleButton className={tm("px-1")} />
-                    <ThemeButton className={listItemClassName} />
-                </List>
+    const currentLocale = useParams().locale || DEFAULT_LOCALE;
 
-                <List className="flex-row">
-                    <li className={listItemClassName}>
-                        <Link href={GITHUB_REPO_URL} className={linkClassName}>
-                            <SiGithub className={linkIconClassName} />
+    return (
+        <header className="w-full" ref={ref} {...props}>
+            <nav className="flex w-full flex-row flex-wrap items-center justify-center gap-6">
+                <NavItem href={homePath}>
+                    <ImHome className="icon-md" />
+                    HOME
+                </NavItem>
+
+                {/* <li
+                    className={tm(
+                        listItemClassName,
+                        (pathname === "/" || pathname === homePath) && activeClassName
+                    )}></li> */}
+                {/* <LocaleButton className={tm("px-1")} /> */}
+
+                <dropdown.Container>
+                    <div className="icon-text std-pad">
+                        <IoLanguage className="icon-md" />
+                        {currentLocale.toUpperCase()}
+                    </div>
+                    <dropdown.Dropdown variant="glass">
+                        {(LOCALES ?? []).map((locale) => (
+                            <NavItem
+                                key={locale}
+                                href={replaceLocale(pathname, currentLocale, locale)}
+                                // data-active={locale === currentLocale}
+                                className="flex flex-row items-center justify-center uppercase">
+                                <span>{locale}</span>
+                            </NavItem>
+                        ))}
+                    </dropdown.Dropdown>
+                </dropdown.Container>
+
+                <ThemeButton />
+
+                <dropdown.Container>
+                    <div className="icon-text std-pad">
+                        <IoNavigateCircle className="icon-md" />
+                        Explore
+                    </div>
+                    <dropdown.Dropdown variant="glass">
+                        <NavItem href={GITHUB_REPO_URL}>
+                            <SiGithub className="icon-md" />
                             {messages["source"]}
-                        </Link>
-                    </li>
-                    <li className={tm(listItemClassName, pathname.startsWith(blogsPath) && activeClassName)}>
-                        <Link href={blogsPath} locale={locale} className={linkClassName}>
-                            <RiFilePaper2Fill className={linkIconClassName} />
+                        </NavItem>
+                        {/* <Separator variant="sm" /> */}
+                        <NavItem href={blogsPath}>
+                            <RiFilePaper2Fill className="icon-md" />
                             {messages["blogs"]}
-                        </Link>
-                    </li>
-                    <li className={tm(listItemClassName, pathname.startsWith(contactPath) && activeClassName)}>
-                        <Link href={contactPath} locale={locale} className={linkClassName}>
-                            <RiContactsBook2Fill className={linkIconClassName} />
+                        </NavItem>
+                        {/* <Separator variant="sm" /> */}
+                        <NavItem href={contactPath}>
+                            <RiContactsBook2Fill className="icon-md" />
                             {messages["contact"]}
-                        </Link>
-                    </li>
-                    <li className={tm(listItemClassName, pathname.startsWith(animePath) && activeClassName)}>
-                        <Link href={animePath} locale={locale} className={linkClassName}>
-                            <GiClover className={linkIconClassName} />
+                        </NavItem>
+                        {/* <Separator variant="sm" /> */}
+                        <NavItem href={animePath}>
+                            <GiClover className="icon-md" />
                             {messages["anime"]}
-                        </Link>
-                    </li>
-                    <li className={tm(listItemClassName, pathname.startsWith(rssPath) && activeClassName)}>
-                        <Link href={rssPath} locale={locale} className={linkClassName}>
-                            <IoLayers className={linkIconClassName} />
+                        </NavItem>
+                        {/* <Separator variant="sm" /> */}
+                        <NavItem href={rssPath}>
+                            <IoLayers className="icon-md" />
                             {messages["rss"]}
-                        </Link>
-                    </li>
-                    <li className={tm(listItemClassName, pathname.startsWith(cvPath) && activeClassName)}>
-                        <Link href={cvPath} locale={locale} className={linkClassName}>
-                            <MdWork className={linkIconClassName} />
+                        </NavItem>
+                        {/* <Separator variant="sm" /> */}
+                        <NavItem href={cvPath}>
+                            <MdWork className="icon-md" />
                             {messages["cv"]}
-                        </Link>
-                    </li>
-                </List>
+                        </NavItem>
+                    </dropdown.Dropdown>
+                </dropdown.Container>
             </nav>
         </header>
     );
 });
+Header.displayName = "Header";
 
-const LinkIcon = forwardRef<HTMLAnchorElement, ComponentPropsWithoutRef<"a">>((props, ref) => {
-    // hover:shadow-gray-600 transition-[box-shadow] hover:shadow-md duration-150
+interface NavItemProps extends ComponentPropsWithoutRef<"a"> {
+    href: string;
+    children: React.ReactNode;
+}
+const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(({ href, children, className, ...rest }, ref) => {
+    const { locale } = useParams();
     return (
-        <a ref={ref} {...props}>
-            <span className="sr-only">{props.children}</span>
-        </a>
+        <Link
+            href={href}
+            locale={locale}
+            className={tm("icon-text std-pad hover:bg-button-std", className)}
+            ref={ref}
+            {...rest}>
+            {children}
+        </Link>
     );
 });
-
-LinkIcon.displayName = "LinkIcon";
-
-Header.displayName = "Header";
+NavItem.displayName = "NavItem";
 
 export default Header;

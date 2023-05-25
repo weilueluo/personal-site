@@ -1,12 +1,14 @@
 import { tm } from "@/shared/utils";
-import React, { ComponentPropsWithoutRef, useEffect, useState } from "react";
+import React, { Children, ComponentPropsWithoutRef, useEffect, useState } from "react";
 
-import styles from "./dropdown.module.scss";
+import Separator from "./Separator";
 
 export interface DropdownProps extends ComponentPropsWithoutRef<"div"> {}
-export interface DropdownButtonProps extends ComponentPropsWithoutRef<"div"> {}
-export interface DropdownItemProps extends ComponentPropsWithoutRef<"div"> {}
-export interface DropdownListProps extends ComponentPropsWithoutRef<"div"> {}
+export interface DropdownListProps extends ComponentPropsWithoutRef<"div"> {
+    variant?: "std" | "glass";
+}
+
+const ContainerContext = React.createContext<{ open: boolean }>({ open: false });
 
 const Container = React.forwardRef<HTMLDivElement, DropdownProps>((props, ref) => {
     const { children, className, ...rest } = props;
@@ -25,49 +27,60 @@ const Container = React.forwardRef<HTMLDivElement, DropdownProps>((props, ref) =
     });
 
     return (
-        <div
-            ref={ref}
-            className={tm(styles.container, open && styles.open, "hover:cursor-pointer", className)}
-            {...rest}
-            onClick={(e) => {
-                setOpen(!open);
-                e.stopPropagation(); // prevent global onClick from firing, it will set open back to false
-            }}>
-            {children}
-        </div>
+        <ContainerContext.Provider value={{ open }}>
+            <div
+                ref={ref}
+                className={tm("relative hover:cursor-pointer", className)}
+                {...rest}
+                onClick={(e) => {
+                    setOpen(!open);
+                    e.stopPropagation(); // prevent global onClick from firing, it will set open back to false
+                }}>
+                {children}
+            </div>
+        </ContainerContext.Provider>
     );
 });
 Container.displayName = "Container";
 
-const List = React.forwardRef<HTMLDivElement, DropdownListProps>((props, ref) => {
-    const { children, className, ...rest } = props;
+const Dropdown = React.forwardRef<HTMLDivElement, DropdownListProps>((props, ref) => {
+    const { children, variant = "std", className, ...rest } = props;
+    const nChildren = Children.count(children);
+
+    const { open } = React.useContext(ContainerContext);
+
+    if (!open) {
+        return null;
+    }
 
     return (
         <div
             ref={ref}
-            className={tm(styles.dropdownList, "z-10 mt-2 flex w-max flex-col rounded-md p-1", className)}
+            className={tm(
+                "absolute top-full z-10 mt-2 flex w-full min-w-max flex-col p-1",
+                variant === "glass" && "border-x border-black backdrop-blur-lg",
+                className
+            )}
             {...rest}>
-            {children}
+            {Children.map(children, (child, i) => {
+                if (i !== nChildren - 1) {
+                    return (
+                        <>
+                            {child}
+                            <Separator variant="sm" />
+                        </>
+                    );
+                }
+                return child;
+            })}
         </div>
     );
 });
-List.displayName = "List";
-
-const Item = React.forwardRef<HTMLDivElement, DropdownItemProps>((props, ref) => {
-    const { children, className, ...rest } = props;
-
-    return (
-        <div ref={ref} className={tm(styles.dropdownItem, className)} {...rest}>
-            {children}
-        </div>
-    );
-});
-Item.displayName = "Item";
+Dropdown.displayName = "List";
 
 const dropdown = {
     Container,
-    Item,
-    List,
+    Dropdown,
 };
 
 export default dropdown;

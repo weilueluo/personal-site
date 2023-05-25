@@ -1,5 +1,3 @@
-
-
 // .icon {
 //     @apply w-5 h-5 transition-all duration-1000 delay-75;
 
@@ -15,22 +13,21 @@
     @apply w-0;
 }
 
-.text[data-active=true] {
+.text[data-active="true"] {
     @apply w-20;
 }
 
-
-.iconContainer  {
-    @apply grid w-5 h-5;
+.iconContainer {
+    @apply grid;
 
     > * {
         grid-area: 1/1;
         @apply transition-all duration-500;
-        @apply opacity-0 scale-0;
+        @apply scale-0 opacity-0;
 
-         > * {
-            @apply w-5 h-5;
-         }
+        // > * {
+        //     @apply h-5 w-5;
+        // }
     }
 }
 
@@ -42,8 +39,7 @@
     @apply rotate-[-180];
 }
 
-
 .leftActive > :nth-child(1),
 .rightActive > :nth-child(2) {
-    @apply opacity-100 scale-100 rotate-0;
+    @apply rotate-0 scale-100 opacity-100;
 }

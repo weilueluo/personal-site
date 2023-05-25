@@ -13,6 +13,11 @@ module.exports = {
                 width: "width",
                 margin: "margin",
             },
+            colors: {
+                'button-std': '#02ab877F',
+                'button-std-hover': '#02ab877F',
+                'button-std-text': 'black',
+            },
         },
     },
     plugins: [require("tailwindcss-animate")],

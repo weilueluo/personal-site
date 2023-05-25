@@ -16,7 +16,7 @@ export default function Page() {
         <CanvasLayout>
             <div className="flex h-full w-full flex-col items-center justify-center">
                 <Title />
-                <View className="hover-shadow-inset h-96 w-96" orbit>
+                <View className="h-96 w-96" orbit>
                     <Suspense fallback={null}>
                         <Room scale={0.1} position={[0, 0, 1]} rotation={[0.65, 0.0, 0]} />
                         <Common />

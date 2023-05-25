@@ -88,7 +88,7 @@ export default function SearchBar() {
 
     return (
         <div className="flex flex-col gap-2">
-            <div className="flex h-10 max-h-full w-full flex-row rounded-md bg-gray-500 text-white caret-white">
+            <div className="flex h-10 max-h-full w-full flex-row border-b border-black">
                 <div className="grid h-full w-12 shrink place-items-center text-gray-300">
                     <FaSearch />
                 </div>
@@ -99,12 +99,13 @@ export default function SearchBar() {
                 />
                 <div
                     className={tm(
-                        "m-2 grid w-12 shrink place-items-center rounded-md hover:cursor-pointer",
-                        !showFilter && "bg-gray-600 text-gray-300 hover:bg-gray-400",
-                        showFilter && "bg-gray-300 text-gray-600 hover:bg-gray-400"
+                        "icon-text std-pad m-2 shrink hover:cursor-pointer hover:bg-button-std"
+                        // !showFilter && "border border-red-200",
+                        // showFilter && "border border-black"
                     )}
                     onClick={onClickShowFilter}>
                     <TbAdjustmentsHorizontal />
+                    Settings
                 </div>
             </div>
 
@@ -172,11 +173,11 @@ function QuickFilter<T extends string>({
 }) {
     return (
         <dropdown.Container>
-            <span className="flex flex-row items-center justify-center rounded-md bg-gray-500 px-2 py-1 capitalize text-gray-100 hover:bg-gray-400">
+            <span className="flex flex-row items-center justify-center rounded-md  px-2 py-1 capitalize hover:bg-gray-400">
                 {displayMap ? displayMap[name] : name.toLowerCase().replaceAll("_", " ")}
-                <MdExpandMore className="ml-2 inline-block rounded-md bg-gray-600" size="1.2em" />
+                <MdExpandMore className="ml-2 inline-block rounded-md " size="1.2em" />
             </span>
-            <dropdown.List className="min-w-full bg-gray-500 text-gray-100">
+            <dropdown.Dropdown variant="glass">
                 {names.map((name) => (
                     <div
                         key={name}
@@ -185,7 +186,7 @@ function QuickFilter<T extends string>({
                         {displayMap ? displayMap[name] : name.toLowerCase().replaceAll("_", " ")}
                     </div>
                 ))}
-            </dropdown.List>
+            </dropdown.Dropdown>
         </dropdown.Container>
     );
 }
@@ -197,13 +198,13 @@ interface BooleanQuickFilterProps extends ComponentPropsWithoutRef<"div"> {
 function BooleanQuickFilter({ name, active, ...rest }: BooleanQuickFilterProps) {
     return (
         <span
-            className="rounded-md, flex flex-row items-center justify-center rounded-md bg-gray-500 px-2 py-1 capitalize text-gray-100 hover:cursor-pointer hover:bg-gray-400"
+            className="rounded-md, flex flex-row items-center justify-center rounded-md  px-2 py-1 capitalize hover:cursor-pointer hover:bg-gray-400"
             {...rest}>
             {name.toLowerCase().replaceAll("_", " ")}
             {active ? (
-                <MdOutlineRadioButtonChecked className="ml-2 text-gray-300" size="1.2em" />
+                <MdOutlineRadioButtonChecked className="ml-2 " size="1.2em" />
             ) : (
-                <MdOutlineRadioButtonUnchecked className="ml-2 text-gray-300" size="1.2em" />
+                <MdOutlineRadioButtonUnchecked className="ml-2 " size="1.2em" />
             )}{" "}
         </span>
     );

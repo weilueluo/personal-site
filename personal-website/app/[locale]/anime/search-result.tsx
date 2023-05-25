@@ -57,7 +57,7 @@ export default function SearchResult() {
                     )}
                 </h3>
 
-                <button className="hover-shadow px-2 py-1" onClick={() => setCollapse((v) => !v)}>
+                <button className="px-2 py-1" onClick={() => setCollapse((v) => !v)}>
                     {collapse ? "expand" : "collpase"}
                 </button>
             </div>
@@ -82,7 +82,7 @@ export default function SearchResult() {
                 {/* load more info / button */}
                 <div className="flex w-full justify-center">
                     <button
-                        className="hover-shadow px-2 py-1"
+                        className="px-2 py-1"
                         onClick={() => swrAnimeResponse.setSize(swrAnimeResponse.size + 1)}
                         disabled={!pageInfo?.hasNextPage}>
                         {buttonText}

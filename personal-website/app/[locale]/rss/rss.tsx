@@ -112,7 +112,7 @@ function FeedTitle({ title, ...rest }: { title: string }) {
 
                 <span
                     className={tm(
-                        "hover-shadow rounded-md px-2 py-1 text-sm",
+                        "rounded-md px-2 py-1 text-sm",
                         isFetchingFeed && "shadow-inset-sm pointer-events-none"
                     )}
                     onClick={() => mutate()}>
@@ -120,7 +120,7 @@ function FeedTitle({ title, ...rest }: { title: string }) {
                 </span>
 
                 <span
-                    className={tm("hover-shadow rounded-md px-2 py-1 text-sm", active && "shadow-inset-sm")}
+                    className={tm("rounded-md px-2 py-1 text-sm", active && "shadow-inset-sm")}
                     onClick={() => setActive(title, !active)}>
                     {active ? <AiFillEye size={"1.2em"} /> : <AiFillEyeInvisible size={"1.2em"} />}
                 </span>
