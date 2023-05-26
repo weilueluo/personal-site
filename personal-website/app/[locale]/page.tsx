@@ -1,8 +1,8 @@
 import CanvasLayout from "@/components/three/layout";
+import Loading from "@/components/ui/loading/spinner";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import Title from "./title";
-import Loading from "@/components/ui/loading/spinner";
 
 const Room = dynamic(() => import("@/components/three/objects/room"), { ssr: false });
 const Common = dynamic(() => import("@/components/three/common"), { ssr: false });
@@ -14,7 +14,7 @@ const View = dynamic(() => import("@/components/three/view"), {
 export default function Page() {
     return (
         <CanvasLayout>
-            <div className="flex h-full w-full flex-col items-center justify-center">
+            <div className="flex h-full w-full flex-col items-center justify-center dark:bg-gray-300">
                 <Title />
                 <View className="h-96 w-96" orbit>
                     <Suspense fallback={null}>

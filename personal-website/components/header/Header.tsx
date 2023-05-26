@@ -1,9 +1,9 @@
 "use client";
 
-import ThemeButton from "@/components/theme/ThemeButton";
 import { DEFAULT_LOCALE, GITHUB_REPO_URL, LOCALES } from "@/shared/constants";
 import { getPathWithLocale, replaceLocale } from "@/shared/locale";
 import { useMessages } from "@/shared/translation";
+import { tm } from "@/shared/utils";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import React, { ComponentPropsWithoutRef, forwardRef } from "react";
@@ -14,7 +14,7 @@ import { MdWork } from "react-icons/md";
 import { RiContactsBook2Fill, RiFilePaper2Fill } from "react-icons/ri";
 import { SiGithub } from "react-icons/si";
 import dropdown from "../ui/dropdown";
-import { tm } from "@/shared/utils";
+import ThemeButton from "./ThemeButton";
 
 export interface HeaderProps extends ComponentPropsWithoutRef<"header"> {}
 
@@ -41,7 +41,7 @@ const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ clas
 
     return (
         <header className="w-full" ref={ref} {...props}>
-            <nav className="flex w-full flex-row flex-wrap items-center justify-center gap-6">
+            <nav className="flex w-full flex-row flex-wrap items-center justify-center gap-2 md:gap-4 xl:gap-6">
                 <NavItem href={homePath}>
                     <ImHome className="icon-md" />
                     HOME

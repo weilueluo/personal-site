@@ -6,7 +6,7 @@ import React, { ReactNode, Suspense, useState } from "react";
 import { BsFillMoonStarsFill, BsGearWideConnected } from "react-icons/bs";
 import { ImSun } from "react-icons/im";
 import { useMountedState } from "react-use";
-import styles from "./ThemeButton.module.scss";
+import styles from "./ThemeButton_v1.module.scss";
 
 const DARK_THEME = "dark";
 const LIGHT_THEME = "light";
@@ -15,9 +15,9 @@ const SYSTEM_THEME = "system";
 const THEMES: UnResolvedTheme[] = [DARK_THEME, LIGHT_THEME, SYSTEM_THEME];
 
 const themeToIconMap: { [theme: string]: ReactNode } = {
-    [DARK_THEME]: <BsFillMoonStarsFill className={styles.icon} />,
-    [LIGHT_THEME]: <ImSun className={styles.icon} />,
-    [SYSTEM_THEME]: <BsGearWideConnected className={styles.icon} />,
+    [DARK_THEME]: <BsFillMoonStarsFill className="icon-md" />,
+    [LIGHT_THEME]: <ImSun className="icon-md" />,
+    [SYSTEM_THEME]: <BsGearWideConnected className="icon-md" />,
 };
 
 const ThemeButton = React.forwardRef<React.ElementRef<"button">, React.ComponentPropsWithoutRef<"button">>(
@@ -70,7 +70,7 @@ const ThemeButton = React.forwardRef<React.ElementRef<"button">, React.Component
                     {leftTheme}
                 </span>
 
-                <div className={tm( styles.iconContainer, leftActive ? styles.leftActive : styles.rightActive)}>
+                <div className={tm(styles.iconContainer, leftActive ? styles.leftActive : styles.rightActive)}>
                     <div>{leftIcon}</div>
                     <div>{rightIcon}</div>
                 </div>

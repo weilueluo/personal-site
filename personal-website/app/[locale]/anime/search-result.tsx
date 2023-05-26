@@ -70,13 +70,13 @@ export default function SearchResult() {
                         collapse && "flex w-full flex-row gap-2 overflow-x-auto",
                         !collapse && "my-grid-cols-3 md:my-grid-cols-4 lg:my-grid-cols-5 grid justify-between"
                     )}>
-                    {(swrAnimeResponse.isLoading || swrAnimeResponse.isValidating) &&
-                        Array.from(Array(15).keys()).map((i) => <PlaceholderCard key={i} />)}
                     {mergedData.map((data) => (
                         <Link href={`${pathname}/${data.id}`} key={data.id} prefetch={false}>
                             <Card data={data} />
                         </Link>
                     ))}
+                    {(swrAnimeResponse.isLoading || swrAnimeResponse.isValidating) && (!mergedData || mergedData.length == 0) &&
+                        Array.from(Array(15).keys()).map((i) => <PlaceholderCard key={i} />)}
                 </ul>
 
                 {/* load more info / button */}

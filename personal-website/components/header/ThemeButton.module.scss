@@ -1,0 +1,80 @@
+@use "sass:math";
+
+$width: 2rem;
+
+.textContainer {
+    // perspective: 100px;
+    @apply flex h-full w-16 items-center justify-center;
+    perspective: 100px;
+}
+.iconContainer {
+    // perspective: 100px;
+    @apply flex h-full w-6 items-center justify-center;
+    perspective: 100px;
+}
+.pieces {
+    position: relative;
+    transform-style: preserve-3d;
+    transform-origin: center center -0.57rem;  // got this by fiddling around, not sure why it works
+    transform: rotateX(0deg);
+    transition: transform 0.5s ease-in-out;
+    // transform: translateZ($width/2);
+}
+
+.pieces,
+.pieceContainer {
+    position: absolute;
+    // background-color: blue;
+    // top: 50%;
+    // left: 50%;
+    // transform: translate(-50%, -50%)
+}
+
+.pieces,
+.pieceContainer {
+    height: $width;
+    width: 100%;
+    background-color: white;
+}
+
+.pieceContainer:nth-child(1) {
+    // background-color: #00ff007f;
+    // transform: translateZ($width/2);
+
+    span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+// @debug math.div(-$width, 2);
+// @debug (math.tan(60deg) * math.div($width, 2));
+
+.pieceContainer:nth-child(2) {
+    //  + (math.tan(60deg) * $width/2)
+    transform-origin: top;
+    transform: rotateX(-60deg);
+    // background-color: #ff00007f;
+
+    span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotateX(180deg);
+    }
+}
+
+.pieceContainer:nth-child(3) {
+    transform-origin: bottom;
+    transform: rotateX(60deg);
+    // background-color: #0000ff7f;
+
+    span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotateX(180deg);
+    }
+}

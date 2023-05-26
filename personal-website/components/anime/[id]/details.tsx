@@ -1,4 +1,3 @@
-"use client";
 import ProgressiveImage from "@/components/ui/Image";
 import BackButton from "./back";
 import { Characters, CoverImage, Description, Relations, Staffs, Title, Trailer } from "./components";
