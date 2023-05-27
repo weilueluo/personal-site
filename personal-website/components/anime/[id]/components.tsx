@@ -14,7 +14,7 @@ function RelationCard({ data }: { data: Relation }) {
     const srcs = [data.node.coverImage?.medium, data.node.coverImage?.large];
     const url = data.node.siteUrl;
 
-    return <Card title={title} url={url} name={name} srcs={srcs} className="overflow-hidden rounded-md" />;
+    return <Card title={title} url={url} name={name} srcs={srcs} className="overflow-hidden" />;
 }
 
 interface VoiceActorCardProps extends ComponentPropsWithoutRef<"div"> {
@@ -40,10 +40,10 @@ function CharacterCard({ data }: { data: Character }) {
     const url = data.node?.siteUrl;
 
     return (
-        <div className="flex shrink-0 flex-row overflow-hidden rounded-md">
-            <Card title={title} name={name} url={url} srcs={srcs} className="rounded-none" />
+        <div className="flex shrink-0 flex-row overflow-hidden">
+            <Card title={title} name={name} url={url} srcs={srcs} />
             {data.voiceActors?.map((voiceActor) => (
-                <VoiceActorCard key={voiceActor.id} className="rounded-none" data={voiceActor} />
+                <VoiceActorCard key={voiceActor.id} data={voiceActor} />
             ))}
         </div>
     );
@@ -57,7 +57,7 @@ function StaffCard({ data }: { data: Staff }) {
     const title = data.role;
     const url = data.node?.siteUrl;
 
-    return <Card title={title} name={name} url={url} srcs={srcs} className="overflow-hidden rounded-md" />;
+    return <Card title={title} name={name} url={url} srcs={srcs} className="overflow-hidden" />;
 }
 
 export function Characters() {
@@ -67,7 +67,7 @@ export function Characters() {
 
     return characters && characters.length > 0 ? (
         <Section title="Characters">
-            <Cards className="gap-6">
+            <Cards className="gap-4 md:gap-6">
                 {characters?.map((character) => (
                     <CharacterCard key={character.id} data={character} />
                 ))}
@@ -83,7 +83,7 @@ export function Staffs() {
 
     return staffs && staffs.length > 0 ? (
         <Section title="Staffs">
-            <Cards className="gap-4">
+            <Cards className="gap-2 md:gap-4">
                 {staffs?.map((staff) => (
                     <StaffCard key={staff.id} data={staff} />
                 ))}
@@ -99,7 +99,7 @@ export function Relations() {
 
     return relations && relations.length > 0 ? (
         <Section title="Relations">
-            <Cards className="gap-4">
+            <Cards className="gap-2 md:gap-4">
                 {relations?.map((relation) => (
                     <RelationCard key={relation.id} data={relation} />
                 ))}
@@ -176,7 +176,7 @@ export function Description() {
     const data = useAnimeDetails();
 
     return data?.description ? (
-        <p dangerouslySetInnerHTML={{ __html: data.description }} className=" font-semibold" />
+        <p dangerouslySetInnerHTML={{ __html: data.description }} className="font-semibold" />
     ) : null;
 }
 
@@ -190,7 +190,7 @@ export function CoverImage() {
                 fill={true}
                 sizes="(min-width: 1024px) 480px, 320px"
                 alt="image"
-                className="hidden h-56 overflow-hidden rounded-md md:block"
+                className="hidden h-56 overflow-hidden md:block"
                 loading={<LoadingItem className="h-56 w-full" />}
             />
         </div>

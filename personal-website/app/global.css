@@ -26,7 +26,13 @@
     } */
 
     .std-pad {
-        @apply px-2 py-1;
+        @apply px-1 py-1 md:px-2;
+    }
+    .std-hover {
+        @apply hover:bg-std hover:underline group-hover:bg-std group-hover:underline cursor-pointer hover:text-black;
+    }
+    .std-text-size {
+        @apply text-sm md:text-base;
     }
 
     .icon-text {
@@ -35,6 +41,9 @@
 
     .icon-md {
         @apply h-4 w-4 md:h-5 md:w-5;
+    }
+    .icon-lg {
+        @apply h-5 w-5 md:h-6 md:w-6;
     }
 
     .hover-subtext {

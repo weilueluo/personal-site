@@ -14,9 +14,8 @@ module.exports = {
                 margin: "margin",
             },
             colors: {
-                'button-std': '#02ab877F',
-                'button-std-hover': '#02ab877F',
-                'button-std-text': 'black',
+                // 'std': '#02ab87',
+                'std': '#00CDA1'
             },
         },
     },

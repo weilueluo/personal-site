@@ -2,6 +2,7 @@
 
 $width: 2rem;
 
+
 .textContainer {
     // perspective: 100px;
     @apply flex h-full w-16 items-center justify-center;
@@ -12,22 +13,20 @@ $width: 2rem;
     @apply flex h-full w-6 items-center justify-center;
     perspective: 100px;
 }
+
+$distToCenter: math.tan(30deg) * -$width/2;
+
 .pieces {
     position: relative;
     transform-style: preserve-3d;
-    transform-origin: center center -0.57rem;  // got this by fiddling around, not sure why it works
+    transform-origin: center center $distToCenter; // got this by fiddling around, not sure why it works
     transform: rotateX(0deg);
     transition: transform 0.5s ease-in-out;
-    // transform: translateZ($width/2);
 }
 
 .pieces,
 .pieceContainer {
     position: absolute;
-    // background-color: blue;
-    // top: 50%;
-    // left: 50%;
-    // transform: translate(-50%, -50%)
 }
 
 .pieces,

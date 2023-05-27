@@ -14,44 +14,32 @@ const SYSTEM_THEME = "system";
 
 const THEMES: UnResolvedTheme[] = [DARK_THEME, LIGHT_THEME, SYSTEM_THEME];
 
-const themeToIconMap: { [theme: string]: ReactNode } = {
-    [DARK_THEME]: <BsFillMoonStarsFill className="icon-md" />,
-    [LIGHT_THEME]: <ImSun className="icon-md" />,
-    [SYSTEM_THEME]: <BsGearWideConnected className="icon-md" />,
-};
-
 const ThemeButton = React.forwardRef<React.ElementRef<"button">, React.ComponentPropsWithoutRef<"button">>(
     ({ className, ...otherProps }, ref) => {
         const { unResolvedTheme, setTheme } = useTheme();
 
-        const getNextTheme = (currTheme: UnResolvedTheme) => THEMES[(THEMES.indexOf(currTheme) + 1) % THEMES.length];
+        const getNextTheme = (currTheme: UnResolvedTheme): UnResolvedTheme =>
+            THEMES[(THEMES.indexOf(currTheme) + 1) % THEMES.length];
 
-
-        const switchTheme = (theme: UnResolvedTheme) => {
-            // invoke animation to show the hidden item
-            // console.log(`ThemeButton: switchTheme(${theme})`);
-
-            setTheme(theme);
-        };
-
-        const getInitDegByTheme = (theme: UnResolvedTheme) => {
+        const getDegByTheme = (theme: UnResolvedTheme) => {
             switch (theme) {
-                case DARK_THEME:
+                case SYSTEM_THEME:
                     return 0;
                 case LIGHT_THEME:
                     return 120;
-                case SYSTEM_THEME:
+                case DARK_THEME:
                     return 240;
             }
         };
 
-        const [textDeg, setTextDeg] = useState(getInitDegByTheme(unResolvedTheme));
-        const [iconDeg, setIconDeg] = useState(getInitDegByTheme(unResolvedTheme));
+        const [textDeg, setTextDeg] = useState(getDegByTheme(unResolvedTheme));
+        const [iconDeg, setIconDeg] = useState(-getDegByTheme(unResolvedTheme));
 
         const onClick = () => {
-            switchTheme(getNextTheme(unResolvedTheme));
-            setTextDeg(textDeg + 120);
-            setIconDeg(iconDeg - 120);
+            const theme = getNextTheme(unResolvedTheme);
+            setTheme(theme);
+            setTextDeg(getDegByTheme(theme));
+            setIconDeg(-getDegByTheme(theme));
         };
 
         if (!useMountedState()) {
@@ -63,22 +51,25 @@ const ThemeButton = React.forwardRef<React.ElementRef<"button">, React.Component
                 ref={ref}
                 onClick={onClick}
                 {...otherProps}
-                className="flex h-8 w-fit flex-row items-center justify-around rounded-md">
+                className={tm(
+                    "group flex h-7 w-fit flex-row items-center justify-around hover:underline",
+                    styles.button
+                )}>
                 <div className={styles.iconContainer}>
                     <div
                         className={styles.pieces}
                         style={{
                             transform: `rotateX(${iconDeg}deg)`,
                         }}>
-                        <div className={styles.pieceContainer}>
-                            <span><BsFillMoonStarsFill className="icon-md" /></span>
-                        </div>
-                        <div className={styles.pieceContainer}>
-                            <span><BsGearWideConnected className="icon-md" /></span>
-                        </div>
-                        <div className={styles.pieceContainer}>
-                            <span><ImSun className="icon-md" /></span>
-                        </div>
+                        <PieceContainer>
+                            <BsGearWideConnected className="icon-lg px-1" />
+                        </PieceContainer>
+                        <PieceContainer>
+                            <ImSun className="icon-lg px-1" />
+                        </PieceContainer>
+                        <PieceContainer>
+                            <BsFillMoonStarsFill className="icon-lg px-1" />
+                        </PieceContainer>
                     </div>
                 </div>
                 <div className={styles.textContainer}>
@@ -87,21 +78,23 @@ const ThemeButton = React.forwardRef<React.ElementRef<"button">, React.Component
                         style={{
                             transform: `rotateX(${textDeg}deg)`,
                         }}>
-                        <div className={styles.pieceContainer}>
-                            <span>Dark</span>
-                        </div>
-                        <div className={styles.pieceContainer}>
-                            <span>Light</span>
-                        </div>
-                        <div className={styles.pieceContainer}>
-                            <span>System</span>
-                        </div>
+                        <PieceContainer>System</PieceContainer>
+                        <PieceContainer>Dark</PieceContainer>
+                        <PieceContainer>Light</PieceContainer>
                     </div>
                 </div>
             </button>
         );
     }
 );
+
+function PieceContainer({ children }: { children: React.ReactNode }) {
+    return (
+        <div className={tm(styles.pieceContainer, "std-hover")}>
+            <span className="std-hover">{children}</span>
+        </div>
+    );
+}
 
 ThemeButton.displayName = "ThemeButton";
 

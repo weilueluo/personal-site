@@ -11,7 +11,7 @@ import { AiFillCheckCircle, AiFillEye, AiFillEyeInvisible } from "react-icons/ai
 import { CgFormatSeparator } from "react-icons/cg";
 import { ImNewTab } from "react-icons/im";
 import { IoMdRefreshCircle } from "react-icons/io";
-import { MdOutlineError } from "react-icons/md";
+import { MdAccessTimeFilled, MdOutlineError } from "react-icons/md";
 import { VscLoading } from "react-icons/vsc";
 import { useSingleUserFeedConfigs, useUserRSSConfigs } from "../../../components/rss/user-config";
 
@@ -90,7 +90,7 @@ const STATUS_2_ICON = {
 };
 
 function FeedTitle({ title, ...rest }: { title: string }) {
-    const { feeds, info, config, mutate } = useSingleRSS(title);
+    const { info, mutate } = useSingleRSS(title);
     const { active, setActive } = useSingleUserFeedConfigs(title);
     const isFetchingFeed = info.status === FeedStatus.VALIDATING || info.status === FeedStatus.LOADING;
 
@@ -112,7 +112,7 @@ function FeedTitle({ title, ...rest }: { title: string }) {
 
                 <span
                     className={tm(
-                        "rounded-md px-2 py-1 text-sm",
+                        "std-pad std-hover text-sm",
                         isFetchingFeed && "shadow-inset-sm pointer-events-none"
                     )}
                     onClick={() => mutate()}>
@@ -120,7 +120,7 @@ function FeedTitle({ title, ...rest }: { title: string }) {
                 </span>
 
                 <span
-                    className={tm("rounded-md px-2 py-1 text-sm", active && "shadow-inset-sm")}
+                    className={tm("std-pad std-hover text-sm", active && "shadow-inset-sm")}
                     onClick={() => setActive(title, !active)}>
                     {active ? <AiFillEye size={"1.2em"} /> : <AiFillEyeInvisible size={"1.2em"} />}
                 </span>
@@ -172,7 +172,7 @@ function FeedData({ feedData }: { feedData: Feed }) {
     const hint = showDetails ? "click to collapse" : "click to expand";
 
     return (
-        <li key={rssUtils.hash(feedData)} className={tm("my-3 break-all rounded-md border border-transparent")}>
+        <li key={rssUtils.hash(feedData)} className={tm("my-3 break-all border border-transparent")}>
             <div className="animate-in slide-in-from-bottom-4">
                 {/* summary */}
                 <div className="flex flex-row">
@@ -188,34 +188,33 @@ function FeedData({ feedData }: { feedData: Feed }) {
                             </h3>
                         </Link>
                         {/* second row */}
-                        <div>
-                            <span className="text-sm text-gray-600">
-                                <Link
-                                    href={feedData.config.homeUrl}
-                                    className="hover-subtext inline-flex flex-row items-center italic hover:cursor-pointer hover:underline"
-                                    target="_blank">
-                                    {`${feedData.config.title}`}
-                                    {/* <ImNewTab className="ml-1 inline-block" /> */}
-                                </Link>
-                                {date && (
-                                    <>
-                                        <span className="px-2">{"|"}</span>
+                        <div className="flex flex-row items-center gap-2 text-sm text-gray-600">
+                            <Link
+                                href={feedData.config.homeUrl}
+                                className="hover-subtext inline-flex flex-row items-center italic hover:cursor-pointer hover:underline"
+                                target="_blank">
+                                {`${feedData.config.title}`}
+                                {/* <ImNewTab className="ml-1 inline-block" /> */}
+                            </Link>
+                            {date && (
+                                <>
+                                    <span>{"|"}</span>
+                                    <span className="flex flex-row items-center gap-1">
+                                        <MdAccessTimeFilled className="inline-block" />
                                         <span
                                             onClick={dateOnClick}
                                             className="hover-subtext italic hover:cursor-default hover:underline">
                                             {date}
                                         </span>
-                                        {showHint && (
-                                            <>
-                                                <div className="inline-block text-sm text-gray-500 animate-in slide-in-from-left-4">
-                                                    <span className="px-2">{"|"}</span>
-                                                    <span className="italic">{hint}</span>
-                                                </div>
-                                            </>
-                                        )}
-                                    </>
-                                )}
-                            </span>
+                                    </span>
+                                    {showHint && (
+                                        <>
+                                            <span>{"|"}</span>
+                                            <span className="italic">{hint}</span>
+                                        </>
+                                    )}
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

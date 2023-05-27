@@ -59,7 +59,7 @@ export default function AnimeSlowFiltersProvider({ children }: { children: React
     };
     // adult filter: this could be a faster filter, but hide it in slow filters...
     const [adultFilter, setAdultFilter] = useImmer<AdultFilter>({
-        name: "R18+",
+        name: "R18",
         active: false,
         type: "adult",
     });

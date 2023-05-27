@@ -6,6 +6,7 @@ import { tm } from "@/shared/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { ComponentPropsWithoutRef, useEffect, useState } from "react";
+import { MdExpandMore } from "react-icons/md";
 import { VscLoading } from "react-icons/vsc";
 
 export default function SearchResult() {
@@ -57,7 +58,8 @@ export default function SearchResult() {
                     )}
                 </h3>
 
-                <button className="px-2 py-1" onClick={() => setCollapse((v) => !v)}>
+                <button className="icon-text std-hover std-pad" onClick={() => setCollapse((v) => !v)}>
+                    <MdExpandMore className="inline-block" />
                     {collapse ? "expand" : "collpase"}
                 </button>
             </div>
@@ -75,14 +77,15 @@ export default function SearchResult() {
                             <Card data={data} />
                         </Link>
                     ))}
-                    {(swrAnimeResponse.isLoading || swrAnimeResponse.isValidating) && (!mergedData || mergedData.length == 0) &&
+                    {(swrAnimeResponse.isLoading || swrAnimeResponse.isValidating) &&
+                        (!mergedData || mergedData.length == 0) &&
                         Array.from(Array(15).keys()).map((i) => <PlaceholderCard key={i} />)}
                 </ul>
 
                 {/* load more info / button */}
                 <div className="flex w-full justify-center">
                     <button
-                        className="px-2 py-1"
+                        className="std-pad std-hover mt-2"
                         onClick={() => swrAnimeResponse.setSize(swrAnimeResponse.size + 1)}
                         disabled={!pageInfo?.hasNextPage}>
                         {buttonText}
@@ -103,17 +106,17 @@ interface CardProps extends ComponentPropsWithoutRef<"div"> {
 const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
     const { data, className } = props;
     return (
-        <div ref={ref} className={tm("group hover:cursor-pointer", className)}>
+        <div ref={ref} className={tm("group hover:underline", className)}>
             <div className="max-w-36 w-24 animate-in fade-in-50 slide-in-from-top-6 duration-150 sm:w-36">
                 <ProgressiveImage
                     srcs={[data.coverImage?.medium, data.coverImage?.large]}
                     fill={true}
                     sizes="(min-width: 1024px) 480px, 320px"
                     alt="image"
-                    className="relative h-36 w-full overflow-hidden rounded-md sm:h-52"
-                    loading={<div className="h-36 w-24 rounded-md bg-gray-500 sm:h-52 sm:w-36" />}
+                    className="relative h-36 w-full overflow-hidden sm:h-52"
+                    loading={<div className="h-36 w-24 bg-gray-500 sm:h-52 sm:w-36" />}
                 />
-                <span className="line-clamp-4 break-words font-semibold group-hover:text-purple-600">
+                <span className="line-clamp-4 break-words font-semibold">
                     {data.title?.english || data.title?.romaji || data.title?.native}
                 </span>
             </div>
@@ -126,8 +129,8 @@ function PlaceholderCard() {
     return (
         <div>
             <div className="max-w-36 w-24 animate-in slide-in-from-top-6 duration-150 sm:w-36">
-                <div className="h-36 rounded-md bg-gray-400 sm:h-52" />
-                <span className="inline-block h-4 w-full rounded-md bg-gray-400"></span>
+                <div className="h-36 bg-gray-400 sm:h-52" />
+                <span className="inline-block h-4 w-full bg-gray-400"></span>
             </div>
         </div>
     );

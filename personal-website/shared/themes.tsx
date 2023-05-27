@@ -1,7 +1,7 @@
 "use client";
 
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useEffectOnce } from "react-use";
 import { Nullable } from "./types/utils";
 import { cookieToObj } from "./utils";
@@ -43,29 +43,38 @@ export default function ThemeProvider({
     const [unResolvedTheme, setUnResolvedTheme] = useState<UnResolvedTheme>(initialTheme);
     const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() => resolve(unResolvedTheme, systemTheme));
 
-    useEffect(() => {
-        if (unResolvedTheme === "system") {
-            setResolvedTheme(systemTheme);
-        } else {
-            setResolvedTheme(resolve(unResolvedTheme, systemTheme));
-        }
-    }, [systemTheme, unResolvedTheme]);
-
-    useEffect(() => {
-        // console.log(`ThemeProvider: resolvedTheme=${resolvedTheme}`);
-
+    const assignTheme = (theme: ResolvedTheme) => {
         if (typeof document !== "undefined") {
             const bodyClassList = document.querySelector("html")?.classList;
             THEMES.forEach((theme) => bodyClassList?.remove(theme)); // remove old theme
-            bodyClassList?.add(resolvedTheme); // add new theme
+            bodyClassList?.add(theme); // add new theme
         }
+    };
+
+    useEffectOnce(() => {
+        assignTheme(resolvedTheme);
+    });
+
+    useEffect(() => {
+        assignTheme(resolvedTheme);
     }, [resolvedTheme]);
 
-    const setTheme = (newTheme: UnResolvedTheme) => {
-        setUnResolvedTheme(newTheme);
-        setClientSideCookieTheme(newTheme); // we need cookie so that server can prerender correct page to avoid flashing
-        setLocalStorageTheme(newTheme); // we need local storage to persistent cookie long term, but it does not get send to server
-    };
+    // handle system theme changes on the fly
+    useEffect(() => {
+        if (unResolvedTheme === 'system') {
+            setResolvedTheme(systemTheme);
+        }
+    }, [systemTheme, unResolvedTheme])
+
+    const setTheme = useCallback(
+        (newTheme: UnResolvedTheme) => {
+            setUnResolvedTheme(newTheme);
+            setResolvedTheme(resolve(newTheme, systemTheme));
+            setClientSideCookieTheme(newTheme); // we need cookie so that server can prerender correct page to avoid flashing
+            setLocalStorageTheme(newTheme); // we need local storage to persistent cookie long term, but it does not get send to server
+        },
+        [systemTheme]
+    );
 
     return (
         <ThemeContext.Provider value={{ resolvedTheme, unResolvedTheme, setTheme }}>{children}</ThemeContext.Provider>
@@ -83,7 +92,7 @@ function resolve(unResolvedTheme: UnResolvedTheme, systemTheme: ResolvedTheme) {
 }
 
 function useSystemTheme(): ResolvedTheme {
-    const [systemTheme, setSystemTheme] = useState<ResolvedTheme>(getSystemTheme);
+    const [systemTheme, setSystemTheme] = useState<ResolvedTheme>(() => getSystemTheme());
 
     // listen for system changes, so that page react when user system theme changes
     useEffectOnce(() => {
@@ -105,9 +114,9 @@ function useSystemTheme(): ResolvedTheme {
 
 function getCookiesTheme(cookies: ReadonlyRequestCookies): Nullable<UnResolvedTheme> {
     // console.log(`getCookiesTheme: cookies=${JSON.stringify(cookies)}`);
-    
+
     let theme: Nullable<UnResolvedTheme>;
-    if (cookies) {  
+    if (cookies) {
         for (const cookie of cookies) {
             // console.log(`getCookiesTheme: cookie=${JSON.stringify(cookie)}`);
             if (cookie[0] == THEME_KEY) {
@@ -116,7 +125,7 @@ function getCookiesTheme(cookies: ReadonlyRequestCookies): Nullable<UnResolvedTh
         }
     }
     // console.log(`getCookiesTheme: theme=${JSON.stringify(theme)}`);
-    return theme    
+    return theme;
 }
 
 function setClientSideCookieTheme(theme: UnResolvedTheme, days = 0) {

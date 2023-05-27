@@ -13,22 +13,23 @@ export default function AnimeDetails() {
 
     return (
         <div className="flex flex-col gap-2 md:gap-4">
-            <div>
+            <div className="flex flex-col gap-1 md:gap-2">
                 <BackButton />
-            </div>
-            {/* banner image */}
-            <ProgressiveImage
+                <ProgressiveImage
                 srcs={[data?.bannerImage]}
                 fill={true}
                 sizes="(min-width: 1024px) 1024px, 768px"
                 alt="image"
-                className=" h-40 w-full overflow-hidden rounded-md"
-                loading={<div className="h-40 w-full rounded-md bg-gray-500" />}
+                className=" h-40 w-full overflow-hidden"
+                loading={<div className="h-40 w-full bg-gray-500" />}
             />
+            </div>
+            {/* banner image */}
+           
 
             <div className="flex grid-cols-4 grid-rows-1 flex-col gap-4 md:grid">
                 {/* side panel */}
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-2 md:gap-4">
                     <CoverImage />
                     <div className="flex flex-col gap-2">
                         <Status />

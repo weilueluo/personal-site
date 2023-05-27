@@ -1,11 +1,14 @@
+import { IoArrowRedoCircle } from "react-icons/io5";
+
 export default function ErrorPage({ error, reset }: { error: Error; reset: () => void }) {
     return (
-        <div>
+        <div className="flex flex-col gap-2">
             <h1 className="text-2xl font-bold">Sorry something went wrong...</h1>
-            <h3 className=" text-lg font-semibold">Will the below message help?</h3>
             <h3>{error.message}</h3>
-            <h3 className=" text-lg font-semibold">Or try again?</h3>
-            <button onClick={reset} className="px-2 py-1 bg-emerald-300">Try again</button>
+            <button onClick={reset} className="std-hover std-pad icon-text">
+                <IoArrowRedoCircle />
+                <span>Try again</span>
+            </button>
         </div>
     );
 }

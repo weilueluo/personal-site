@@ -11,10 +11,10 @@ import {
 } from "@/components/anime/fast-filters";
 import { FilterItem, useAnimeSearch } from "@/components/anime/search";
 import { useAnimeSlowFilters } from "@/components/anime/slow-filters";
-import Separator from "@/components/ui/Separator";
+import { SeparatedList } from "@/components/ui/Separator";
 import dropdown from "@/components/ui/dropdown";
 import { tm } from "@/shared/utils";
-import { ComponentPropsWithoutRef, useEffect, useState } from "react";
+import React, { ComponentPropsWithoutRef, useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { MdExpandMore, MdOutlineRadioButtonChecked, MdOutlineRadioButtonUnchecked } from "react-icons/md";
 import { TbAdjustmentsHorizontal } from "react-icons/tb";
@@ -85,21 +85,46 @@ export default function SearchBar() {
     }, [activeSlowFilters, setClearAllFilter]);
 
     const { setSearchString } = useAnimeSearch();
+    const searchBarRef = useRef<HTMLInputElement>(null);
+    const handleOnSubmit = (e: React.SyntheticEvent) => {
+        e.preventDefault();
+        if (searchBarRef.current) {
+            setSearchString(searchBarRef.current.value);
+        }
+    };
+
+    const [placeholder, setPlaceholder] = useState("what anime do you like?");
+    const [searchBarFocused, setSearchBarFocused] = useState(false);
+
+    useEffect(() => {
+        if (searchBarFocused) {
+            setPlaceholder("");
+        } else {
+            setPlaceholder("what anime do you like?");
+        }
+    }, [searchBarFocused]);
 
     return (
         <div className="flex flex-col gap-2">
-            <div className="flex h-10 max-h-full w-full flex-row border-b border-black">
-                <div className="grid h-full w-12 shrink place-items-center text-gray-300">
+            <div className="flex h-8 md:h-10 max-h-full w-full flex-row border-b border-black pb-1">
+                <div
+                    className="hover:std-hover grid h-full w-12 shrink place-items-center"
+                    onClick={(e) => handleOnSubmit(e)}>
                     <FaSearch />
                 </div>
-                <input
-                    className="grow bg-transparent py-1 font-semibold focus:outline-none"
-                    placeholder="do you want to search something?"
-                    onChange={(e) => setSearchString(e.target.value)}
-                />
+                <form onSubmit={(e) => handleOnSubmit(e)} className="mx-1 flex grow items-center bg-transparent">
+                    <input
+                        ref={searchBarRef}
+                        className="w-full font-semibold focus:outline-none"
+                        placeholder={placeholder}
+                        onChange={(e) => handleOnSubmit(e)}
+                        onFocus={() => setSearchBarFocused(true)}
+                        onBlur={() => setSearchBarFocused(false)}
+                    />
+                </form>
                 <div
                     className={tm(
-                        "icon-text std-pad m-2 shrink hover:cursor-pointer hover:bg-button-std"
+                        "icon-text std-pad hover:bg-button-std hover:std-hover shrink hover:cursor-pointer"
                         // !showFilter && "border border-red-200",
                         // showFilter && "border border-black"
                     )}
@@ -109,7 +134,7 @@ export default function SearchBar() {
                 </div>
             </div>
 
-            <div className="flex flex-row flex-wrap gap-2">
+            <div className="flex flex-row flex-wrap gap-1 md:gap-2">
                 <BooleanQuickFilter
                     name={myFavouriteFilter.name}
                     onClick={() => setFavouriteFilter(!myFavouriteFilter.active)}
@@ -135,25 +160,27 @@ export default function SearchBar() {
 
             {(activeSlowFilters.length > 0 || showFilter) && (
                 <div className=" flex flex-row items-center">
-                    <h3 className="my-1 mr-2 font-bold">Active Filters</h3>
+                    <h3 className="my-1 mr-2 font-bold">Active Filters:</h3>
                     <FilterPanel filterItems={activeSlowFilters} toggleSelection={activeSlowFilterOnClick} />
                 </div>
             )}
 
             {showFilter && (
-                <div className="flex flex-col gap-4 rounded-md border border-black p-2">
-                    <FilterPanel title="Misc" filterItems={[adultFilter]} toggleSelection={adultFilterOnClick} />
-                    <FilterPanel
-                        title="Genres"
-                        filterItems={displayGenreFilters}
-                        toggleSelection={genreFilterOnClick}
-                    />
-                    <FilterPanel
-                        title="Tags"
-                        filterItems={displayTagFilters}
-                        toggleSelection={tagFilterOnClick}
-                        many={true}
-                    />
+                <div className="flex flex-col gap-2 border border-black p-2">
+                    <SeparatedList>
+                        <FilterPanel title="Meta" filterItems={[adultFilter]} toggleSelection={adultFilterOnClick} />
+                        <FilterPanel
+                            title="Genres"
+                            filterItems={displayGenreFilters}
+                            toggleSelection={genreFilterOnClick}
+                        />
+                        <FilterPanel
+                            title="Tags"
+                            filterItems={displayTagFilters}
+                            toggleSelection={tagFilterOnClick}
+                            many={true}
+                        />
+                    </SeparatedList>
                 </div>
             )}
         </div>
@@ -173,15 +200,15 @@ function QuickFilter<T extends string>({
 }) {
     return (
         <dropdown.Container>
-            <span className="flex flex-row items-center justify-center rounded-md  px-2 py-1 capitalize hover:bg-gray-400">
+            <span className="std-hover flex flex-row items-center justify-center std-pad capitalize gap-1 std-text-size">
+                <MdExpandMore className="inline-block" />
                 {displayMap ? displayMap[name] : name.toLowerCase().replaceAll("_", " ")}
-                <MdExpandMore className="ml-2 inline-block rounded-md " size="1.2em" />
             </span>
             <dropdown.Dropdown variant="glass">
                 {names.map((name) => (
                     <div
                         key={name}
-                        className="min-w-full rounded-md px-2 capitalize hover:bg-gray-400"
+                        className="min-w-full px-2 capitalize std-hover"
                         onClick={() => onNameClick(name)}>
                         {displayMap ? displayMap[name] : name.toLowerCase().replaceAll("_", " ")}
                     </div>
@@ -197,15 +224,13 @@ interface BooleanQuickFilterProps extends ComponentPropsWithoutRef<"div"> {
 }
 function BooleanQuickFilter({ name, active, ...rest }: BooleanQuickFilterProps) {
     return (
-        <span
-            className="rounded-md, flex flex-row items-center justify-center rounded-md  px-2 py-1 capitalize hover:cursor-pointer hover:bg-gray-400"
-            {...rest}>
-            {name.toLowerCase().replaceAll("_", " ")}
+        <span className="std-hover flex flex-row items-center justify-center std-pad capitalize gap-1 std-text-size" {...rest}>
             {active ? (
-                <MdOutlineRadioButtonChecked className="ml-2 " size="1.2em" />
+                <MdOutlineRadioButtonChecked/>
             ) : (
-                <MdOutlineRadioButtonUnchecked className="ml-2 " size="1.2em" />
-            )}{" "}
+                <MdOutlineRadioButtonUnchecked />
+            )}
+            {name.toLowerCase().replaceAll("_", " ")}
         </span>
     );
 }
@@ -222,15 +247,14 @@ function FilterPanel<T extends FilterItem>({
     many?: boolean;
 }) {
     return (
-        <div className="max-h-fit">
+        <div className="flex max-h-fit flex-col gap-2">
             {title && (
                 <>
-                    <span className="font-bold">{title}</span>
-                    <Separator className="mb-3 h-1" />
+                    <span className="font-semibold">{title}</span>
                 </>
             )}
             <div className={tm(many && "resize-y overflow-y-auto")}>
-                <div className={tm("flex flex-row flex-wrap gap-2 text-sm", many && " h-72")}>
+                <div className={tm("flex flex-row flex-wrap gap-2 text-sm", many && "h-72")}>
                     {filterItems.map((item) => (
                         <FilterLabel key={item.name} item={item} toggleSelection={toggleSelection} />
                     ))}
@@ -245,10 +269,10 @@ function FilterLabel<T extends FilterItem>({ item, toggleSelection }: { item: T;
         <span
             key={item.name}
             className={tm(
-                "h-fit rounded-md bg-gray-500 px-2 py-1 text-gray-300 hover:cursor-pointer",
-                item.active && "bg-gray-600 hover:bg-gray-500",
-                !item.active && "bg-gray-500 hover:bg-gray-600",
-                !item.active && item.isAdult && "bg-gray-400 hover:bg-gray-600",
+                "h-fit bg-gray-500 std-pad text-gray-300 std-hover",
+                // item.active && "bg-gray-600 hover:bg-gray-500",
+                // !item.active && "bg-gray-500 hover:bg-gray-600",
+                !item.active && item.isAdult && "opacity-75",
                 item.type === "clearAll" &&
                     "bg-gray-400 animate-in fade-in-0 slide-in-from-left-8 duration-200 hover:bg-gray-600"
             )}

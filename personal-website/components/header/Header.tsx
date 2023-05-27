@@ -47,15 +47,8 @@ const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ clas
                     HOME
                 </NavItem>
 
-                {/* <li
-                    className={tm(
-                        listItemClassName,
-                        (pathname === "/" || pathname === homePath) && activeClassName
-                    )}></li> */}
-                {/* <LocaleButton className={tm("px-1")} /> */}
-
                 <dropdown.Container>
-                    <div className="icon-text std-pad">
+                    <div className="icon-text std-pad std-hover">
                         <IoLanguage className="icon-md" />
                         {currentLocale.toUpperCase()}
                     </div>
@@ -75,7 +68,7 @@ const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ clas
                 <ThemeButton />
 
                 <dropdown.Container>
-                    <div className="icon-text std-pad">
+                    <div className="icon-text std-pad std-hover">
                         <IoNavigateCircle className="icon-md" />
                         Explore
                     </div>
@@ -127,7 +120,7 @@ const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(({ href, children, c
         <Link
             href={href}
             locale={locale}
-            className={tm("icon-text std-pad hover:bg-button-std", className)}
+            className={tm("icon-text std-pad std-hover", className)}
             ref={ref}
             {...rest}>
             {children}

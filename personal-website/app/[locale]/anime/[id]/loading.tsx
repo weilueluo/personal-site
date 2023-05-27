@@ -67,9 +67,9 @@ function Section({ children }: { children: React.ReactNode }) {
     return (
         <div className={"flex flex-col"}>
             <div className="mb-1 flex flex-row gap-2">
-                <div className="mb-2 grow border-b-2 border-black"></div>
+                <div className="mb-2 grow border-b border-black"></div>
                 <LoadingItem className="h-6 w-24" />
-                <div className="mb-2 grow border-b-2 border-black"></div>
+                <div className="mb-2 grow border-b border-black"></div>
             </div>
 
             {children}

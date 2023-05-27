@@ -19,11 +19,11 @@ export const Card = React.forwardRef<ElementRef<"div">, CardProps>(
         return (
             <Link
                 href={url || "#"}
-                className="group hover:cursor-pointer"
+                className="std-hover group hover:cursor-pointer"
                 target="_blank"
                 onMouseOver={() => setHover(true)}
                 onMouseOut={() => setHover(false)}>
-                <div ref={ref} className={tm("relative w-28 shrink-0", className)} {...rest}>
+                <div ref={ref} className={tm("relative w-20 shrink-0 md:w-28", className)} {...rest}>
                     {hover && <ImNewTab className="absolute right-0 top-0 z-10 bg-white" />}
 
                     <ProgressiveImage
@@ -31,12 +31,12 @@ export const Card = React.forwardRef<ElementRef<"div">, CardProps>(
                         fill={true}
                         sizes="(min-width: 768px) 480px, 360px"
                         alt="image"
-                        className=" h-40 w-full"
-                        loading={<LoadingItem className="h-40 w-28" />}
+                        className="h-32 w-full md:h-40"
+                        loading={<LoadingItem className="h-32 w-20 md:h-40 md:w-28" />}
                     />
                     <div className="flex flex-col">
-                        {title && <span className="font-semibold">{title}</span>}
-                        {name && <span className="line-clamp-3 group-hover:text-purple-500">{name}</span>}
+                        {title && <span className="line-clamp-2 font-semibold">{title}</span>}
+                        {name && <span className="line-clamp-3">{name}</span>}
                     </div>
                 </div>
             </Link>
@@ -59,13 +59,12 @@ Cards.displayName = "Cards";
 export const Section = React.forwardRef<ElementRef<"div">, ComponentPropsWithoutRef<"div">>(
     ({ title, children, className, ...rest }, ref) => {
         return (
-            <div className={tm("flex flex-col rounded-md", className)} ref={ref} {...rest}>
+            <div className={tm("flex flex-col", className)} ref={ref} {...rest}>
                 <div className="mb-1 flex flex-row gap-2">
-                    <div className="mb-2 grow border-b-2 border-black"></div>
-                    <h3 className="text-xl font-bold">{title}</h3>
-                    <div className="mb-2 grow border-b-2 border-black"></div>
+                    <div className="mb-2 grow border-b border-black"></div>
+                    <h3 className="text-xl font-semibold">{title}</h3>
+                    <div className="mb-2 grow border-b border-black"></div>
                 </div>
-                {/* <Separator className="mb-2 h-1" /> */}
                 {children}
             </div>
         );
@@ -76,7 +75,7 @@ Section.displayName = "Section";
 export const FullLabel = React.forwardRef<ElementRef<"div">, ComponentPropsWithoutRef<"div">>(
     ({ children, className, ...rest }, ref) => {
         return (
-            <div ref={ref} className={tm("w-full rounded-md text-center font-semibold", className)} {...rest}>
+            <div ref={ref} className={tm("w-full text-center font-semibold", className)} {...rest}>
                 {children}
             </div>
         );
@@ -94,7 +93,7 @@ export interface LabelProps extends ComponentPropsWithoutRef<"span"> {
 export const Label = React.forwardRef<ElementRef<"span">, LabelProps>(({ children, className, url, ...rest }, ref) => {
     const label = (
         <span
-            className={tm("whitespace-nowrap rounded-md px-2 font-semibold md:whitespace-normal", className)}
+            className={tm("std-hover whitespace-nowrap px-2 font-semibold md:whitespace-normal", className)}
             ref={ref}
             {...rest}>
             {children}
@@ -102,7 +101,7 @@ export const Label = React.forwardRef<ElementRef<"span">, LabelProps>(({ childre
     );
 
     return url ? (
-        <Link href={url} target="_blank" className="hover:underline hover:opacity-90">
+        <Link href={url} target="_blank">
             {label}
         </Link>
     ) : (
