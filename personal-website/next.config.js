@@ -25,6 +25,11 @@ const nextConfig = {
             },
         ],
     },
+
+    eslint: {
+        // eslint ran during pre-commit hooks
+        ignoreDuringBuilds: true,
+    },
 };
 
 module.exports = nextConfig;
