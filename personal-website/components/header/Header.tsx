@@ -24,7 +24,7 @@ const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ clas
 
     const homePath = getPathWithLocale(pathname, "/");
     const blogsPath = getPathWithLocale(pathname, "/blogs");
-    const contactPath = getPathWithLocale(pathname, "/contact");
+    const aboutPath = getPathWithLocale(pathname, "/about");
     const animePath = getPathWithLocale(pathname, "/anime");
     const rssPath = getPathWithLocale(pathname, "/rss");
     const cvPath = getPathWithLocale(pathname, "/cv");
@@ -83,9 +83,9 @@ const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ clas
                             {messages["blogs"]}
                         </NavItem>
                         {/* <Separator variant="sm" /> */}
-                        <NavItem href={contactPath}>
+                        <NavItem href={aboutPath}>
                             <RiContactsBook2Fill className="icon-md" />
-                            {messages["contact"]}
+                            {messages["about"]}
                         </NavItem>
                         {/* <Separator variant="sm" /> */}
                         <NavItem href={animePath}>

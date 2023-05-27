@@ -1,0 +1,52 @@
+.react {
+    position: relative;
+}
+
+.borderBR {
+    border: 1px solid;
+    border-image: linear-gradient(to top left, black, transparent 15%) 1;
+}
+
+.borderTL {
+    border: 1px solid;
+    border-image: linear-gradient(to bottom right, black, transparent 15%) 1;
+}
+
+.borderTR {
+    border: 1px solid;
+    border-image: linear-gradient(to bottom left, black, transparent 15%) 1;
+}
+
+.borderBL {
+    border: 1px solid;
+    border-image: linear-gradient(to top right, black, transparent 15%) 1;
+}
+
+.borderT,
+.borderB,
+.borderL,
+.borderR {
+    &::before,
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}
+.borderT::after {
+    @extend .borderTL;
+}
+
+.borderT::before {
+    @extend .borderTR;
+}
+.borderB::after {
+    @extend .borderBL;
+}
+
+.borderB::before {
+    @extend .borderBR;
+}

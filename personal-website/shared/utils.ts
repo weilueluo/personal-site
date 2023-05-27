@@ -1,3 +1,4 @@
+import getConfig from "next/config";
 import { MutableRefObject } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -124,3 +125,10 @@ export const stringHash = (str: string, seed = 42) => {
 
     return 4294967296 * (2097151 & h2) + (h1 >>> 0);
 };
+
+export function getBuildTime() {
+    const dat = getConfig();
+    console.log("dat", dat);
+
+    return dat.publicRuntimeConfig.buildTime;
+}
