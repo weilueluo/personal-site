@@ -6,3 +6,10 @@ repos:
         additional_dependencies:
           - prettier@2.8.4
           - prettier-plugin-tailwindcss@0.2.4
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: "v8.41.0" # Use the sha / tag you want to point at
+    hooks:
+      - id: eslint
+        files: \.[jt]sx?$ # *.js, *.jsx, *.ts and *.tsx
+        additional_dependencies:
+          - eslint-config-next@13.3.1
