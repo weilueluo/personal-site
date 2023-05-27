@@ -2,7 +2,7 @@
 import React, { useContext, useLayoutEffect } from "react";
 import { MediaItem } from "../graphql/graphql";
 import { fetchAnilistMedia } from "../graphql/query";
-import Loading from "@/components/ui/loading/spinner";
+import Loading from "@/app/[locale]/anime/[id]/loading";
 
 type AnimeDetailsContextValue = MediaItem | undefined;
 
