@@ -18,7 +18,7 @@ export const Card = React.forwardRef<ElementRef<"div">, CardProps>(
         return (
             <Link
                 href={url || "#"}
-                className="std-hover group hover:cursor-pointer"
+                className="group hover:cursor-pointer hover:underline"
                 target="_blank"
                 onMouseOver={() => setHover(true)}
                 onMouseOut={() => setHover(false)}>

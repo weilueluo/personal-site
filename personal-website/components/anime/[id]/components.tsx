@@ -120,7 +120,7 @@ export function Trailer() {
         <Section title="Trailer" className="h-fit">
             <div className="relative h-0 pb-[56.25%]">
                 <iframe
-                    className="absolute left-0 top-0 h-full w-full animate-in fade-in-0 slide-in-from-right-4"
+                    className="absolute left-0 top-0 h-full w-full"
                     src={videoSource}
                     title="YouTube video player"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

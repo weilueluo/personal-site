@@ -11,9 +11,10 @@ import { AiFillCheckCircle, AiFillEye, AiFillEyeInvisible } from "react-icons/ai
 import { CgFormatSeparator } from "react-icons/cg";
 import { ImNewTab } from "react-icons/im";
 import { IoMdRefreshCircle } from "react-icons/io";
-import { MdAccessTimeFilled, MdOutlineError } from "react-icons/md";
+import { MdAccessTimeFilled, MdLightbulb, MdOutlineError } from "react-icons/md";
 import { VscLoading } from "react-icons/vsc";
 import { useSingleUserFeedConfigs, useUserRSSConfigs } from "../../../components/rss/user-config";
+import { IoLayersSharp } from "react-icons/io5";
 
 export default function RSS() {
     const { feeds, infoMap } = useRSS();
@@ -187,14 +188,14 @@ function FeedData({ feedData }: { feedData: Feed }) {
                         <div className="flex flex-row items-center gap-2 text-sm text-gray-600">
                             <Link
                                 href={feedData.config.homeUrl}
-                                className="hover-subtext inline-flex flex-row items-center italic hover:cursor-pointer hover:underline"
+                                className="hover-subtext inline-flex flex-row items-center gap-1 italic hover:cursor-pointer hover:underline"
                                 target="_blank">
+                                <IoLayersSharp className="inline-block" />
                                 {`${feedData.config.title}`}
                                 {/* <ImNewTab className="ml-1 inline-block" /> */}
                             </Link>
                             {date && (
                                 <>
-                                    <span>{"|"}</span>
                                     <span className="flex flex-row items-center gap-1">
                                         <MdAccessTimeFilled className="inline-block" />
                                         <span
@@ -204,10 +205,10 @@ function FeedData({ feedData }: { feedData: Feed }) {
                                         </span>
                                     </span>
                                     {showHint && (
-                                        <>
-                                            <span>{"|"}</span>
+                                        <span className=" flex flex-row items-center animate-in fade-in-0 slide-in-from-bottom-4">
+                                            <MdLightbulb className="inline-block" />
                                             <span className="italic">{hint}</span>
-                                        </>
+                                        </span>
                                     )}
                                 </>
                             )}

@@ -13,7 +13,7 @@ $width: 2rem;
     perspective: 100px;
 }
 
-$distToCenter: math.tan(30deg) * -$width/2;
+$distToCenter: math.tan(30deg) * math.div(-$width, 2);
 
 .pieces {
     position: relative;

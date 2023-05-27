@@ -1,14 +1,21 @@
 "use client";
 import BackButton from "@/components/anime/[id]/back";
-import { Characters, CoverImage, Description, Relations, Staffs, Trailer } from "@/components/anime/[id]/components";
+import {
+    Characters,
+    CoverImage,
+    Description,
+    Relations,
+    Staffs,
+    Title,
+    Trailer,
+} from "@/components/anime/[id]/components";
 import { AnimeDetailsProvider, useAnimeDetails } from "@/components/anime/[id]/context";
 import { Genres, HashTags, NextAiring, Score, Status, Tags } from "@/components/anime/[id]/labels";
 import ProgressiveImage from "@/components/ui/Image";
-import Title from "../../title";
+import LoadingItem from "@/components/ui/loading/loading";
 
 export default function Page({ params }: { params: { id: number } }) {
     return (
-        // @ts-ignore async server component
         <AnimeDetailsProvider animeId={params.id}>
             <AnimeDetailsPage />
         </AnimeDetailsProvider>
@@ -29,7 +36,7 @@ function AnimeDetailsPage() {
                     sizes="(min-width: 1024px) 1024px, 768px"
                     alt="image"
                     className=" h-40 w-full overflow-hidden"
-                    loading={<div className="h-40 w-full bg-gray-500" />}
+                    loading={<LoadingItem className="h-40 w-full" />}
                 />
             </div>
 
