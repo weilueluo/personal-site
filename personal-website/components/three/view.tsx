@@ -10,7 +10,7 @@ export interface ViewProps extends React.ComponentPropsWithoutRef<"div"> {
 }
 
 const View = forwardRef(({ children, orbit, className, ...props }: ViewProps, ref) => {
-    const localRef = useRef<HTMLDivElement>(null);
+    const localRef = useRef<HTMLDivElement>(null!);
     useImperativeHandle(ref, () => localRef.current);
 
     return (
