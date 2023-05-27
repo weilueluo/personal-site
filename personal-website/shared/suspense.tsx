@@ -8,26 +8,19 @@ export function suspensify<T>(promise: Promise<T>) {
     let suspender = promise.then(
         (response) => {
             status = "success";
-            // console.log("suspensify success", promise);
             result = response;
-            // return Promise.resolve(response);
         },
         (error) => {
             status = "error";
-            // console.log("suspensify error", promise);
             result = error;
-            // return Promise.reject(error);
         }
     );
 
     const read = () => {
         switch (status) {
             case "pending":
-                // console.log("read pending", suspender);
-
                 throw suspender;
             case "error":
-                // console.log("read error", result);
                 throw result;
             default:
                 return result;

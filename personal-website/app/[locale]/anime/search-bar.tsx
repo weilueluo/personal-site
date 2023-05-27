@@ -63,7 +63,7 @@ export default function SearchBar() {
         }
     }, [adultFilter, tagFilters, tagFiltersNoHentai]);
 
-    // show hentai genre only if adult tag is selected
+    // show hentai genre only if R18 meta tag is selected
     const [genreFiltersNoHentai, setGenreFiltersNoHentai] = useState(() =>
         genreFilters.filter((genre) => genre.isAdult === false)
     );
@@ -84,6 +84,7 @@ export default function SearchBar() {
         setClearAllFilter(activeSlowFilters.filter((item) => item.type !== "clearAll").length >= 3);
     }, [activeSlowFilters, setClearAllFilter]);
 
+    // search bar stuff
     const { setSearchString } = useAnimeSearch();
     const searchBarRef = useRef<HTMLInputElement>(null);
     const handleOnSubmit = (e: React.SyntheticEvent) => {
@@ -106,7 +107,7 @@ export default function SearchBar() {
 
     return (
         <div className="flex flex-col gap-2">
-            <div className="flex h-8 md:h-10 max-h-full w-full flex-row border-b border-black pb-1">
+            <div className="flex h-8 max-h-full w-full flex-row border-b border-black pb-1 md:h-10">
                 <div
                     className="hover:std-hover grid h-full w-12 shrink place-items-center"
                     onClick={(e) => handleOnSubmit(e)}>
@@ -200,16 +201,13 @@ function QuickFilter<T extends string>({
 }) {
     return (
         <dropdown.Container>
-            <span className="std-hover flex flex-row items-center justify-center std-pad capitalize gap-1 std-text-size">
+            <span className="std-hover std-pad std-text-size flex flex-row items-center justify-center gap-1 capitalize">
                 <MdExpandMore className="inline-block" />
                 {displayMap ? displayMap[name] : name.toLowerCase().replaceAll("_", " ")}
             </span>
             <dropdown.Dropdown variant="glass">
                 {names.map((name) => (
-                    <div
-                        key={name}
-                        className="min-w-full px-2 capitalize std-hover"
-                        onClick={() => onNameClick(name)}>
+                    <div key={name} className="std-hover min-w-full px-2 capitalize" onClick={() => onNameClick(name)}>
                         {displayMap ? displayMap[name] : name.toLowerCase().replaceAll("_", " ")}
                     </div>
                 ))}
@@ -224,12 +222,10 @@ interface BooleanQuickFilterProps extends ComponentPropsWithoutRef<"div"> {
 }
 function BooleanQuickFilter({ name, active, ...rest }: BooleanQuickFilterProps) {
     return (
-        <span className="std-hover flex flex-row items-center justify-center std-pad capitalize gap-1 std-text-size" {...rest}>
-            {active ? (
-                <MdOutlineRadioButtonChecked/>
-            ) : (
-                <MdOutlineRadioButtonUnchecked />
-            )}
+        <span
+            className="std-hover std-pad std-text-size flex flex-row items-center justify-center gap-1 capitalize"
+            {...rest}>
+            {active ? <MdOutlineRadioButtonChecked /> : <MdOutlineRadioButtonUnchecked />}
             {name.toLowerCase().replaceAll("_", " ")}
         </span>
     );
@@ -269,7 +265,7 @@ function FilterLabel<T extends FilterItem>({ item, toggleSelection }: { item: T;
         <span
             key={item.name}
             className={tm(
-                "h-fit bg-gray-500 std-pad text-gray-300 std-hover",
+                "std-pad std-hover h-fit bg-gray-500 text-gray-300",
                 // item.active && "bg-gray-600 hover:bg-gray-500",
                 // !item.active && "bg-gray-500 hover:bg-gray-600",
                 !item.active && item.isAdult && "opacity-75",

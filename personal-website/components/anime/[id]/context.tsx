@@ -9,14 +9,11 @@ type AnimeDetailsContextValue = MediaItem | undefined;
 
 const AnimeDetailsContext = React.createContext<AnimeDetailsContextValue>(undefined!);
 
-export function AnimeDetailsProvider({
-    animeDetails,
-    children,
-}: {
-    animeDetails: { read: () => MediaItem | undefined };
-    children: React.ReactNode;
-}) {
-    const data = animeDetails.read();
+export async function AnimeDetailsProvider({ animeId, children }: { animeId: number; children: React.ReactNode }) {
+    const data = await fetchAnilistMedia(animeId);
+    if (!data) {
+        throw new Error("Failed to fetch anime data");
+    }
     return <AnimeDetailsContext.Provider value={data}>{children}</AnimeDetailsContext.Provider>;
 }
 
