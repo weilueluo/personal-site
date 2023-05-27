@@ -10,12 +10,12 @@ export interface ViewProps extends React.ComponentPropsWithoutRef<"div"> {
 }
 
 const View = forwardRef(({ children, orbit, className, ...props }: ViewProps, ref) => {
-    const localRef = useRef(null!);
+    const localRef = useRef<HTMLDivElement>(null);
     useImperativeHandle(ref, () => localRef.current);
 
     return (
         <>
-            <div ref={localRef} className={tm("max-w-full max-h-full" ,className)} {...props} />
+            <div ref={localRef} className={tm("max-h-full max-w-full", className)} {...props} />
             <r3f.In>
                 <ViewImpl track={localRef}>
                     {children}

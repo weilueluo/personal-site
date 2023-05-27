@@ -65,7 +65,7 @@ export default function AnimeSlowFiltersProvider({ children }: { children: React
     });
     const adultFilterOnClick = (item: FilterItem) => {
         setAdultFilter((draft) => {
-            draft.active = !draft.active;
+            draft.active = !item.active;
         });
     };
     // clear all filter: special filter that clear all active filters on click
@@ -116,7 +116,6 @@ export default function AnimeSlowFiltersProvider({ children }: { children: React
             console.warn("unknown slow filter type clicked");
         }
     };
-
 
     return (
         <AnimeSlowFilterContext.Provider

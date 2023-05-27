@@ -1,3 +1,23 @@
 {
-  "extends": "next/core-web-vitals"
+    "extends": [
+        "next/core-web-vitals",
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint"],
+    "rules": {
+        // suppress errors for missing 'import React' in files, next Js does that for us
+        "react/react-in-jsx-scope": "off",
+        // required for suppress missing support for async server component
+        "@typescript-eslint/ban-ts-comment": "off",
+        // allow interfacce to be empty for ease of extending
+        "@typescript-eslint/no-empty-interface": "off",
+        // fuck this man, I know it is not going to be null
+        "@typescript-eslint/no-non-null-assertion": "off",
+        // dev flexibility
+        "@typescript-eslint/no-explicit-any": "off"
+    },
+    "root": true
 }

@@ -26,7 +26,10 @@ const Feed = React.forwardRef<React.ElementRef<"div">, FeedProps>(({ url, classN
     }
 
     return (
-        <div ref={ref} className={tm("flex w-full flex-col items-center overflow-hidden p-2", className)} {...otherProps}>
+        <div
+            ref={ref}
+            className={tm("flex w-full flex-col items-center overflow-hidden p-2", className)}
+            {...otherProps}>
             <div className="h-32 w-full">
                 <h3 className="w-full text-center text-xl font-bold">
                     <a href={data?.link}>{data?.title}</a>
@@ -67,7 +70,7 @@ const FeedItem = React.forwardRef<React.ElementRef<"li">, FeedItemProps>(({ item
 
     return (
         <li
-            className="m-4 w-full border [&_img]:h-48"
+            className={tm("m-4 w-full border [&_img]:h-48", className)}
             onClick={() => {
                 setActive(!active);
             }}

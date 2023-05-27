@@ -6,7 +6,5 @@ import { useEffect } from "react";
 enableMapSet();
 
 export default function Init() {
-
-
     return <></>;
 }

@@ -21,15 +21,15 @@ export function getPathWithLocale(currentPath: string, newPath: string) {
 
     const isRoot = newPath.startsWith("/");
     if (!isRoot) {
-        return currentPath + '/' + newPath;
+        return currentPath + "/" + newPath;
     }
 
     for (const locale of LOCALES) {
         if (currentPath.startsWith(`/${locale}/`) || currentPath == `/${locale}`) {
-            return newPath === '/' ? `/${locale}` : `/${locale}${newPath}`;
+            return newPath === "/" ? `/${locale}` : `/${locale}${newPath}`;
         }
     }
 
     // currentPath == '/'
-    return newPath === '/' ? `/${DEFAULT_LOCALE}` : `/${DEFAULT_LOCALE}${newPath}`;
+    return newPath === "/" ? `/${DEFAULT_LOCALE}` : `/${DEFAULT_LOCALE}${newPath}`;
 }

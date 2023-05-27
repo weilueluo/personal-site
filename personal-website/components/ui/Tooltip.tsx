@@ -16,7 +16,10 @@ const Content = React.forwardRef<ElementRef<"div">, ComponentPropsWithoutRef<"di
     ({ className, children, ...otherProps }, ref) => {
         return (
             <div
-                className={tm("invisible absolute bottom-[calc(100%+0.25em)] group-hover:visible rounded-md bg-gray-300 px-2 py-1", className)}
+                className={tm(
+                    "invisible absolute bottom-[calc(100%+0.25em)] rounded-md bg-gray-300 px-2 py-1 group-hover:visible",
+                    className
+                )}
                 ref={ref}
                 {...otherProps}>
                 {children}

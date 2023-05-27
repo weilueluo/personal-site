@@ -18,7 +18,7 @@ import {
     SectionMedia,
     Staff,
     Staffs,
-    UsersFavouritesAnime
+    UsersFavouritesAnime,
 } from "./graphql";
 
 export const INIT_PAGE_INFO: PageInfoItem = {
@@ -50,32 +50,30 @@ async function fetchAnilist<T>(query: string, options = {}): Promise<T> {
         ...options,
     };
 
-    return fetch(ANILIST_GRAPHQL_ENDPOINT, allOptions)
-        .then((res) =>
-            res
-                .json()
-                .then((json) => {
-                    if (json.errors) {
-                        throw new Error(JSON.stringify(json.errors))
-                    }
-                    if (json.status >= 400) {
-                        throw new Error(JSON.stringify(json));
-                    }
-                    return json.data;
-                })
-                .then((data) => {
-                    console.log("Received Anilist data");
-                    console.log(data);
-                    return data;
-                })
-        );
+    return fetch(ANILIST_GRAPHQL_ENDPOINT, allOptions).then((res) =>
+        res
+            .json()
+            .then((json) => {
+                if (json.errors) {
+                    throw new Error(JSON.stringify(json.errors));
+                }
+                if (json.status >= 400) {
+                    throw new Error(JSON.stringify(json));
+                }
+                return json.data;
+            })
+            .then((data) => {
+                console.log("Received Anilist data");
+                console.log(data);
+                return data;
+            })
+    );
 }
 
 export interface Page<T> {
     pageInfo?: PageInfoItem;
     data?: T;
 }
-
 
 export async function fetchMyAnimeCollection(chunk: number, options = {}): Promise<Page<MediaListCollectionList[]>> {
     const graphqlQuery = AnilistGraphqlQuery.fetchMyAnimeCollection(MY_USER_ID, chunk, "ANIME", 500);
@@ -88,7 +86,7 @@ export async function fetchMyAnimeCollection(chunk: number, options = {}): Promi
         currentPage: chunk,
         lastPage: undefined,
         hasNextPage: response.MediaListCollection.hasNextChunk,
-    }
+    };
 
     return {
         pageInfo: pageInfo,
@@ -104,7 +102,10 @@ export async function fetchFilters(): Promise<Filters> {
     return response;
 }
 
-export async function fetchSearchPage(FetchSearchParams: FetchSearchParams, options = {}): Promise<Page<SectionMedia[]>> {
+export async function fetchSearchPage(
+    FetchSearchParams: FetchSearchParams,
+    options = {}
+): Promise<Page<SectionMedia[]>> {
     const graphqlQuery = AnilistGraphqlQuery.fetchSearch(FetchSearchParams);
 
     const response = await fetchAnilist<RawPage<Media<MediaItem>>>(graphqlQuery, options);
@@ -128,7 +129,11 @@ export async function fetchFavouritesPage(page_: number | string = 1, options = 
     };
 }
 
-export async function fetchMediaList(page_ = 1, status: MEDIALIST_STATUS, options = {}): Promise<Page<(SectionMedia | undefined)[]>> {
+export async function fetchMediaList(
+    page_ = 1,
+    status: MEDIALIST_STATUS,
+    options = {}
+): Promise<Page<(SectionMedia | undefined)[]>> {
     const graphqlQuery = AnilistGraphqlQuery.fetchMediaList(MY_USER_ID, page_, status);
 
     const response = await fetchAnilist<RawPage<MediaList>>(graphqlQuery, options);
@@ -150,7 +155,11 @@ export async function fetchAnilistMedia(animeID: number, options = {}): Promise<
     return response?.Page?.media?.[0];
 }
 
-export async function fetchAnilistMediaCharacters(animeID: number, page_: number, options = {}): Promise<Page<Character[]>> {
+export async function fetchAnilistMediaCharacters(
+    animeID: number,
+    page_: number,
+    options = {}
+): Promise<Page<Character[]>> {
     const graphqlQuery = AnilistGraphqlQuery.fetchMediaCharacters(animeID, page_);
 
     const response = await fetchAnilist<RawPage<Media<Characters>>>(graphqlQuery, options);

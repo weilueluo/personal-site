@@ -61,10 +61,10 @@ export default function ThemeProvider({
 
     // handle system theme changes on the fly
     useEffect(() => {
-        if (unResolvedTheme === 'system') {
+        if (unResolvedTheme === "system") {
             setResolvedTheme(systemTheme);
         }
-    }, [systemTheme, unResolvedTheme])
+    }, [systemTheme, unResolvedTheme]);
 
     const setTheme = useCallback(
         (newTheme: UnResolvedTheme) => {

@@ -172,7 +172,9 @@ export interface ExternalLinks {
 }
 
 ///////////////////////////////////////////////// media
-const mediaFields = `${sectionMediaFields} trailer{id site thumbnail} startDate{${dateFields}} description status season seasonYear episodes synonyms meanScore bannerImage genres hashtag tags{name description} nextAiringEpisode{id airingAt timeUntilAiring episode} ${relations} ${characters(1)} ${staffs(1)} ${externalLinks}`;
+const mediaFields = `${sectionMediaFields} trailer{id site thumbnail} startDate{${dateFields}} description status season seasonYear episodes synonyms meanScore bannerImage genres hashtag tags{name description} nextAiringEpisode{id airingAt timeUntilAiring episode} ${relations} ${characters(
+    1
+)} ${staffs(1)} ${externalLinks}`;
 
 type AnimeStatus = "FINISHED" | "RELEASING" | "NOT_YET_RELEASED" | "CANCELLED" | "HIATUS";
 
@@ -182,7 +184,9 @@ type AnimeSeason = "WINTER" | "SPRING" | "SUMMER" | "FALL";
 export type MEDIALIST_STATUS = "CURRENT" | "PLANNING" | "COMPLETED" | "DROPPED" | "PAUSED" | "REPEATING";
 
 const mediaList = (userID: number | string, status: MEDIALIST_STATUS) =>
-    `mediaList(userId:${userID}, type:ANIME${status ? `,status_in:[${status}]` : ""}){id status media{${sectionMediaFields}}}`;
+    `mediaList(userId:${userID}, type:ANIME${
+        status ? `,status_in:[${status}]` : ""
+    }){id status media{${sectionMediaFields}}}`;
 export interface MediaListItem {
     id: number;
     status?: MEDIALIST_STATUS;
@@ -206,7 +210,6 @@ export interface UsersFavouritesAnime {
     }[];
 }
 
-
 /////////////////////////////////////////////////
 
 const medias = (id: number | string) =>
@@ -214,36 +217,35 @@ const medias = (id: number | string) =>
     ${mediaFields}
 }`;
 const mediasSearch = (mediaSearchParams: Omit<FetchSearchParams, "page">) => {
-
-    const {
-        searchString,
-        activeGenreFilters,
-        activeTagFilters,
-        typeFilter,
-        sortFilter,
-        countryFilter,
-        idsToFilter } = mediaSearchParams;
+    const { searchString, activeGenreFilters, activeTagFilters, typeFilter, sortFilter, countryFilter, idsToFilter } =
+        mediaSearchParams;
 
     const searchQuery = searchString ? `search:"${searchString}"` : undefined;
 
-    const genres = (activeGenreFilters || []).filter(item => item.active).map((item) => `"${item.name}"`);
+    const genres = (activeGenreFilters || []).filter((item) => item.active).map((item) => `"${item.name}"`);
     const genreQuery = genres.length > 0 ? `genre_in:[${genres.join(",")}]` : undefined;
 
-    const tags = (activeTagFilters || []).filter(item => item.active).map((item) => `"${item.name}"`);
+    const tags = (activeTagFilters || []).filter((item) => item.active).map((item) => `"${item.name}"`);
     const tagQuery = tags.length > 0 ? `tag_in:[${tags.join(",")}]` : undefined;
 
-    const typeQuery = (typeFilter && typeFilter.name.toLowerCase() !== 'any') ? `type:${typeFilter.name.toUpperCase()}` : undefined;
-    const countryQuery = (countryFilter && countryFilter.name.toLowerCase() !== 'any') ? `countryOfOrigin:${countryFilter.name.toUpperCase()}` : undefined;
+    const typeQuery =
+        typeFilter && typeFilter.name.toLowerCase() !== "any" ? `type:${typeFilter.name.toUpperCase()}` : undefined;
+    const countryQuery =
+        countryFilter && countryFilter.name.toLowerCase() !== "any"
+            ? `countryOfOrigin:${countryFilter.name.toUpperCase()}`
+            : undefined;
 
     const sortQuery = sortFilter ? `sort:[${sortFilter.name.toUpperCase()}]` : undefined;
 
-    const filterIdsQuery = (idsToFilter) ? `id_in:[${[...idsToFilter].join(",")}]` : undefined;
+    const filterIdsQuery = idsToFilter ? `id_in:[${[...idsToFilter].join(",")}]` : undefined;
 
-    const queryItems = [searchQuery, genreQuery, tagQuery, typeQuery, sortQuery, countryQuery, filterIdsQuery].filter(item => !!item).join(",");
+    const queryItems = [searchQuery, genreQuery, tagQuery, typeQuery, sortQuery, countryQuery, filterIdsQuery]
+        .filter((item) => !!item)
+        .join(",");
     const mediaQuery = queryItems.length > 0 ? `media(${queryItems})` : "media";
 
-    return `${mediaQuery}{${sectionMediaFields}}`
-}
+    return `${mediaQuery}{${sectionMediaFields}}`;
+};
 
 export interface Media<T> {
     media: T[];
@@ -298,36 +300,35 @@ const mediasStaffsOnly = (id: number | string, page: number | string) =>
 const genreCollection = "GenreCollection";
 export interface GenreCollection {
     GenreCollection: string[];
-};
+}
 
 /////////////////////////////////////////////
-const mediaTagCollection = `MediaTagCollection{name description category isAdult}`
+const mediaTagCollection = `MediaTagCollection{name description category isAdult}`;
 export interface MediaTag {
-    name: string,
-    description: string,
-    category: string,
-    isAdult: boolean
+    name: string;
+    description: string;
+    category: string;
+    isAdult: boolean;
 }
 export interface MediaTagCollection {
     MediaTagCollection: MediaTag[];
-};
+}
 
 ///////////////////////////////////////////// filter
 const filters = `${genreCollection}
-${mediaTagCollection}`
+${mediaTagCollection}`;
 export type Filters = MediaTagCollection & GenreCollection;
 
-
 ///////////////////////////////////////////// my anime collection
-const mediaListCollectionFields = `hasNextChunk lists {name status entries {media {id}}}`
+const mediaListCollectionFields = `hasNextChunk lists {name status entries {media {id}}}`;
 export type MediaListStatus = "CURRENT" | "PLANNING" | "COMPLETED" | "DROPPED" | "PAUSED" | "REPEATING";
 export interface MediaListCollectionList {
     name: string;
     status: MediaListStatus;
     entries: {
         media: {
-            id: number
-        }
+            id: number;
+        };
     }[];
 }
 export interface MediaListCollectionFields {
@@ -335,20 +336,25 @@ export interface MediaListCollectionFields {
     lists: MediaListCollectionList[];
 }
 
-const mediaListCollection = (userId: string | number, type?: TypeFilterName, perChunk?: number | string, chunk?: number | string) => {
-
+const mediaListCollection = (
+    userId: string | number,
+    type?: TypeFilterName,
+    perChunk?: number | string,
+    chunk?: number | string
+) => {
     const userIdQuery = `userId:${userId}`;
-    const typeQuery = (type && type.toLowerCase() !== 'any') ? `type:${type.toUpperCase()}` : undefined;
-    const perChunkQuery = `perChunk:${perChunk ? perChunk : 500}`;  // 500 is the upper limit
+    const typeQuery = type && type.toLowerCase() !== "any" ? `type:${type.toUpperCase()}` : undefined;
+    const perChunkQuery = `perChunk:${perChunk ? perChunk : 500}`; // 500 is the upper limit
     const chunkQuery = `chunk:${chunk ? chunk : 1}`;
 
-    const queryItems = [userIdQuery, typeQuery, perChunkQuery, chunkQuery].filter(item => !!item).join(",");
-    const mediaListCollectionQuery = queryItems.length > 0 ? `MediaListCollection(${queryItems})` : "MediaListCollection";
+    const queryItems = [userIdQuery, typeQuery, perChunkQuery, chunkQuery].filter((item) => !!item).join(",");
+    const mediaListCollectionQuery =
+        queryItems.length > 0 ? `MediaListCollection(${queryItems})` : "MediaListCollection";
 
-    return `${mediaListCollectionQuery}{${mediaListCollectionFields}}`
-}
+    return `${mediaListCollectionQuery}{${mediaListCollectionFields}}`;
+};
 export interface MediaListCollection {
-    MediaListCollection: MediaListCollectionFields
+    MediaListCollection: MediaListCollectionFields;
 }
 
 ///////////////////////////////////////////// client
@@ -385,9 +391,14 @@ export class AnilistGraphqlQuery {
         return query(page_(mediasSearch(rest), page));
     }
     public static fetchFilters() {
-        return query(filters)
+        return query(filters);
     }
-    public static fetchMyAnimeCollection(userID: number | string, chunk: number | string, type: TypeFilterName, perChunk: number | string) {
-        return query(mediaListCollection(userID, type, perChunk, chunk))
+    public static fetchMyAnimeCollection(
+        userID: number | string,
+        chunk: number | string,
+        type: TypeFilterName,
+        perChunk: number | string
+    ) {
+        return query(mediaListCollection(userID, type, perChunk, chunk));
     }
 }

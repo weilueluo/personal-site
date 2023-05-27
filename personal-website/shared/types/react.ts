@@ -1,7 +1,5 @@
-
-
 export interface BaseParams {
-    locale: string
+    locale: string;
 }
 
-export default {}
+export default {};

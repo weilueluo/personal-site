@@ -10,7 +10,7 @@ export type ProgressiveImageProps = Omit<ImageProps, "src" | "loading"> & {
 };
 
 const ProgressiveImage = (props: ProgressiveImageProps) => {
-    let { srcs: srcs_, alt, loading, fallback, className, ...rest } = props;
+    const { srcs: srcs_, alt, loading, fallback, className, ...rest } = props;
     const srcs = srcs_.filter((src) => !!src) as string[]; // filter falsy url
 
     const [imIndex, setImIndex] = useState(0);

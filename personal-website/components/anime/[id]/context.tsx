@@ -1,7 +1,5 @@
 "use client";
-import Loading from "@/components/ui/loading/spinner";
-import { suspensify } from "@/shared/suspense";
-import React, { Suspense, useContext } from "react";
+import React, { useContext } from "react";
 import { MediaItem } from "../graphql/graphql";
 import { fetchAnilistMedia } from "../graphql/query";
 

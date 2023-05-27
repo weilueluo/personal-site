@@ -40,7 +40,7 @@ const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ clas
     const currentLocale = useParams().locale || DEFAULT_LOCALE;
 
     return (
-        <header className="w-full" ref={ref} {...props}>
+        <header className={tm("w-full", className)} ref={ref} {...props}>
             <nav className="flex w-full flex-row flex-wrap items-center justify-center gap-2 md:gap-4 xl:gap-6">
                 <NavItem href={homePath}>
                     <ImHome className="icon-md" />
@@ -117,12 +117,7 @@ interface NavItemProps extends ComponentPropsWithoutRef<"a"> {
 const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(({ href, children, className, ...rest }, ref) => {
     const { locale } = useParams();
     return (
-        <Link
-            href={href}
-            locale={locale}
-            className={tm("icon-text std-pad std-hover", className)}
-            ref={ref}
-            {...rest}>
+        <Link href={href} locale={locale} className={tm("icon-text std-pad std-hover", className)} ref={ref} {...rest}>
             {children}
         </Link>
     );

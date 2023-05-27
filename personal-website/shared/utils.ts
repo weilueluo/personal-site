@@ -2,8 +2,8 @@ import { MutableRefObject } from "react";
 import { twMerge } from "tailwind-merge";
 
 export const jsonFetcher = <T>(input: RequestInfo | URL, init: RequestInit | undefined = undefined) => {
-    return fetch(input, init).then(res => res.json())
-}
+    return fetch(input, init).then((res) => res.json());
+};
 
 export function cookieToObj(cookie: string | undefined): Record<string, string> {
     if (cookie) {
@@ -23,7 +23,6 @@ export function objToCookie(obj: Record<string, string>) {
         .join("; ");
 }
 
-
 export const tm = (...classNames: (string | undefined | false | null | 0)[]): string => {
     return twMerge(...classNames);
 };
@@ -31,17 +30,17 @@ export const tm = (...classNames: (string | undefined | false | null | 0)[]): st
 // set utils
 function union<T>(setA: Set<T>, setB: Set<T>) {
     const _union = new Set(setA);
-    setB.forEach(elem => _union.add(elem))
+    setB.forEach((elem) => _union.add(elem));
     return _union;
 }
 
 function intersection<T>(setA: Set<T>, setB: Set<T>) {
     const _intersection = new Set<T>();
-    setB.forEach(elem => {
+    setB.forEach((elem) => {
         if (setA.has(elem)) {
             _intersection.add(elem);
         }
-    })
+    });
     return _intersection;
 }
 
@@ -49,25 +48,25 @@ export function timeSinceSeconds(seconds: number) {
     let interval = seconds / 31536000;
 
     if (interval > 1) {
-        return Math.floor(interval) + ' years';
+        return Math.floor(interval) + " years";
     }
     interval = seconds / 2592000;
     if (interval > 1) {
-        return Math.floor(interval) + ' months';
+        return Math.floor(interval) + " months";
     }
     interval = seconds / 86400;
     if (interval > 1) {
-        return Math.floor(interval) + ' days';
+        return Math.floor(interval) + " days";
     }
     interval = seconds / 3600;
     if (interval > 1) {
-        return Math.floor(interval) + ' hours';
+        return Math.floor(interval) + " hours";
     }
     interval = seconds / 60;
     if (interval > 1) {
-        return Math.floor(interval) + ' minutes';
+        return Math.floor(interval) + " minutes";
     }
-    return Math.floor(seconds) + ' seconds';
+    return Math.floor(seconds) + " seconds";
 }
 
 export function timeSince(from: Date, date: Date) {
@@ -76,9 +75,8 @@ export function timeSince(from: Date, date: Date) {
     return timeSinceSeconds(seconds);
 }
 
-
 export function isDevEnv() {
-    return process && process.env.NODE_ENV === 'development';
+    return process && process.env.NODE_ENV === "development";
 }
 
 // https://stackoverflow.com/questions/6268508/restart-animation-in-css3-any-better-way-than-removing-the-element
@@ -91,7 +89,6 @@ export const restartAnimations = (element: Element): void => {
         }
     }
 };
-
 
 export function reTriggerAnimateFunction(element: MutableRefObject<any>, className: string) {
     return function (e: MouseEvent) {
@@ -108,21 +105,22 @@ export function reTriggerAnimateFunction(element: MutableRefObject<any>, classNa
 
         // -> and re-adding the class
         element.current.classList.add(className);
-    }
+    };
 }
 
 // https://stackoverflow.com/a/52171480
 export const stringHash = (str: string, seed = 42) => {
-    let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
-    for(let i = 0, ch; i < str.length; i++) {
+    let h1 = 0xdeadbeef ^ seed,
+        h2 = 0x41c6ce57 ^ seed;
+    for (let i = 0, ch; i < str.length; i++) {
         ch = str.charCodeAt(i);
         h1 = Math.imul(h1 ^ ch, 2654435761);
         h2 = Math.imul(h2 ^ ch, 1597334677);
     }
-    h1  = Math.imul(h1 ^ (h1 >>> 16), 2246822507);
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507);
     h1 ^= Math.imul(h2 ^ (h2 >>> 13), 3266489909);
-    h2  = Math.imul(h2 ^ (h2 >>> 16), 2246822507);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507);
     h2 ^= Math.imul(h1 ^ (h1 >>> 13), 3266489909);
-  
+
     return 4294967296 * (2097151 & h2) + (h1 >>> 0);
 };

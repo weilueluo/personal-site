@@ -15,7 +15,7 @@ module.exports = {
             },
             colors: {
                 // 'std': '#02ab87',
-                'std': '#00CDA1'
+                std: "#00CDA1",
             },
         },
     },

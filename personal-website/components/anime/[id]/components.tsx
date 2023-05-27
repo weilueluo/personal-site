@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { ComponentPropsWithoutRef, ElementRef, useState } from "react";
 import { Character, Relation, Staff, VoiceActor } from "../graphql/graphql";

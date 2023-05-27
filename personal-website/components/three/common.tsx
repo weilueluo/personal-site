@@ -1,4 +1,5 @@
-"use client"
+/* eslint-disable react/no-unknown-property */
+"use client";
 
 import { PerspectiveCamera } from "@react-three/drei";
 import { Suspense } from "react";

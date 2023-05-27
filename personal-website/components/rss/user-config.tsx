@@ -71,14 +71,11 @@ export function UserRSSConfigsProvider({ children }: { children: React.ReactNode
         [setUserConfigs]
     );
 
-    const setShowRawDate = useCallback(
-        (showRawDate: boolean) => {
-            setUserConfigs((draft) => {
-                draft.globalConfigs.showRawDate = !draft.globalConfigs.showRawDate;
-            });
-        },
-        [setUserConfigs]
-    );
+    const setShowRawDate = useCallback(() => {
+        setUserConfigs((draft) => {
+            draft.globalConfigs.showRawDate = !draft.globalConfigs.showRawDate;
+        });
+    }, [setUserConfigs]);
 
     return (
         <UserRSSConfigsContext.Provider value={{ userConfigs, setActive, setShowRawDate }}>

@@ -16,7 +16,7 @@ import { VscLoading } from "react-icons/vsc";
 import { useSingleUserFeedConfigs, useUserRSSConfigs } from "../../../components/rss/user-config";
 
 export default function RSS() {
-    const { feeds, infoMap, configs: rssConfigs } = useRSS();
+    const { feeds, infoMap } = useRSS();
     const { userConfigs } = useUserRSSConfigs();
 
     useEffect(() => {
@@ -46,13 +46,12 @@ export default function RSS() {
         setHasMoreFeeds(displayFeeds.length < activeFeeds.length);
     }, [activeFeeds, displayFeeds]);
 
-    const isLoading =
-        Array.from(infoMap.entries()).filter(([title, info]) => info.status !== FeedStatus.LOADING).length === 0;
+    const isLoading = Array.from(infoMap.entries()).some(([, info]) => info.status === FeedStatus.LOADING);
 
     return (
         <>
             <ul className="my-2 flex h-fit w-full flex-col gap-2">
-                {Array.from(infoMap).map(([title, info]) => (
+                {Array.from(infoMap).map(([title]) => (
                     <FeedTitle key={title} title={title} />
                 ))}
             </ul>
@@ -111,10 +110,7 @@ function FeedTitle({ title, ...rest }: { title: string }) {
                 <span className="grid h-full place-items-center px-2">{STATUS_2_ICON[info.status]}</span>
 
                 <span
-                    className={tm(
-                        "std-pad std-hover text-sm",
-                        isFetchingFeed && "shadow-inset-sm pointer-events-none"
-                    )}
+                    className={tm("std-pad std-hover text-sm", isFetchingFeed && "shadow-inset-sm pointer-events-none")}
                     onClick={() => mutate()}>
                     <IoMdRefreshCircle size={"1.2em"} />
                 </span>
@@ -163,10 +159,10 @@ function FeedData({ feedData }: { feedData: Feed }) {
 
     // hover hint
     const [showHint, setShowHint] = useState(false);
-    const onDetailsMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    const onDetailsMouseEnter = () => {
         setShowHint(true);
     };
-    const onDetailsMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    const onDetailsMouseLeave = () => {
         setShowHint(false);
     };
     const hint = showDetails ? "click to collapse" : "click to expand";

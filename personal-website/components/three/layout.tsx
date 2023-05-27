@@ -16,8 +16,7 @@ const CanvasLayout = ({ children }: { children: React.ReactNode }) => {
                 height: "100%",
                 overflow: "hidden",
                 touchAction: "auto",
-            }}
-            >
+            }}>
             {children}
             <Scene
                 style={{
@@ -37,4 +36,4 @@ const CanvasLayout = ({ children }: { children: React.ReactNode }) => {
 
 CanvasLayout.displayName = "CanvasLayout";
 
-export default CanvasLayout
+export default CanvasLayout;

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useGLTF } from "@react-three/drei";
 import React from "react";
@@ -14,5 +14,6 @@ export default function Room(props: React.ComponentPropsWithoutRef<any>) {
             mesh.receiveShadow = true;
         });
     });
+    // eslint-disable-next-line react/no-unknown-property
     return <primitive object={scene} {...props} />;
 }

@@ -126,8 +126,7 @@ export function RSSProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useSingleRSS(title: string): UseSingleRSS {
-    let { feeds, feedInfo, rssConfigs, mutateMap } = useContext(RSSContext);
-    feeds = feeds.filter((feed) => feed.title === title);
+    const { feeds, feedInfo, rssConfigs, mutateMap } = useContext(RSSContext);
     const configs = rssConfigs.filter((config) => config.title === title);
     if (configs.length != 1) {
         throw new Error(`Invalid config for title=${title}`);
@@ -142,7 +141,7 @@ export function useSingleRSS(title: string): UseSingleRSS {
     }
 
     return {
-        feeds,
+        feeds: feeds.filter((feed) => feed.title === title),
         info,
         config: configs[0],
         mutate,

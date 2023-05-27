@@ -2,7 +2,7 @@
 
 import { UnResolvedTheme, useTheme } from "@/shared/themes";
 import { tm } from "@/shared/utils";
-import React, { ReactNode, Suspense, useState } from "react";
+import React, { useState } from "react";
 import { BsFillMoonStarsFill, BsGearWideConnected } from "react-icons/bs";
 import { ImSun } from "react-icons/im";
 import { useMountedState } from "react-use";
@@ -15,6 +15,7 @@ const SYSTEM_THEME = "system";
 const THEMES: UnResolvedTheme[] = [DARK_THEME, LIGHT_THEME, SYSTEM_THEME];
 
 const ThemeButton = React.forwardRef<React.ElementRef<"button">, React.ComponentPropsWithoutRef<"button">>(
+    // eslint-disable-next-line react/prop-types
     ({ className, ...otherProps }, ref) => {
         const { unResolvedTheme, setTheme } = useTheme();
 
@@ -53,7 +54,8 @@ const ThemeButton = React.forwardRef<React.ElementRef<"button">, React.Component
                 {...otherProps}
                 className={tm(
                     "group flex h-7 w-fit flex-row items-center justify-around hover:underline",
-                    styles.button
+                    styles.button,
+                    className
                 )}>
                 <div className={styles.iconContainer}>
                     <div

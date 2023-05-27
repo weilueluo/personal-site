@@ -11,10 +11,9 @@ interface CardProps extends ComponentPropsWithoutRef<"div"> {
     name: string | undefined;
     srcs: (string | undefined)[];
     url: string | undefined;
-    variant?: "standard" | "medium";
 }
 export const Card = React.forwardRef<ElementRef<"div">, CardProps>(
-    ({ title, url, className, name, variant = "standard", srcs, ...rest }, ref) => {
+    ({ title, url, className, name, srcs, ...rest }, ref) => {
         const [hover, setHover] = React.useState(false);
         return (
             <Link

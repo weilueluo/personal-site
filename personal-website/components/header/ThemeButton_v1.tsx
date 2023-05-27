@@ -2,7 +2,7 @@
 
 import { UnResolvedTheme, useTheme } from "@/shared/themes";
 import { tm } from "@/shared/utils";
-import React, { ReactNode, Suspense, useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { BsFillMoonStarsFill, BsGearWideConnected } from "react-icons/bs";
 import { ImSun } from "react-icons/im";
 import { useMountedState } from "react-use";
@@ -21,6 +21,7 @@ const themeToIconMap: { [theme: string]: ReactNode } = {
 };
 
 const ThemeButton = React.forwardRef<React.ElementRef<"button">, React.ComponentPropsWithoutRef<"button">>(
+    // eslint-disable-next-line react/prop-types
     ({ className, ...otherProps }, ref) => {
         const { unResolvedTheme, setTheme } = useTheme();
 
@@ -65,7 +66,7 @@ const ThemeButton = React.forwardRef<React.ElementRef<"button">, React.Component
                 ref={ref}
                 onClick={onClick}
                 {...otherProps}
-                className="flex h-fit w-fit flex-row items-center justify-around rounded-md">
+                className={tm("flex h-fit w-fit flex-row items-center justify-around rounded-md", className)}>
                 <span className={styles.text} data-active={leftActive}>
                     {leftTheme}
                 </span>
