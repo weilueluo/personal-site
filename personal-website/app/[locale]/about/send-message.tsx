@@ -112,7 +112,7 @@ export default function SendMessage() {
                 <div className="absolute left-0 top-0 flex h-full w-full flex-col items-center justify-center gap-2 p-2 backdrop-blur-md">
                     <div className="font-semibold uppercase">{status}</div>
                     {status === "sending" ? (
-                        <Loading />
+                        <Loading className="h-fit w-fit" />
                     ) : (
                         <>
                             <div className="text-center">{systemMessage}</div>
@@ -143,7 +143,7 @@ function Input(props: ComponentPropsWithoutRef<"input">) {
             type="text"
             spellCheck={false}
             autoComplete="off"
-            className="border-b border-black border-opacity-75 py-1 opacity-75 focus:border-opacity-75 focus:opacity-100 focus:outline-none"
+            className="border-b border-black border-opacity-75 opacity-75 focus:border-opacity-75 focus:opacity-100 focus:outline-none"
             {...props}
         />
     );
