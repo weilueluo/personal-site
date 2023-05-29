@@ -24,6 +24,7 @@ const nextConfig = {
                 port: "",
             },
         ],
+        unoptimized: true, // avoid vercel optimization billing
     },
 
     eslint: {

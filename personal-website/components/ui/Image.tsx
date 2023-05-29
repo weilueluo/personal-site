@@ -28,7 +28,6 @@ const ProgressiveImage = (props: ProgressiveImageProps) => {
 
                 <Image
                     className={"object-cover object-center"}
-                    unoptimized={true} // avoid vercel optimization billing
                     src={srcs[imIndex]}
                     onLoadingComplete={() => {
                         setLoaded(true);
