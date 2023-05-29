@@ -1,0 +1,11 @@
+$line-height: 2rem;
+.textarea {
+    line-height: $line-height;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent $line-height,
+        black $line-height,
+        black calc($line-height + 1px)
+    );
+}

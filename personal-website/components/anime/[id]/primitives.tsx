@@ -23,7 +23,7 @@ export const Card = React.forwardRef<ElementRef<"div">, CardProps>(
                 onMouseOver={() => setHover(true)}
                 onMouseOut={() => setHover(false)}>
                 <div ref={ref} className={tm("relative w-20 shrink-0 md:w-28", className)} {...rest}>
-                    {hover && <ImNewTab className="absolute right-0 top-0 z-10 bg-white" />}
+                    {hover && <ImNewTab className="pointer-events-none absolute right-0 top-0 z-10 bg-white" />}
 
                     <ProgressiveImage
                         srcs={srcs}

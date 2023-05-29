@@ -1,6 +1,6 @@
 "use client";
 
-import { DEFAULT_LOCALE, GITHUB_REPO_URL, LOCALES } from "@/shared/constants";
+import { DEFAULT_LOCALE, GITHUB_CV_URL, GITHUB_REPO_URL, LOCALES } from "@/shared/constants";
 import { getPathWithLocale, replaceLocale } from "@/shared/locale";
 import { useMessages } from "@/shared/translation";
 import { tm } from "@/shared/utils";
@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import React, { ComponentPropsWithoutRef, forwardRef } from "react";
 import { GiClover } from "react-icons/gi";
-import { ImHome } from "react-icons/im";
+import { ImHome, ImNewTab } from "react-icons/im";
 import { IoLanguage, IoLayers, IoNavigateCircle } from "react-icons/io5";
 import { MdWork } from "react-icons/md";
 import { RiContactsBook2Fill, RiFilePaper2Fill } from "react-icons/ri";
@@ -27,7 +27,6 @@ const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ clas
     const aboutPath = getPathWithLocale(pathname, "/about");
     const animePath = getPathWithLocale(pathname, "/anime");
     const rssPath = getPathWithLocale(pathname, "/rss");
-    const cvPath = getPathWithLocale(pathname, "/cv");
 
     // console.log(`pathname=${pathname}`);
     // console.log(`homePath=${homePath}`);
@@ -73,7 +72,7 @@ const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ clas
                         Explore
                     </div>
                     <dropdown.Dropdown variant="glass">
-                        <NavItem href={GITHUB_REPO_URL}>
+                        <NavItem href={GITHUB_REPO_URL} target="_blank">
                             <SiGithub className="icon-md" />
                             {messages["source"]}
                         </NavItem>
@@ -98,7 +97,7 @@ const Header = React.forwardRef<React.ElementRef<"header">, HeaderProps>(({ clas
                             {messages["rss"]}
                         </NavItem>
                         {/* <Separator variant="sm" /> */}
-                        <NavItem href={cvPath}>
+                        <NavItem href={GITHUB_CV_URL} target="_blank">
                             <MdWork className="icon-md" />
                             {messages["cv"]}
                         </NavItem>
@@ -116,8 +115,20 @@ interface NavItemProps extends ComponentPropsWithoutRef<"a"> {
 }
 const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(({ href, children, className, ...rest }, ref) => {
     const { locale } = useParams();
+    const useNewTabIcon = rest.target === "_blank";
+    const [hover, setHover] = React.useState(false);
     return (
-        <Link href={href} locale={locale} className={tm("icon-text std-pad std-hover", className)} ref={ref} {...rest}>
+        <Link
+            href={href}
+            locale={locale}
+            className={tm("icon-text std-pad std-hover relative", className)}
+            ref={ref}
+            onMouseEnter={() => setHover(true)}
+            onMouseOut={() => setHover(false)}
+            {...rest}>
+            {useNewTabIcon && hover && (
+                <ImNewTab className="pointer-events-none absolute right-0 top-0 z-10 bg-white" />
+            )}
             {children}
         </Link>
     );
