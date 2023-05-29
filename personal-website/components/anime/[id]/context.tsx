@@ -15,8 +15,6 @@ export function AnimeDetailsProvider({ animeId, children }: { animeId: number; c
         throw error;
     }
 
-    // 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
-
     useEffect(() => {
         fetchAnilistMedia(animeId)
             .then((data) => {
