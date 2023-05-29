@@ -107,7 +107,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
     const { data, className } = props;
     return (
         <div ref={ref} className={tm("group hover:underline", className)}>
-            <div className="max-w-36 w-24 animate-in fade-in-50 slide-in-from-top-6 duration-150 sm:w-36">
+            <div className="max-w-36 w-24 duration-150 sm:w-36">
                 <ProgressiveImage
                     srcs={[data.coverImage?.medium, data.coverImage?.large]}
                     fill={true}
