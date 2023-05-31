@@ -4,7 +4,7 @@ import { GetBlogData, GetBlogsMetadata as GetBlogsMetadata, GithubGraphQL } from
 
 const GITHUB_GRAPHQL_ENDPOINT = "https://api.github.com/graphql";
 
-const PUBLIC_GITHUB_ACCESS_TOKEN = "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";
+const PUBLIC_GITHUB_ACCESS_TOKEN = "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";
 
 const fetchGithubData = async <T>(query: string) => {
     console.log("query", query);
