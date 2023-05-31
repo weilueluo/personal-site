@@ -4,7 +4,8 @@ import { GetBlogData, GetBlogsMetadata as GetBlogsMetadata, GithubGraphQL } from
 
 const GITHUB_GRAPHQL_ENDPOINT = "https://api.github.com/graphql";
 
-const PUBLIC_GITHUB_ACCESS_TOKEN = "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";
+// read only on public repo, free to expose this to public
+const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
 
 const fetchGithubData = async <T>(query: string) => {
     console.log("query", query);
@@ -13,7 +14,7 @@ const fetchGithubData = async <T>(query: string) => {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${PUBLIC_GITHUB_ACCESS_TOKEN}`,
+            Authorization: `Bearer ${GITHUB_TOKEN}`,
         },
         body: JSON.stringify({
             query,
