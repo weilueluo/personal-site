@@ -64,7 +64,7 @@ async function fetchAnilist<T>(query: string, options = {}): Promise<T> {
             })
             .then((data) => {
                 console.log("Received Anilist data");
-                console.log(data);
+                // console.log(data);
                 return data;
             })
     );

@@ -1,22 +1,23 @@
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
-import { fetchBlogCommit, fetchBlogContent, fetchBlogDirectory } from "@/components/blogs/query";
-import remarkMath from "remark-math";
-import rehypeMathjax from "rehype-mathjax";
-import remarkToc from "remark-toc";
-import { BsCalendar2DateFill } from "react-icons/bs";
+import { fetchBlogCommit, fetchBlogContent } from "@/components/blogs/query";
 import Separator from "@/components/ui/Separator";
 import BackButton from "@/components/ui/back";
 import Link from "next/link";
+import { BsCalendar2DateFill } from "react-icons/bs";
 import { FaDownload } from "react-icons/fa";
-import { SiGithub } from "react-icons/si";
 import { ImStatsBars } from "react-icons/im";
+import { SiGithub } from "react-icons/si";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import rehypeMathjax from "rehype-mathjax";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import remarkToc from "remark-toc";
 
-export async function generateStaticParams() {
-    const data = await fetchBlogDirectory();
-    return data.map((data) => ({ filename: data.name }));
-}
+// fuck Page changed from static to dynamic at runtime /en/blogs/README.md, reason: cookies
+// export async function generateStaticParams() {
+//     const data = await fetchBlogDirectory();
+//     return data.map((data) => ({ filename: data.name }));
+// }
 
 export default async function Page({ params }: { params: { filename: string } }) {
     const blogContentPromise = fetchBlogContent(params.filename);
