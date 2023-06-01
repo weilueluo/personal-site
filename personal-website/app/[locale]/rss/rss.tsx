@@ -196,11 +196,9 @@ function FeedData({ feedData }: { feedData: Feed }) {
                             </Link>
                             {date && (
                                 <>
-                                    <span className="flex flex-row items-center gap-1">
+                                    <span className="hover-subtext flex flex-row items-center gap-1 hover:cursor-default hover:underline">
                                         <MdAccessTimeFilled className="inline-block" />
-                                        <span
-                                            onClick={dateOnClick}
-                                            className="hover-subtext italic hover:cursor-default hover:underline">
+                                        <span onClick={dateOnClick} className=" italic ">
                                             {date}
                                         </span>
                                     </span>

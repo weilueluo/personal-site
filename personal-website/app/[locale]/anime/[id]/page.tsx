@@ -1,5 +1,4 @@
 "use client";
-import BackButton from "@/components/anime/[id]/back";
 import {
     Characters,
     CoverImage,
@@ -12,6 +11,7 @@ import {
 import { AnimeDetailsProvider, useAnimeDetails } from "@/components/anime/[id]/context";
 import { Genres, HashTags, NextAiring, Score, Status, Tags } from "@/components/anime/[id]/labels";
 import ProgressiveImage from "@/components/ui/Image";
+import BackButton from "@/components/ui/back";
 import LoadingItem from "@/components/ui/loading/loading";
 
 export default function Page({ params }: { params: { id: number } }) {

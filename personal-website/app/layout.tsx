@@ -7,6 +7,8 @@ import { Analytics } from "@vercel/analytics/react";
 import { cookies } from "next/headers";
 import "./global.css";
 import Script from "next/script";
+import { inter } from "@/shared/fonts";
+import { tm } from "@/shared/utils";
 
 interface Params {
     locale: string;
@@ -21,7 +23,7 @@ export default async function Layout({ children, params }: { children: React.Rea
         <ThemeProvider cookies={cookies()}>
             <TranslationProvider messages={messages}>
                 <html lang={locale}>
-                    <body className="grid place-items-center">
+                    <body className={tm("grid place-items-center", inter.className)}>
                         <Init />
                         <Analytics />
                         <main className="max-w-screen relative flex h-fit min-h-screen w-[60em] max-w-[100vw] flex-col p-4 md:px-24 md:py-4">

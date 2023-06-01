@@ -6,6 +6,7 @@ import SearchBar from "./search-bar";
 import SearchResult from "./search-result";
 
 // TODO: fix: do not use async server component
+// TODO: feat: add searches & tags & genres to url search params
 
 export default function Page() {
     return (
