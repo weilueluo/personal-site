@@ -1,5 +1,5 @@
+import { GenreFilterItem, TagFilterItem } from "../context";
 import { CountryFilter, SortFilter, TypeFilter, TypeFilterName } from "../fast-filters";
-import { GenreFilterItem, TagFilterItem } from "../slow-filters";
 
 export const MY_USER_ID = 6044692;
 export const PAGE_SIZE = 30;
