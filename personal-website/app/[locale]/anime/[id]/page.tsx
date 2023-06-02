@@ -8,11 +8,11 @@ import {
     Title,
     Trailer,
 } from "@/components/anime/[id]/components";
-import { AnimeDetailsProvider, useAnimeDetails } from "@/components/anime/[id]/context";
 import { Genres, HashTags, NextAiring, Score, Status, Tags } from "@/components/anime/[id]/labels";
-import ProgressiveImage from "@/components/ui/Image";
 import BackButton from "@/components/ui/back";
+import ProgressiveImage from "@/components/ui/image";
 import LoadingItem from "@/components/ui/loading/loading";
+import { AnimeDetailsProvider, useAnimeDetails } from "@/shared/contexts/anime-id";
 
 export default function Page({ params }: { params: { id: number } }) {
     return (

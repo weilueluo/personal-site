@@ -1,9 +1,8 @@
-import ProgressiveImage from "@/components/ui/Image";
+import ProgressiveImage from "@/components/ui/image";
 import LoadingItem from "@/components/ui/loading/loading";
 import { tm } from "@/shared/utils";
 import Link from "next/link";
-import React from "react";
-import { ComponentPropsWithoutRef, ElementRef } from "react";
+import React, { ComponentPropsWithoutRef, ElementRef } from "react";
 import { ImNewTab } from "react-icons/im";
 
 interface CardProps extends ComponentPropsWithoutRef<"div"> {

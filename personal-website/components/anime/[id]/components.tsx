@@ -1,12 +1,12 @@
 "use client";
 
-import React, { ComponentPropsWithoutRef, ElementRef, useState } from "react";
-import { Character, Relation, Staff, VoiceActor } from "../graphql/graphql";
-import { useAnimeDetails } from "../../../shared/contexts/anime-id";
-import { Card, Section, Cards, Label } from "./primitives";
-import Link from "next/link";
-import ProgressiveImage from "@/components/ui/Image";
+import ProgressiveImage from "@/components/ui/image";
 import LoadingItem from "@/components/ui/loading/loading";
+import Link from "next/link";
+import React, { ComponentPropsWithoutRef, ElementRef, useState } from "react";
+import { useAnimeDetails } from "../../../shared/contexts/anime-id";
+import { Character, Relation, Staff, VoiceActor } from "../graphql/graphql";
+import { Card, Cards, Label, Section } from "./primitives";
 
 function RelationCard({ data }: { data: Relation }) {
     const title = data.relationType?.replace("_", " ");
