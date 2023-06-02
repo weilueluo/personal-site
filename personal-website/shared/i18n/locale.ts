@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, LOCALES } from "./constants";
+import { DEFAULT_LOCALE, LOCALES } from "../constants";
 
 export function replaceLocale(path: string, oldLocale: string, newLocale: string) {
     const localePrefix1 = `/${oldLocale}/`;

@@ -1,6 +1,5 @@
 "use client";
 import { enableMapSet } from "immer";
-import { useEffect } from "react";
 
 // immer
 enableMapSet();

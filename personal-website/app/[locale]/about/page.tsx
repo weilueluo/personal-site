@@ -13,8 +13,8 @@ import {
 import { tm } from "@/shared/utils";
 import React from "react";
 import { MdEmail } from "react-icons/md";
-import { Item } from "./item";
-import SendMessage from "./send-message";
+import { Item } from "../../../components/about/item";
+import SendMessage from "@/components/about/send-message";
 
 export default function Page() {
     return (

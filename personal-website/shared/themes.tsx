@@ -3,9 +3,9 @@
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useEffectOnce } from "react-use";
+import { useForceUpdate } from "./hooks";
 import { Nullable } from "./types/utils";
 import { cookieToObj } from "./utils";
-import { useForceUpdate } from "./hooks";
 
 // types
 export type ResolvedTheme = "light" | "dark";
@@ -48,7 +48,7 @@ export default function ThemeProvider({
     const assignTheme = (theme: ResolvedTheme) => {
         if (typeof document !== "undefined") {
             const bodyClassList = document.querySelector("html")?.classList;
-            THEMES.forEach((theme) => bodyClassList?.remove(theme)); // remove old theme
+            THEMES.forEach(theme => bodyClassList?.remove(theme)); // remove old theme
             bodyClassList?.add(theme); // add new theme
         }
     };

@@ -1,5 +1,5 @@
 import { timeSinceSeconds } from "@/shared/utils";
-import { useAnimeDetails } from "./context";
+import { useAnimeDetails } from "../../../shared/contexts/anime-id";
 import { FullLabel, Label, Labels } from "./primitives";
 
 export function Status() {
@@ -58,7 +58,7 @@ export function Genres() {
 
     return data?.genres ? (
         <Labels>
-            {data.genres.map((genre) => (
+            {data.genres.map(genre => (
                 <Label key={genre} className=" bg-[#f48668]" url={`https://anilist.co/search/anime/${genre}`}>
                     {genre}
                 </Label>
@@ -72,7 +72,7 @@ export function Tags() {
 
     return data?.tags ? (
         <Labels>
-            {data.tags.map((tag) => (
+            {data.tags.map(tag => (
                 // tag is search with genre query... not an mistake
                 <Label
                     key={tag.name}
@@ -90,7 +90,7 @@ export function HashTags() {
 
     return data?.hashtag ? (
         <Labels>
-            {data.hashtag.split(" ").map((tag) => (
+            {data.hashtag.split(" ").map(tag => (
                 <Label key={tag} className=" bg-[#c2e1c2]" url={`https://twitter.com/hashtag/${tag.replace("#", "")}`}>
                     {tag}
                 </Label>

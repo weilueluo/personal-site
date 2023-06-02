@@ -1,5 +1,4 @@
 "use client";
-import { useAnimeSlowFilters } from "@/components/anime/context";
 import {
     COUNTRT_FILTER_DISPLAY_NAMES,
     COUNTRY_FILTER_VALUES,
@@ -11,8 +10,9 @@ import {
     useAnimeFastFilters,
 } from "@/components/anime/fast-filters";
 import { FilterItem, useAnimeSearch } from "@/components/anime/search";
-import { SeparatedList } from "@/components/ui/Separator";
 import dropdown from "@/components/ui/dropdown";
+import { SeparatedList } from "@/components/ui/separator";
+import { useAnimeSlowFilters } from "@/shared/contexts/anime";
 import { tm } from "@/shared/utils";
 import React, { ComponentPropsWithoutRef, useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
@@ -48,11 +48,9 @@ export default function SearchBar() {
     const onClickShowFilter = () => setShowFilter(!showFilter);
 
     // show adult tag filter only if hentai genre is selected
-    const [tagFiltersNoHentai, setTagFiltersNoHentai] = useState(() =>
-        tagFilters.filter((tag) => tag.isAdult === false)
-    );
+    const [tagFiltersNoHentai, setTagFiltersNoHentai] = useState(() => tagFilters.filter(tag => tag.isAdult === false));
     useEffect(() => {
-        setTagFiltersNoHentai(tagFilters.filter((tag) => tag.isAdult === false));
+        setTagFiltersNoHentai(tagFilters.filter(tag => tag.isAdult === false));
     }, [tagFilters]);
     const [displayTagFilters, setDisplayTagFilters] = useState(tagFiltersNoHentai);
     useEffect(() => {
@@ -65,10 +63,10 @@ export default function SearchBar() {
 
     // show hentai genre only if R18 meta tag is selected
     const [genreFiltersNoHentai, setGenreFiltersNoHentai] = useState(() =>
-        genreFilters.filter((genre) => genre.isAdult === false)
+        genreFilters.filter(genre => genre.isAdult === false)
     );
     useEffect(() => {
-        setGenreFiltersNoHentai(genreFilters.filter((genre) => genre.isAdult === false));
+        setGenreFiltersNoHentai(genreFilters.filter(genre => genre.isAdult === false));
     }, [genreFilters]);
     const [displayGenreFilters, setDisplayGenreFilters] = useState(genreFiltersNoHentai);
     useEffect(() => {
@@ -81,7 +79,7 @@ export default function SearchBar() {
 
     // clear all filter label
     useEffect(() => {
-        setClearAllFilter(activeSlowFilters.filter((item) => item.type !== "clearAll").length >= 3);
+        setClearAllFilter(activeSlowFilters.filter(item => item.type !== "clearAll").length >= 3);
     }, [activeSlowFilters, setClearAllFilter]);
 
     // search bar stuff
@@ -110,15 +108,15 @@ export default function SearchBar() {
             <div className="flex h-8 max-h-full w-full flex-row border-b border-black pb-1 md:h-10">
                 <div
                     className="hover:std-hover grid h-full w-12 shrink place-items-center"
-                    onClick={(e) => handleOnSubmit(e)}>
+                    onClick={e => handleOnSubmit(e)}>
                     <FaSearch />
                 </div>
-                <form onSubmit={(e) => handleOnSubmit(e)} className="mx-1 flex grow items-center bg-transparent">
+                <form onSubmit={e => handleOnSubmit(e)} className="mx-1 flex grow items-center bg-transparent">
                     <input
                         ref={searchBarRef}
                         className="w-full font-semibold focus:outline-none"
                         placeholder={placeholder}
-                        onChange={(e) => handleOnSubmit(e)}
+                        onChange={e => handleOnSubmit(e)}
                         onFocus={() => setSearchBarFocused(true)}
                         onBlur={() => setSearchBarFocused(false)}
                     />
@@ -143,18 +141,18 @@ export default function SearchBar() {
                 />
                 <QuickFilter
                     name={typeFilter.name}
-                    onNameClick={(name) => setTypeFilter(name as TypeFilterName)}
+                    onNameClick={name => setTypeFilter(name as TypeFilterName)}
                     names={TYPE_FILTER_VALUES}
                 />
                 <QuickFilter
                     name={countryFilter.name}
-                    onNameClick={(name) => setCountryFilter(name as CountryFilterName)}
+                    onNameClick={name => setCountryFilter(name as CountryFilterName)}
                     names={COUNTRY_FILTER_VALUES}
                     displayMap={COUNTRT_FILTER_DISPLAY_NAMES}
                 />
                 <QuickFilter
                     name={sortFilter.name}
-                    onNameClick={(name) => setSortFilter(name as SortFilterName)}
+                    onNameClick={name => setSortFilter(name as SortFilterName)}
                     names={SORT_FILTER_VALUES}
                 />
             </div>
@@ -206,7 +204,7 @@ function QuickFilter<T extends string>({
                 {displayMap ? displayMap[name] : name.toLowerCase().replaceAll("_", " ")}
             </span>
             <dropdown.Dropdown variant="glass">
-                {names.map((name) => (
+                {names.map(name => (
                     <div key={name} className="std-hover min-w-full px-2 capitalize" onClick={() => onNameClick(name)}>
                         {displayMap ? displayMap[name] : name.toLowerCase().replaceAll("_", " ")}
                     </div>
@@ -251,7 +249,7 @@ function FilterPanel<T extends FilterItem>({
             )}
             <div className={tm(many && "resize-y overflow-y-auto")}>
                 <div className={tm("flex flex-row flex-wrap gap-2 text-sm", many && "h-72")}>
-                    {filterItems.map((item) => (
+                    {filterItems.map(item => (
                         <FilterLabel key={item.name} item={item} toggleSelection={toggleSelection} />
                     ))}
                 </div>

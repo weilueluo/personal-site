@@ -2,7 +2,7 @@
 
 import React, { ComponentPropsWithoutRef, ElementRef, useState } from "react";
 import { Character, Relation, Staff, VoiceActor } from "../graphql/graphql";
-import { useAnimeDetails } from "./context";
+import { useAnimeDetails } from "../../../shared/contexts/anime-id";
 import { Card, Section, Cards, Label } from "./primitives";
 import Link from "next/link";
 import ProgressiveImage from "@/components/ui/Image";
@@ -22,7 +22,7 @@ interface VoiceActorCardProps extends ComponentPropsWithoutRef<"div"> {
 }
 const VoiceActorCard = React.forwardRef<ElementRef<"div">, VoiceActorCardProps>(({ data, ...rest }, ref) => {
     const name = [data?.name?.full, data?.name?.native, ...(data.name?.alternative || [])].filter(
-        (title) => !!title
+        title => !!title
     )[0] as string;
     const srcs = [data?.image?.medium, data.image?.large];
     const url = data?.siteUrl;
@@ -33,7 +33,7 @@ VoiceActorCard.displayName = "VoiceActorCard";
 
 function CharacterCard({ data }: { data: Character }) {
     const name = [data.node?.name?.full, data.node?.name?.alternative, ...(data.node?.name?.alternative || [])].filter(
-        (title) => !!title
+        title => !!title
     )[0] as string;
     const srcs = [data.node?.image?.medium, data.node?.image?.large];
     const title = data.role;
@@ -42,7 +42,7 @@ function CharacterCard({ data }: { data: Character }) {
     return (
         <div className="flex shrink-0 flex-row overflow-hidden">
             <Card title={title} name={name} url={url} srcs={srcs} />
-            {data.voiceActors?.map((voiceActor) => (
+            {data.voiceActors?.map(voiceActor => (
                 <VoiceActorCard key={voiceActor.id} data={voiceActor} />
             ))}
         </div>
@@ -51,7 +51,7 @@ function CharacterCard({ data }: { data: Character }) {
 
 function StaffCard({ data }: { data: Staff }) {
     const name = [data.node?.name?.full, data.node?.name?.alternative, ...(data.node?.name?.alternative || [])].filter(
-        (title) => !!title
+        title => !!title
     )[0] as string;
     const srcs = [data.node?.image?.medium, data.node?.image?.large];
     const title = data.role;
@@ -68,7 +68,7 @@ export function Characters() {
     return characters && characters.length > 0 ? (
         <Section title="Characters">
             <Cards className="gap-4 md:gap-6">
-                {characters?.map((character) => (
+                {characters?.map(character => (
                     <CharacterCard key={character.id} data={character} />
                 ))}
             </Cards>
@@ -84,7 +84,7 @@ export function Staffs() {
     return staffs && staffs.length > 0 ? (
         <Section title="Staffs">
             <Cards className="gap-2 md:gap-4">
-                {staffs?.map((staff) => (
+                {staffs?.map(staff => (
                     <StaffCard key={staff.id} data={staff} />
                 ))}
             </Cards>
@@ -100,7 +100,7 @@ export function Relations() {
     return relations && relations.length > 0 ? (
         <Section title="Relations">
             <Cards className="gap-2 md:gap-4">
-                {relations?.map((relation) => (
+                {relations?.map(relation => (
                     <RelationCard key={relation.id} data={relation} />
                 ))}
             </Cards>
@@ -133,9 +133,9 @@ export function Trailer() {
 export function Title() {
     const data = useAnimeDetails();
 
-    const titles = [data?.title?.english, data?.title?.native, data?.title?.romaji].filter((title) => !!title);
+    const titles = [data?.title?.english, data?.title?.native, data?.title?.romaji].filter(title => !!title);
     const mainTitle = titles[0];
-    const subTitles = [...new Set(titles.slice(1).filter((title) => title !== mainTitle))];
+    const subTitles = [...new Set(titles.slice(1).filter(title => title !== mainTitle))];
 
     const url = data?.siteUrl;
 
@@ -148,13 +148,13 @@ export function Title() {
                 <h1 className="text-2xl font-bold hover:cursor-pointer hover:underline">{mainTitle}</h1>
             </Link>
             <div className="flex flex-row flex-wrap gap-2 text-sm">
-                {subTitles.map((title) => (
+                {subTitles.map(title => (
                     <Label url={url} key={title} className=" bg-slate-200 hover:cursor-pointer hover:underline">
                         {title}
                     </Label>
                 ))}
                 {showOtherNames &&
-                    synonyms.map((title) => (
+                    synonyms.map(title => (
                         <Label url={url} key={title} className=" bg-slate-200 hover:cursor-pointer hover:underline">
                             {title}
                         </Label>

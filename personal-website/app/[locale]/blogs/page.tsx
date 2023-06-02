@@ -1,6 +1,6 @@
-import Separator from "@/components/ui/Separator";
-import { BlogItem } from "./blog-item";
 import { fetchBlogDirectory } from "@/components/blogs/query";
+import Separator from "@/components/ui/separator";
+import { BlogItem } from "../../../components/blogs/blog-item";
 
 export default async function Page() {
     const data = await fetchBlogDirectory();
@@ -10,7 +10,7 @@ export default async function Page() {
             <h1 className="font-bold">Blogs</h1>
             <Separator className="mb-4 h-2" />
             <ul className="flex flex-col gap-2">
-                {data.map((data) => (
+                {data.map(data => (
                     <BlogItem filename={data.name} key={data.name} />
                 ))}
             </ul>

@@ -3,7 +3,7 @@ import { RSSConfig } from "@/components/rss/config";
 import { useRSS } from "@/components/rss/manager";
 import React from "react";
 import { useImmer } from "use-immer";
-import { UserRSSConfigsContextProvider } from "./context";
+import { UserRSSConfigsContextProvider } from "../../shared/contexts/rss";
 
 export interface FeedConfigs {
     active: boolean;
@@ -43,7 +43,7 @@ function initUserConfigs(rssConfigs: RSSConfig[]): UserConfigsMap {
         perFeedItemConfigs,
     };
 
-    rssConfigs.forEach((rssConfig) => (perFeedConfigs[rssConfig.title] = { active: true }));
+    rssConfigs.forEach(rssConfig => (perFeedConfigs[rssConfig.title] = { active: true }));
 
     return configs;
 }
@@ -53,7 +53,7 @@ export function UserRSSConfigsProvider({ children }: { children: React.ReactNode
     const [userConfigs, setUserConfigs] = useImmer<UserConfigsMap>(() => initUserConfigs(rssConfigs));
 
     const setActive = (feedTitle: string, active: boolean) => {
-        setUserConfigs((draft) => {
+        setUserConfigs(draft => {
             if (feedTitle in draft.perFeedConfigs) {
                 draft.perFeedConfigs[feedTitle].active = active;
             } else {
@@ -63,7 +63,7 @@ export function UserRSSConfigsProvider({ children }: { children: React.ReactNode
     };
 
     const setShowRawDate = () => {
-        setUserConfigs((draft) => {
+        setUserConfigs(draft => {
             draft.globalConfigs.showRawDate = !draft.globalConfigs.showRawDate;
         });
     };

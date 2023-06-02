@@ -1,6 +1,6 @@
 "use client";
 
-import { useMessages } from "../context";
+import { useMessages } from "../../shared/contexts/translation";
 
 export default function Title() {
     const messages: any = useMessages();

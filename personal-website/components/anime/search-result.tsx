@@ -1,7 +1,7 @@
 "use client";
 import { SectionMedia } from "@/components/anime/graphql/graphql";
 import { useAnimeSearch } from "@/components/anime/search";
-import ProgressiveImage from "@/components/ui/Image";
+import ProgressiveImage from "@/components/ui/image";
 import { tm } from "@/shared/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -58,7 +58,7 @@ export default function SearchResult() {
                     )}
                 </h3>
 
-                <button className="icon-text std-hover std-pad" onClick={() => setCollapse((v) => !v)}>
+                <button className="icon-text std-hover std-pad" onClick={() => setCollapse(v => !v)}>
                     <MdExpandMore className="inline-block" />
                     {collapse ? "expand" : "collpase"}
                 </button>
@@ -72,14 +72,14 @@ export default function SearchResult() {
                         collapse && "flex w-full flex-row gap-2 overflow-x-auto",
                         !collapse && "my-grid-cols-3 md:my-grid-cols-4 lg:my-grid-cols-5 grid justify-between"
                     )}>
-                    {mergedData.map((data) => (
+                    {mergedData.map(data => (
                         <Link href={`${pathname}/${data.id}`} key={data.id} prefetch={false}>
                             <Card data={data} />
                         </Link>
                     ))}
                     {(swrAnimeResponse.isLoading || swrAnimeResponse.isValidating) &&
                         (!mergedData || mergedData.length == 0) &&
-                        Array.from(Array(15).keys()).map((i) => <PlaceholderCard key={i} />)}
+                        Array.from(Array(15).keys()).map(i => <PlaceholderCard key={i} />)}
                 </ul>
 
                 {/* load more info / button */}

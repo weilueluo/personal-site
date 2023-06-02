@@ -3,7 +3,7 @@ import useSWR from "swr";
 
 import { reTriggerAnimateFunction, tm } from "@/shared/utils";
 import { sanitize } from "dompurify";
-import Separator from "../ui/Separator";
+import Separator from "../ui/separator";
 import { rssFetcher } from "./fetcher";
 
 import { Item } from "rss-parser";
@@ -38,7 +38,7 @@ const Feed = React.forwardRef<React.ElementRef<"div">, FeedProps>(({ url, classN
             </div>
             <Suspense fallback={"loading list"}>
                 <ul className="m-4 flex w-full flex-col items-center overflow-x-hidden overflow-y-scroll border">
-                    {data?.items?.map((item) => (
+                    {data?.items?.map(item => (
                         <FeedItem key={item?.guid || item?.link} item={item} />
                     ))}
                 </ul>

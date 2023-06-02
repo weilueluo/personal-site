@@ -1,16 +1,15 @@
 "use client";
 
 import { tm } from "@/shared/utils";
+import borderStyles from "../ui/border.module.scss";
 import styles from "./send-message.module.scss";
-import pageStyles from "./page.module.scss";
 
-import { BsSendFill } from "react-icons/bs";
-import React, { FormEvent, useEffect, useState } from "react";
-import { ComponentPropsWithoutRef } from "react";
-import { PublishCommandOutput } from "@aws-sdk/client-sns";
-import { SEND_AGAIN_DELAY, sendMessage } from "@/components/about/message-handler";
-import { IoCheckbox } from "react-icons/io5";
 import Loading from "@/components/ui/loading/spinner";
+import { SEND_AGAIN_DELAY, sendMessage } from "@/shared/send-message/message-handler";
+import { PublishCommandOutput } from "@aws-sdk/client-sns";
+import React, { ComponentPropsWithoutRef, FormEvent, useEffect, useState } from "react";
+import { BsSendFill } from "react-icons/bs";
+import { IoCheckbox } from "react-icons/io5";
 
 type SendMessageStatus = "sending" | "idle" | "error" | "success";
 
@@ -65,7 +64,7 @@ export default function SendMessage() {
                 setSystemMessage(`Message sent with ID: ${data.MessageId}`);
                 setButtonDisableFor(SEND_AGAIN_DELAY);
             })
-            .catch((error) => {
+            .catch((error: any) => {
                 setStatus("error");
                 setSystemMessage(error.message);
             });
@@ -73,35 +72,35 @@ export default function SendMessage() {
 
     return (
         <div className="relative h-fit w-full">
-            <div className={tm("h-full w-full", pageStyles.borderT)}>
-                <div className={tm("h-full w-full", pageStyles.borderB)}>
-                    <form onSubmit={(e) => onSubmit(e)} className="flex h-fit w-full flex-col gap-1">
+            <div className={tm("h-full w-full", borderStyles.borderT)}>
+                <div className={tm("h-full w-full", borderStyles.borderB)}>
+                    <form onSubmit={e => onSubmit(e)} className="flex h-fit w-full flex-col gap-1">
                         <div className="flex w-full flex-col gap-2 p-4">
-                            <Label name={"Name"}>
-                                <Input onChange={(e) => setName(e.target.value)} />
-                            </Label>
-                            <Label name={"Contact"}>
-                                <Input onChange={(e) => setContact(e.target.value)} />
-                            </Label>
                             <Label name={"Message*"}>
                                 <textarea
                                     className={tm(
-                                        "h-48 w-full opacity-75 focus:opacity-100 focus:outline-none",
+                                        "h-36 w-full opacity-75 focus:opacity-100 focus:outline-none",
                                         styles.textarea
                                     )}
                                     spellCheck={false}
                                     autoComplete="off"
-                                    onChange={(e) => setUserMessage(e.target.value)}
+                                    onChange={e => setUserMessage(e.target.value)}
                                 />
+                            </Label>
+                            <Label name={"Name (optional)"}>
+                                <Input onChange={e => setName(e.target.value)} />
+                            </Label>
+                            <Label name={"Contact (optional)"}>
+                                <Input onChange={e => setContact(e.target.value)} />
                             </Label>
                             <button
                                 disabled={sendButtonDisabled}
                                 className={tm(
                                     "icon-text std-pad std-hover flex flex-row justify-end",
-                                    pageStyles.borderA
+                                    borderStyles.borderA
                                 )}
                                 type="submit"
-                                onClick={(e) => onSubmit(e)}>
+                                onClick={e => onSubmit(e)}>
                                 <BsSendFill /> <span>{buttonText}</span>
                             </button>
                         </div>

@@ -3,7 +3,7 @@ import { tm } from "@/shared/utils";
 import Link from "next/link";
 import React from "react";
 import { ImNewTab } from "react-icons/im";
-import styles from "./page.module.scss";
+import styles from "../ui/border.module.scss";
 
 export function Item({
     children,

@@ -1,7 +1,7 @@
 import { tm } from "@/shared/utils";
 import React, { Children, ComponentPropsWithoutRef, useEffect, useState } from "react";
 
-import Separator from "./Separator";
+import Separator from "./separator";
 
 export interface DropdownProps extends ComponentPropsWithoutRef<"div"> {}
 export interface DropdownListProps extends ComponentPropsWithoutRef<"div"> {
@@ -32,7 +32,7 @@ const Container = React.forwardRef<HTMLDivElement, DropdownProps>((props, ref) =
                 ref={ref}
                 className={tm("relative hover:cursor-pointer", className)}
                 {...rest}
-                onClick={(e) => {
+                onClick={e => {
                     setOpen(!open);
                     e.stopPropagation(); // prevent global onClick from firing, it will set open back to false
                 }}>

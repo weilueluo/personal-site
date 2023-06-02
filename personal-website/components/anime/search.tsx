@@ -2,7 +2,7 @@
 import React, { startTransition, useCallback, useContext, useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite";
-import { GenreFilterItem, TagFilterItem, useAnimeSlowFilters, useMyAnimeCollection } from "./context";
+import { GenreFilterItem, TagFilterItem, useAnimeSlowFilters, useMyAnimeCollection } from "../../shared/contexts/anime";
 import { useAnimeFastFilters } from "./fast-filters";
 import { FetchSearchParams, PageInfoItem, SectionMedia } from "./graphql/graphql";
 import { Page, fetchSearchPage } from "./graphql/query";
@@ -32,12 +32,12 @@ export function AnimeSearchProvider({ children }: { children: React.ReactNode })
 
     const [activeGenreFilters, setActiveGenreFilters] = React.useState<GenreFilterItem[]>([]);
     useEffect(() => {
-        setActiveGenreFilters(genreFilters.filter((item) => item.active));
+        setActiveGenreFilters(genreFilters.filter(item => item.active));
     }, [genreFilters]);
 
     const [activeTagFilters, setActiveTagFilters] = React.useState<TagFilterItem[]>([]);
     useEffect(() => {
-        setActiveTagFilters(tagFilters.filter((item) => item.active));
+        setActiveTagFilters(tagFilters.filter(item => item.active));
     }, [tagFilters]);
 
     const { favourites } = useMyAnimeCollection();
@@ -106,10 +106,10 @@ export function AnimeSearchProvider({ children }: { children: React.ReactNode })
 
     useEffect(() => {
         // sometimes we get duplicate anime back... fix it
-        const newMergedData = data?.flatMap((data) => data.data || []) || [];
+        const newMergedData = data?.flatMap(data => data.data || []) || [];
         const newDataIds = new Set();
         const uniqueMergedData: SectionMedia[] = [];
-        newMergedData.forEach((item) => {
+        newMergedData.forEach(item => {
             if (item.id && !newDataIds.has(item.id)) {
                 newDataIds.add(item.id);
                 uniqueMergedData.push(item);

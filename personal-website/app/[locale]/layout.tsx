@@ -1,14 +1,14 @@
 import Header from "@/components/header/Header";
-import Separator from "@/components/ui/Separator";
+import Separator from "@/components/ui/separator";
 import { inter } from "@/shared/fonts";
+import TranslationProvider from "@/shared/i18n/translation";
 import Init from "@/shared/init";
 import ThemeProvider from "@/shared/themes";
-import TranslationProvider from "@/shared/translation";
 import { tm } from "@/shared/utils";
 import { Analytics } from "@vercel/analytics/react";
+import { cookies } from "next/headers";
 import Script from "next/script";
 import "./global.css";
-import { cookies } from "next/dist/client/components/headers";
 
 interface Params {
     locale: string;

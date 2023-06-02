@@ -9,7 +9,7 @@ import {
     GenreFilterItem,
     TagFilterItem,
     useTagsAndGenres,
-} from "./context";
+} from "../../shared/contexts/anime";
 import { FilterItem } from "./search";
 
 export default function AnimeSlowFiltersProvider({ children }: { children: React.ReactNode }) {
@@ -17,7 +17,7 @@ export default function AnimeSlowFiltersProvider({ children }: { children: React
 
     // genre filter
     const [genreFilters, setGenreFilters] = useImmer<GenreFilterItem[]>(() => {
-        return genres.map((genre) => ({
+        return genres.map(genre => ({
             name: genre,
             active: false,
             type: "genre",
@@ -25,22 +25,22 @@ export default function AnimeSlowFiltersProvider({ children }: { children: React
         }));
     });
     const genreFilterOnClick = (clickedItem: FilterItem) => {
-        setGenreFilters((draft) => {
-            const index = draft.findIndex((item) => item.name === clickedItem.name);
+        setGenreFilters(draft => {
+            const index = draft.findIndex(item => item.name === clickedItem.name);
             draft[index].active = !draft[index].active;
         });
     };
     // tag filter
     const [tagFilters, setTagFilters] = useImmer<TagFilterItem[]>(() => {
-        return tags.map((tag) => ({
+        return tags.map(tag => ({
             ...tag,
             active: false,
             type: "tag",
         }));
     });
     const tagFilterOnClick = (clickedItem: FilterItem) => {
-        setTagFilters((draft) => {
-            const index = draft.findIndex((item) => item.name === clickedItem.name);
+        setTagFilters(draft => {
+            const index = draft.findIndex(item => item.name === clickedItem.name);
             draft[index].active = !draft[index].active;
         });
     };
@@ -51,7 +51,7 @@ export default function AnimeSlowFiltersProvider({ children }: { children: React
         type: "adult",
     });
     const adultFilterOnClick = (item: FilterItem) => {
-        setAdultFilter((draft) => {
+        setAdultFilter(draft => {
             draft.active = !item.active;
         });
     };
@@ -62,14 +62,14 @@ export default function AnimeSlowFiltersProvider({ children }: { children: React
         type: "clearAll",
     });
     const clearAllFilterOnClick = () => {
-        activeSlowFilters.forEach((item) => {
+        activeSlowFilters.forEach(item => {
             if (item.type !== "clearAll") {
                 activeSlowFilterOnClick(item);
             }
         });
     };
     const setClearAllFilter = (active: boolean) => {
-        setClearAllFilter_((draft) => {
+        setClearAllFilter_(draft => {
             draft.active = active;
         });
     };
@@ -79,8 +79,8 @@ export default function AnimeSlowFiltersProvider({ children }: { children: React
     useEffect(() => {
         setActiveSlowFilters(() => {
             const draft = [];
-            draft.push(...genreFilters.filter((item) => item.active));
-            draft.push(...tagFilters.filter((item) => item.active));
+            draft.push(...genreFilters.filter(item => item.active));
+            draft.push(...tagFilters.filter(item => item.active));
             if (adultFilter.active) {
                 draft.push(adultFilter);
             }

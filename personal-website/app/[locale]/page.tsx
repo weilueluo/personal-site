@@ -1,6 +1,6 @@
 import CanvasLayout from "@/components/three/layout";
-import { MyRoom } from "./my-room";
-import Title from "./title";
+import { MyRoom } from "../../components/locale/my-room";
+import Title from "../../components/locale/title";
 
 export default function Page() {
     return (

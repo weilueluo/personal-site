@@ -1,6 +1,6 @@
 import { fetchBlogCommit, fetchBlogContent } from "@/components/blogs/query";
-import Separator from "@/components/ui/Separator";
 import BackButton from "@/components/ui/back";
+import Separator from "@/components/ui/separator";
 import Link from "next/link";
 import { BsCalendar2DateFill } from "react-icons/bs";
 import { FaDownload } from "react-icons/fa";
@@ -11,7 +11,7 @@ import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkToc from "remark-toc";
-import ShareButton from "./share";
+import ShareButton from "../../../../components/blogs/filename/share";
 
 export default async function Page({ params }: { params: { filename: string } }) {
     const blogContentPromise = fetchBlogContent(params.filename);

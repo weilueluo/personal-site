@@ -1,21 +1,20 @@
 "use client";
 
 import { Feed, FeedStatus, useRSS, useSingleRSS } from "@/components/rss/manager";
-import { rssUtils } from "@/components/rss/utils";
-import Separator from "@/components/ui/Separator";
-import { timeSince, tm } from "@/shared/utils";
+import Separator from "@/components/ui/separator";
+import { useSingleUserFeedConfigs, useUserRSSConfigs } from "@/shared/contexts/rss";
+import { stringHash, timeSince, tm } from "@/shared/utils";
 import { sanitize } from "dompurify";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AiFillCheckCircle, AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { CgFormatSeparator } from "react-icons/cg";
+import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { ImNewTab } from "react-icons/im";
 import { IoMdRefreshCircle } from "react-icons/io";
-import { MdAccessTimeFilled, MdOutlineError } from "react-icons/md";
-import { FaAngleDown, FaAngleUp } from "react-icons/fa";
-import { VscLoading } from "react-icons/vsc";
 import { IoLayersSharp } from "react-icons/io5";
-import { useUserRSSConfigs, useSingleUserFeedConfigs } from "@/components/rss/context";
+import { MdAccessTimeFilled, MdOutlineError } from "react-icons/md";
+import { VscLoading } from "react-icons/vsc";
 
 export default function RSS() {
     const { feeds, infoMap } = useRSS();
@@ -23,7 +22,7 @@ export default function RSS() {
 
     useEffect(() => {
         const activeFeeds = feeds
-            .filter((feed) => userConfigs.perFeedConfigs[feed.config.title].active)
+            .filter(feed => userConfigs.perFeedConfigs[feed.config.title].active)
             .sort((a, b) => {
                 if (a.date === undefined) {
                     return 1;
@@ -60,8 +59,8 @@ export default function RSS() {
             <Separator className="mb-0 h-3" />
 
             <ul>
-                {displayFeeds.map((feedData) => (
-                    <FeedData key={`${rssUtils.hash(feedData)}`} feedData={feedData} />
+                {displayFeeds.map(feedData => (
+                    <FeedData key={`${rsshash(feedData)}`} feedData={feedData} />
                 ))}
             </ul>
             <div className="flex justify-center">
@@ -130,7 +129,7 @@ function FeedTitle({ title, ...rest }: { title: string }) {
 function FeedData({ feedData }: { feedData: Feed }) {
     const [showDetails, setShowDetails] = useState(false);
     const detailsOnClick = () => {
-        setShowDetails((v) => !v);
+        setShowDetails(v => !v);
     };
     // click on details: open and close
     // drag on details: maybe expanding the details panel
@@ -171,7 +170,7 @@ function FeedData({ feedData }: { feedData: Feed }) {
     };
 
     return (
-        <li key={rssUtils.hash(feedData)} className={tm("my-3 break-all border border-transparent")}>
+        <li key={rsshash(feedData)} className={tm("my-3 break-all border border-transparent")}>
             <div className="relative animate-in slide-in-from-bottom-4">
                 {/* summary */}
                 <div className="flex flex-row">
@@ -182,7 +181,7 @@ function FeedData({ feedData }: { feedData: Feed }) {
                             href={feedData.item?.link || "#"}
                             target="_blank"
                             className="w-fit hover:cursor-pointer hover:underline">
-                            <h3 className="font-bold">
+                            <h3 className="text-sm font-bold md:text-base">
                                 {feedData.item.title} <ImNewTab className="inline-block" />
                             </h3>
                         </Link>
@@ -200,7 +199,7 @@ function FeedData({ feedData }: { feedData: Feed }) {
                                 <>
                                     <span className="hover-subtext flex flex-row items-center gap-1 hover:cursor-default hover:underline">
                                         <MdAccessTimeFilled className="inline-block" />
-                                        <span onClick={dateOnClick} className=" italic ">
+                                        <span onClick={dateOnClick} className="italic ">
                                             {date}
                                         </span>
                                     </span>
@@ -222,7 +221,7 @@ function FeedData({ feedData }: { feedData: Feed }) {
                     onMouseUp={detailsMouseUp}
                     onMouseEnter={onDetailsMouseEnter}
                     onMouseLeave={onDetailsMouseLeave}
-                    className="relative flex flex-row hover:cursor-pointer">
+                    className="std-text-size relative mt-1 flex flex-row hover:cursor-pointer">
                     {!showDetails && (
                         <div>
                             <div className="line-clamp-3 break-normal text-gray-700 animate-in slide-in-from-bottom-4">
@@ -259,4 +258,10 @@ function FeedData({ feedData }: { feedData: Feed }) {
             )}
         </li>
     );
+}
+
+function rsshash(feed: Feed) {
+    const key = (feed.item.guid || "") + (feed.item.title || "") + (feed.item.link || "");
+
+    return stringHash(key);
 }

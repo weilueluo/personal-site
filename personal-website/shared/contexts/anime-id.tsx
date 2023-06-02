@@ -1,8 +1,8 @@
 "use client";
 import Loading from "@/app/[locale]/anime/[id]/loading";
 import React, { useContext, useEffect } from "react";
-import { MediaItem } from "../graphql/graphql";
-import { fetchAnilistMedia } from "../graphql/query";
+import { MediaItem } from "../../components/anime/graphql/graphql";
+import { fetchAnilistMedia } from "../../components/anime/graphql/query";
 
 type AnimeDetailsContextValue = MediaItem | undefined;
 
@@ -17,10 +17,10 @@ export function AnimeDetailsProvider({ animeId, children }: { animeId: number; c
 
     useEffect(() => {
         fetchAnilistMedia(animeId)
-            .then((data) => {
+            .then(data => {
                 setData(data);
             })
-            .catch((err) => {
+            .catch(err => {
                 setError(err);
             });
     }, [animeId]);

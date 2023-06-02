@@ -1,4 +1,4 @@
-import { GenreFilterItem, TagFilterItem } from "../context";
+import { GenreFilterItem, TagFilterItem } from "../../../shared/contexts/anime";
 import { CountryFilter, SortFilter, TypeFilter, TypeFilterName } from "../fast-filters";
 
 export const MY_USER_ID = 6044692;
@@ -222,10 +222,10 @@ const mediasSearch = (mediaSearchParams: Omit<FetchSearchParams, "page">) => {
 
     const searchQuery = searchString ? `search:"${searchString}"` : undefined;
 
-    const genres = (activeGenreFilters || []).filter((item) => item.active).map((item) => `"${item.name}"`);
+    const genres = (activeGenreFilters || []).filter(item => item.active).map(item => `"${item.name}"`);
     const genreQuery = genres.length > 0 ? `genre_in:[${genres.join(",")}]` : undefined;
 
-    const tags = (activeTagFilters || []).filter((item) => item.active).map((item) => `"${item.name}"`);
+    const tags = (activeTagFilters || []).filter(item => item.active).map(item => `"${item.name}"`);
     const tagQuery = tags.length > 0 ? `tag_in:[${tags.join(",")}]` : undefined;
 
     const typeQuery =
@@ -240,7 +240,7 @@ const mediasSearch = (mediaSearchParams: Omit<FetchSearchParams, "page">) => {
     const filterIdsQuery = idsToFilter ? `id_in:[${[...idsToFilter].join(",")}]` : undefined;
 
     const queryItems = [searchQuery, genreQuery, tagQuery, typeQuery, sortQuery, countryQuery, filterIdsQuery]
-        .filter((item) => !!item)
+        .filter(item => !!item)
         .join(",");
     const mediaQuery = queryItems.length > 0 ? `media(${queryItems})` : "media";
 
@@ -315,8 +315,7 @@ export interface MediaTagCollection {
 }
 
 ///////////////////////////////////////////// filter
-const filters = `${genreCollection}
-${mediaTagCollection}`;
+const filters = `${genreCollection} ${mediaTagCollection}`;
 export type Filters = MediaTagCollection & GenreCollection;
 
 ///////////////////////////////////////////// my anime collection
@@ -347,7 +346,7 @@ const mediaListCollection = (
     const perChunkQuery = `perChunk:${perChunk ? perChunk : 500}`; // 500 is the upper limit
     const chunkQuery = `chunk:${chunk ? chunk : 1}`;
 
-    const queryItems = [userIdQuery, typeQuery, perChunkQuery, chunkQuery].filter((item) => !!item).join(",");
+    const queryItems = [userIdQuery, typeQuery, perChunkQuery, chunkQuery].filter(item => !!item).join(",");
     const mediaListCollectionQuery =
         queryItems.length > 0 ? `MediaListCollection(${queryItems})` : "MediaListCollection";
 
