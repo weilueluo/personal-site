@@ -1,7 +1,9 @@
+"use client";
 import { RSSConfig } from "@/components/rss/config";
 import { useRSS } from "@/components/rss/manager";
-import React, { useCallback, useContext } from "react";
+import React from "react";
 import { useImmer } from "use-immer";
+import { UserRSSConfigsContextProvider } from "./context";
 
 export interface FeedConfigs {
     active: boolean;
@@ -32,14 +34,6 @@ export interface UseUserRSSConfigs {
     setShowRawDate: (showRawDate: boolean) => void;
 }
 
-export interface UserRSSConfigsContext {
-    userConfigs: UserConfigsMap;
-    setActive: (title: string, active: boolean) => void;
-    setShowRawDate: (showRawDate: boolean) => void;
-}
-
-const UserRSSConfigsContext = React.createContext<UserRSSConfigsContext>(null!);
-
 function initUserConfigs(rssConfigs: RSSConfig[]): UserConfigsMap {
     const perFeedConfigs: PerFeedConfigs = {};
     const perFeedItemConfigs: PerFeedItemConfigs = {};
@@ -58,42 +52,25 @@ export function UserRSSConfigsProvider({ children }: { children: React.ReactNode
     const { configs: rssConfigs } = useRSS();
     const [userConfigs, setUserConfigs] = useImmer<UserConfigsMap>(() => initUserConfigs(rssConfigs));
 
-    const setActive = useCallback(
-        (feedTitle: string, active: boolean) => {
-            setUserConfigs((draft) => {
-                if (feedTitle in draft.perFeedConfigs) {
-                    draft.perFeedConfigs[feedTitle].active = active;
-                } else {
-                    console.error(`feed title not found to update active status: ${feedTitle}`);
-                }
-            });
-        },
-        [setUserConfigs]
-    );
+    const setActive = (feedTitle: string, active: boolean) => {
+        setUserConfigs((draft) => {
+            if (feedTitle in draft.perFeedConfigs) {
+                draft.perFeedConfigs[feedTitle].active = active;
+            } else {
+                console.error(`feed title not found to update active status: ${feedTitle}`);
+            }
+        });
+    };
 
-    const setShowRawDate = useCallback(() => {
+    const setShowRawDate = () => {
         setUserConfigs((draft) => {
             draft.globalConfigs.showRawDate = !draft.globalConfigs.showRawDate;
         });
-    }, [setUserConfigs]);
+    };
 
     return (
-        <UserRSSConfigsContext.Provider value={{ userConfigs, setActive, setShowRawDate }}>
+        <UserRSSConfigsContextProvider value={{ userConfigs, setActive, setShowRawDate }}>
             {children}
-        </UserRSSConfigsContext.Provider>
+        </UserRSSConfigsContextProvider>
     );
-}
-
-export function useUserRSSConfigs(): UseUserRSSConfigs {
-    return useContext(UserRSSConfigsContext);
-}
-
-export function useSingleUserFeedConfigs(title: string): SingleUserFeedConfigs {
-    const { userConfigs, setActive, setShowRawDate } = useContext(UserRSSConfigsContext);
-    const { active } = userConfigs.perFeedConfigs[title];
-    return {
-        active,
-        setActive,
-        setShowRawDate,
-    };
 }

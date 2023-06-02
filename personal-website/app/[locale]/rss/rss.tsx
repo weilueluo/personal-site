@@ -11,10 +11,11 @@ import { AiFillCheckCircle, AiFillEye, AiFillEyeInvisible } from "react-icons/ai
 import { CgFormatSeparator } from "react-icons/cg";
 import { ImNewTab } from "react-icons/im";
 import { IoMdRefreshCircle } from "react-icons/io";
-import { MdAccessTimeFilled, MdLightbulb, MdOutlineError } from "react-icons/md";
+import { MdAccessTimeFilled, MdOutlineError } from "react-icons/md";
+import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { VscLoading } from "react-icons/vsc";
-import { useSingleUserFeedConfigs, useUserRSSConfigs } from "../../../components/rss/user-config";
 import { IoLayersSharp } from "react-icons/io5";
+import { useUserRSSConfigs, useSingleUserFeedConfigs } from "@/components/rss/context";
 
 export default function RSS() {
     const { feeds, infoMap } = useRSS();
@@ -51,7 +52,7 @@ export default function RSS() {
 
     return (
         <>
-            <ul className="my-2 flex h-fit w-full flex-col gap-2">
+            <ul className="flex h-fit w-full flex-col gap-2 md:my-2">
                 {Array.from(infoMap).map(([title]) => (
                     <FeedTitle key={title} title={title} />
                 ))}
@@ -97,7 +98,7 @@ function FeedTitle({ title, ...rest }: { title: string }) {
     return (
         <div className={tm("flex h-fit flex-row items-center justify-between gap-1 rounded-md")} {...rest}>
             <div className="flex h-fit flex-row items-center justify-center gap-1 rounded-md">
-                <span>{title}</span>
+                <span className="std-text-size">{title}</span>
             </div>
 
             <div className="mx-1 flex h-full w-fit flex-row items-center gap-1">
@@ -131,6 +132,8 @@ function FeedData({ feedData }: { feedData: Feed }) {
     const detailsOnClick = () => {
         setShowDetails((v) => !v);
     };
+    // click on details: open and close
+    // drag on details: maybe expanding the details panel
     // to distinguish click and drag: https://stackoverflow.com/questions/6042202/how-to-distinguish-mouse-click-and-drag
     let mouseX = 0,
         mouseY = 0;
@@ -166,11 +169,10 @@ function FeedData({ feedData }: { feedData: Feed }) {
     const onDetailsMouseLeave = () => {
         setShowHint(false);
     };
-    const hint = showDetails ? "click to collapse" : "click to expand";
 
     return (
         <li key={rssUtils.hash(feedData)} className={tm("my-3 break-all border border-transparent")}>
-            <div className="animate-in slide-in-from-bottom-4">
+            <div className="relative animate-in slide-in-from-bottom-4">
                 {/* summary */}
                 <div className="flex flex-row">
                     {/* title, source, date, etc */}
@@ -202,12 +204,12 @@ function FeedData({ feedData }: { feedData: Feed }) {
                                             {date}
                                         </span>
                                     </span>
-                                    {showHint && (
+                                    {/* {showHint && (
                                         <span className=" flex flex-row items-center animate-in fade-in-0 slide-in-from-bottom-4">
                                             <MdLightbulb className="inline-block" />
                                             <span className="italic">{hint}</span>
                                         </span>
-                                    )}
+                                    )} */}
                                 </>
                             )}
                         </div>
@@ -249,6 +251,12 @@ function FeedData({ feedData }: { feedData: Feed }) {
                     )}
                 </div>
             </div>
+            {showHint && !showDetails && (
+                <FaAngleDown className="top-100 absolute left-[50%] animate-in fade-in slide-in-from-top-4" />
+            )}
+            {showHint && showDetails && (
+                <FaAngleUp className="top-100 absolute left-[50%] animate-in fade-in slide-in-from-bottom-4" />
+            )}
         </li>
     );
 }

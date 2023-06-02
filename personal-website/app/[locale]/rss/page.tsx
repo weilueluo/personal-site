@@ -1,5 +1,3 @@
-"use client";
-
 import { RSSProvider } from "@/components/rss/manager";
 import { ErrorBoundary } from "react-error-boundary";
 import { UserRSSConfigsProvider } from "../../../components/rss/user-config";
