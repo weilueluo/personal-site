@@ -39,6 +39,9 @@ const fetchGithubRestData = async <T>(path: string) => {
             Authorization: `Bearer ${GITHUB_TOKEN}`,
             "X-GitHub-Api-Version": "2022-11-28",
         },
+        next: {
+            revalidate: 60 * 10, // revalidate every 10 minutes
+        },
     }).then((res) => res.json() as T);
 };
 

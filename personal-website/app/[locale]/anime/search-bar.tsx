@@ -1,4 +1,5 @@
 "use client";
+import { useAnimeSlowFilters } from "@/components/anime/context";
 import {
     COUNTRT_FILTER_DISPLAY_NAMES,
     COUNTRY_FILTER_VALUES,
@@ -10,7 +11,6 @@ import {
     useAnimeFastFilters,
 } from "@/components/anime/fast-filters";
 import { FilterItem, useAnimeSearch } from "@/components/anime/search";
-import { useAnimeSlowFilters } from "@/components/anime/slow-filters";
 import { SeparatedList } from "@/components/ui/Separator";
 import dropdown from "@/components/ui/dropdown";
 import { tm } from "@/shared/utils";

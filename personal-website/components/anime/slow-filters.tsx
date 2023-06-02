@@ -1,29 +1,16 @@
 "use client";
+
 import React, { useEffect } from "react";
 import { useImmer } from "use-immer";
-import { useTagsAndGenres } from "./collections";
-import { MediaTag } from "./graphql/graphql";
+import {
+    AdultFilter,
+    AnimeSlowFilterContextProvider,
+    ClearAllFilter,
+    GenreFilterItem,
+    TagFilterItem,
+    useTagsAndGenres,
+} from "./context";
 import { FilterItem } from "./search";
-
-export interface ClearAllFilter extends FilterItem {}
-export interface AdultFilter extends FilterItem {}
-export interface GenreFilterItem extends FilterItem {}
-export interface TagFilterItem extends Omit<FilterItem, "isAdult">, MediaTag {}
-
-interface AnimeSlowFilterContext {
-    genreFilters: GenreFilterItem[];
-    tagFilters: TagFilterItem[];
-    genreFilterOnClick: (clickedItem: GenreFilterItem) => void;
-    tagFilterOnClick: (clickedItem: TagFilterItem) => void;
-    adultFilter: AdultFilter;
-    adultFilterOnClick: (clickedItem: AdultFilter) => void;
-    clearAllFilter: ClearAllFilter;
-    setClearAllFilter: (active: boolean) => void;
-    activeSlowFilters: FilterItem[];
-    activeSlowFilterOnClick: (clickedItem: FilterItem) => void;
-}
-
-const AnimeSlowFilterContext = React.createContext<AnimeSlowFilterContext>(null!);
 
 export default function AnimeSlowFiltersProvider({ children }: { children: React.ReactNode }) {
     const { tags, genres } = useTagsAndGenres();
@@ -118,7 +105,7 @@ export default function AnimeSlowFiltersProvider({ children }: { children: React
     };
 
     return (
-        <AnimeSlowFilterContext.Provider
+        <AnimeSlowFilterContextProvider
             value={{
                 genreFilters,
                 tagFilters,
@@ -132,10 +119,6 @@ export default function AnimeSlowFiltersProvider({ children }: { children: React
                 activeSlowFilterOnClick,
             }}>
             {children}
-        </AnimeSlowFilterContext.Provider>
+        </AnimeSlowFilterContextProvider>
     );
-}
-
-export function useAnimeSlowFilters(): AnimeSlowFilterContext {
-    return React.useContext(AnimeSlowFilterContext);
 }

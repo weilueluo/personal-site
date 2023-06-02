@@ -4,7 +4,6 @@ import BackButton from "@/components/ui/back";
 import Link from "next/link";
 import { BsCalendar2DateFill } from "react-icons/bs";
 import { FaDownload } from "react-icons/fa";
-import { ImStatsBars } from "react-icons/im";
 import { SiGithub } from "react-icons/si";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import rehypeMathjax from "rehype-mathjax";
@@ -12,12 +11,7 @@ import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkToc from "remark-toc";
-
-// fuck Page changed from static to dynamic at runtime /en/blogs/README.md, reason: cookies
-// export async function generateStaticParams() {
-//     const data = await fetchBlogDirectory();
-//     return data.map((data) => ({ filename: data.name }));
-// }
+import ShareButton from "./share";
 
 export default async function Page({ params }: { params: { filename: string } }) {
     const blogContentPromise = fetchBlogContent(params.filename);
@@ -47,9 +41,7 @@ export default async function Page({ params }: { params: { filename: string } })
                         <FaDownload /> Download
                     </span>
                 </Link>
-                <span className="icon-text std-pad">
-                    <ImStatsBars /> {blogContent.size} bytes
-                </span>
+                <ShareButton />
                 <span className="icon-text std-pad">
                     <BsCalendar2DateFill /> {date}
                 </span>

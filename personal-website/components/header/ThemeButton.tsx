@@ -5,7 +5,6 @@ import { tm } from "@/shared/utils";
 import React, { useState } from "react";
 import { BsFillMoonStarsFill, BsGearWideConnected } from "react-icons/bs";
 import { ImSun } from "react-icons/im";
-import { useMountedState } from "react-use";
 import styles from "./ThemeButton.module.scss";
 
 const DARK_THEME = "dark";
@@ -42,10 +41,6 @@ const ThemeButton = React.forwardRef<React.ElementRef<"button">, React.Component
             setTextDeg(getDegByTheme(theme));
             setIconDeg(-getDegByTheme(theme));
         };
-
-        if (!useMountedState()) {
-            return null; // avoid hydration errors because theme is undefined at server
-        }
 
         return (
             <button

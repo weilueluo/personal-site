@@ -1,28 +1,25 @@
 import Header from "@/components/header/Header";
 import Separator from "@/components/ui/Separator";
+import { inter } from "@/shared/fonts";
 import Init from "@/shared/init";
 import ThemeProvider from "@/shared/themes";
 import TranslationProvider from "@/shared/translation";
-import { Analytics } from "@vercel/analytics/react";
-import { cookies } from "next/headers";
-import "./global.css";
-import Script from "next/script";
-import { inter } from "@/shared/fonts";
 import { tm } from "@/shared/utils";
+import { Analytics } from "@vercel/analytics/react";
+import Script from "next/script";
+import "./global.css";
+import { cookies } from "next/dist/client/components/headers";
 
 interface Params {
     locale: string;
 }
 
 export default async function Layout({ children, params }: { children: React.ReactNode; params: Params }) {
-    const locale = params.locale ?? "en";
-
-    const messages = (await import(`../public/messages/${locale}.json`)).default;
-
     return (
         <ThemeProvider cookies={cookies()}>
-            <TranslationProvider messages={messages}>
-                <html lang={locale}>
+            {/* @ts-ignore Async Server Component */}
+            <TranslationProvider locale={params.locale}>
+                <html lang={params.locale}>
                     <body className={tm("grid place-items-center", inter.className)}>
                         <Init />
                         <Analytics />

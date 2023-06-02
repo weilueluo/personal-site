@@ -1,14 +1,9 @@
 // server side component for fetching my favourites and filter tags and genres
 
-import React, { useContext } from "react";
-import {
-    MyAnimeCollectionContext,
-    MyAnimeCollectionContextProvider,
-    TagsAndGenresContext,
-    TagsAndGenresContextProvider,
-} from "./context";
+import React from "react";
+import { MyAnimeCollectionContextProvider, TagsAndGenresContextProvider } from "./context";
 import { MediaTag } from "./graphql/graphql";
-import { fetchMyAnimeCollection, fetchFilters } from "./graphql/query";
+import { fetchFilters, fetchMyAnimeCollection } from "./graphql/query";
 
 export async function MyAnimeCollectionProvider({ children }: { children: React.ReactNode }) {
     const favSet = new Set<number>();
@@ -28,10 +23,6 @@ export async function MyAnimeCollectionProvider({ children }: { children: React.
     );
 }
 
-export function useMyAnimeCollection() {
-    return useContext(MyAnimeCollectionContext);
-}
-
 export async function TagsAndGenresProvider({ children }: { children: React.ReactNode }) {
     const genres: string[] = [];
     const tags: MediaTag[] = [];
@@ -49,8 +40,4 @@ export async function TagsAndGenresProvider({ children }: { children: React.Reac
             {children}
         </TagsAndGenresContextProvider>
     );
-}
-
-export function useTagsAndGenres() {
-    return useContext(TagsAndGenresContext);
 }

@@ -1,9 +1,9 @@
-import { TagsAndGenresProvider, MyAnimeCollectionProvider } from "@/components/anime/collections";
 import { AnimeFastFiltersProvider } from "@/components/anime/fast-filters";
 import { AnimeSearchProvider } from "@/components/anime/search";
 import AnimeSlowFiltersProvider from "@/components/anime/slow-filters";
 import SearchBar from "./search-bar";
 import SearchResult from "./search-result";
+import { TagsAndGenresProvider, MyAnimeCollectionProvider } from "@/components/anime/collections";
 
 // TODO: fix: do not use async server component
 // TODO: feat: add searches & tags & genres to url search params

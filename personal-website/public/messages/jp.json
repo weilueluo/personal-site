@@ -1,13 +1,13 @@
 {
-    "Index": {
-        "title": "「こんにちは 世界」"
-    },
     "header": {
-        "source": "ソース",
-        "blogs": "ブログ",
         "about": "について",
         "anime": "アニメ",
+        "blogs": "ブログ",
+        "cv": "履歴",
         "rss": "RSS フィード",
-        "cv": "履歴"
+        "source": "ソース"
+    },
+    "index": {
+        "title": "「こんにちは世界」"
     }
 }

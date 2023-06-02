@@ -5,6 +5,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useEffectOnce } from "react-use";
 import { Nullable } from "./types/utils";
 import { cookieToObj } from "./utils";
+import { useForceUpdate } from "./hooks";
 
 // types
 export type ResolvedTheme = "light" | "dark";
@@ -23,6 +24,7 @@ export const THEMES: UnResolvedTheme[] = ["system", "light", "dark"];
 const ThemeContext = React.createContext<UseTheme>({
     resolvedTheme: DEFAULT_RESOLVED_THEME,
     unResolvedTheme: DEFAULT_RESOLVED_THEME,
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     setTheme: () => {},
 });
 
@@ -51,8 +53,10 @@ export default function ThemeProvider({
         }
     };
 
+    const forceUpdate = useForceUpdate();
+
     useEffectOnce(() => {
-        assignTheme(resolvedTheme);
+        forceUpdate();
     });
 
     useEffect(() => {
@@ -133,7 +137,7 @@ function setClientSideCookieTheme(theme: UnResolvedTheme, days = 0) {
         const cookieObj = cookieToObj(document.cookie);
         cookieObj[THEME_KEY] = theme;
         if (days) {
-            var date = new Date();
+            const date = new Date();
             date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
             document.cookie = `expires=${date.toUTCString()}`;
         }
@@ -169,6 +173,7 @@ function getLocalStorageTheme(): Nullable<UnResolvedTheme> {
     return undefined;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function removeClientSideCookieTheme() {
     if (typeof document !== "undefined") {
         const cookieObj = cookieToObj(document.cookie);
@@ -176,6 +181,7 @@ function removeClientSideCookieTheme() {
     }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function removeLocalStorageTheme(): void {
     if (typeof localStorage !== "undefined") {
         localStorage.removeItem(THEME_KEY);

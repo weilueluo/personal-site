@@ -1,13 +1,13 @@
 {
-    "Index": {
-        "title": "Hello World!"
-    },
     "header": {
-        "source": "Source",
-        "blogs": "Blogs",
         "about": "About",
         "anime": "Anime",
+        "blogs": "Blogs",
+        "cv": "CV",
         "rss": "RSS",
-        "cv": "CV"
+        "source": "Source"
+    },
+    "index": {
+        "title": "Hello World!"
     }
 }

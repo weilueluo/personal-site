@@ -2,7 +2,6 @@
 
 import { DEFAULT_LOCALE, GITHUB_CV_URL, GITHUB_REPO_URL, LOCALES } from "@/shared/constants";
 import { getPathWithLocale, replaceLocale } from "@/shared/locale";
-import { useMessages } from "@/shared/translation";
 import { tm } from "@/shared/utils";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
@@ -15,6 +14,7 @@ import { RiContactsBook2Fill, RiFilePaper2Fill } from "react-icons/ri";
 import { SiGithub } from "react-icons/si";
 import dropdown from "../ui/dropdown";
 import ThemeButton from "./ThemeButton";
+import { useMessages } from "@/app/context";
 
 export interface HeaderProps extends ComponentPropsWithoutRef<"header"> {}
 

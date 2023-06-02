@@ -1,9 +1,9 @@
 "use client";
 
-import { useMessages } from "@/shared/translation";
+import { useMessages } from "../context";
 
 export default function Title() {
     const messages: any = useMessages();
 
-    return <h3>{messages["Index"]["title"]}</h3>;
+    return <h3>{messages["index"]["title"]}</h3>;
 }
