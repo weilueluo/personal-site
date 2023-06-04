@@ -1,18 +1,20 @@
 import ProgressiveImage from "@/components/ui/image";
 import LoadingItem from "@/components/ui/loading/loading";
+import { formattedMessage } from "@/shared/i18n/translation";
+import { BaseCompProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
 import Link from "next/link";
 import React, { ComponentPropsWithoutRef, ElementRef } from "react";
 import { ImNewTab } from "react-icons/im";
 
-interface CardProps extends ComponentPropsWithoutRef<"div"> {
+interface CardProps extends BaseCompProps<"div"> {
     title: string | undefined;
     name: string | undefined;
     srcs: (string | undefined)[];
     url: string | undefined;
 }
 export const Card = React.forwardRef<ElementRef<"div">, CardProps>(
-    ({ title, url, className, name, srcs, ...rest }, ref) => {
+    ({ title, url, className, name, messages, srcs, ...rest }, ref) => {
         const [hover, setHover] = React.useState(false);
         return (
             <Link
@@ -28,7 +30,7 @@ export const Card = React.forwardRef<ElementRef<"div">, CardProps>(
                         srcs={srcs}
                         fill={true}
                         sizes="(min-width: 768px) 480px, 360px"
-                        alt="image"
+                        alt={formattedMessage(messages, "anime.details.card.image_alt")}
                         className="h-32 w-full md:h-40"
                         loading={<LoadingItem className="h-32 w-20 md:h-40 md:w-28" />}
                     />

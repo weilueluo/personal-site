@@ -3,28 +3,6 @@
 @tailwind utilities;
 
 @layer components {
-    /* .hover-shadow {
-        @apply rounded-xl transition-[box-shadow] duration-150 hover:cursor-pointer hover:shadow-md hover:shadow-gray-600;
-    } */
-
-    /* .hover-shadow-inset {
-        @apply rounded-xl transition-[box-shadow] duration-150  hover:cursor-pointer hover:shadow-gray-600;
-    } */
-
-    /* .shadow-inset-md {
-        @apply rounded-xl;
-        box-shadow: inset 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgb(0, 0, 0, 0.4);
-    } */
-
-    /* .shadow-inset-sm {
-        @apply rounded-xl transition-[box-shadow] duration-150;
-        box-shadow: inset 0 2px 3px -1px rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgb(0, 0, 0, 0.4);
-    } */
-
-    /* .hover-shadow-inset:hover {
-        @apply shadow-inset-md;
-    } */
-
     .std-pad {
         @apply px-1 py-1 md:px-2;
     }

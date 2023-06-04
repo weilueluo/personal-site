@@ -1,20 +1,20 @@
-import { timeSinceSeconds } from "@/shared/utils";
+import { FormattedMessage, formattedMessage } from "@/shared/i18n/translation";
+import { BaseCompProps } from "@/shared/types/comp";
 import { useAnimeDetails } from "../../../shared/contexts/anime-id";
 import { FullLabel, Label, Labels } from "./primitives";
 
-export function Status() {
+export function Status({ messages }: BaseCompProps<"div">) {
     const data = useAnimeDetails();
 
-    const status = data?.status || "UNKNOWN";
+    const status = data?.status || formattedMessage(messages, "anime.details.status.unknown");
 
     return <FullLabel className=" bg-green-400">{status}</FullLabel>;
 }
 
-export function NextAiring() {
+export function NextAiring({ messages, locale }: BaseCompProps<"div">) {
     const data = useAnimeDetails();
 
-    const timeUntilNextAiring =
-        data?.nextAiringEpisode && timeSinceSeconds(data.nextAiringEpisode?.timeUntilAiring || 0);
+    const nextAiringDate = new Date(((data?.nextAiringEpisode && data.nextAiringEpisode?.airingAt) || 0) * 1000);
 
     const nextEpisode = data?.nextAiringEpisode?.episode || 1;
     const totalEpisode = data?.episodes || 1;
@@ -29,13 +29,17 @@ export function NextAiring() {
                 }% 100%)`,
             }}>
             {data?.nextAiringEpisode
-                ? `Ep. ${nextEpisode}/${totalEpisode} in ${timeUntilNextAiring}`
-                : "Episode Unavailable"}
+                ? formattedMessage(messages, "anime.details.next_airing", locale, {
+                      nextEpisode: nextEpisode,
+                      totalEpisode: totalEpisode,
+                      timeUntilNextAiring: nextAiringDate,
+                  })
+                : formattedMessage(messages, "anime.details.next_airing.unavailable")}
         </FullLabel>
     );
 }
 
-export function Score() {
+export function Score({ messages, locale }: BaseCompProps<"div">) {
     const data = useAnimeDetails();
 
     const breakpoint = Math.max(data?.meanScore || 0, 0);
@@ -48,7 +52,18 @@ export function Score() {
                     breakpoint + 1
                 }% 100%)`,
             }}>
-            {data?.meanScore ? `Rating ${data.meanScore}` : "Score Unavailable"}
+            {data?.meanScore ? (
+                <FormattedMessage
+                    messages={messages}
+                    id="anime.details.score"
+                    locale={locale}
+                    values={{
+                        score: data?.meanScore,
+                    }}
+                />
+            ) : (
+                <FormattedMessage messages={messages} id="anime.details.score.unavailable" />
+            )}
         </FullLabel>
     );
 }

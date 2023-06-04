@@ -1,6 +1,6 @@
 "use client";
 
-import dropdown from "@/components/ui/dropdown";
+import * as dropdown from "@/components/ui/dropdown";
 import { BsShareFill } from "react-icons/bs";
 import { MdContentPaste } from "react-icons/md";
 

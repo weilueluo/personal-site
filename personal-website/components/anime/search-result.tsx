@@ -2,29 +2,31 @@
 import { SectionMedia } from "@/components/anime/graphql/graphql";
 import { useAnimeSearch } from "@/components/anime/search";
 import ProgressiveImage from "@/components/ui/image";
+import { FormattedMessage, formattedMessage } from "@/shared/i18n/translation";
+import { BaseCompProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { ComponentPropsWithoutRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdExpandMore } from "react-icons/md";
 import { VscLoading } from "react-icons/vsc";
 
-export default function SearchResult() {
+export default function SearchResult({ messages, locale, ...rest }: BaseCompProps<"div">) {
     const { swrAnimeResponse, mergedData, pageInfo } = useAnimeSearch();
 
     useEffect(() => swrAnimeResponse.error && console.error(swrAnimeResponse.error), [swrAnimeResponse.error]);
 
     // button text by state
-    const [buttonText, setButtonText] = useState("loading");
+    const [buttonText, setButtonText] = useState(formattedMessage(messages, "anime.search.result.loading"));
     useEffect(() => {
         if (swrAnimeResponse.isLoading || swrAnimeResponse.isValidating) {
-            setButtonText("loading");
+            setButtonText(formattedMessage(messages, "anime.search.result.loading"));
         } else if (!pageInfo?.hasNextPage) {
-            setButtonText("all loaded");
+            setButtonText(formattedMessage(messages, "anime.search.result.all_loaded"));
         } else {
-            setButtonText("load more");
+            setButtonText(formattedMessage(messages, "anime.search.result.load_more"));
         }
-    }, [swrAnimeResponse.isLoading, swrAnimeResponse.isValidating, pageInfo?.hasNextPage]);
+    }, [swrAnimeResponse.isLoading, swrAnimeResponse.isValidating, pageInfo?.hasNextPage, messages]);
 
     // load more when reach bottom
     useEffect(() => {
@@ -50,9 +52,9 @@ export default function SearchResult() {
     return (
         <>
             {/* loading header */}
-            <div className="my-2 flex flex-row justify-between">
+            <div className="my-2 flex flex-row justify-between" {...rest}>
                 <h3 className="text-xl font-bold capitalize">
-                    Results
+                    <FormattedMessage id="anime.search.result.results" messages={messages} />
                     {(swrAnimeResponse.isLoading || swrAnimeResponse.isValidating) && (
                         <VscLoading className="mx-2 inline-block animate-spin align-middle" />
                     )}
@@ -60,7 +62,11 @@ export default function SearchResult() {
 
                 <button className="icon-text std-hover std-pad" onClick={() => setCollapse(v => !v)}>
                     <MdExpandMore className="inline-block" />
-                    {collapse ? "expand" : "collpase"}
+                    {collapse ? (
+                        <FormattedMessage id="anime.search.result.expand" messages={messages} />
+                    ) : (
+                        <FormattedMessage id="anime.search.result.collapse" messages={messages} />
+                    )}
                 </button>
             </div>
 
@@ -74,7 +80,7 @@ export default function SearchResult() {
                     )}>
                     {mergedData.map(data => (
                         <Link href={`${pathname}/${data.id}`} key={data.id} prefetch={false}>
-                            <Card data={data} />
+                            <Card data={data} messages={messages} locale={locale} />
                         </Link>
                     ))}
                     {(swrAnimeResponse.isLoading || swrAnimeResponse.isValidating) &&
@@ -100,11 +106,11 @@ export default function SearchResult() {
     );
 }
 
-interface CardProps extends ComponentPropsWithoutRef<"div"> {
+interface CardProps extends BaseCompProps<"div"> {
     data: SectionMedia;
 }
 const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
-    const { data, className } = props;
+    const { data, className, messages } = props;
     return (
         <div ref={ref} className={tm("group hover:underline", className)}>
             <div className="max-w-36 w-24 duration-150 sm:w-36">
@@ -112,7 +118,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
                     srcs={[data.coverImage?.medium, data.coverImage?.large]}
                     fill={true}
                     sizes="(min-width: 1024px) 480px, 320px"
-                    alt="image"
+                    alt={formattedMessage(messages, "anime.search.result.image_alt")}
                     className="relative h-36 w-full overflow-hidden sm:h-52"
                     loading={<div className="h-36 w-24 bg-gray-500 sm:h-52 sm:w-36" />}
                 />

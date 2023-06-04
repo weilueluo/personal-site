@@ -1,11 +1,13 @@
 "use client";
 
+import { FormattedMessage } from "@/shared/i18n/translation";
 import { UnResolvedTheme, useTheme } from "@/shared/themes";
+import { BaseCompProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
 import React, { useState } from "react";
 import { BsFillMoonStarsFill, BsGearWideConnected } from "react-icons/bs";
 import { ImSun } from "react-icons/im";
-import styles from "./ThemeButton.module.scss";
+import styles from "./theme-button.module.scss";
 
 const DARK_THEME = "dark";
 const LIGHT_THEME = "light";
@@ -13,9 +15,9 @@ const SYSTEM_THEME = "system";
 
 const THEMES: UnResolvedTheme[] = [DARK_THEME, LIGHT_THEME, SYSTEM_THEME];
 
-const ThemeButton = React.forwardRef<React.ElementRef<"button">, React.ComponentPropsWithoutRef<"button">>(
+const ThemeButton = React.forwardRef<React.ElementRef<"button">, BaseCompProps<"button">>(
     // eslint-disable-next-line react/prop-types
-    ({ className, ...otherProps }, ref) => {
+    ({ className, messages, ...otherProps }, ref) => {
         const { unResolvedTheme, setTheme } = useTheme();
 
         const getNextTheme = (currTheme: UnResolvedTheme): UnResolvedTheme =>
@@ -75,9 +77,15 @@ const ThemeButton = React.forwardRef<React.ElementRef<"button">, React.Component
                         style={{
                             transform: `rotateX(${textDeg}deg)`,
                         }}>
-                        <PieceContainer>System</PieceContainer>
-                        <PieceContainer>Dark</PieceContainer>
-                        <PieceContainer>Light</PieceContainer>
+                        <PieceContainer>
+                            <FormattedMessage id="header.theme.system" messages={messages} />
+                        </PieceContainer>
+                        <PieceContainer>
+                            <FormattedMessage id="header.theme.dark" messages={messages} />
+                        </PieceContainer>
+                        <PieceContainer>
+                            <FormattedMessage id="header.theme.light" messages={messages} />
+                        </PieceContainer>
                     </div>
                 </div>
             </button>

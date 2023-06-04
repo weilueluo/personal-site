@@ -2,36 +2,62 @@
 
 import ProgressiveImage from "@/components/ui/image";
 import LoadingItem from "@/components/ui/loading/loading";
+import { FormattedMessage, formattedMessage } from "@/shared/i18n/translation";
+import { BaseCompProps } from "@/shared/types/comp";
 import Link from "next/link";
-import React, { ComponentPropsWithoutRef, ElementRef, useState } from "react";
+import React, { ElementRef, useState } from "react";
 import { useAnimeDetails } from "../../../shared/contexts/anime-id";
 import { Character, Relation, Staff, VoiceActor } from "../graphql/graphql";
 import { Card, Cards, Label, Section } from "./primitives";
 
-function RelationCard({ data }: { data: Relation }) {
+function RelationCard({ data, messages, locale }: BaseCompProps<"div"> & { data: Relation }) {
     const title = data.relationType?.replace("_", " ");
     const name = data.node.title?.english || data.node.title?.romaji || data.node.title?.native;
     const srcs = [data.node.coverImage?.medium, data.node.coverImage?.large];
     const url = data.node.siteUrl;
 
-    return <Card title={title} url={url} name={name} srcs={srcs} className="overflow-hidden" />;
+    return (
+        <Card
+            title={title}
+            url={url}
+            name={name}
+            srcs={srcs}
+            className="overflow-hidden"
+            messages={messages}
+            locale={locale}
+        />
+    );
 }
 
-interface VoiceActorCardProps extends ComponentPropsWithoutRef<"div"> {
+interface VoiceActorCardProps extends BaseCompProps<"div"> {
     data: VoiceActor;
 }
-const VoiceActorCard = React.forwardRef<ElementRef<"div">, VoiceActorCardProps>(({ data, ...rest }, ref) => {
-    const name = [data?.name?.full, data?.name?.native, ...(data.name?.alternative || [])].filter(
-        title => !!title
-    )[0] as string;
-    const srcs = [data?.image?.medium, data.image?.large];
-    const url = data?.siteUrl;
+const VoiceActorCard = React.forwardRef<ElementRef<"div">, VoiceActorCardProps>(
+    ({ data, messages, locale, ...rest }, ref) => {
+        const name = [data?.name?.full, data?.name?.native, ...(data.name?.alternative || [])].filter(
+            title => !!title
+        )[0] as string;
+        const srcs = [data?.image?.medium, data.image?.large];
+        const url = data?.siteUrl;
 
-    return <Card title={"VA"} name={name} url={url} srcs={srcs} {...rest} ref={ref} className=" text-right" />;
-});
+        return (
+            <Card
+                title={"VA"}
+                name={name}
+                url={url}
+                srcs={srcs}
+                {...rest}
+                ref={ref}
+                className=" text-right"
+                messages={messages}
+                locale={locale}
+            />
+        );
+    }
+);
 VoiceActorCard.displayName = "VoiceActorCard";
 
-function CharacterCard({ data }: { data: Character }) {
+function CharacterCard({ data, messages, locale }: BaseCompProps<"div"> & { data: Character }) {
     const name = [data.node?.name?.full, data.node?.name?.alternative, ...(data.node?.name?.alternative || [])].filter(
         title => !!title
     )[0] as string;
@@ -41,15 +67,15 @@ function CharacterCard({ data }: { data: Character }) {
 
     return (
         <div className="flex shrink-0 flex-row overflow-hidden">
-            <Card title={title} name={name} url={url} srcs={srcs} />
+            <Card title={title} name={name} url={url} srcs={srcs} messages={messages} locale={locale} />
             {data.voiceActors?.map(voiceActor => (
-                <VoiceActorCard key={voiceActor.id} data={voiceActor} />
+                <VoiceActorCard key={voiceActor.id} data={voiceActor} messages={messages} locale={locale} />
             ))}
         </div>
     );
 }
 
-function StaffCard({ data }: { data: Staff }) {
+function StaffCard({ data, messages, locale }: BaseCompProps<"div"> & { data: Staff }) {
     const name = [data.node?.name?.full, data.node?.name?.alternative, ...(data.node?.name?.alternative || [])].filter(
         title => !!title
     )[0] as string;
@@ -57,58 +83,68 @@ function StaffCard({ data }: { data: Staff }) {
     const title = data.role;
     const url = data.node?.siteUrl;
 
-    return <Card title={title} name={name} url={url} srcs={srcs} className="overflow-hidden" />;
+    return (
+        <Card
+            title={title}
+            name={name}
+            url={url}
+            srcs={srcs}
+            className="overflow-hidden"
+            messages={messages}
+            locale={locale}
+        />
+    );
 }
 
-export function Characters() {
+export function Characters({ messages, locale }: BaseCompProps<"div">) {
     const data = useAnimeDetails();
 
     const characters = data?.characters?.edges;
 
     return characters && characters.length > 0 ? (
-        <Section title="Characters">
+        <Section title={formattedMessage(messages, "anime.details.characters.title")}>
             <Cards className="gap-4 md:gap-6">
                 {characters?.map(character => (
-                    <CharacterCard key={character.id} data={character} />
+                    <CharacterCard key={character.id} data={character} messages={messages} locale={locale} />
                 ))}
             </Cards>
         </Section>
     ) : null;
 }
 
-export function Staffs() {
+export function Staffs({ messages, locale }: BaseCompProps<"div">) {
     const data = useAnimeDetails();
 
     const staffs = data?.staff?.edges;
 
     return staffs && staffs.length > 0 ? (
-        <Section title="Staffs">
+        <Section title={formattedMessage(messages, "anime.details.staffs.title")}>
             <Cards className="gap-2 md:gap-4">
                 {staffs?.map(staff => (
-                    <StaffCard key={staff.id} data={staff} />
+                    <StaffCard key={staff.id} data={staff} messages={messages} locale={locale} />
                 ))}
             </Cards>
         </Section>
     ) : null;
 }
 
-export function Relations() {
+export function Relations({ messages, locale }: BaseCompProps<"div">) {
     const data = useAnimeDetails();
 
     const relations = data?.relations?.edges;
 
     return relations && relations.length > 0 ? (
-        <Section title="Relations">
+        <Section title={formattedMessage(messages, "anime.details.relation.title")}>
             <Cards className="gap-2 md:gap-4">
                 {relations?.map(relation => (
-                    <RelationCard key={relation.id} data={relation} />
+                    <RelationCard key={relation.id} data={relation} messages={messages} locale={locale} />
                 ))}
             </Cards>
         </Section>
     ) : null;
 }
 
-export function Trailer() {
+export function Trailer({ messages }: BaseCompProps<"div">) {
     const data = useAnimeDetails();
 
     const videoSource =
@@ -117,12 +153,12 @@ export function Trailer() {
             : `https://www.dailymotion.com/embed/video/${data?.trailer?.id}?autoplay=0`;
 
     return data?.trailer ? (
-        <Section title="Trailer" className="h-fit">
+        <Section title={formattedMessage(messages, "anime.details.trailer.title")} className="h-fit">
             <div className="relative h-0 pb-[56.25%]">
                 <iframe
                     className="absolute left-0 top-0 h-full w-full"
                     src={videoSource}
-                    title="YouTube video player"
+                    title={formattedMessage(messages, "anime.details.trailer.title")}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen={true}></iframe>
             </div>
@@ -130,7 +166,7 @@ export function Trailer() {
     ) : null;
 }
 
-export function Title() {
+export function Title({ messages }: BaseCompProps<"div">) {
     const data = useAnimeDetails();
 
     const titles = [data?.title?.english, data?.title?.native, data?.title?.romaji].filter(title => !!title);
@@ -164,7 +200,11 @@ export function Title() {
                         key={"otherName"}
                         className=" bg-slate-200 hover:cursor-pointer hover:underline"
                         onClick={() => setShowOtherNames(!showOtherNames)}>
-                        {showOtherNames ? "hide" : "show more..."}
+                        {showOtherNames ? (
+                            <FormattedMessage messages={messages} id="anime.details.title.others.hide" />
+                        ) : (
+                            <FormattedMessage messages={messages} id="anime.details.title.others.show_more" />
+                        )}
                     </Label>
                 )}
             </div>
@@ -180,7 +220,7 @@ export function Description() {
     ) : null;
 }
 
-export function CoverImage() {
+export function CoverImage({ messages }: BaseCompProps<"div">) {
     const data = useAnimeDetails();
 
     return data?.coverImage ? (
@@ -189,7 +229,7 @@ export function CoverImage() {
                 srcs={[data?.coverImage?.medium, data?.coverImage?.large]}
                 fill={true}
                 sizes="(min-width: 1024px) 480px, 320px"
-                alt="image"
+                alt={formattedMessage(messages, "anime.details.cover_image_alt")}
                 className="hidden h-56 overflow-hidden md:block"
                 loading={<LoadingItem className="h-56 w-full" />}
             />

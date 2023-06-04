@@ -1,32 +1,34 @@
+import { Messages } from "@/shared/i18n/type";
+
 export type RSSConfig = {
-    title: string;
+    title: keyof Messages;
     url: string;
     homeUrl: string;
 };
 
 export const RSS_CONFIGS: RSSConfig[] = [
     {
-        title: "Steam News",
+        title: "rss.title.steam_news",
         url: "https://store.steampowered.com/feeds/news/?l=english",
         homeUrl: "https://store.steampowered.com",
     },
     {
-        title: "Weibo Hot",
+        title: "rss.title.weibo_hot",
         url: "https://rsshub.app/weibo/search/hot",
         homeUrl: "https://weibo.com",
     },
     {
-        title: "CSDN News",
+        title: "rss.title.csdn_news",
         url: "https://rsshub.app/csdn/blog/csdngeeknews",
         homeUrl: "https://www.csdn.net",
     },
     {
-        title: "BBC News",
+        title: "rss.title.bbc_news",
         url: "https://rsshub.app/bbc",
         homeUrl: "https://www.bbc.com/news",
     },
     {
-        title: "Github Trending",
+        title: "rss.title.github_trending",
         url: "https://rsshub.app/github/trending/daily/any/en",
         homeUrl: "https://github.com",
     },

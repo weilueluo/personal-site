@@ -15,13 +15,19 @@ import React from "react";
 import { MdEmail } from "react-icons/md";
 import { Item } from "../../../components/about/item";
 import SendMessage from "@/components/about/send-message";
+import { BasePageProps } from "@/shared/types/comp";
+import { FormattedMessage, fetchMessages } from "@/shared/i18n/translation";
 
-export default function Page() {
+export default async function Page({ params }: BasePageProps) {
+    const messages = await fetchMessages(params.locale);
+
     return (
         <div className="flex w-full flex-col items-center">
             <div className="flex w-max flex-col gap-4">
                 <Section>
-                    <Title>Frameworks</Title>
+                    <Title>
+                        <FormattedMessage id="about.framework" messages={messages} />
+                    </Title>
                     <div className="grid grid-cols-3">
                         <Item name="React" className="group" href="https://react.dev/">
                             <SiReact size="2rem" className="group-hover:animate-spin" />
@@ -44,7 +50,9 @@ export default function Page() {
                     </div>
                 </Section>
                 <Section>
-                    <Title>Infrastructure</Title>
+                    <Title>
+                        <FormattedMessage id="about.infrastructure" messages={messages} />
+                    </Title>
                     <div className="grid grid-cols-3">
                         <Item name="AWS" className="group" href="https://aws.amazon.com/">
                             <SiAmazonaws size="2rem" className="group-hover:animate-spin" />
@@ -61,11 +69,15 @@ export default function Page() {
                     </div>
                 </Section>
                 <Section>
-                    <Title>Message</Title>
-                    <SendMessage />
+                    <Title>
+                        <FormattedMessage id="about.message" messages={messages} />
+                    </Title>
+                    <SendMessage messages={messages} locale={params.locale} />
                 </Section>
                 <Section>
-                    <Title>Email</Title>
+                    <Title>
+                        <FormattedMessage id="about.email" messages={messages} />
+                    </Title>
                     <div className="group flex w-full flex-row gap-2">
                         <Item className="w-full p-4" href="mailto:luoweilue@gmail.com">
                             <MdEmail size="2rem" className="group-hover:animate-spin" />
@@ -79,7 +91,7 @@ export default function Page() {
 }
 
 function Title({ children }: { children: React.ReactNode }) {
-    return <h2 className=" text-lg font-semibold">{children}</h2>;
+    return <h2 className=" text-lg font-semibold capitalize">{children}</h2>;
 }
 
 const Section = ({ children, className }: { children: React.ReactNode; className?: string }) => {

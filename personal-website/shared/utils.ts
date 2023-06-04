@@ -1,10 +1,5 @@
-import getConfig from "next/config";
 import { MutableRefObject } from "react";
 import { twMerge } from "tailwind-merge";
-
-export const jsonFetcher = <T>(input: RequestInfo | URL, init: RequestInit | undefined = undefined) => {
-    return fetch(input, init).then((res) => res.json());
-};
 
 export function cookieToObj(cookie: string | undefined): Record<string, string> {
     if (cookie) {
@@ -27,23 +22,6 @@ export function objToCookie(obj: Record<string, string>) {
 export const tm = (...classNames: (string | undefined | false | null | 0)[]): string => {
     return twMerge(...classNames);
 };
-
-// set utils
-function union<T>(setA: Set<T>, setB: Set<T>) {
-    const _union = new Set(setA);
-    setB.forEach((elem) => _union.add(elem));
-    return _union;
-}
-
-function intersection<T>(setA: Set<T>, setB: Set<T>) {
-    const _intersection = new Set<T>();
-    setB.forEach((elem) => {
-        if (setA.has(elem)) {
-            _intersection.add(elem);
-        }
-    });
-    return _intersection;
-}
 
 export function timeSinceSeconds(seconds: number) {
     let interval = seconds / 31536000;
@@ -80,17 +58,6 @@ export function isDevEnv() {
     return process && process.env.NODE_ENV === "development";
 }
 
-// https://stackoverflow.com/questions/6268508/restart-animation-in-css3-any-better-way-than-removing-the-element
-export const restartAnimations = (element: Element): void => {
-    for (const animation of document.getAnimations()) {
-        if (element.contains((animation.effect as KeyframeEffect).target)) {
-            // console.log(animation);
-            animation.cancel();
-            animation.play();
-        }
-    }
-};
-
 export function reTriggerAnimateFunction(element: MutableRefObject<any>, className: string) {
     return function (e: MouseEvent) {
         e.preventDefault;
@@ -125,3 +92,21 @@ export const stringHash = (str: string, seed = 42) => {
 
     return 4294967296 * (2097151 & h2) + (h1 >>> 0);
 };
+
+// https://stackoverflow.com/questions/10687099/how-to-test-if-a-url-string-is-absolute-or-relative
+const isAbsolutePath = new RegExp("^(?:[a-z+]+:)?//", "i");
+
+export function isAbsoluteUrl(url: string | undefined | null) {
+    if (!url) {
+        return false;
+    }
+    return isAbsolutePath.test(url);
+}
+
+export function getPublicFolderPath() {
+    return process.cwd() + "/public";
+}
+
+export function readDefaultRevalidate() {
+    return process.env.DEFAULT_REVALIDATE === "false" ? false : Number(process.env.DEFAULT_REVALIDATE);
+}

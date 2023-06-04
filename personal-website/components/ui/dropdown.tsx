@@ -1,3 +1,5 @@
+"use client";
+
 import { tm } from "@/shared/utils";
 import React, { Children, ComponentPropsWithoutRef, useEffect, useState } from "react";
 
@@ -76,11 +78,6 @@ const Dropdown = React.forwardRef<HTMLDivElement, DropdownListProps>((props, ref
         </div>
     );
 });
-Dropdown.displayName = "List";
+Dropdown.displayName = "Dropdown";
 
-const dropdown = {
-    Container,
-    Dropdown,
-};
-
-export default dropdown;
+export { Container, Dropdown };

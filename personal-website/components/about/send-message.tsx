@@ -5,7 +5,9 @@ import borderStyles from "../ui/border.module.scss";
 import styles from "./send-message.module.scss";
 
 import Loading from "@/components/ui/loading/spinner";
+import { FormattedMessage, formattedMessage } from "@/shared/i18n/translation";
 import { SEND_AGAIN_DELAY, sendMessage } from "@/shared/send-message/message-handler";
+import { BaseCompProps } from "@/shared/types/comp";
 import { PublishCommandOutput } from "@aws-sdk/client-sns";
 import React, { ComponentPropsWithoutRef, FormEvent, useEffect, useState } from "react";
 import { BsSendFill } from "react-icons/bs";
@@ -17,7 +19,7 @@ const getRandomSmallMilliseconds = () => {
     return Math.floor(Math.random() * 50);
 };
 
-export default function SendMessage() {
+export default function SendMessage({ messages, locale, className, ...rest }: BaseCompProps<"div">) {
     const [name, setName] = React.useState("");
     const [contact, setContact] = React.useState("");
     const [userMessage, setUserMessage] = React.useState("");
@@ -27,7 +29,7 @@ export default function SendMessage() {
     const [status, setStatus] = useState<SendMessageStatus>("idle");
     const [systemMessage, setSystemMessage] = useState<string>("");
 
-    const [buttonText, setButtonText] = useState<string>("Send");
+    const [buttonText, setButtonText] = useState<string>(formattedMessage(messages, "about.sendMessage.send"));
     const [sendButtonDisabled, setSendButtonDisabled] = useState<boolean>(false);
     const setButtonDisableFor = (seconds: number) => {
         setSendButtonDisabled(true);
@@ -57,11 +59,15 @@ export default function SendMessage() {
     const onSubmit = (e: FormEvent) => {
         e.preventDefault();
         setStatus("sending");
-        setSystemMessage("Sending message...");
+        setSystemMessage(messages["about.sendMessage.sending"]);
         sendMessage({ name, contact, userMessage })
             .then((data: PublishCommandOutput) => {
                 setStatus("success");
-                setSystemMessage(`Message sent with ID: ${data.MessageId}`);
+                setSystemMessage(
+                    formattedMessage(messages, "about.sendMessage.success", locale, {
+                        id: data.MessageId,
+                    })
+                );
                 setButtonDisableFor(SEND_AGAIN_DELAY);
             })
             .catch((error: any) => {
@@ -71,12 +77,12 @@ export default function SendMessage() {
     };
 
     return (
-        <div className="relative h-fit w-full">
+        <div className={tm("relative h-fit w-full", className)} {...rest}>
             <div className={tm("h-full w-full", borderStyles.borderT)}>
                 <div className={tm("h-full w-full", borderStyles.borderB)}>
                     <form onSubmit={e => onSubmit(e)} className="flex h-fit w-full flex-col gap-1">
                         <div className="flex w-full flex-col gap-2 p-4">
-                            <Label name={"Message*"}>
+                            <Label name={messages["about.sendMessage.label.message"]}>
                                 <textarea
                                     className={tm(
                                         "h-36 w-full opacity-75 focus:opacity-100 focus:outline-none",
@@ -87,10 +93,10 @@ export default function SendMessage() {
                                     onChange={e => setUserMessage(e.target.value)}
                                 />
                             </Label>
-                            <Label name={"Name (optional)"}>
+                            <Label name={formattedMessage(messages, "about.sendMessage.label.name")}>
                                 <Input onChange={e => setName(e.target.value)} />
                             </Label>
-                            <Label name={"Contact (optional)"}>
+                            <Label name={formattedMessage(messages, "about.sendMessage.label.contact")}>
                                 <Input onChange={e => setContact(e.target.value)} />
                             </Label>
                             <button
@@ -117,7 +123,9 @@ export default function SendMessage() {
                             <div className="text-center">{systemMessage}</div>
                             <button className="std-pad std-hover icon-text" onClick={() => setShowInfo(false)}>
                                 <IoCheckbox />
-                                <span>OK</span>
+                                <span>
+                                    <FormattedMessage id="about.sendMessage.label.confirm" messages={messages} />
+                                </span>
                             </button>
                         </>
                     )}
@@ -142,7 +150,7 @@ function Input(props: ComponentPropsWithoutRef<"input">) {
             type="text"
             spellCheck={false}
             autoComplete="off"
-            className="border-b border-black border-opacity-75 opacity-75 focus:border-opacity-75 focus:opacity-100 focus:outline-none"
+            className="border-b border-black border-opacity-75 py-1 opacity-75 focus:border-opacity-75 focus:opacity-100 focus:outline-none"
             {...props}
         />
     );

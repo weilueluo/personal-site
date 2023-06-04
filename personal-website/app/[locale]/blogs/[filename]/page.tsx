@@ -12,12 +12,19 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkToc from "remark-toc";
 import ShareButton from "../../../../components/blogs/filename/share";
+import { BasePageProps } from "@/shared/types/comp";
+import { fetchMessages } from "@/shared/i18n/translation";
 
-export default async function Page({ params }: { params: { filename: string } }) {
+export default async function Page({ params }: { params: { filename: string } } & BasePageProps) {
     const blogContentPromise = fetchBlogContent(params.filename);
     const blogCommitPromise = fetchBlogCommit(params.filename);
+    const messagesPromise = fetchMessages(params.locale);
 
-    const [blogContent, blogCommit] = await Promise.all([blogContentPromise, blogCommitPromise]);
+    const [blogContent, blogCommit, messages] = await Promise.all([
+        blogContentPromise,
+        blogCommitPromise,
+        messagesPromise,
+    ]);
 
     // console.log("blogContent", blogContent);
     // console.log("blogCommit", blogCommit);
@@ -30,7 +37,7 @@ export default async function Page({ params }: { params: { filename: string } })
     return (
         <div>
             <div className="flex flex-row flex-wrap items-center justify-around gap-2 md:justify-between">
-                <BackButton />
+                <BackButton messages={messages} locale={params.locale} />
                 <Link href={blogContent.html_url} target="_blank">
                     <span className="icon-text std-hover std-pad">
                         <SiGithub /> View on GitHub

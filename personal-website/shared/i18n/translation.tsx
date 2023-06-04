@@ -1,9 +1,53 @@
-import React from "react";
-import { TranslationContextProvider } from "../contexts/translation";
+import MessageFormat from "@messageformat/core";
+import { readDefaultRevalidate } from "../utils";
+import { Messages } from "./type";
 
-export default async function TranslationProvider({ locale, children }: { locale: string; children: React.ReactNode }) {
-    const messages = (await import(`../../public/messages/${locale ?? "en"}.json`, { assert: { type: "json" } }))
-        .default;
+export async function fetchMessages(locale: string): Promise<Messages> {
+    if (!locale) {
+        throw new Error(`locale is nullish: ${locale}`);
+    }
+    const messages = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/i18n/${locale}`, {
+        next: {
+            revalidate: readDefaultRevalidate(),
+        },
+    }).then(res => res.json());
 
-    return <TranslationContextProvider messages={messages}>{children}</TranslationContextProvider>;
+    return messages;
+}
+
+export function formattedMessage(
+    messages: Messages,
+    id: keyof Messages,
+    locale?: string,
+    values?: Record<string, unknown> | unknown[]
+) {
+    // console.log("message", id, messages[id]);
+
+    if ((locale && !values) || (!locale && values)) {
+        throw new Error("locale and values must be both nullish or both defined");
+    }
+
+    if (locale && values) {
+        const mf = new MessageFormat(locale);
+        const msgFunc = mf.compile(messages[id]);
+        return msgFunc(values);
+    } else {
+        return messages[id];
+    }
+}
+
+export function FormattedMessage({
+    messages,
+    id,
+    locale,
+    values,
+}: {
+    messages: Messages;
+    id: keyof Messages;
+    locale?: string;
+    values?: Record<string, unknown> | unknown[];
+}) {
+    const message = formattedMessage(messages, id, locale, values);
+
+    return <>{message}</>;
 }

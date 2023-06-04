@@ -3,7 +3,10 @@
 import { Feed, FeedStatus, useRSS, useSingleRSS } from "@/components/rss/manager";
 import Separator from "@/components/ui/separator";
 import { useSingleUserFeedConfigs, useUserRSSConfigs } from "@/shared/contexts/rss";
-import { stringHash, timeSince, tm } from "@/shared/utils";
+import { FormattedMessage, formattedMessage } from "@/shared/i18n/translation";
+import { Messages } from "@/shared/i18n/type";
+import { BaseCompProps } from "@/shared/types/comp";
+import { stringHash, tm } from "@/shared/utils";
 import { sanitize } from "dompurify";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -16,7 +19,7 @@ import { IoLayersSharp } from "react-icons/io5";
 import { MdAccessTimeFilled, MdOutlineError } from "react-icons/md";
 import { VscLoading } from "react-icons/vsc";
 
-export default function RSS() {
+export default function RSS({ messages, locale }: BaseCompProps<"div">) {
     const { feeds, infoMap } = useRSS();
     const { userConfigs } = useUserRSSConfigs();
 
@@ -53,14 +56,14 @@ export default function RSS() {
         <>
             <ul className="flex h-fit w-full flex-col gap-2 md:my-2">
                 {Array.from(infoMap).map(([title]) => (
-                    <FeedTitle key={title} title={title} />
+                    <FeedTitle key={title} title={title} messages={messages} locale={locale} />
                 ))}
             </ul>
             <Separator className="mb-0 h-3" />
 
             <ul>
                 {displayFeeds.map(feedData => (
-                    <FeedData key={`${rsshash(feedData)}`} feedData={feedData} />
+                    <FeedData key={`${rsshash(feedData)}`} feedData={feedData} messages={messages} locale={locale} />
                 ))}
             </ul>
             <div className="flex justify-center">
@@ -71,10 +74,27 @@ export default function RSS() {
                     <span
                         className="hover-subtext mb-2 px-2 py-1 underline"
                         onClick={() => setDisplayAmount(displayAmount + 20)}>
-                        click to view 20 more ({displayAmount}/{activeFeeds.length})
+                        <FormattedMessage
+                            messages={messages}
+                            id={"rss.view_more"}
+                            locale={locale}
+                            values={{
+                                current: displayAmount,
+                                total: activeFeeds.length,
+                            }}
+                        />
                     </span>
                 ) : (
-                    <span className="italic">~ displayed all {displayFeeds.length} feeds ~</span>
+                    <span className="italic">
+                        <FormattedMessage
+                            messages={messages}
+                            id={"rss.displayed_all"}
+                            locale={locale}
+                            values={{
+                                size: displayFeeds.length,
+                            }}
+                        />
+                    </span>
                 )}
             </div>
         </>
@@ -89,7 +109,7 @@ const STATUS_2_ICON = {
     [FeedStatus.VALIDATING]: <VscLoading className="inline-block animate-spin" />,
 };
 
-function FeedTitle({ title, ...rest }: { title: string }) {
+function FeedTitle({ title, messages, locale, ...rest }: { title: keyof Messages } & BaseCompProps<"div">) {
     const { info, mutate } = useSingleRSS(title);
     const { active, setActive } = useSingleUserFeedConfigs(title);
     const isFetchingFeed = info.status === FeedStatus.VALIDATING || info.status === FeedStatus.LOADING;
@@ -97,16 +117,20 @@ function FeedTitle({ title, ...rest }: { title: string }) {
     return (
         <div className={tm("flex h-fit flex-row items-center justify-between gap-1 rounded-md")} {...rest}>
             <div className="flex h-fit flex-row items-center justify-center gap-1 rounded-md">
-                <span className="std-text-size">{title}</span>
+                <span className="std-text-size">
+                    <FormattedMessage messages={messages} id={title} />
+                </span>
             </div>
 
             <div className="mx-1 flex h-full w-fit flex-row items-center gap-1">
                 <span className="flex h-full text-sm">
                     {isFetchingFeed
-                        ? `?`
+                        ? formattedMessage(messages, "rss.title.fetching_feed")
                         : info.status === FeedStatus.ERROR
                         ? info.error?.message
-                        : `${info.amount} feeds`}
+                        : formattedMessage(messages, "rss.title.fetched_feed", locale, {
+                              amount: info.amount,
+                          })}
                 </span>
                 <span className="grid h-full place-items-center px-2">{STATUS_2_ICON[info.status]}</span>
 
@@ -126,7 +150,7 @@ function FeedTitle({ title, ...rest }: { title: string }) {
     );
 }
 
-function FeedData({ feedData }: { feedData: Feed }) {
+function FeedData({ feedData, messages }: { feedData: Feed } & BaseCompProps<"li">) {
     const [showDetails, setShowDetails] = useState(false);
     const detailsOnClick = () => {
         setShowDetails(v => !v);
@@ -152,9 +176,7 @@ function FeedData({ feedData }: { feedData: Feed }) {
     const content = feedData.item.summary || feedData.item.contentSnippet || feedData.item.content;
     const sanitizedContent = content ? sanitize(content) : undefined;
 
-    const date = userConfigs.globalConfigs.showRawDate
-        ? feedData.date?.toDateString()
-        : feedData.date && `${timeSince(new Date(), feedData.date)} ago`;
+    const date = userConfigs.globalConfigs.showRawDate ? feedData.date?.toISOString() : feedData.date?.toUTCString();
     const dateOnClick = (e: React.MouseEvent<HTMLSpanElement>) => {
         e.stopPropagation();
         setShowRawDate(!userConfigs.globalConfigs.showRawDate);
@@ -192,7 +214,7 @@ function FeedData({ feedData }: { feedData: Feed }) {
                                 className="hover-subtext inline-flex flex-row items-center gap-1 italic hover:cursor-pointer hover:underline"
                                 target="_blank">
                                 <IoLayersSharp className="inline-block" />
-                                {`${feedData.config.title}`}
+                                <FormattedMessage messages={messages} id={feedData.config.title} />
                                 {/* <ImNewTab className="ml-1 inline-block" /> */}
                             </Link>
                             {date && (

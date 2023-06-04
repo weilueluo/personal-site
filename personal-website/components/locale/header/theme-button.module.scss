@@ -1,10 +1,10 @@
 @use "sass:math";
 
-$width: 2rem;
+$width: 2.2rem;
 
 .textContainer {
     // perspective: 100px;
-    @apply flex h-full w-16 items-center justify-center;
+    @apply flex h-full w-16 items-center justify-center whitespace-nowrap;
     perspective: 100px;
 }
 .iconContainer {

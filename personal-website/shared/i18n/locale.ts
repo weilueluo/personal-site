@@ -1,35 +1,64 @@
-import { DEFAULT_LOCALE, LOCALES } from "../constants";
+import { useParams, usePathname } from "next/navigation";
+import { LOCALES, LOCALE_TYPE } from "../constants";
+import { isAbsoluteUrl } from "../utils";
 
-export function replaceLocale(path: string, oldLocale: string, newLocale: string) {
-    const localePrefix1 = `/${oldLocale}/`;
-    if (path.startsWith(localePrefix1)) {
-        return `/${newLocale}/${path.slice(localePrefix1.length)}`;
+export function localedPath(path: string | undefined | null, newLocale: LOCALE_TYPE | undefined | null): string {
+    if (path == null) {
+        throw new Error("path must not be null or undefined");
     }
-    const localePrefix2 = `/${oldLocale}`;
-    if (path == localePrefix2) {
-        return `/${newLocale}`;
+    if (newLocale == null) {
+        throw new Error("new locale must not be null or undefined");
     }
-    // path == '/'
-    return newLocale == DEFAULT_LOCALE ? path : `/${newLocale}`;
-}
-
-// currentPath: with locale prefix
-// newPath: without locale prefix
-export function getPathWithLocale(currentPath: string, newPath: string) {
-    // console.log(`currentPath`, currentPath);
-    // console.log(`newPath`, newPath);
-
-    const isRoot = newPath.startsWith("/");
-    if (!isRoot) {
-        return currentPath + "/" + newPath;
+    if (!LOCALES.includes(newLocale)) {
+        throw new Error(`new locale must be one of ${LOCALES}`);
     }
 
     for (const locale of LOCALES) {
-        if (currentPath.startsWith(`/${locale}/`) || currentPath == `/${locale}`) {
-            return newPath === "/" ? `/${locale}` : `/${locale}${newPath}`;
+        // case: /locale/xxx/yyy/zzz ===> /newLocale/xxx/yyy/zzz
+        const localePrefix1 = `/${locale}/`;
+        if (path.startsWith(localePrefix1)) {
+            return `/${newLocale}/${path.slice(localePrefix1.length)}`;
+        }
+        // case: /locale ===> /newLocale
+        const localePrefix2 = `/${locale}`;
+        if (path == localePrefix2) {
+            return `/${newLocale}`;
         }
     }
 
-    // currentPath == '/'
-    return newPath === "/" ? `/${DEFAULT_LOCALE}` : `/${DEFAULT_LOCALE}${newPath}`;
+    // path does not have a locale prefix
+    if (path === "/") {
+        // case: / ===> /locale
+        return `/${newLocale}`;
+    } else if (path.startsWith("/")) {
+        // case: /xxx/yyy/zzz ===> /locale/xxx/yyy/zzz
+        return `/${newLocale}${path}`;
+    } else {
+        // case: xxx/yyy/zzz ===> /locale/xxx/yyy/zzz
+        return `/${newLocale}/${path}`;
+    }
+}
+
+export function useResolvedHref(href?: string | undefined | null, locale?: LOCALE_TYPE): string {
+    // use current path if href is not provided
+    const pathname = usePathname();
+
+    href ??= pathname;
+
+    // use current locale if locale is not provided
+    const { locale: currentLocale } = useParams() as { locale: LOCALE_TYPE };
+    if (!locale) {
+        locale = currentLocale;
+    }
+
+    // resolve href to a localed path if href is not an absolute url
+    if (!isAbsoluteUrl(href)) {
+        href = localedPath(href, locale);
+    }
+
+    if (!href) {
+        throw new Error(`Failed to resolved href`);
+    }
+
+    return href;
 }

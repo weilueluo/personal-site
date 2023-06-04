@@ -1,8 +1,9 @@
 "use client";
 import {
-    COUNTRT_FILTER_DISPLAY_NAMES,
     COUNTRY_FILTER_VALUES,
     CountryFilterName,
+    FILTER_NAMES,
+    FILTER_NAME_DISPLAY_MAP,
     SORT_FILTER_VALUES,
     SortFilterName,
     TYPE_FILTER_VALUES,
@@ -10,16 +11,18 @@ import {
     useAnimeFastFilters,
 } from "@/components/anime/fast-filters";
 import { FilterItem, useAnimeSearch } from "@/components/anime/search";
-import dropdown from "@/components/ui/dropdown";
+import * as dropdown from "@/components/ui/dropdown";
 import { SeparatedList } from "@/components/ui/separator";
 import { useAnimeSlowFilters } from "@/shared/contexts/anime";
+import { FormattedMessage, formattedMessage } from "@/shared/i18n/translation";
+import { BaseCompProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
-import React, { ComponentPropsWithoutRef, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { MdExpandMore, MdOutlineRadioButtonChecked, MdOutlineRadioButtonUnchecked } from "react-icons/md";
 import { TbAdjustmentsHorizontal } from "react-icons/tb";
 
-export default function SearchBar() {
+export default function SearchBar({ messages, locale, className, ...rest }: BaseCompProps<"div">) {
     const {
         genreFilters,
         genreFilterOnClick,
@@ -92,19 +95,19 @@ export default function SearchBar() {
         }
     };
 
-    const [placeholder, setPlaceholder] = useState("what anime do you like?");
+    const [placeholder, setPlaceholder] = useState(formattedMessage(messages, "anime.search.placeholder"));
     const [searchBarFocused, setSearchBarFocused] = useState(false);
 
     useEffect(() => {
         if (searchBarFocused) {
             setPlaceholder("");
         } else {
-            setPlaceholder("what anime do you like?");
+            setPlaceholder(formattedMessage(messages, "anime.search.placeholder"));
         }
-    }, [searchBarFocused]);
+    }, [searchBarFocused, messages]);
 
     return (
-        <div className="flex flex-col gap-2">
+        <div className={tm("flex flex-col gap-2", className)} {...rest}>
             <div className="flex h-8 max-h-full w-full flex-row border-b border-black pb-1 md:h-10">
                 <div
                     className="hover:std-hover grid h-full w-12 shrink place-items-center"
@@ -129,7 +132,7 @@ export default function SearchBar() {
                     )}
                     onClick={onClickShowFilter}>
                     <TbAdjustmentsHorizontal />
-                    Settings
+                    <FormattedMessage id="anime.search.settings" messages={messages} />
                 </div>
             </div>
 
@@ -138,28 +141,37 @@ export default function SearchBar() {
                     name={myFavouriteFilter.name}
                     onClick={() => setFavouriteFilter(!myFavouriteFilter.active)}
                     active={myFavouriteFilter.active}
+                    messages={messages}
+                    locale={locale}
                 />
                 <QuickFilter
                     name={typeFilter.name}
                     onNameClick={name => setTypeFilter(name as TypeFilterName)}
                     names={TYPE_FILTER_VALUES}
+                    messages={messages}
+                    locale={locale}
                 />
                 <QuickFilter
                     name={countryFilter.name}
                     onNameClick={name => setCountryFilter(name as CountryFilterName)}
                     names={COUNTRY_FILTER_VALUES}
-                    displayMap={COUNTRT_FILTER_DISPLAY_NAMES}
+                    messages={messages}
+                    locale={locale}
                 />
                 <QuickFilter
                     name={sortFilter.name}
                     onNameClick={name => setSortFilter(name as SortFilterName)}
                     names={SORT_FILTER_VALUES}
+                    messages={messages}
+                    locale={locale}
                 />
             </div>
 
             {(activeSlowFilters.length > 0 || showFilter) && (
                 <div className=" flex flex-row items-center">
-                    <h3 className="my-1 mr-2 font-bold">Active Filters:</h3>
+                    <h3 className="my-1 mr-2 font-bold">
+                        <FormattedMessage id="anime.search.filter.active_filters" messages={messages} />
+                    </h3>
                     <FilterPanel filterItems={activeSlowFilters} toggleSelection={activeSlowFilterOnClick} />
                 </div>
             )}
@@ -167,14 +179,18 @@ export default function SearchBar() {
             {showFilter && (
                 <div className="flex flex-col gap-2 border border-black p-2">
                     <SeparatedList>
-                        <FilterPanel title="Meta" filterItems={[adultFilter]} toggleSelection={adultFilterOnClick} />
                         <FilterPanel
-                            title="Genres"
+                            title={formattedMessage(messages, "anime.search.filter.meta")}
+                            filterItems={[adultFilter]}
+                            toggleSelection={adultFilterOnClick}
+                        />
+                        <FilterPanel
+                            title={formattedMessage(messages, "anime.search.filter.genres")}
                             filterItems={displayGenreFilters}
                             toggleSelection={genreFilterOnClick}
                         />
                         <FilterPanel
-                            title="Tags"
+                            title={formattedMessage(messages, "anime.search.filter.tags")}
                             filterItems={displayTagFilters}
                             toggleSelection={tagFilterOnClick}
                             many={true}
@@ -186,27 +202,35 @@ export default function SearchBar() {
     );
 }
 
-function QuickFilter<T extends string>({
-    name,
-    onNameClick,
-    names,
-    displayMap,
-}: {
+interface QuickFilterProps<T> extends BaseCompProps<"span"> {
     name: T;
     names: T[];
     onNameClick: (name: T) => void;
-    displayMap?: Record<T, string>;
-}) {
+}
+
+function QuickFilter<T extends FILTER_NAMES>({
+    name,
+    onNameClick,
+    names,
+    className,
+    messages,
+    ...rest
+}: QuickFilterProps<T>) {
     return (
         <dropdown.Container>
-            <span className="std-hover std-pad std-text-size flex flex-row items-center justify-center gap-1 capitalize">
+            <span
+                className={tm(
+                    "std-hover std-pad std-text-size flex flex-row items-center justify-center gap-1 capitalize",
+                    className
+                )}
+                {...rest}>
                 <MdExpandMore className="inline-block" />
-                {displayMap ? displayMap[name] : name.toLowerCase().replaceAll("_", " ")}
+                <FormattedMessage id={FILTER_NAME_DISPLAY_MAP[name]} messages={messages} />
             </span>
             <dropdown.Dropdown variant="glass">
                 {names.map(name => (
                     <div key={name} className="std-hover min-w-full px-2 capitalize" onClick={() => onNameClick(name)}>
-                        {displayMap ? displayMap[name] : name.toLowerCase().replaceAll("_", " ")}
+                        <FormattedMessage id={FILTER_NAME_DISPLAY_MAP[name]} messages={messages} />
                     </div>
                 ))}
             </dropdown.Dropdown>
@@ -214,17 +238,17 @@ function QuickFilter<T extends string>({
     );
 }
 
-interface BooleanQuickFilterProps extends ComponentPropsWithoutRef<"div"> {
-    name: string;
+interface BooleanQuickFilterProps extends BaseCompProps<"span"> {
+    name: FILTER_NAMES;
     active: boolean;
 }
-function BooleanQuickFilter({ name, active, ...rest }: BooleanQuickFilterProps) {
+function BooleanQuickFilter({ name, active, messages, ...rest }: BooleanQuickFilterProps) {
     return (
         <span
             className="std-hover std-pad std-text-size flex flex-row items-center justify-center gap-1 capitalize"
             {...rest}>
             {active ? <MdOutlineRadioButtonChecked /> : <MdOutlineRadioButtonUnchecked />}
-            {name.toLowerCase().replaceAll("_", " ")}
+            <FormattedMessage id={FILTER_NAME_DISPLAY_MAP[name]} messages={messages} />
         </span>
     );
 }

@@ -1,4 +1,5 @@
 "use client";
+import { Messages } from "@/shared/i18n/type";
 import React from "react";
 import { useImmer } from "use-immer";
 
@@ -34,7 +35,7 @@ export interface MyFavoriteFilter {
 }
 
 export const TYPE_FILTER_VALUES: TypeFilterName[] = ["ANIME", "MANGA", "ANY"];
-export const SORT_FILTER_VALUES = [
+export const SORT_FILTER_VALUES: SortFilterName[] = [
     "TITLE_ENGLISH",
     "TITLE_ENGLISH_DESC",
     "START_DATE",
@@ -49,10 +50,27 @@ export const SORT_FILTER_VALUES = [
     "TRENDING_DESC",
 ];
 export const COUNTRY_FILTER_VALUES: CountryFilterName[] = ["JP", "CN", "ANY"];
-export const COUNTRT_FILTER_DISPLAY_NAMES: Record<CountryFilterName, string> = {
-    JP: "Japan",
-    CN: "China",
-    ANY: "Any",
+export type FILTER_NAMES = TypeFilterName | SortFilterName | CountryFilterName | MyFavoriteFilterName;
+
+export const FILTER_NAME_DISPLAY_MAP: Record<FILTER_NAMES, keyof Messages> = {
+    ANIME: "anime.search.filter.anime",
+    MANGA: "anime.search.filter.manga",
+    ANY: "anime.search.filter.any",
+    TITLE_ENGLISH: "anime.search.filter.title_english",
+    TITLE_ENGLISH_DESC: "anime.search.filter.title_english_desc",
+    START_DATE: "anime.search.filter.start_date",
+    START_DATE_DESC: "anime.search.filter.start_date_desc",
+    SCORE: "anime.search.filter.score",
+    SCORE_DESC: "anime.search.filter.score_desc",
+    UPDATE_AT: "anime.search.filter.update_at",
+    UPDATED_AT_DESC: "anime.search.filter.updated_at_desc",
+    POPULARITY: "anime.search.filter.popularity",
+    POPULARITY_DESC: "anime.search.filter.popularity_desc",
+    TRENDING: "anime.search.filter.trending",
+    TRENDING_DESC: "anime.search.filter.trending_desc",
+    JP: "anime.search.filter.jp",
+    CN: "anime.search.filter.cn",
+    FAVOURITES: "anime.search.filter.favourites",
 };
 
 export const TYPE_FILTER: TypeFilter = {
@@ -81,7 +99,7 @@ const FastFilterContext = React.createContext<AnimeFastFilterContext>(null!);
 export function AnimeFastFiltersProvider({ children }: { children: React.ReactNode }) {
     const [typeFilter, setTypeFilter_] = useImmer<TypeFilter>(TYPE_FILTER);
     const setTypeFilter = (type: TypeFilterName) => {
-        setTypeFilter_((draft) => {
+        setTypeFilter_(draft => {
             if (TYPE_FILTER_VALUES.includes(type)) {
                 draft.name = type;
             } else {
@@ -92,7 +110,7 @@ export function AnimeFastFiltersProvider({ children }: { children: React.ReactNo
 
     const [sortFilter, setSortFilter_] = useImmer<SortFilter>(SORT_FILTER);
     const setSortFilter = (sort: SortFilterName) => {
-        setSortFilter_((draft) => {
+        setSortFilter_(draft => {
             if (SORT_FILTER_VALUES.includes(sort)) {
                 draft.name = sort;
             } else {
@@ -103,7 +121,7 @@ export function AnimeFastFiltersProvider({ children }: { children: React.ReactNo
 
     const [countryFilter, setCountryFilter_] = useImmer<CountryFilter>(COUNTRY_FILTER);
     const setCountryFilter = (country: CountryFilterName) => {
-        setCountryFilter_((draft) => {
+        setCountryFilter_(draft => {
             if (COUNTRY_FILTER_VALUES.includes(country)) {
                 draft.name = country;
             } else {
@@ -117,7 +135,7 @@ export function AnimeFastFiltersProvider({ children }: { children: React.ReactNo
         active: false,
     });
     const setFavouriteFilter = (active: boolean) => {
-        setMyFavouriteFilter_((draft) => {
+        setMyFavouriteFilter_(draft => {
             draft.active = active;
         });
     };
