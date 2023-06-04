@@ -1,6 +1,6 @@
 import MessageFormat from "@messageformat/core";
-import { readDefaultRevalidate } from "../utils";
 import { Messages } from "./type";
+import { readDefaultRevalidate } from "../utils";
 
 export async function fetchMessages(locale: string): Promise<Messages> {
     if (!locale) {

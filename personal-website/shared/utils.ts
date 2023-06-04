@@ -103,10 +103,6 @@ export function isAbsoluteUrl(url: string | undefined | null) {
     return isAbsolutePath.test(url);
 }
 
-export function getPublicFolderPath() {
-    return process.cwd() + "/public";
-}
-
 export function readDefaultRevalidate() {
     return process.env.DEFAULT_REVALIDATE === "false" ? false : Number(process.env.DEFAULT_REVALIDATE);
 }
