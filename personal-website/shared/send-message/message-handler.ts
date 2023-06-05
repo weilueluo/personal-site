@@ -1,5 +1,7 @@
 import { PublishCommand, PublishCommandOutput, SNSClient } from "@aws-sdk/client-sns";
 import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
+import { isDevEnv } from "../utils";
+import { SEND_AGAIN_DELAY } from "@/components/about/send-message";
 
 const REGION = "eu-west-2";
 
@@ -10,8 +12,6 @@ const snsClient = new SNSClient({
         clientConfig: { region: REGION },
     }),
 });
-
-export const SEND_AGAIN_DELAY = 5; // in seconds
 
 function isBlank(str: string) {
     return !str || /^\s*$/.test(str); // \s matches white space characters
@@ -28,8 +28,7 @@ export const sendMessage = async ({
     contact?: string;
     userMessage?: string;
 }): Promise<PublishCommandOutput> => {
-    console.log("Sending message");
-    console.log({ name, contact, userMessage });
+    console.info("Sending message", { name, contact, userMessage });
 
     if (!userMessage || isBlank(userMessage)) {
         throw new Error("Message is empty");
@@ -39,7 +38,11 @@ export const sendMessage = async ({
         throw new Error(`Message sent too fast.`);
     }
 
-    const message = `Name:\n${name}\n\nMessage:\n${userMessage}\n\nContact:\n${contact}`;
+    let message = `Name:\n${name}\n\nMessage:\n${userMessage}\n\nContact:\n${contact}`;
+
+    if (isDevEnv()) {
+        message = `[DEV]\n\n${message}`;
+    }
 
     const params = {
         Subject: "Message via Personal Website",

@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 
-const nextConfig = {
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+    enabled: process.env.ANALYZE === "true",
+});
+
+const nextConfig = withBundleAnalyzer({
     experimental: {
         appDir: true,
     },
@@ -31,6 +35,6 @@ const nextConfig = {
         // eslint ran during pre-commit hooks
         ignoreDuringBuilds: true,
     },
-};
+});
 
 module.exports = nextConfig;

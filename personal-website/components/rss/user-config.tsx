@@ -48,7 +48,7 @@ function initUserConfigs(rssConfigs: RSSConfig[]): UserConfigsMap {
     return configs;
 }
 
-export function UserRSSConfigsProvider({ children }: { children: React.ReactNode }) {
+export default function UserRSSConfigsProvider({ children }: { children: React.ReactNode }) {
     const { configs: rssConfigs } = useRSS();
     const [userConfigs, setUserConfigs] = useImmer<UserConfigsMap>(() => initUserConfigs(rssConfigs));
 

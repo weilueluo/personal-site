@@ -1,6 +1,7 @@
 "use client";
 
 import { Feed, FeedStatus, useRSS, useSingleRSS } from "@/components/rss/manager";
+import Loading from "@/components/ui/loading/spinner";
 import Separator from "@/components/ui/separator";
 import { useSingleUserFeedConfigs, useUserRSSConfigs } from "@/shared/contexts/rss";
 import { FormattedMessage, formattedMessage } from "@/shared/i18n/translation";
@@ -10,13 +11,18 @@ import { stringHash, tm } from "@/shared/utils";
 import { sanitize } from "dompurify";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { AiFillCheckCircle, AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import {
+    AiFillCheckCircle,
+    AiFillClockCircle,
+    AiFillEye,
+    AiFillEyeInvisible,
+    AiFillTag,
+    AiOutlineCloseCircle,
+} from "react-icons/ai";
 import { CgFormatSeparator } from "react-icons/cg";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { ImNewTab } from "react-icons/im";
 import { IoMdRefreshCircle } from "react-icons/io";
-import { IoLayersSharp } from "react-icons/io5";
-import { MdAccessTimeFilled, MdOutlineError } from "react-icons/md";
 import { VscLoading } from "react-icons/vsc";
 
 export default function RSS({ messages, locale }: BaseCompProps<"div">) {
@@ -69,7 +75,7 @@ export default function RSS({ messages, locale }: BaseCompProps<"div">) {
             <div className="flex justify-center">
                 {isLoading ? (
                     // <GiHandTruck className=" animate-in animate-out fade-in fade-out slide-in-from-left-8 slide-out-to-right-8 duration-1000 running repeat-infinite" />
-                    <VscLoading className="mt-4 inline-block animate-spin" />
+                    <Loading />
                 ) : hasMoreFeeds ? (
                     <span
                         className="hover-subtext mb-2 px-2 py-1 underline"
@@ -103,7 +109,7 @@ export default function RSS({ messages, locale }: BaseCompProps<"div">) {
 
 const STATUS_2_ICON = {
     [FeedStatus.COMPLETED]: <AiFillCheckCircle className="inline-block" />,
-    [FeedStatus.ERROR]: <MdOutlineError className="inline-block" color="#8E354A" />,
+    [FeedStatus.ERROR]: <AiOutlineCloseCircle className="inline-block" color="#8E354A" />,
     [FeedStatus.LOADING]: <VscLoading className="inline-block animate-spin" />,
     [FeedStatus.PROCESSING]: <CgFormatSeparator className="inline-block" />,
     [FeedStatus.VALIDATING]: <VscLoading className="inline-block animate-spin" />,
@@ -213,14 +219,14 @@ function FeedData({ feedData, messages }: { feedData: Feed } & BaseCompProps<"li
                                 href={feedData.config.homeUrl}
                                 className="hover-subtext inline-flex flex-row items-center gap-1 italic hover:cursor-pointer hover:underline"
                                 target="_blank">
-                                <IoLayersSharp className="inline-block" />
+                                <AiFillTag className="inline-block" />
                                 <FormattedMessage messages={messages} id={feedData.config.title} />
                                 {/* <ImNewTab className="ml-1 inline-block" /> */}
                             </Link>
                             {date && (
                                 <>
                                     <span className="hover-subtext flex flex-row items-center gap-1 hover:cursor-default hover:underline">
-                                        <MdAccessTimeFilled className="inline-block" />
+                                        <AiFillClockCircle className="inline-block" />
                                         <span onClick={dateOnClick} className="italic ">
                                             {date}
                                         </span>

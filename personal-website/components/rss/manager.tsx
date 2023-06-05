@@ -63,7 +63,7 @@ const RSSContext = React.createContext<RSSProviderValue>(null!);
 const initFeedStatus = new Map(RSS_CONFIGS.map(config => [config.title, { status: FeedStatus.LOADING, amount: 0 }]));
 const initMutateMap = new Map(RSS_CONFIGS.map(config => [config.title, () => undefined!]));
 
-export function RSSProvider({ children }: { children: React.ReactNode }) {
+export default function RSSProvider({ children }: { children: React.ReactNode }) {
     const [feeds, setFeeds] = useImmer<Feed[]>([]);
     const [feedInfo, setFeedInfo] = useImmer<FeedInfoMap>(initFeedStatus);
     const rssConfigs = useRef(RSS_CONFIGS);

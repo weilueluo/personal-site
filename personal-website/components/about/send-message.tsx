@@ -6,14 +6,31 @@ import styles from "./send-message.module.scss";
 
 import Loading from "@/components/ui/loading/spinner";
 import { FormattedMessage, formattedMessage } from "@/shared/i18n/translation";
-import { SEND_AGAIN_DELAY, sendMessage } from "@/shared/send-message/message-handler";
 import { BaseCompProps } from "@/shared/types/comp";
-import { PublishCommandOutput } from "@aws-sdk/client-sns";
+import dynamic from "next/dynamic";
 import React, { ComponentPropsWithoutRef, FormEvent, useEffect, useState } from "react";
 import { BsSendFill } from "react-icons/bs";
 import { IoCheckbox } from "react-icons/io5";
 
-type SendMessageStatus = "sending" | "idle" | "error" | "success";
+export interface SendMessageOutput {
+    MessageId?: string;
+}
+
+export interface SendMessageFunctionProps extends BaseCompProps<any> {
+    params?: {
+        name?: string;
+        contact?: string;
+        userMessage: string;
+        onSendMessageSuccess: (data: SendMessageOutput) => void;
+        onSendMessageError: (error: Error) => void;
+    };
+}
+
+export const SEND_AGAIN_DELAY = 5; // in seconds
+
+const SendMessageFunction = dynamic(() => import("./send-message-function"), { ssr: false, loading: () => <></> });
+
+export type SendMessageStatus = "sending" | "idle" | "error" | "success";
 
 const getRandomSmallMilliseconds = () => {
     return Math.floor(Math.random() * 50);
@@ -56,24 +73,37 @@ export default function SendMessage({ messages, locale, className, ...rest }: Ba
         }
     }, [status]);
 
+    const onSendMessageSuccess = (
+        data: SendMessageOutput /* should be PublishCommandOutput but I do not want to import it */
+    ) => {
+        setStatus("success");
+        setSystemMessage(
+            formattedMessage(messages, "about.sendMessage.success", locale, {
+                id: data.MessageId,
+            })
+        );
+        setButtonDisableFor(SEND_AGAIN_DELAY);
+    };
+    const onSendMessageError = (error: Error) => {
+        setStatus("error");
+        setSystemMessage(error.message);
+    };
+    const [sendMessageFunctionProps, setSendMessageFunctionProps] = useState<SendMessageFunctionProps["params"]>();
+    const triggerSendMessage = () => {
+        setSendMessageFunctionProps({
+            name,
+            contact,
+            userMessage,
+            onSendMessageSuccess,
+            onSendMessageError,
+        });
+    };
+
     const onSubmit = (e: FormEvent) => {
         e.preventDefault();
         setStatus("sending");
-        setSystemMessage(messages["about.sendMessage.sending"]);
-        sendMessage({ name, contact, userMessage })
-            .then((data: PublishCommandOutput) => {
-                setStatus("success");
-                setSystemMessage(
-                    formattedMessage(messages, "about.sendMessage.success", locale, {
-                        id: data.MessageId,
-                    })
-                );
-                setButtonDisableFor(SEND_AGAIN_DELAY);
-            })
-            .catch((error: any) => {
-                setStatus("error");
-                setSystemMessage(error.message);
-            });
+        setSystemMessage(formattedMessage(messages, "about.sendMessage.sending"));
+        triggerSendMessage();
     };
 
     return (
@@ -131,6 +161,7 @@ export default function SendMessage({ messages, locale, className, ...rest }: Ba
                     )}
                 </div>
             )}
+            <SendMessageFunction params={sendMessageFunctionProps} />
         </div>
     );
 }
