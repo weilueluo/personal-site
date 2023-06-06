@@ -11,6 +11,7 @@ import { SiGithub } from "react-icons/si";
 import * as dropdown from "../../ui/dropdown";
 import NavItem from "./nav-item";
 import ThemeButton from "./theme-button";
+import Separator from "@/components/ui/separator";
 
 export default async function Header({ className, messages, locale, ...props }: BaseCompProps<"header">) {
     return (
@@ -46,35 +47,37 @@ export default async function Header({ className, messages, locale, ...props }: 
                         <IoNavigateCircle className="icon-md" />
                         <FormattedMessage messages={messages} id={"header.explore"} />
                     </div>
-                    <dropdown.Dropdown variant="glass">
-                        <NavItem locale={locale} messages={messages} href={GITHUB_REPO_URL} target="_blank">
-                            <SiGithub className="icon-md" />
-                            <FormattedMessage messages={messages} id="header.source" />
-                        </NavItem>
-                        {/* <Separator variant="sm" /> */}
+                    <dropdown.Dropdown variant="glass" sep={false}>
                         <NavItem locale={locale} messages={messages} href={"/blogs"}>
                             <RiFilePaper2Fill className="icon-md" />
                             <FormattedMessage messages={messages} id="header.blogs" />
                         </NavItem>
-                        {/* <Separator variant="sm" /> */}
+                        <Separator variant="sm" />
                         <NavItem locale={locale} messages={messages} href={"/about"}>
                             <RiContactsBook2Fill className="icon-md" />
                             <FormattedMessage messages={messages} id="header.about" />
                         </NavItem>
-                        {/* <Separator variant="sm" /> */}
+                        <Separator variant="sm" />
                         <NavItem locale={locale} messages={messages} href={"/anime"}>
                             <GiClover className="icon-md" />
                             <FormattedMessage messages={messages} id="header.anime" />
                         </NavItem>
-                        {/* <Separator variant="sm" /> */}
+                        <Separator variant="sm" />
                         <NavItem locale={locale} messages={messages} href={"/rss"}>
                             <IoLayers className="icon-md" />
                             <FormattedMessage messages={messages} id="header.rss" />
                         </NavItem>
-                        {/* <Separator variant="sm" /> */}
+
+                        <Separator variant="sm" className="mx-0 border-2 border-gray-600" />
+
                         <NavItem locale={locale} messages={messages} href={GITHUB_CV_URL} target="_blank">
                             <MdWork className="icon-md" />
                             <FormattedMessage messages={messages} id="header.cv" />
+                        </NavItem>
+                        <Separator variant="sm" />
+                        <NavItem locale={locale} messages={messages} href={GITHUB_REPO_URL} target="_blank">
+                            <SiGithub className="icon-md" />
+                            <FormattedMessage messages={messages} id="header.source" />
                         </NavItem>
                     </dropdown.Dropdown>
                 </dropdown.Container>

@@ -8,6 +8,7 @@ import Separator from "./separator";
 export interface DropdownProps extends ComponentPropsWithoutRef<"div"> {}
 export interface DropdownListProps extends ComponentPropsWithoutRef<"div"> {
     variant?: "std" | "glass";
+    sep?: boolean;
 }
 
 const ContainerContext = React.createContext<{ open: boolean }>({ open: false });
@@ -46,7 +47,7 @@ const Container = React.forwardRef<HTMLDivElement, DropdownProps>((props, ref) =
 Container.displayName = "Container";
 
 const Dropdown = React.forwardRef<HTMLDivElement, DropdownListProps>((props, ref) => {
-    const { children, variant = "std", className, ...rest } = props;
+    const { children, sep = true, variant = "std", className, ...rest } = props;
     const nChildren = Children.count(children);
 
     const { open } = React.useContext(ContainerContext);
@@ -65,7 +66,7 @@ const Dropdown = React.forwardRef<HTMLDivElement, DropdownListProps>((props, ref
             )}
             {...rest}>
             {Children.map(children, (child, i) => {
-                if (i !== nChildren - 1) {
+                if (sep && i !== nChildren - 1) {
                     return (
                         <>
                             {child}
