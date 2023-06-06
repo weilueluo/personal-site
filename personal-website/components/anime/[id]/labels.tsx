@@ -1,6 +1,6 @@
 import { FormattedMessage, formattedMessage } from "@/shared/i18n/translation";
 import { BaseCompProps } from "@/shared/types/comp";
-import { useAnimeDetails } from "../../../shared/contexts/anime-id";
+import { useAnimeDetails } from "./context";
 import { FullLabel, Label, Labels } from "./primitives";
 
 export function Status({ messages }: BaseCompProps<"div">) {

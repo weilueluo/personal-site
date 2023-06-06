@@ -5,7 +5,7 @@ import { BaseCompProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
 import Link from "next/link";
 import React, { forwardRef } from "react";
-import { ImNewTab } from "react-icons/im";
+import { ImNewTab } from "react-icons/im/index";
 
 interface NavItemProps extends BaseCompProps<"a"> {
     href?: string;

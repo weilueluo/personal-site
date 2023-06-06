@@ -3,7 +3,7 @@ import { RSSConfig } from "@/components/rss/config";
 import { useRSS } from "@/components/rss/manager";
 import React from "react";
 import { useImmer } from "use-immer";
-import { UserRSSConfigsContextProvider } from "../../shared/contexts/rss";
+import { UserRSSConfigsContextProvider } from "../../app/[locale]/rss/context";
 
 export interface FeedConfigs {
     active: boolean;

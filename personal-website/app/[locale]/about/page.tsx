@@ -8,13 +8,13 @@ import {
     SiThreedotjs,
     SiTypescript,
     SiVercel,
-} from "react-icons/si";
+} from "react-icons/si/index";
 
 import { FormattedMessage, fetchMessages } from "@/shared/i18n/translation";
 import { BasePageProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
 import React from "react";
-import { MdEmail } from "react-icons/md";
+import { MdEmail } from "react-icons/md/index";
 import { Item } from "../../../components/about/item";
 import SendMessage from "@/components/about/send-message";
 

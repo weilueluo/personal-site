@@ -1,4 +1,4 @@
-import { GenreFilterItem, TagFilterItem } from "../../../shared/contexts/anime";
+import { GenreFilterItem, TagFilterItem } from "../context";
 import { CountryFilter, SortFilter, TypeFilter, TypeFilterName } from "../fast-filters";
 
 export const MY_USER_ID = 6044692;

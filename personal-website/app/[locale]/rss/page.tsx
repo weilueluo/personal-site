@@ -1,5 +1,4 @@
 // import { RSSProvider } from "@/components/rss/manager";
-import { ErrorBoundary } from "react-error-boundary";
 // import { UserRSSConfigsProvider } from "@/components/rss/user-config";
 // import RSS from "./rss";
 import { fetchMessages } from "@/shared/i18n/translation";
@@ -30,10 +29,8 @@ export default async function RSSPage({ params }: BasePageProps) {
 
 function RSSLayout({ children }: { children: React.ReactNode }) {
     return (
-        <ErrorBoundary fallback={<span>Unexpected RSS Error</span>}>
-            <RSSProvider>
-                <UserRSSConfigsProvider>{children}</UserRSSConfigsProvider>
-            </RSSProvider>
-        </ErrorBoundary>
+        <RSSProvider>
+            <UserRSSConfigsProvider>{children}</UserRSSConfigsProvider>
+        </RSSProvider>
     );
 }

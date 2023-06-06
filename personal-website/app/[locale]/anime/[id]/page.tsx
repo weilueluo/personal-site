@@ -8,11 +8,11 @@ import {
     Title,
     Trailer,
 } from "@/components/anime/[id]/components";
+import { AnimeDetailsProvider, useAnimeDetails } from "@/components/anime/[id]/context";
 import { Genres, HashTags, NextAiring, Score, Status, Tags } from "@/components/anime/[id]/labels";
 import BackButton from "@/components/ui/back";
 import ProgressiveImage from "@/components/ui/image";
 import LoadingItem from "@/components/ui/loading/loading";
-import { AnimeDetailsProvider, useAnimeDetails } from "@/shared/contexts/anime-id";
 import { fetchMessages, formattedMessage } from "@/shared/i18n/translation";
 import { BaseCompProps, BaseParams } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";

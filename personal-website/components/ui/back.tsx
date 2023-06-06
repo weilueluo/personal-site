@@ -3,7 +3,7 @@ import { FormattedMessage } from "@/shared/i18n/translation";
 import { BaseCompProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
 import { useRouter } from "next/navigation";
-import { IoChevronBackCircle } from "react-icons/io5";
+import { IoChevronBackCircle } from "react-icons/io5/index";
 
 export default function BackButton({ messages, className, ...rest }: BaseCompProps<"span">) {
     const router = useRouter();

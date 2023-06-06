@@ -11,7 +11,7 @@ const Separator = forwardRef<React.ElementRef<"div">, SeparatorProps>(
             <div
                 ref={ref}
                 className={tm(
-                    "box-border w-full border-b border-black",
+                    "box-border w-full border-b border-black dark:border-std-light",
                     variant === "std" && "mb-6 h-6",
                     variant === "sm" && "mb-1 h-1",
                     className
@@ -30,7 +30,7 @@ const VSeparator = forwardRef<React.ElementRef<"div">, SeparatorProps>(
             <div
                 ref={ref}
                 className={tm(
-                    "h-full border-r border-black",
+                    "h-full border-r border-black dark:border-std-light",
                     variant === "std" && "mr-3 w-6",
                     variant === "sm" && "mr-1 w-2",
                     className

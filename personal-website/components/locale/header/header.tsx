@@ -1,17 +1,17 @@
+import Separator from "@/components/ui/separator";
 import { GITHUB_CV_URL, GITHUB_REPO_URL, LOCALES, LOCALE_DISPLAY_MAP } from "@/shared/constants";
 import { FormattedMessage } from "@/shared/i18n/translation";
 import { BaseCompProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
-import { GiClover } from "react-icons/gi";
-import { ImHome } from "react-icons/im";
-import { IoLanguage, IoLayers, IoNavigateCircle } from "react-icons/io5";
-import { MdWork } from "react-icons/md";
-import { RiContactsBook2Fill, RiFilePaper2Fill } from "react-icons/ri";
-import { SiGithub } from "react-icons/si";
+import { GiClover } from "react-icons/gi/index";
+import { ImHome } from "react-icons/im/index";
+import { IoLanguage, IoLayers, IoNavigateCircle } from "react-icons/io5/index";
+import { MdWork } from "react-icons/md/index";
+import { RiContactsBook2Fill, RiFilePaper2Fill } from "react-icons/ri/index";
+import { SiGithub } from "react-icons/si/index";
 import * as dropdown from "../../ui/dropdown";
 import NavItem from "./nav-item";
 import ThemeButton from "./theme-button";
-import Separator from "@/components/ui/separator";
 
 export default async function Header({ className, messages, locale, ...props }: BaseCompProps<"header">) {
     return (

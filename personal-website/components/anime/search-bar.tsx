@@ -13,14 +13,14 @@ import {
 import { FilterItem, useAnimeSearch } from "@/components/anime/search";
 import * as dropdown from "@/components/ui/dropdown";
 import { SeparatedList } from "@/components/ui/separator";
-import { useAnimeSlowFilters } from "@/shared/contexts/anime";
 import { FormattedMessage, formattedMessage } from "@/shared/i18n/translation";
 import { BaseCompProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
 import React, { useEffect, useRef, useState } from "react";
-import { FaSearch } from "react-icons/fa";
-import { MdExpandMore, MdOutlineRadioButtonChecked, MdOutlineRadioButtonUnchecked } from "react-icons/md";
-import { TbAdjustmentsHorizontal } from "react-icons/tb";
+import { FaSearch } from "react-icons/fa/index";
+import { MdExpandMore, MdOutlineRadioButtonChecked, MdOutlineRadioButtonUnchecked } from "react-icons/md/index";
+import { TbAdjustmentsHorizontal } from "react-icons/tb/index";
+import { useAnimeSlowFilters } from "./context";
 
 export default function SearchBar({ messages, locale, className, ...rest }: BaseCompProps<"div">) {
     const {

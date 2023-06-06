@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useContext } from "react";
-import { MediaTag } from "../../components/anime/graphql/graphql";
-import { FilterItem } from "../../components/anime/search";
+import { MediaTag } from "./graphql/graphql";
+import { FilterItem } from "./search";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 

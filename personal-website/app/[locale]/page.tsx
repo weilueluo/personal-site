@@ -14,7 +14,7 @@ export default async function Page({ params }: BasePageProps) {
 
     return (
         <CanvasLayout>
-            <div className="flex h-full w-full flex-col items-center justify-center dark:bg-gray-300">
+            <div className="std-bg flex h-full w-full flex-col items-center justify-center">
                 <h3>
                     <FormattedMessage messages={messages} id="index.title" />
                 </h3>

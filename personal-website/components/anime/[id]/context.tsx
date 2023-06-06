@@ -1,9 +1,9 @@
 "use client";
 import Loading from "@/app/[locale]/anime/[id]/loading";
 import React, { useContext, useEffect } from "react";
-import { MediaItem } from "../../components/anime/graphql/graphql";
-import { fetchAnilistMedia } from "../../components/anime/graphql/query";
-import { BaseCompProps } from "../types/comp";
+import { MediaItem } from "../graphql/graphql";
+import { fetchAnilistMedia } from "../graphql/query";
+import { BaseCompProps } from "../../../shared/types/comp";
 
 type AnimeDetailsContextValue = MediaItem | undefined;
 

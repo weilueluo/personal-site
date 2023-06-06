@@ -1,24 +1,25 @@
 import Header from "@/components/locale/header/header";
 import Separator from "@/components/ui/separator";
 import { inter } from "@/shared/fonts";
+import { fetchMessages } from "@/shared/i18n/translation";
 import Init from "@/shared/init";
-import ThemeProvider from "@/shared/themes";
+import { getThemeFromCookies } from "@/shared/theme/theme-utils";
+import ThemeProvider from "@/shared/theme/themes";
 import { BaseCompProps, BasePageProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 import { cookies } from "next/headers";
 import Script from "next/script";
 import "./global.css";
-import { fetchMessages } from "@/shared/i18n/translation";
 
 export default async function Layout({ children, params }: BasePageProps) {
     const messages = await fetchMessages(params.locale);
-
+    const theme = getThemeFromCookies(cookies());
     return (
-        <ThemeProvider cookies={cookies()}>
+        <ThemeProvider theme={theme}>
             {/* @ts-ignore Async Server Component */}
             <html lang={params.locale}>
-                <body className={tm("grid place-items-center", inter.className)}>
+                <body className={tm("std-bg std-text grid place-items-center", inter.className)}>
                     <Init />
                     <Main messages={messages} locale={params.locale}>
                         {children}

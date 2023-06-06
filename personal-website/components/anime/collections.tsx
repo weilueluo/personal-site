@@ -1,7 +1,7 @@
 // server side component for fetching my favourites and filter tags and genres
 
 import React from "react";
-import { MyAnimeCollectionContextProvider, TagsAndGenresContextProvider } from "../../shared/contexts/anime";
+import { MyAnimeCollectionContextProvider, TagsAndGenresContextProvider } from "./context";
 import { MediaTag } from "./graphql/graphql";
 import { fetchFilters, fetchMyAnimeCollection } from "./graphql/query";
 

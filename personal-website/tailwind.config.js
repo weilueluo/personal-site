@@ -14,8 +14,9 @@ module.exports = {
                 margin: "margin",
             },
             colors: {
-                // 'std': '#02ab87',
                 std: "#00CDA1",
+                "std-dark": "#1e293b",
+                "std-light": "#d1d5db",
             },
         },
     },

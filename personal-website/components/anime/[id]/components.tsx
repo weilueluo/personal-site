@@ -6,7 +6,7 @@ import { FormattedMessage, formattedMessage } from "@/shared/i18n/translation";
 import { BaseCompProps } from "@/shared/types/comp";
 import Link from "next/link";
 import React, { ElementRef, useState } from "react";
-import { useAnimeDetails } from "../../../shared/contexts/anime-id";
+import { useAnimeDetails } from "./context";
 import { Character, Relation, Staff, VoiceActor } from "../graphql/graphql";
 import { Card, Cards, Label, Section } from "./primitives";
 

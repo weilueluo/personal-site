@@ -1,6 +1,6 @@
 "use client";
 import React, { useContext } from "react";
-import { SingleUserFeedConfigs, UseUserRSSConfigs, UserConfigsMap } from "../../components/rss/user-config";
+import { SingleUserFeedConfigs, UseUserRSSConfigs, UserConfigsMap } from "../../../components/rss/user-config";
 
 export interface UserRSSConfigsContext {
     userConfigs: UserConfigsMap;

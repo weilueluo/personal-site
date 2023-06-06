@@ -1,13 +1,14 @@
 "use client";
 
 import { FormattedMessage } from "@/shared/i18n/translation";
-import { UnResolvedTheme, useTheme } from "@/shared/themes";
 import { BaseCompProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
 import React, { useState } from "react";
-import { BsFillMoonStarsFill, BsGearWideConnected } from "react-icons/bs";
-import { ImSun } from "react-icons/im";
+import { BsFillMoonStarsFill, BsGearWideConnected } from "react-icons/bs/index";
+import { ImSun } from "react-icons/im/index";
 import styles from "./theme-button.module.scss";
+import { UnResolvedTheme } from "@/shared/theme/theme-utils";
+import { useTheme } from "@/shared/theme/themes";
 
 const DARK_THEME = "dark";
 const LIGHT_THEME = "light";
@@ -50,7 +51,7 @@ const ThemeButton = React.forwardRef<React.ElementRef<"button">, BaseCompProps<"
                 onClick={onClick}
                 {...otherProps}
                 className={tm(
-                    "group flex h-7 w-fit flex-row items-center justify-around hover:underline",
+                    "std-hover group flex h-7 w-fit flex-row items-center justify-around",
                     styles.button,
                     className
                 )}>
@@ -71,7 +72,7 @@ const ThemeButton = React.forwardRef<React.ElementRef<"button">, BaseCompProps<"
                         </PieceContainer>
                     </div>
                 </div>
-                <div className={styles.textContainer}>
+                <div className={tm(styles.textContainer, "bg-std-dark")}>
                     <div
                         className={styles.pieces}
                         style={{
@@ -95,8 +96,8 @@ const ThemeButton = React.forwardRef<React.ElementRef<"button">, BaseCompProps<"
 
 function PieceContainer({ children }: { children: React.ReactNode }) {
     return (
-        <div className={tm(styles.pieceContainer, "std-hover")}>
-            <span className="std-hover">{children}</span>
+        <div className={tm(styles.pieceContainer, "std-bg group-hover:bg-std")}>
+            <span>{children}</span>
         </div>
     );
 }

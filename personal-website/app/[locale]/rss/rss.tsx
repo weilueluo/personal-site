@@ -3,7 +3,6 @@
 import { Feed, FeedStatus, useRSS, useSingleRSS } from "@/components/rss/manager";
 import Loading from "@/components/ui/loading/spinner";
 import Separator from "@/components/ui/separator";
-import { useSingleUserFeedConfigs, useUserRSSConfigs } from "@/shared/contexts/rss";
 import { FormattedMessage, formattedMessage } from "@/shared/i18n/translation";
 import { Messages } from "@/shared/i18n/type";
 import { BaseCompProps } from "@/shared/types/comp";
@@ -18,12 +17,13 @@ import {
     AiFillEyeInvisible,
     AiFillTag,
     AiOutlineCloseCircle,
-} from "react-icons/ai";
-import { CgFormatSeparator } from "react-icons/cg";
-import { FaAngleDown, FaAngleUp } from "react-icons/fa";
-import { ImNewTab } from "react-icons/im";
-import { IoMdRefreshCircle } from "react-icons/io";
-import { VscLoading } from "react-icons/vsc";
+} from "react-icons/ai/index";
+import { CgFormatSeparator } from "react-icons/cg/index";
+import { FaAngleDown, FaAngleUp } from "react-icons/fa/index";
+import { ImNewTab } from "react-icons/im/index";
+import { IoMdRefreshCircle } from "react-icons/io/index";
+import { VscLoading } from "react-icons/vsc/index";
+import { useUserRSSConfigs, useSingleUserFeedConfigs } from "./context";
 
 export default function RSS({ messages, locale }: BaseCompProps<"div">) {
     const { feeds, infoMap } = useRSS();

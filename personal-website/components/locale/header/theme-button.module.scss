@@ -3,12 +3,10 @@
 $width: 2.2rem;
 
 .textContainer {
-    // perspective: 100px;
     @apply flex h-full w-16 items-center justify-center whitespace-nowrap;
     perspective: 100px;
 }
 .iconContainer {
-    // perspective: 100px;
     @apply flex h-full w-6 items-center justify-center;
     perspective: 100px;
 }
@@ -18,7 +16,7 @@ $distToCenter: math.tan(30deg) * math.div(-$width, 2);
 .pieces {
     position: relative;
     transform-style: preserve-3d;
-    transform-origin: center center $distToCenter; // got this by fiddling around, not sure why it works
+    transform-origin: center center $distToCenter;
     transform: rotateX(0deg);
     transition: transform 0.5s ease-in-out;
 }
@@ -26,19 +24,11 @@ $distToCenter: math.tan(30deg) * math.div(-$width, 2);
 .pieces,
 .pieceContainer {
     position: absolute;
-}
-
-.pieces,
-.pieceContainer {
     height: $width;
     width: 100%;
-    background-color: white;
 }
 
 .pieceContainer:nth-child(1) {
-    // background-color: #00ff007f;
-    // transform: translateZ($width/2);
-
     span {
         position: absolute;
         top: 50%;
@@ -47,14 +37,9 @@ $distToCenter: math.tan(30deg) * math.div(-$width, 2);
     }
 }
 
-// @debug math.div(-$width, 2);
-// @debug (math.tan(60deg) * math.div($width, 2));
-
 .pieceContainer:nth-child(2) {
-    //  + (math.tan(60deg) * $width/2)
     transform-origin: top;
     transform: rotateX(-60deg);
-    // background-color: #ff00007f;
 
     span {
         position: absolute;
@@ -67,7 +52,6 @@ $distToCenter: math.tan(30deg) * math.div(-$width, 2);
 .pieceContainer:nth-child(3) {
     transform-origin: bottom;
     transform: rotateX(60deg);
-    // background-color: #0000ff7f;
 
     span {
         position: absolute;

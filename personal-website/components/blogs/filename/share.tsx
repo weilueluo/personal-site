@@ -1,8 +1,8 @@
 "use client";
 
 import * as dropdown from "@/components/ui/dropdown";
-import { BsShareFill } from "react-icons/bs";
-import { MdContentPaste } from "react-icons/md";
+import { BsShareFill } from "react-icons/bs/index";
+import { MdContentPaste } from "react-icons/md/index";
 
 export default function ShareButton() {
     const copylinkOnClick = () => {

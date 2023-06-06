@@ -61,7 +61,7 @@ const Dropdown = React.forwardRef<HTMLDivElement, DropdownListProps>((props, ref
             ref={ref}
             className={tm(
                 "std-text-size absolute top-full z-10 mt-2 flex w-full min-w-max flex-col p-1",
-                variant === "glass" && "border border-black outline-black backdrop-blur-lg",
+                variant === "glass" && "border border-black outline-black backdrop-blur-lg dark:bg-std-dark",
                 className
             )}
             {...rest}>

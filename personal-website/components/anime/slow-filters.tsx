@@ -9,7 +9,7 @@ import {
     GenreFilterItem,
     TagFilterItem,
     useTagsAndGenres,
-} from "../../shared/contexts/anime";
+} from "./context";
 import { FilterItem } from "./search";
 
 export default function AnimeSlowFiltersProvider({ children }: { children: React.ReactNode }) {

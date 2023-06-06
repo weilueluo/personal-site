@@ -3,24 +3,53 @@
 @tailwind utilities;
 
 @layer components {
+    /* common utilities */
     .std-pad {
         @apply px-1 py-1 md:px-2;
     }
-    .std-hover {
-        @apply cursor-pointer hover:bg-std hover:text-black hover:underline group-hover:bg-std group-hover:underline;
+    /* standard stuff applied at body */
+    .std-hover:hover {
+        @apply cursor-pointer bg-std text-black underline;
     }
+    .std-hover:hover svg {
+        @apply text-black;
+    }
+    .std-text {
+        @apply text-black dark:text-gray-300;
+    }
+
     .std-text-size {
         @apply text-sm md:text-base;
+    }
+
+    .std-bg {
+        @apply bg-white dark:bg-slate-800;
+    }
+    .std-bg-dark {
+        @apply bg-slate-800;
     }
 
     .icon-text {
         @apply flex flex-row items-center gap-2 text-sm md:text-base;
     }
 
+    .icon-dark {
+        @apply text-gray-300;
+    }
+
+    .std-icon-dark {
+        @apply text-gray-300;
+    }
+    .std-icon {
+        @apply std-icon-dark;
+        @apply h-3 w-3 md:h-4 md:w-4;
+    }
     .icon-md {
+        @apply std-icon-dark;
         @apply h-4 w-4 md:h-5 md:w-5;
     }
     .icon-lg {
+        @apply std-icon-dark;
         @apply h-5 w-5 md:h-6 md:w-6;
     }
 
@@ -47,6 +76,10 @@ details > summary {
 }
 details > summary::-webkit-details-marker {
     display: none;
+}
+
+button:focus {
+    outline: none;
 }
 
 a:hover {

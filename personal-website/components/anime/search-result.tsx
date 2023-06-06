@@ -8,8 +8,8 @@ import { tm } from "@/shared/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { MdExpandMore } from "react-icons/md";
-import { VscLoading } from "react-icons/vsc";
+import { MdExpandMore } from "react-icons/md/index";
+import { VscLoading } from "react-icons/vsc/index";
 
 export default function SearchResult({ messages, locale, ...rest }: BaseCompProps<"div">) {
     const { swrAnimeResponse, mergedData, pageInfo } = useAnimeSearch();
