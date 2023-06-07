@@ -10,6 +10,7 @@ import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { MdExpandMore } from "react-icons/md/index";
 import { VscLoading } from "react-icons/vsc/index";
+import IconedText from "../ui/icon-text";
 
 export default function SearchResult({ messages, locale, ...rest }: BaseCompProps<"div">) {
     const { swrAnimeResponse, mergedData, pageInfo } = useAnimeSearch();
@@ -60,14 +61,14 @@ export default function SearchResult({ messages, locale, ...rest }: BaseCompProp
                     )}
                 </h3>
 
-                <button className="icon-text std-hover std-pad" onClick={() => setCollapse(v => !v)}>
+                <IconedText onClick={() => setCollapse(v => !v)}>
                     <MdExpandMore className="inline-block" />
                     {collapse ? (
                         <FormattedMessage id="anime.search.result.expand" messages={messages} />
                     ) : (
                         <FormattedMessage id="anime.search.result.collapse" messages={messages} />
                     )}
-                </button>
+                </IconedText>
             </div>
 
             {/* content */}
@@ -122,7 +123,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
                     className="relative h-36 w-full overflow-hidden sm:h-52"
                     loading={<div className="h-36 w-24 bg-gray-500 sm:h-52 sm:w-36" />}
                 />
-                <span className="line-clamp-4 break-words font-semibold">
+                <span className="sm-text-size line-clamp-4 break-words font-semibold">
                     {data.title?.english || data.title?.romaji || data.title?.native}
                 </span>
             </div>

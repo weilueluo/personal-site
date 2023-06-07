@@ -21,6 +21,7 @@ import { FaSearch } from "react-icons/fa/index";
 import { MdExpandMore, MdOutlineRadioButtonChecked, MdOutlineRadioButtonUnchecked } from "react-icons/md/index";
 import { TbAdjustmentsHorizontal } from "react-icons/tb/index";
 import { useAnimeSlowFilters } from "./context";
+import IconedText from "../ui/icon-text";
 
 export default function SearchBar({ messages, locale, className, ...rest }: BaseCompProps<"div">) {
     const {
@@ -124,16 +125,10 @@ export default function SearchBar({ messages, locale, className, ...rest }: Base
                         onBlur={() => setSearchBarFocused(false)}
                     />
                 </form>
-                <div
-                    className={tm(
-                        "icon-text std-pad hover:bg-button-std hover:std-hover shrink hover:cursor-pointer"
-                        // !showFilter && "border border-red-200",
-                        // showFilter && "border border-black"
-                    )}
-                    onClick={onClickShowFilter}>
+                <IconedText onClick={onClickShowFilter}>
                     <TbAdjustmentsHorizontal />
                     <FormattedMessage id="anime.search.settings" messages={messages} />
-                </div>
+                </IconedText>
             </div>
 
             <div className="flex flex-row flex-wrap md:gap-2">

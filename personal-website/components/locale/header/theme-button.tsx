@@ -62,13 +62,13 @@ const ThemeButton = React.forwardRef<React.ElementRef<"button">, BaseCompProps<"
                             transform: `rotateX(${iconDeg}deg)`,
                         }}>
                         <PieceContainer>
-                            <BsGearWideConnected className="icon-lg px-1" />
+                            <BsGearWideConnected className="std-icon" />
                         </PieceContainer>
                         <PieceContainer>
-                            <ImSun className="icon-lg px-1" />
+                            <ImSun className="std-icon" />
                         </PieceContainer>
                         <PieceContainer>
-                            <BsFillMoonStarsFill className="icon-lg px-1" />
+                            <BsFillMoonStarsFill className="std-icon" />
                         </PieceContainer>
                     </div>
                 </div>

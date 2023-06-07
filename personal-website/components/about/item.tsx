@@ -3,7 +3,7 @@ import { tm } from "@/shared/utils";
 import Link from "next/link";
 import React from "react";
 import { ImNewTab } from "react-icons/im/index";
-import styles from "../ui/border.module.scss";
+import "../ui/border.scss";
 
 export function Item({
     children,
@@ -26,8 +26,8 @@ export function Item({
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}>
             {hover && <ImNewTab className="pointer-events-none absolute right-0 top-0 z-10" />}
-            <div className={tm("h-full w-full", styles.borderT)}>
-                <div className={tm("flex h-full w-full flex-col items-center justify-center", styles.borderB)}>
+            <div className={tm("borderT h-full w-full")}>
+                <div className={tm("borderB flex h-full w-full flex-col items-center justify-center")}>
                     {children}
                     {name && (
                         <span className="mt-0 flex h-0 flex-col overflow-hidden font-semibold leading-4 transition-[height,margin] group-hover:mt-2 group-hover:h-8">

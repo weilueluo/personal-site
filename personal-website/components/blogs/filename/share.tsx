@@ -1,28 +1,26 @@
 "use client";
 
 import * as dropdown from "@/components/ui/dropdown";
+import IconedText from "@/components/ui/icon-text";
 import { BsShareFill } from "react-icons/bs/index";
 import { MdContentPaste } from "react-icons/md/index";
 
 export default function ShareButton() {
     const copylinkOnClick = () => {
         navigator.clipboard.writeText(window.location.href).then(() => {
-            console.log("Copied to clipboard");
             alert("Copied to clipboard");
         });
     };
 
     return (
         <dropdown.Container>
-            <span className="icon-text std-pad std-hover">
+            <IconedText>
                 <BsShareFill /> Share
-            </span>
+            </IconedText>
             <dropdown.Dropdown variant="glass">
-                <div>
-                    <span className="std-hover icon-text std-pad" onClick={() => copylinkOnClick()}>
-                        <MdContentPaste /> Copy Link
-                    </span>
-                </div>
+                <IconedText onClick={() => copylinkOnClick()}>
+                    <MdContentPaste /> Copy Link
+                </IconedText>
             </dropdown.Dropdown>
         </dropdown.Container>
     );

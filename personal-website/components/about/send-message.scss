@@ -1,0 +1,27 @@
+$line-height: 2rem;
+textarea {
+    line-height: $line-height;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent $line-height,
+        black $line-height,
+        black calc($line-height + 1px)
+    );
+}
+
+// should be consistent with tailwind.config.js
+$std-light: #d1d5db;
+$std-dark: #1e293b;
+
+.dark textarea {
+    line-height: $line-height;
+    background-color: $std-dark;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent $line-height,
+        $std-light $line-height,
+        $std-light calc($line-height + 1px)
+    );
+}

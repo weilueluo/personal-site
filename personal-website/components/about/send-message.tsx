@@ -1,8 +1,8 @@
 "use client";
 
 import { tm } from "@/shared/utils";
-import borderStyles from "../ui/border.module.scss";
-import styles from "./send-message.module.scss";
+import "../ui/border.scss";
+import "./send-message.scss";
 
 import Loading from "@/components/ui/loading/spinner";
 import { FormattedMessage, formattedMessage } from "@/shared/i18n/translation";
@@ -11,6 +11,7 @@ import dynamic from "next/dynamic";
 import React, { ComponentPropsWithoutRef, FormEvent, useEffect, useState } from "react";
 import { BsSendFill } from "react-icons/bs/index";
 import { IoCheckbox } from "react-icons/io5/index";
+import IconedText from "../ui/icon-text";
 
 export interface SendMessageOutput {
     MessageId?: string;
@@ -108,16 +109,13 @@ export default function SendMessage({ messages, locale, className, ...rest }: Ba
 
     return (
         <div className={tm("relative h-fit w-full", className)} {...rest}>
-            <div className={tm("h-full w-full", borderStyles.borderT)}>
-                <div className={tm("h-full w-full", borderStyles.borderB)}>
+            <div className={tm("borderT h-full w-full")}>
+                <div className={tm("borderB h-full w-full")}>
                     <form onSubmit={e => onSubmit(e)} className="flex h-fit w-full flex-col gap-1">
                         <div className="flex w-full flex-col gap-2 p-4">
                             <Label name={messages["about.sendMessage.label.message"]}>
                                 <textarea
-                                    className={tm(
-                                        "h-36 w-full opacity-75 focus:opacity-100 focus:outline-none",
-                                        styles.textarea
-                                    )}
+                                    className={tm("h-36 w-full opacity-75 focus:opacity-100 focus:outline-none")}
                                     spellCheck={false}
                                     autoComplete="off"
                                     onChange={e => setUserMessage(e.target.value)}
@@ -129,15 +127,10 @@ export default function SendMessage({ messages, locale, className, ...rest }: Ba
                             <Label name={formattedMessage(messages, "about.sendMessage.label.contact")}>
                                 <Input onChange={e => setContact(e.target.value)} />
                             </Label>
-                            <button
-                                disabled={sendButtonDisabled}
-                                className={tm(
-                                    "icon-text std-pad std-hover flex flex-row justify-end",
-                                    borderStyles.borderA
-                                )}
-                                type="submit"
-                                onClick={e => onSubmit(e)}>
-                                <BsSendFill /> <span>{buttonText}</span>
+                            <button disabled={sendButtonDisabled} type="submit" onClick={e => onSubmit(e)}>
+                                <IconedText className="justify-end">
+                                    <BsSendFill /> {buttonText}
+                                </IconedText>
                             </button>
                         </div>
                     </form>
@@ -151,12 +144,10 @@ export default function SendMessage({ messages, locale, className, ...rest }: Ba
                     ) : (
                         <>
                             <div className="text-center">{systemMessage}</div>
-                            <button className="std-pad std-hover icon-text" onClick={() => setShowInfo(false)}>
+                            <IconedText onClick={() => setShowInfo(false)}>
                                 <IoCheckbox />
-                                <span>
-                                    <FormattedMessage id="about.sendMessage.label.confirm" messages={messages} />
-                                </span>
-                            </button>
+                                <FormattedMessage id="about.sendMessage.label.confirm" messages={messages} />
+                            </IconedText>
                         </>
                     )}
                 </div>
@@ -181,7 +172,7 @@ function Input(props: ComponentPropsWithoutRef<"input">) {
             type="text"
             spellCheck={false}
             autoComplete="off"
-            className="border-b border-black border-opacity-75 py-1 opacity-75 focus:border-opacity-75 focus:opacity-100 focus:outline-none"
+            className="border-b border-black border-opacity-75 py-1 opacity-75 focus:border-opacity-75 focus:opacity-100 focus:outline-none dark:border-std-light dark:bg-std-dark"
             {...props}
         />
     );

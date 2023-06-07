@@ -1,6 +1,7 @@
 @use "sass:math";
 
 $width: 2.2rem;
+$height: 2em;
 
 .textContainer {
     @apply flex h-full w-16 items-center justify-center whitespace-nowrap;
@@ -11,7 +12,7 @@ $width: 2.2rem;
     perspective: 100px;
 }
 
-$distToCenter: math.tan(30deg) * math.div(-$width, 2);
+$distToCenter: math.tan(30deg) * math.div(-$height, 2);
 
 .pieces {
     position: relative;
@@ -24,7 +25,7 @@ $distToCenter: math.tan(30deg) * math.div(-$width, 2);
 .pieces,
 .pieceContainer {
     position: absolute;
-    height: $width;
+    height: $height;
     width: 100%;
 }
 

@@ -14,6 +14,7 @@ import remarkToc from "remark-toc";
 import ShareButton from "../../../../components/blogs/filename/share";
 import { BasePageProps } from "@/shared/types/comp";
 import { fetchMessages } from "@/shared/i18n/translation";
+import IconedText from "@/components/ui/icon-text";
 
 export default async function Page({ params }: { params: { filename: string } } & BasePageProps) {
     const blogContentPromise = fetchBlogContent(params.filename);
@@ -39,19 +40,19 @@ export default async function Page({ params }: { params: { filename: string } } 
             <div className="flex flex-row flex-wrap items-center justify-around gap-2 md:justify-between">
                 <BackButton messages={messages} locale={params.locale} />
                 <Link href={blogContent.html_url} target="_blank">
-                    <span className="icon-text std-hover std-pad">
+                    <IconedText>
                         <SiGithub /> View on GitHub
-                    </span>
+                    </IconedText>
                 </Link>
                 <Link href={blogContent.download_url} target="_blank" download={true}>
-                    <span className="icon-text std-hover std-pad">
+                    <IconedText>
                         <FaDownload /> Download
-                    </span>
+                    </IconedText>
                 </Link>
                 <ShareButton />
-                <span className="icon-text std-pad">
+                <IconedText hover={false}>
                     <BsCalendar2DateFill /> {date}
-                </span>
+                </IconedText>
             </div>
             <Separator className="mb-2 h-2" />
             <ReactMarkdown

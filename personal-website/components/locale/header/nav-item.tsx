@@ -1,5 +1,6 @@
 "use client";
 
+import IconedText from "@/components/ui/icon-text";
 import { useResolvedHref } from "@/shared/i18n/locale";
 import { BaseCompProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
@@ -21,7 +22,7 @@ const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(({ href, locale, chi
         <Link
             href={href}
             locale={locale}
-            className={tm("icon-text std-pad std-hover relative", className)}
+            className={tm("relative", className)}
             ref={ref}
             onMouseEnter={() => setHover(true)}
             onMouseOut={() => setHover(false)}
@@ -29,7 +30,7 @@ const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(({ href, locale, chi
             {useNewTabIcon && hover && (
                 <ImNewTab className="pointer-events-none absolute right-0 top-0 z-10 bg-white" />
             )}
-            {children}
+            <IconedText>{children}</IconedText>
         </Link>
     );
 });

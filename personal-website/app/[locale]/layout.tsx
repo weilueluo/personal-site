@@ -55,11 +55,9 @@ function Analytics() {
             {/* <!-- Google tag (gtag.js) --> */}
             <Script src={`https://www.googletagmanager.com/gtag/js?id=${g_tag}`} strategy="afterInteractive" />
             <Script id="google-analytics" strategy="afterInteractive">
-                {`
-                    window.dataLayer = window.dataLayer || [];
+                {`window.dataLayer = window.dataLayer || [];
                     function gtag(){window.dataLayer.push(arguments);}
                     gtag('js', new Date());
-
                     gtag('config', '${g_tag}');
                 `}
             </Script>

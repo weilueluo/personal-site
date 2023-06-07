@@ -12,6 +12,7 @@ import { SiGithub } from "react-icons/si/index";
 import * as dropdown from "../../ui/dropdown";
 import NavItem from "./nav-item";
 import ThemeButton from "./theme-button";
+import IconedText from "@/components/ui/icon-text";
 
 export default async function Header({ className, messages, locale, ...props }: BaseCompProps<"header">) {
     return (
@@ -23,10 +24,10 @@ export default async function Header({ className, messages, locale, ...props }: 
                 </NavItem>
 
                 <dropdown.Container>
-                    <div className="icon-text std-pad std-hover">
+                    <IconedText>
                         <IoLanguage className="icon-md" />
                         {LOCALE_DISPLAY_MAP[locale]}
-                    </div>
+                    </IconedText>
                     <dropdown.Dropdown variant="glass">
                         {(LOCALES ?? []).map(locale => (
                             <NavItem
@@ -43,10 +44,10 @@ export default async function Header({ className, messages, locale, ...props }: 
                 <ThemeButton locale={locale} messages={messages} />
 
                 <dropdown.Container>
-                    <div className="icon-text std-pad std-hover">
+                    <IconedText>
                         <IoNavigateCircle className="icon-md" />
                         <FormattedMessage messages={messages} id={"header.explore"} />
-                    </div>
+                    </IconedText>
                     <dropdown.Dropdown variant="glass" sep={false}>
                         <NavItem locale={locale} messages={messages} href={"/blogs"}>
                             <RiFilePaper2Fill className="icon-md" />

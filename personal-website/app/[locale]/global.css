@@ -11,9 +11,7 @@
     .std-hover:hover {
         @apply cursor-pointer bg-std text-black underline;
     }
-    .std-hover:hover svg {
-        @apply text-black;
-    }
+
     .std-text {
         @apply text-black dark:text-gray-300;
     }
@@ -22,34 +20,35 @@
         @apply text-sm md:text-base;
     }
 
+    .text-ssm {
+        font-size: 0.75rem /* 12px */;
+        line-height: 1rem /* 16px */;
+    }
+    .sm-text-size {
+        @apply text-ssm md:text-sm;
+    }
+
     .std-bg {
         @apply bg-white dark:bg-slate-800;
     }
     .std-bg-dark {
         @apply bg-slate-800;
     }
+    /* icon */
 
-    .icon-text {
+    /* for icon + text styling, commonly used */
+    .std-icon-text {
         @apply flex flex-row items-center gap-2 text-sm md:text-base;
     }
 
-    .icon-dark {
-        @apply text-gray-300;
-    }
-
-    .std-icon-dark {
-        @apply text-gray-300;
-    }
+    /* for icon */
     .std-icon {
-        @apply std-icon-dark;
         @apply h-3 w-3 md:h-4 md:w-4;
     }
-    .icon-md {
-        @apply std-icon-dark;
+    .md-icon {
         @apply h-4 w-4 md:h-5 md:w-5;
     }
-    .icon-lg {
-        @apply std-icon-dark;
+    .lg-icon {
         @apply h-5 w-5 md:h-6 md:w-6;
     }
 
