@@ -1,16 +1,6 @@
 "use client";
-import {
-    COUNTRY_FILTER_VALUES,
-    CountryFilterName,
-    FILTER_NAMES,
-    FILTER_NAME_DISPLAY_MAP,
-    SORT_FILTER_VALUES,
-    SortFilterName,
-    TYPE_FILTER_VALUES,
-    TypeFilterName,
-    useAnimeFastFilters,
-} from "@/components/anime/fast-filters";
-import { FilterItem, useAnimeSearch } from "@/components/anime/search";
+
+import { FilterItem } from "@/components/anime/search";
 import * as dropdown from "@/components/ui/dropdown";
 import { SeparatedList } from "@/components/ui/separator";
 import { FormattedMessage, formattedMessage } from "@/shared/i18n/translation";
@@ -20,37 +10,38 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa/index";
 import { MdExpandMore, MdOutlineRadioButtonChecked, MdOutlineRadioButtonUnchecked } from "react-icons/md/index";
 import { TbAdjustmentsHorizontal } from "react-icons/tb/index";
-import { useAnimeSlowFilters } from "./context";
+import { useImmer } from "use-immer";
 import IconedText from "../ui/icon-text";
+import { FILTER_NAMES, FILTER_NAME_DISPLAY_MAP } from "./fast-filters";
+import { AdultFilter } from "./filters/adult";
+import { COUNTRY_FILTER_VALUES, CountryFilter, CountryFilterName } from "./filters/country";
+import { MyFavoriteFilter } from "./filters/favourite";
+import { GenreFilterItem } from "./filters/genre";
+import { SORT_FILTER_VALUES, SortFilter, SortFilterName } from "./filters/sort";
+import { TagFilterItem } from "./filters/tag";
+import { TYPE_FILTER_VALUES, TypeFilter, TypeFilterName } from "./filters/type";
 
-export default function SearchBar({ messages, locale, className, ...rest }: BaseCompProps<"div">) {
-    const {
-        genreFilters,
-        genreFilterOnClick,
-        tagFilters,
-        tagFilterOnClick,
-        adultFilter,
-        adultFilterOnClick,
-        setClearAllFilter,
-        activeSlowFilters,
-        activeSlowFilterOnClick,
-    } = useAnimeSlowFilters();
+export interface SearchBarProps extends BaseCompProps<"div"> {
+    countryFilter: CountryFilter;
+    setCountryFilter: (name: CountryFilterName) => void;
+    sortFilter: SortFilter;
+    setSortFilter: (name: SortFilterName) => void;
+    typeFilter: TypeFilter;
+    setTypeFilter: (name: TypeFilterName) => void;
+    myFavouriteFilter: MyFavoriteFilter;
+    setMyFavouriteFilter: (active: boolean) => void;
+    tagFilters: TagFilterItem[];
+    setTagFilter: (name: string, active: boolean) => void;
+    genreFilters: GenreFilterItem[];
+    setGenreFilter: (name: string, active: boolean) => void;
+    adultFilter: AdultFilter;
+    setAdultFilter: (active: boolean) => void;
+    clearAllFilter: FilterItem;
+    setClearAllFilter: (active: boolean) => void;
+    setSearchString: (searchString: string) => void;
+}
 
-    const {
-        typeFilter,
-        setTypeFilter,
-        sortFilter,
-        setSortFilter,
-        countryFilter,
-        setCountryFilter,
-        myFavouriteFilter,
-        setFavouriteFilter,
-    } = useAnimeFastFilters();
-
-    // fast filters
-    const [showFilter, setShowFilter] = useState(false);
-    const onClickShowFilter = () => setShowFilter(!showFilter);
-
+function useDisplayTagFilters(tagFilters: TagFilterItem[], adultFilter: AdultFilter) {
     // show adult tag filter only if hentai genre is selected
     const [tagFiltersNoHentai, setTagFiltersNoHentai] = useState(() => tagFilters.filter(tag => tag.isAdult === false));
     useEffect(() => {
@@ -65,7 +56,10 @@ export default function SearchBar({ messages, locale, className, ...rest }: Base
         }
     }, [adultFilter, tagFilters, tagFiltersNoHentai]);
 
-    // show hentai genre only if R18 meta tag is selected
+    return displayTagFilters;
+}
+
+function useDisplayGenreFilters(genreFilters: GenreFilterItem[], adultFilter: AdultFilter) {
     const [genreFiltersNoHentai, setGenreFiltersNoHentai] = useState(() =>
         genreFilters.filter(genre => genre.isAdult === false)
     );
@@ -81,13 +75,80 @@ export default function SearchBar({ messages, locale, className, ...rest }: Base
         }
     }, [adultFilter, genreFilters, genreFiltersNoHentai]);
 
+    return displayGenreFilters;
+}
+
+export default function SearchBar({
+    messages,
+    locale,
+    className,
+    countryFilter,
+    setCountryFilter,
+    sortFilter,
+    setSortFilter,
+    typeFilter,
+    setTypeFilter,
+    myFavouriteFilter,
+    setMyFavouriteFilter,
+    tagFilters,
+    setTagFilter,
+    genreFilters,
+    setGenreFilter,
+    adultFilter,
+    setAdultFilter,
+    clearAllFilter,
+    setClearAllFilter,
+    setSearchString,
+    ...rest
+}: SearchBarProps) {
+    const [showFilter, setShowFilter] = useState(false);
+    const onClickShowFilter = () => setShowFilter(!showFilter);
+
+    const displayTagFilters = useDisplayTagFilters(tagFilters, adultFilter);
+    const displayGenreFilters = useDisplayGenreFilters(genreFilters, adultFilter);
+
+    const adultFilterOnClick = () => setAdultFilter(!adultFilter.active);
+    const genreFilterOnClick = (clickedItem: GenreFilterItem) => setGenreFilter(clickedItem.name, !clickedItem.active);
+    const tagFilterOnClick = (clickedItem: TagFilterItem) => setTagFilter(clickedItem.name, !clickedItem.active);
+    const myFavouriteFilterOnClick = () => setMyFavouriteFilter(!myFavouriteFilter.active);
+    const clearAllFilterOnClick = () => setClearAllFilter(!clearAllFilter.active);
+
+    // slow filters: just means those that are not directly under the search bar, need to click on the settings to show
+    const [activeSlowFilters, setActiveSlowFilters] = useImmer<FilterItem[]>([]);
+    useEffect(() => {
+        setActiveSlowFilters(() => {
+            const draft = [];
+            draft.push(...genreFilters.filter(item => item.active));
+            draft.push(...tagFilters.filter(item => item.active));
+            if (adultFilter.active) {
+                draft.push(adultFilter);
+            }
+            if (clearAllFilter.active) {
+                draft.push(clearAllFilter);
+            }
+            return draft;
+        });
+    }, [tagFilters, genreFilters, adultFilter, clearAllFilter, setActiveSlowFilters]);
+    const activeSlowFilterOnClick = (clickedItem: FilterItem) => {
+        if (clickedItem.type === "genre") {
+            genreFilterOnClick(clickedItem);
+        } else if (clickedItem.type === "tag") {
+            tagFilterOnClick(clickedItem as TagFilterItem);
+        } else if (clickedItem.type === "adult") {
+            adultFilterOnClick();
+        } else if (clickedItem.type === "clearAll") {
+            clearAllFilterOnClick();
+        } else {
+            console.warn("unknown slow filter type clicked");
+        }
+    };
+
     // clear all filter label
     useEffect(() => {
         setClearAllFilter(activeSlowFilters.filter(item => item.type !== "clearAll").length >= 3);
     }, [activeSlowFilters, setClearAllFilter]);
 
     // search bar stuff
-    const { setSearchString } = useAnimeSearch();
     const searchBarRef = useRef<HTMLInputElement>(null);
     const handleOnSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault();
@@ -98,7 +159,6 @@ export default function SearchBar({ messages, locale, className, ...rest }: Base
 
     const [placeholder, setPlaceholder] = useState(formattedMessage(messages, "anime.search.placeholder"));
     const [searchBarFocused, setSearchBarFocused] = useState(false);
-
     useEffect(() => {
         if (searchBarFocused) {
             setPlaceholder("");
@@ -134,7 +194,7 @@ export default function SearchBar({ messages, locale, className, ...rest }: Base
             <div className="flex flex-row flex-wrap md:gap-2">
                 <BooleanQuickFilter
                     name={myFavouriteFilter.name}
-                    onClick={() => setFavouriteFilter(!myFavouriteFilter.active)}
+                    onClick={() => myFavouriteFilterOnClick()}
                     active={myFavouriteFilter.active}
                     messages={messages}
                     locale={locale}

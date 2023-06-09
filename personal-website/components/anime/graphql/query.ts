@@ -4,7 +4,7 @@ import {
     AnilistGraphqlQuery,
     Character,
     Characters,
-    FetchSearchParams,
+    SearchParams,
     Filters,
     MEDIALIST_STATUS,
     Media,
@@ -52,10 +52,10 @@ async function fetchAnilist<T>(query: string): Promise<T> {
         },
     };
 
-    return fetch(ANILIST_GRAPHQL_ENDPOINT, allOptions).then((res) =>
+    return fetch(ANILIST_GRAPHQL_ENDPOINT, allOptions).then(res =>
         res
             .json()
-            .then((json) => {
+            .then(json => {
                 if (json.errors) {
                     throw new Error(JSON.stringify(json.errors));
                 }
@@ -64,7 +64,7 @@ async function fetchAnilist<T>(query: string): Promise<T> {
                 }
                 return json.data;
             })
-            .then((data) => {
+            .then(data => {
                 console.log("Received Anilist data");
                 // console.log(data);
                 return data;
@@ -104,7 +104,7 @@ export async function fetchFilters(): Promise<Filters> {
     return response;
 }
 
-export async function fetchSearchPage(FetchSearchParams: FetchSearchParams): Promise<Page<SectionMedia[]>> {
+export async function fetchSearchPage(FetchSearchParams: SearchParams): Promise<Page<SectionMedia[]>> {
     const graphqlQuery = AnilistGraphqlQuery.fetchSearch(FetchSearchParams);
 
     const response = await fetchAnilist<RawPage<Media<MediaItem>>>(graphqlQuery);
@@ -134,7 +134,7 @@ export async function fetchMediaList(page_ = 1, status: MEDIALIST_STATUS): Promi
     const response = await fetchAnilist<RawPage<MediaList>>(graphqlQuery);
 
     const mediaListItems: MediaListItem[] = response?.Page?.mediaList || [];
-    const medias = mediaListItems.map((node) => node?.media);
+    const medias = mediaListItems.map(node => node?.media);
 
     return {
         pageInfo: response?.Page?.pageInfo,

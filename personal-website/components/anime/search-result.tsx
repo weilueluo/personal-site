@@ -1,6 +1,5 @@
 "use client";
 import { SectionMedia } from "@/components/anime/graphql/graphql";
-import { useAnimeSearch } from "@/components/anime/search";
 import ProgressiveImage from "@/components/ui/image";
 import { FormattedMessage, formattedMessage } from "@/shared/i18n/translation";
 import { BaseCompProps } from "@/shared/types/comp";
@@ -11,40 +10,48 @@ import React, { useEffect, useState } from "react";
 import { MdExpandMore } from "react-icons/md/index";
 import { VscLoading } from "react-icons/vsc/index";
 import IconedText from "../ui/icon-text";
+import { SearchResult } from "./searcher";
 
-export default function SearchResult({ messages, locale, ...rest }: BaseCompProps<"div">) {
-    const { swrAnimeResponse, mergedData, pageInfo } = useAnimeSearch();
+export type SearchResultProps = BaseCompProps<"div"> & SearchResult;
 
-    useEffect(() => swrAnimeResponse.error && console.error(swrAnimeResponse.error), [swrAnimeResponse.error]);
+export default function SearchResultPage({
+    messages,
+    locale,
+    rawResponse,
+    animeData,
+    pageInfo,
+    ...rest
+}: SearchResultProps) {
+    useEffect(() => rawResponse.error && console.error(rawResponse.error), [rawResponse.error]);
 
     // button text by state
     const [buttonText, setButtonText] = useState(formattedMessage(messages, "anime.search.result.loading"));
     useEffect(() => {
-        if (swrAnimeResponse.isLoading || swrAnimeResponse.isValidating) {
+        if (rawResponse.isLoading || rawResponse.isValidating) {
             setButtonText(formattedMessage(messages, "anime.search.result.loading"));
         } else if (!pageInfo?.hasNextPage) {
             setButtonText(formattedMessage(messages, "anime.search.result.all_loaded"));
         } else {
             setButtonText(formattedMessage(messages, "anime.search.result.load_more"));
         }
-    }, [swrAnimeResponse.isLoading, swrAnimeResponse.isValidating, pageInfo?.hasNextPage, messages]);
+    }, [pageInfo?.hasNextPage, messages, rawResponse.isLoading, rawResponse.isValidating]);
 
     // load more when reach bottom
     useEffect(() => {
         const handleScroll = () => {
-            if (swrAnimeResponse.isLoading || swrAnimeResponse.isValidating) {
+            if (rawResponse.isLoading || rawResponse.isValidating) {
                 return;
             }
 
             // https://stackoverflow.com/questions/9439725/how-to-detect-if-browser-window-is-scrolled-to-bottom
             if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
-                swrAnimeResponse.setSize(swrAnimeResponse.size + 1);
+                rawResponse.setSize(rawResponse.size + 1);
             }
         };
         window.addEventListener("scroll", handleScroll);
 
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [swrAnimeResponse]);
+    }, [rawResponse]);
 
     const [collapse, setCollapse] = useState(false);
 
@@ -56,7 +63,7 @@ export default function SearchResult({ messages, locale, ...rest }: BaseCompProp
             <div className="my-2 flex flex-row justify-between" {...rest}>
                 <h3 className="text-xl font-bold capitalize">
                     <FormattedMessage id="anime.search.result.results" messages={messages} />
-                    {(swrAnimeResponse.isLoading || swrAnimeResponse.isValidating) && (
+                    {(rawResponse.isLoading || rawResponse.isValidating) && (
                         <VscLoading className="mx-2 inline-block animate-spin align-middle" />
                     )}
                 </h3>
@@ -79,13 +86,13 @@ export default function SearchResult({ messages, locale, ...rest }: BaseCompProp
                         collapse && "flex w-full flex-row gap-2 overflow-x-auto",
                         !collapse && "my-grid-cols-3 md:my-grid-cols-4 lg:my-grid-cols-5 grid justify-between"
                     )}>
-                    {mergedData.map(data => (
+                    {animeData.map(data => (
                         <Link href={`${pathname}/${data.id}`} key={data.id} prefetch={false}>
                             <Card data={data} messages={messages} locale={locale} />
                         </Link>
                     ))}
-                    {(swrAnimeResponse.isLoading || swrAnimeResponse.isValidating) &&
-                        (!mergedData || mergedData.length == 0) &&
+                    {(rawResponse.isLoading || rawResponse.isValidating) &&
+                        (!animeData || animeData.length == 0) &&
                         Array.from(Array(15).keys()).map(i => <PlaceholderCard key={i} />)}
                 </ul>
 
@@ -93,11 +100,11 @@ export default function SearchResult({ messages, locale, ...rest }: BaseCompProp
                 <div className="flex w-full justify-center">
                     <button
                         className="std-pad std-hover mt-2"
-                        onClick={() => swrAnimeResponse.setSize(swrAnimeResponse.size + 1)}
+                        onClick={() => rawResponse.setSize(rawResponse.size + 1)}
                         disabled={!pageInfo?.hasNextPage}>
                         {buttonText}
-                        {pageInfo && ` (${mergedData.length}/${pageInfo.total})`}
-                        {(swrAnimeResponse.isLoading || swrAnimeResponse.isValidating) && (
+                        {pageInfo && ` (${animeData.length}/${pageInfo.total})`}
+                        {(rawResponse.isLoading || rawResponse.isValidating) && (
                             <VscLoading className="mx-2 inline-block animate-spin align-middle" />
                         )}
                     </button>

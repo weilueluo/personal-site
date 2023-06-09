@@ -216,7 +216,7 @@ const medias = (id: number | string) =>
     `media(id:${id}){
     ${mediaFields}
 }`;
-const mediasSearch = (mediaSearchParams: Omit<FetchSearchParams, "page">) => {
+const mediasSearch = (mediaSearchParams: Omit<SearchParams, "page">) => {
     const { searchString, activeGenreFilters, activeTagFilters, typeFilter, sortFilter, countryFilter, idsToFilter } =
         mediaSearchParams;
 
@@ -358,7 +358,7 @@ export interface MediaListCollection {
 
 ///////////////////////////////////////////// client
 
-export interface FetchSearchParams {
+export interface SearchParams {
     searchString: string;
     activeGenreFilters: GenreFilterItem[];
     activeTagFilters: TagFilterItem[];
@@ -385,8 +385,8 @@ export class AnilistGraphqlQuery {
     public static fetchFavouriteAnimes(userID: number | string, page: number | string) {
         return query(page_(usersFavouritesAnimeNodes(userID, page)));
     }
-    public static fetchSearch(FetchSearchParams: FetchSearchParams) {
-        const { page, ...rest } = FetchSearchParams;
+    public static fetchSearch(searchParams: SearchParams) {
+        const { page, ...rest } = searchParams;
         return query(page_(mediasSearch(rest), page));
     }
     public static fetchFilters() {
