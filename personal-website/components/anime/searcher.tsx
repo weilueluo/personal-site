@@ -143,8 +143,8 @@ function useIdsToFilter(myAnimeCollection: Set<number>, myFavouriteFilter: MyFav
     return idsToFilter;
 }
 
-function useActiveFilters(filterItems: FilterItem[]) {
-    const [activeFilters, setActiveFilters] = React.useState<FilterItem[]>([]);
+function useActiveFilters<T extends FilterItem>(filterItems: T[]) {
+    const [activeFilters, setActiveFilters] = React.useState<T[]>([]);
     useEffect(() => {
         setActiveFilters(filterItems.filter(item => item.active));
     }, [filterItems]);
