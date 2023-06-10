@@ -1,6 +1,7 @@
 "use client";
 
 import { useImmer } from "use-immer";
+import { Clickable } from "./common";
 
 export type SortFilterName =
     | "TITLE_ENGLISH"
@@ -9,7 +10,7 @@ export type SortFilterName =
     | "START_DATE_DESC"
     | "SCORE"
     | "SCORE_DESC"
-    | "UPDATE_AT"
+    | "UPDATED_AT"
     | "UPDATED_AT_DESC"
     | "POPULARITY"
     | "POPULARITY_DESC"
@@ -26,31 +27,27 @@ export const SORT_FILTER_VALUES: SortFilterName[] = [
     "START_DATE_DESC",
     "SCORE",
     "SCORE_DESC",
-    "UPDATE_AT",
+    "UPDATED_AT",
     "UPDATED_AT_DESC",
     "POPULARITY",
     "POPULARITY_DESC",
     "TRENDING",
     "TRENDING_DESC",
 ];
-export const SORT_FILTER: SortFilter = {
-    name: "TRENDING_DESC",
-};
 
-export function useSortFilter() {
-    const [sortFilter, setSortFilterInternal] = useImmer<SortFilter>(SORT_FILTER);
-    const setSortFilter = (sort: SortFilterName) => {
-        setSortFilterInternal(draft => {
-            if (SORT_FILTER_VALUES.includes(sort)) {
-                draft.name = sort;
-            } else {
-                console.warn(`Invalid sort filter name: ${sort}`);
-            }
-        });
-    };
+export function useSortFilter(): Clickable<SortFilter, SortFilterName> {
+    const [sortFilter, setSortFilterInternal] = useImmer<Clickable<SortFilter, SortFilterName>>({
+        name: "TRENDING_DESC",
+        onClick: (name: SortFilterName) => {
+            setSortFilterInternal(draft => {
+                if (SORT_FILTER_VALUES.includes(name)) {
+                    draft.name = name;
+                } else {
+                    console.warn(`Invalid sort filter name: ${name}`);
+                }
+            });
+        },
+    });
 
-    return {
-        sortFilter,
-        setSortFilter,
-    };
+    return sortFilter;
 }

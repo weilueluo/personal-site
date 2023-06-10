@@ -1,6 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
+import { fetchMyAnimeCollection } from "../graphql/query";
+import { SameClickable } from "./common";
 
 export type MyFavoriteFilterName = "FAVOURITES";
 
@@ -9,19 +12,31 @@ export interface MyFavoriteFilter {
     active: boolean;
 }
 
-export function useMyFavouriteFilter() {
-    const [myFavouriteFilter, setMyFavouriteFilterInternal] = useImmer<MyFavoriteFilter>({
+export function useMyFavouriteFilter(): SameClickable<MyFavoriteFilter> {
+    const [myFavouriteFilter, setMyFavouriteFilterInternal] = useImmer<SameClickable<MyFavoriteFilter>>({
         name: "FAVOURITES",
         active: false,
+        onClick: (filter: MyFavoriteFilter) => {
+            setMyFavouriteFilterInternal(draft => {
+                draft.active = !filter.active;
+            });
+        },
     });
-    const setMyFavouriteFilter = (active: boolean) => {
-        setMyFavouriteFilterInternal(draft => {
-            draft.active = active;
-        });
-    };
 
-    return {
-        myFavouriteFilter,
-        setMyFavouriteFilter,
-    };
+    return myFavouriteFilter;
+}
+
+export function useAnimeCollection() {
+    const [myAnimeCollection, setMyAnimeCollection] = useState<Set<number>>(() => new Set());
+    useEffect(() => {
+        fetchMyAnimeCollection(1).then(data => {
+            const favSet = new Set<number>();
+            data?.data?.forEach(data => {
+                data.entries.forEach(data => favSet.add(data.media.id));
+            });
+            setMyAnimeCollection(favSet);
+        });
+    }, []);
+
+    return myAnimeCollection;
 }

@@ -1,25 +1,21 @@
 "use client";
 
 import { useImmer } from "use-immer";
-import { FilterItem } from "../search";
+import { FilterItem, SameClickable } from "./common";
 
 export interface AdultFilter extends FilterItem {}
 
-export function useAdultFilter() {
-    const [adultFilter, setAdultFilterInternal] = useImmer<AdultFilter>({
+export function useAdultFilter(): SameClickable<AdultFilter> {
+    const [adultFilter, setAdultFilterInternal] = useImmer<SameClickable<AdultFilter>>({
         name: "R18",
         active: false,
         type: "adult",
+        onClick: filter => {
+            setAdultFilterInternal(draft => {
+                draft.active = !filter.active;
+            });
+        },
     });
 
-    const setAdultFilter = (active: boolean) => {
-        setAdultFilterInternal(draft => {
-            draft.active = active;
-        });
-    };
-
-    return {
-        adultFilter,
-        setAdultFilter,
-    };
+    return adultFilter;
 }

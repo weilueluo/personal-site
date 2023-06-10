@@ -3,7 +3,7 @@ import Separator from "@/components/ui/separator";
 import { inter } from "@/shared/fonts";
 import { fetchMessages } from "@/shared/i18n/translation";
 import Init from "@/shared/init";
-import { getThemeFromCookies } from "@/shared/theme/theme-utils";
+import { DEFAULT_RESOLVED_THEME, getThemeFromCookies, resolve } from "@/shared/theme/theme-utils";
 import ThemeProvider from "@/shared/theme/themes";
 import { BaseCompProps, BasePageProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
@@ -15,10 +15,11 @@ import "./global.css";
 export default async function Layout({ children, params }: BasePageProps) {
     const messages = await fetchMessages(params.locale);
     const theme = getThemeFromCookies(cookies());
+    const resolvedTheme = resolve(theme || DEFAULT_RESOLVED_THEME, DEFAULT_RESOLVED_THEME);
     return (
         <ThemeProvider theme={theme}>
             {/* @ts-ignore Async Server Component */}
-            <html lang={params.locale}>
+            <html lang={params.locale} className={resolvedTheme}>
                 <body className={tm("std-bg std-text grid place-items-center", inter.className)}>
                     <Init />
                     <Main messages={messages} locale={params.locale}>

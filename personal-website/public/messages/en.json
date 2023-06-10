@@ -44,7 +44,7 @@
     "anime.search.filter.title_english_desc": "title english desc",
     "anime.search.filter.trending": "trending",
     "anime.search.filter.trending_desc": "trending desc",
-    "anime.search.filter.update_at": "update at",
+    "anime.search.filter.updated_at": "updated at",
     "anime.search.filter.updated_at_desc": "updated at desc",
     "anime.search.placeholder": "What are you looking for?",
     "anime.search.result.all_loaded": "All Loaded",

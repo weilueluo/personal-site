@@ -58,7 +58,7 @@ export default async function Page({ params }: { params: { filename: string } } 
             <ReactMarkdown
                 remarkPlugins={[remarkGfm, remarkMath, remarkToc]}
                 rehypePlugins={[rehypeRaw, rehypeMathjax]}
-                className="prose-sm max-w-none md:prose">
+                className="prose-sm max-w-none dark:prose-invert md:prose">
                 {blogText}
             </ReactMarkdown>
         </div>

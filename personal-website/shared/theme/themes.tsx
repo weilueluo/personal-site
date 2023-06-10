@@ -2,7 +2,6 @@
 
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useEffectOnce } from "react-use";
-import { useForceUpdate } from "../hooks";
 import { Nullable } from "../types/utils";
 import {
     DEFAULT_RESOLVED_THEME,
@@ -52,11 +51,11 @@ export default function ThemeProvider({
         }
     };
 
-    const forceUpdate = useForceUpdate();
+    // const forceUpdate = useForceUpdate();
 
-    useEffectOnce(() => {
-        forceUpdate();
-    });
+    // useEffectOnce(() => {
+    //     forceUpdate();
+    // });
 
     useEffect(() => {
         assignTheme(resolvedTheme);

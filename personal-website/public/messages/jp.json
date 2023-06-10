@@ -44,7 +44,7 @@
     "anime.search.filter.title_english_desc": "タイトル英語説明",
     "anime.search.filter.trending": "トレンド",
     "anime.search.filter.trending_desc": "トレンドの説明",
-    "anime.search.filter.update_at": "で更新します",
+    "anime.search.filter.updated_at": "で更新します",
     "anime.search.filter.updated_at_desc": "説明で更新されました",
     "anime.search.placeholder": "何を探していますか？",
     "anime.search.result.all_loaded": "すべてロードされました",

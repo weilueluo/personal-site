@@ -4,13 +4,12 @@ import { useDebounce } from "react-use";
 import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite";
 import { CountryFilter } from "./filters/country";
 import { MyFavoriteFilter } from "./filters/favourite";
-import { GenreFilterItem } from "./filters/genre";
 import { SortFilter } from "./filters/sort";
-import { TagFilterItem } from "./filters/tag";
 import { TypeFilter } from "./filters/type";
 import { PageInfoItem, SearchParams, SectionMedia } from "./graphql/graphql";
 import { Page, fetchSearchPage } from "./graphql/query";
-import { FilterItem } from "./search";
+import { TagFilterItem, GenreFilterItem } from "./filters/tag-and-genre";
+import { FilterItem } from "./filters/common";
 
 export interface SearchResult {
     animeData: SectionMedia[];

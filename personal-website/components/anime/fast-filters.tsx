@@ -64,7 +64,7 @@ export const FILTER_NAME_DISPLAY_MAP: Record<FILTER_NAMES, keyof Messages> = {
     START_DATE_DESC: "anime.search.filter.start_date_desc",
     SCORE: "anime.search.filter.score",
     SCORE_DESC: "anime.search.filter.score_desc",
-    UPDATE_AT: "anime.search.filter.update_at",
+    UPDATED_AT: "anime.search.filter.updated_at",
     UPDATED_AT_DESC: "anime.search.filter.updated_at_desc",
     POPULARITY: "anime.search.filter.popularity",
     POPULARITY_DESC: "anime.search.filter.popularity_desc",

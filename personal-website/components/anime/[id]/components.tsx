@@ -185,20 +185,20 @@ export function Title({ messages }: BaseCompProps<"div">) {
             </Link>
             <div className="flex flex-row flex-wrap gap-2 text-sm">
                 {subTitles.map(title => (
-                    <Label url={url} key={title} className=" bg-slate-200 hover:cursor-pointer hover:underline">
+                    <Label url={url} key={title} className=" bg-slate-200 dark:bg-slate-700 ">
                         {title}
                     </Label>
                 ))}
                 {showOtherNames &&
                     synonyms.map(title => (
-                        <Label url={url} key={title} className=" bg-slate-200 hover:cursor-pointer hover:underline">
+                        <Label url={url} key={title} className=" bg-slate-200 dark:bg-slate-700 ">
                             {title}
                         </Label>
                     ))}
                 {synonyms && synonyms.length > 0 && (
                     <Label
                         key={"otherName"}
-                        className=" bg-slate-200 hover:cursor-pointer hover:underline"
+                        className=" bg-slate-200 dark:bg-slate-700 "
                         onClick={() => setShowOtherNames(!showOtherNames)}>
                         {showOtherNames ? (
                             <FormattedMessage messages={messages} id="anime.details.title.others.hide" />

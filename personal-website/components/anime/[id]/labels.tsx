@@ -8,7 +8,7 @@ export function Status({ messages }: BaseCompProps<"div">) {
 
     const status = data?.status || formattedMessage(messages, "anime.details.status.unknown");
 
-    return <FullLabel className=" bg-green-400">{status}</FullLabel>;
+    return <FullLabel className=" bg-green-400 dark:bg-green-900">{status}</FullLabel>;
 }
 
 export function NextAiring({ messages, locale }: BaseCompProps<"div">) {
@@ -47,11 +47,11 @@ export function Score({ messages, locale }: BaseCompProps<"div">) {
     return (
         <FullLabel
             style={{
-                color: "black",
                 background: `linear-gradient(90deg, rgba(209,96,104,0.8) 0% ${breakpoint}%, rgba(209,96,104,0.5) ${
                     breakpoint + 1
                 }% 100%)`,
-            }}>
+            }}
+            className="text-black dark:text-gray-300">
             {data?.meanScore ? (
                 <FormattedMessage
                     messages={messages}
@@ -74,7 +74,10 @@ export function Genres() {
     return data?.genres ? (
         <Labels>
             {data.genres.map(genre => (
-                <Label key={genre} className=" bg-[#f48668]" url={`https://anilist.co/search/anime/${genre}`}>
+                <Label
+                    key={genre}
+                    className=" bg-[#f48668] dark:bg-orange-800"
+                    url={`https://anilist.co/search/anime/${genre}`}>
                     {genre}
                 </Label>
             )) || null}
@@ -91,7 +94,7 @@ export function Tags() {
                 // tag is search with genre query... not an mistake
                 <Label
                     key={tag.name}
-                    className="bg-[#c7b8ea]"
+                    className="bg-[#c7b8ea] dark:bg-purple-900"
                     url={`https://anilist.co/search/anime?genres=${tag.name}`}>
                     {tag.name}
                 </Label>
@@ -106,7 +109,10 @@ export function HashTags() {
     return data?.hashtag ? (
         <Labels>
             {data.hashtag.split(" ").map(tag => (
-                <Label key={tag} className=" bg-[#c2e1c2]" url={`https://twitter.com/hashtag/${tag.replace("#", "")}`}>
+                <Label
+                    key={tag}
+                    className=" bg-[#c2e1c2] dark:bg-green-800"
+                    url={`https://twitter.com/hashtag/${tag.replace("#", "")}`}>
                     {tag}
                 </Label>
             ))}

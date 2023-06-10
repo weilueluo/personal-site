@@ -44,7 +44,7 @@ export interface Messages {
     "anime.search.filter.title_english_desc": string;
     "anime.search.filter.trending": string;
     "anime.search.filter.trending_desc": string;
-    "anime.search.filter.update_at": string;
+    "anime.search.filter.updated_at": string;
     "anime.search.filter.updated_at_desc": string;
     "anime.search.placeholder": string;
     "anime.search.result.all_loaded": string;

@@ -1,7 +1,6 @@
 import { CountryFilter } from "../filters/country";
-import { GenreFilterItem } from "../filters/genre";
 import { SortFilter } from "../filters/sort";
-import { TagFilterItem } from "../filters/tag";
+import { GenreFilterItem, TagFilterItem } from "../filters/tag-and-genre";
 import { TypeFilterName, TypeFilter } from "../filters/type";
 
 export const MY_USER_ID = 6044692;
