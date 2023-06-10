@@ -15,8 +15,18 @@
     border-image: linear-gradient(to top right, black, transparent 15%) 1;
 }
 
+.inverseBorderB {
+    border-bottom: 1px solid;
+    border-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent) 1;
+}
+
 // has to be consistent with tailwind.config.js
 $std-light: #d1d5db;
+
+.dark .inverseBorderB {
+    border-bottom: 1px solid;
+    border-image: linear-gradient(to right, transparent, $std-light 15%, $std-light 85%, transparent) 1;
+}
 
 .dark .borderBR {
     border: 1px solid;

@@ -70,7 +70,7 @@ const Dropdown = React.forwardRef<HTMLDivElement, DropdownListProps>((props, ref
                     return (
                         <>
                             {child}
-                            <Separator variant="sm" />
+                            <Separator size="sm" />
                         </>
                     );
                 }

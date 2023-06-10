@@ -1,19 +1,23 @@
 import { tm } from "@/shared/utils";
 import React, { Children, ComponentPropsWithoutRef, forwardRef } from "react";
+import "./border.scss";
 
 export interface SeparatorProps extends ComponentPropsWithoutRef<"div"> {
-    variant?: "std" | "sm";
+    size?: "std" | "sm";
+    variant?: "sharp" | "square";
 }
 
 const Separator = forwardRef<React.ElementRef<"div">, SeparatorProps>(
-    ({ className, variant = "std", ...otherProps }, ref) => {
+    ({ className, size = "std", variant = "sharp", ...otherProps }, ref) => {
         return (
             <div
                 ref={ref}
                 className={tm(
-                    "box-border w-full border-b border-black dark:border-std-light",
-                    variant === "std" && "mb-6 h-6",
-                    variant === "sm" && "mb-1 h-1",
+                    "box-border w-full",
+                    variant === "sharp" && "inverseBorderB",
+                    variant === "square" && "border-b border-black dark:border-std-light",
+                    size === "std" && "mb-6 h-6",
+                    size === "sm" && "mb-1 h-1",
                     className
                 )}
                 {...otherProps}
@@ -25,7 +29,7 @@ Separator.displayName = "Separator";
 export default Separator;
 
 const VSeparator = forwardRef<React.ElementRef<"div">, SeparatorProps>(
-    ({ className, variant = "std", ...otherProps }, ref) => {
+    ({ className, size: variant = "std", ...otherProps }, ref) => {
         return (
             <div
                 ref={ref}
@@ -51,7 +55,7 @@ const SeparatedList = function ({ children }: { children: React.ReactNode }) {
                     return (
                         <>
                             {child}
-                            <Separator variant="sm" />
+                            <Separator size="sm" />
                         </>
                     );
                 }

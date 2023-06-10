@@ -53,29 +53,33 @@ export default async function Header({ className, messages, locale, ...props }: 
                             <RiFilePaper2Fill className="icon-md" />
                             <FormattedMessage messages={messages} id="header.blogs" />
                         </NavItem>
-                        <Separator variant="sm" />
+                        <Separator size="sm" />
                         <NavItem locale={locale} messages={messages} href={"/about"}>
                             <RiContactsBook2Fill className="icon-md" />
                             <FormattedMessage messages={messages} id="header.about" />
                         </NavItem>
-                        <Separator variant="sm" />
+                        <Separator size="sm" />
                         <NavItem locale={locale} messages={messages} href={"/anime"}>
                             <GiClover className="icon-md" />
                             <FormattedMessage messages={messages} id="header.anime" />
                         </NavItem>
-                        <Separator variant="sm" />
+                        <Separator size="sm" />
                         <NavItem locale={locale} messages={messages} href={"/rss"}>
                             <IoLayers className="icon-md" />
                             <FormattedMessage messages={messages} id="header.rss" />
                         </NavItem>
 
-                        <Separator variant="sm" className="mx-0 border-2 border-gray-600" />
+                        <Separator
+                            size="sm"
+                            variant="square"
+                            className="mx-0 border-b-2 border-gray-600 dark:border-b-2 dark:border-black"
+                        />
 
                         <NavItem locale={locale} messages={messages} href={GITHUB_CV_URL} target="_blank">
                             <MdWork className="icon-md" />
                             <FormattedMessage messages={messages} id="header.cv" />
                         </NavItem>
-                        <Separator variant="sm" />
+                        <Separator size="sm" />
                         <NavItem locale={locale} messages={messages} href={GITHUB_REPO_URL} target="_blank">
                             <SiGithub className="icon-md" />
                             <FormattedMessage messages={messages} id="header.source" />

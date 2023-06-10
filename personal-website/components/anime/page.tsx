@@ -5,7 +5,7 @@ import { BaseCompProps } from "@/shared/types/comp";
 import { useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useImmer } from "use-immer";
-import { SeparatedList } from "../ui/separator";
+import Separator, { SeparatedList } from "../ui/separator";
 import { useAdultFilter } from "./filters/adult";
 import { useClearAllFilter } from "./filters/clearAll";
 import { BooleanQuickFilter, FilterPanel, QuickFilter, SearchSettings } from "./filters/components";
@@ -84,13 +84,13 @@ export default function AnimePage({ messages, locale }: BaseCompProps<"div">) {
             {/* search bar */}
             <div className="flex flex-col gap-2">
                 {/* 1st row search input */}
-                <div className="flex h-8 max-h-full w-full flex-row border-b border-black pb-1 md:h-10">
+                <div className="flex h-8 max-h-full w-full flex-row justify-between md:h-10">
                     <SearchIcon />
                     <SearchInput messages={messages} setSearchString={setSearchString} locale={locale} />
                     <SearchSettings messages={messages} onClickShowFilter={onClickShowFilter} locale={locale} />
                 </div>
                 {/* 2nd row quick filters */}
-                <div className="flex flex-row flex-wrap md:gap-2">
+                <div className="flex flex-row flex-wrap justify-between md:justify-start md:gap-2">
                     <BooleanQuickFilter
                         name={myFavouriteFilter.name}
                         onClick={() => myFavouriteFilter.onClick(myFavouriteFilter)}
@@ -120,6 +120,7 @@ export default function AnimePage({ messages, locale }: BaseCompProps<"div">) {
                         locale={locale}
                     />
                 </div>
+                <Separator size="sm" />
 
                 {/* 3rd row active slow filters */}
                 {(activeSlowFilters.length > 0 || showFilter) && (
@@ -168,8 +169,8 @@ export default function AnimePage({ messages, locale }: BaseCompProps<"div">) {
 
 function SearchIcon() {
     return (
-        <div className="hover:std-hover grid h-full w-12 shrink place-items-center">
-            <FaSearch />
+        <div className="hover:std-hover std-pad grid h-full shrink place-items-center">
+            <FaSearch className="std-icon" />
         </div>
     );
 }
@@ -198,10 +199,10 @@ function SearchInput({ setSearchString, messages }: SearchInputProps) {
     }, [searchBarFocused, messages]);
 
     return (
-        <form onSubmit={e => handleOnSubmit(e)} className="mx-1 flex grow items-center bg-transparent">
+        <form onSubmit={e => handleOnSubmit(e)} className="mx-1 flex grow items-center">
             <input
                 ref={searchBarRef}
-                className="w-full font-semibold focus:outline-none"
+                className="std-text-size w-full bg-transparent font-semibold focus:outline-none"
                 placeholder={placeholder}
                 onChange={e => handleOnSubmit(e)}
                 onFocus={() => setSearchBarFocused(true)}
