@@ -28,9 +28,9 @@ const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(({ href, locale, chi
             onMouseOut={() => setHover(false)}
             {...rest}>
             {useNewTabIcon && hover && (
-                <ImNewTab className="pointer-events-none absolute right-0 top-0 z-10 bg-white" />
+                <ImNewTab className="pointer-events-none absolute right-0 top-0 z-10 bg-white text-black" />
             )}
-            <IconedText>{children}</IconedText>
+            <IconedText className="flex w-full flex-row justify-center">{children}</IconedText>
         </Link>
     );
 });

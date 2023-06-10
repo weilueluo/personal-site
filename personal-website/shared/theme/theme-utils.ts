@@ -5,7 +5,7 @@ import { cookieToObj } from "../utils";
 export type ResolvedTheme = "light" | "dark";
 export type UnResolvedTheme = ResolvedTheme | "system";
 export const THEME_KEY = "x-theme"; // for local storage and cookie
-export const DEFAULT_RESOLVED_THEME = "light";
+export const DEFAULT_RESOLVED_THEME = "dark";
 export const THEMES: UnResolvedTheme[] = ["system", "light", "dark"];
 
 export function getThemeFromCookies(cookies: ReadonlyRequestCookies): Nullable<UnResolvedTheme> {

@@ -198,7 +198,7 @@ export function Title({ messages }: BaseCompProps<"div">) {
                 {synonyms && synonyms.length > 0 && (
                     <Label
                         key={"otherName"}
-                        className=" bg-slate-200 dark:bg-slate-700 "
+                        className="bg-slate-200 dark:bg-slate-700 "
                         onClick={() => setShowOtherNames(!showOtherNames)}>
                         {showOtherNames ? (
                             <FormattedMessage messages={messages} id="anime.details.title.others.hide" />

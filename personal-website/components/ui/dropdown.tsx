@@ -4,6 +4,8 @@ import { tm } from "@/shared/utils";
 import React, { Children, ComponentPropsWithoutRef, useEffect, useState } from "react";
 
 import Separator from "./separator";
+import "@/components/ui/border.scss";
+import { MdExpandMore, MdUnfoldMore } from "react-icons/md/index";
 
 export interface DropdownProps extends ComponentPropsWithoutRef<"div"> {}
 export interface DropdownListProps extends ComponentPropsWithoutRef<"div"> {
@@ -61,7 +63,7 @@ const Dropdown = React.forwardRef<HTMLDivElement, DropdownListProps>((props, ref
             ref={ref}
             className={tm(
                 "std-text-size absolute top-full z-10 mt-2 flex w-full min-w-max flex-col p-1",
-                variant === "glass" && "border border-black outline-black backdrop-blur-lg dark:bg-std-dark",
+                variant === "glass" && "borderB border border-black outline-black backdrop-blur-lg dark:bg-std-dark",
                 className
             )}
             {...rest}>
@@ -81,4 +83,34 @@ const Dropdown = React.forwardRef<HTMLDivElement, DropdownListProps>((props, ref
 });
 Dropdown.displayName = "Dropdown";
 
-export { Container, Dropdown };
+export interface DropdownTriggerProps extends ComponentPropsWithoutRef<"div"> {
+    open?: boolean; // allow this component to be use as standalone without dropdown container
+}
+const Trigger = React.forwardRef<HTMLDivElement, DropdownTriggerProps>(
+    ({ className, children, open: openProps, ...rest }, ref) => {
+        let { open } = React.useContext(ContainerContext);
+
+        open = openProps ?? open;
+
+        return (
+            <div ref={ref} className={tm("flex flex-row items-center md:gap-1", className)} {...rest}>
+                {children}
+                <MdExpandMore className={tm("icon-sm transition-transform", open && "rotate-180")} />
+            </div>
+        );
+    }
+);
+Trigger.displayName = "DropdownTrigger";
+
+export interface DropdownTrigger2Props extends ComponentPropsWithoutRef<"div"> {}
+const Trigger2 = React.forwardRef<HTMLDivElement, DropdownTrigger2Props>(({ className, children, ...rest }, ref) => {
+    return (
+        <div ref={ref} className={tm("flex flex-row items-center md:gap-1", className)} {...rest}>
+            {children}
+            <MdUnfoldMore className={tm("icon-sm h-full transition-transform")} />
+        </div>
+    );
+});
+Trigger2.displayName = "DropdownTrigger2";
+
+export { Container, Dropdown, Trigger, Trigger2 };

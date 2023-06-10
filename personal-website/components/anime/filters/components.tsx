@@ -2,7 +2,7 @@ import IconedText from "@/components/ui/icon-text";
 import { FormattedMessage } from "@/shared/i18n/translation";
 import { BaseCompProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
-import { MdExpandMore, MdOutlineRadioButtonChecked, MdOutlineRadioButtonUnchecked } from "react-icons/md";
+import { MdOutlineRadioButtonChecked, MdOutlineRadioButtonUnchecked } from "react-icons/md";
 import { TbAdjustmentsHorizontal } from "react-icons/tb";
 import * as dropdown from "../../ui/dropdown";
 import { FILTER_NAMES, FILTER_NAME_DISPLAY_MAP } from "../fast-filters";
@@ -30,8 +30,9 @@ export function QuickFilter<T extends FILTER_NAMES>({
                     className
                 )}
                 {...rest}>
-                <MdExpandMore className="inline-block" />
-                <FormattedMessage id={FILTER_NAME_DISPLAY_MAP[name]} messages={messages} />
+                <dropdown.Trigger>
+                    <FormattedMessage id={FILTER_NAME_DISPLAY_MAP[name]} messages={messages} />
+                </dropdown.Trigger>
             </span>
             <dropdown.Dropdown variant="glass">
                 {names.map(name => (
@@ -53,8 +54,8 @@ export function BooleanQuickFilter({ name, active, messages, ...rest }: BooleanQ
         <span
             className="std-hover std-pad std-text-size flex flex-row items-center justify-center gap-1 capitalize"
             {...rest}>
-            {active ? <MdOutlineRadioButtonChecked /> : <MdOutlineRadioButtonUnchecked />}
             <FormattedMessage id={FILTER_NAME_DISPLAY_MAP[name]} messages={messages} />
+            {active ? <MdOutlineRadioButtonChecked /> : <MdOutlineRadioButtonUnchecked />}
         </span>
     );
 }
@@ -118,8 +119,8 @@ export interface SearchSettingsProps extends BaseCompProps<"div"> {
 export function SearchSettings({ messages, onClickShowFilter }: SearchSettingsProps) {
     return (
         <IconedText onClick={onClickShowFilter}>
-            <TbAdjustmentsHorizontal />
             <FormattedMessage id="anime.search.settings" messages={messages} />
+            <TbAdjustmentsHorizontal />
         </IconedText>
     );
 }

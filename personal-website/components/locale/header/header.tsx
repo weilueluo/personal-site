@@ -13,6 +13,7 @@ import * as dropdown from "../../ui/dropdown";
 import NavItem from "./nav-item";
 import ThemeButton from "./theme-button";
 import IconedText from "@/components/ui/icon-text";
+import "@/components/ui/border.scss";
 
 export default async function Header({ className, messages, locale, ...props }: BaseCompProps<"header">) {
     return (
@@ -25,8 +26,10 @@ export default async function Header({ className, messages, locale, ...props }: 
 
                 <dropdown.Container>
                     <IconedText>
-                        <IoLanguage className="icon-md" />
-                        {LOCALE_DISPLAY_MAP[locale]}
+                        <dropdown.Trigger>
+                            <IoLanguage className="icon-md" />
+                            {LOCALE_DISPLAY_MAP[locale]}
+                        </dropdown.Trigger>
                     </IconedText>
                     <dropdown.Dropdown variant="glass">
                         {(LOCALES ?? []).map(locale => (
@@ -34,8 +37,8 @@ export default async function Header({ className, messages, locale, ...props }: 
                                 key={locale}
                                 locale={locale}
                                 messages={messages}
-                                className="flex flex-row items-center justify-center uppercase">
-                                <span>{LOCALE_DISPLAY_MAP[locale]}</span>
+                                className="flex w-full flex-row items-center justify-center uppercase">
+                                {LOCALE_DISPLAY_MAP[locale]}
                             </NavItem>
                         ))}
                     </dropdown.Dropdown>
@@ -45,44 +48,61 @@ export default async function Header({ className, messages, locale, ...props }: 
 
                 <dropdown.Container>
                     <IconedText>
-                        <IoNavigateCircle className="icon-md" />
-                        <FormattedMessage messages={messages} id={"header.explore"} />
+                        <dropdown.Trigger>
+                            <IoNavigateCircle className="icon-md" />
+                            <span className="grow">
+                                <FormattedMessage messages={messages} id={"header.explore"} />
+                            </span>
+                        </dropdown.Trigger>
                     </IconedText>
                     <dropdown.Dropdown variant="glass" sep={false}>
                         <NavItem locale={locale} messages={messages} href={"/blogs"}>
                             <RiFilePaper2Fill className="icon-md" />
-                            <FormattedMessage messages={messages} id="header.blogs" />
+                            <span className="grow">
+                                <FormattedMessage messages={messages} id="header.blogs" />
+                            </span>
                         </NavItem>
                         <Separator size="sm" />
                         <NavItem locale={locale} messages={messages} href={"/about"}>
                             <RiContactsBook2Fill className="icon-md" />
-                            <FormattedMessage messages={messages} id="header.about" />
+                            <span className="grow">
+                                <FormattedMessage messages={messages} id="header.about" />
+                            </span>
                         </NavItem>
                         <Separator size="sm" />
                         <NavItem locale={locale} messages={messages} href={"/anime"}>
                             <GiClover className="icon-md" />
-                            <FormattedMessage messages={messages} id="header.anime" />
+                            <span className="grow">
+                                <FormattedMessage messages={messages} id="header.anime" />
+                            </span>
                         </NavItem>
                         <Separator size="sm" />
                         <NavItem locale={locale} messages={messages} href={"/rss"}>
                             <IoLayers className="icon-md" />
-                            <FormattedMessage messages={messages} id="header.rss" />
+                            <span className="grow">
+                                <FormattedMessage messages={messages} id="header.rss" />
+                            </span>
                         </NavItem>
 
-                        <Separator
-                            size="sm"
-                            variant="square"
-                            className="mx-0 border-b-2 border-gray-600 dark:border-b-2 dark:border-black"
-                        />
+                        <Separator size="sm" variant="square" className="mx-0" />
 
-                        <NavItem locale={locale} messages={messages} href={GITHUB_CV_URL} target="_blank">
+                        <NavItem
+                            locale={locale}
+                            messages={messages}
+                            href={GITHUB_CV_URL}
+                            target="_blank"
+                            className="flex flex-row">
                             <MdWork className="icon-md" />
-                            <FormattedMessage messages={messages} id="header.cv" />
+                            <span className="grow">
+                                <FormattedMessage messages={messages} id="header.cv" />
+                            </span>
                         </NavItem>
                         <Separator size="sm" />
                         <NavItem locale={locale} messages={messages} href={GITHUB_REPO_URL} target="_blank">
                             <SiGithub className="icon-md" />
-                            <FormattedMessage messages={messages} id="header.source" />
+                            <span className="grow">
+                                <FormattedMessage messages={messages} id="header.source" />
+                            </span>
                         </NavItem>
                     </dropdown.Dropdown>
                 </dropdown.Container>

@@ -182,7 +182,7 @@ function FeedData({ feedData, messages }: { feedData: Feed } & BaseCompProps<"li
     const content = feedData.item.summary || feedData.item.contentSnippet || feedData.item.content;
     const sanitizedContent = content ? sanitize(content) : undefined;
 
-    const date = userConfigs.globalConfigs.showRawDate ? feedData.date?.toISOString() : feedData.date?.toUTCString();
+    const date = userConfigs.globalConfigs.showRawDate ? feedData.date?.toISOString() : feedData.date?.toLocaleString();
     const dateOnClick = (e: React.MouseEvent<HTMLSpanElement>) => {
         e.stopPropagation();
         setShowRawDate(!userConfigs.globalConfigs.showRawDate);
@@ -213,11 +213,11 @@ function FeedData({ feedData, messages }: { feedData: Feed } & BaseCompProps<"li
                                 {feedData.item.title} <ImNewTab className="inline-block" />
                             </h3>
                         </Link>
-                        {/* second row */}
+                        {/* second row: source and date */}
                         <div className="flex flex-row items-center gap-2 text-sm text-gray-600">
                             <Link
                                 href={feedData.config.homeUrl}
-                                className="hover-subtext inline-flex flex-row items-center gap-1 italic hover:cursor-pointer hover:underline"
+                                className="secondary-text secondary-hover inline-flex flex-row items-center gap-1 italic hover:cursor-pointer hover:underline"
                                 target="_blank">
                                 <AiFillTag className="inline-block" />
                                 <FormattedMessage messages={messages} id={feedData.config.title} />
@@ -225,7 +225,7 @@ function FeedData({ feedData, messages }: { feedData: Feed } & BaseCompProps<"li
                             </Link>
                             {date && (
                                 <>
-                                    <span className="hover-subtext flex flex-row items-center gap-1 hover:cursor-default hover:underline">
+                                    <span className="secondary-text secondary-hover flex flex-row items-center gap-1 hover:cursor-default hover:underline">
                                         <AiFillClockCircle className="inline-block" />
                                         <span onClick={dateOnClick} className="italic ">
                                             {date}
@@ -252,7 +252,7 @@ function FeedData({ feedData, messages }: { feedData: Feed } & BaseCompProps<"li
                     className="std-text-size relative mt-1 flex flex-row hover:cursor-pointer">
                     {!showDetails && (
                         <div>
-                            <div className="line-clamp-3 break-normal text-gray-700 animate-in slide-in-from-bottom-4">
+                            <div className="std-text-darker line-clamp-3 break-normal animate-in slide-in-from-bottom-4">
                                 {sanitizedContent ? (
                                     <p dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
                                 ) : (

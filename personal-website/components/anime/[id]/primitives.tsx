@@ -93,7 +93,10 @@ export interface LabelProps extends ComponentPropsWithoutRef<"span"> {
 export const Label = React.forwardRef<ElementRef<"span">, LabelProps>(({ children, className, url, ...rest }, ref) => {
     const label = (
         <span
-            className={tm("std-hover whitespace-nowrap px-2 font-semibold md:whitespace-normal", className)}
+            className={tm(
+                "secondary-text secondary-hover whitespace-nowrap px-2 font-semibold md:whitespace-normal",
+                className
+            )}
             ref={ref}
             {...rest}>
             {children}

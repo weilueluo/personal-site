@@ -9,6 +9,7 @@ import { ImSun } from "react-icons/im/index";
 import styles from "./theme-button.module.scss";
 import { UnResolvedTheme } from "@/shared/theme/theme-utils";
 import { useTheme } from "@/shared/theme/themes";
+import { Trigger2 } from "@/components/ui/dropdown";
 
 const DARK_THEME = "dark";
 const LIGHT_THEME = "light";
@@ -72,7 +73,7 @@ const ThemeButton = React.forwardRef<React.ElementRef<"button">, BaseCompProps<"
                         </PieceContainer>
                     </div>
                 </div>
-                <div className={tm(styles.textContainer, "bg-std-dark")}>
+                <div className={tm(styles.textContainer, "w-20 bg-std-dark")}>
                     <div
                         className={styles.pieces}
                         style={{
@@ -80,12 +81,15 @@ const ThemeButton = React.forwardRef<React.ElementRef<"button">, BaseCompProps<"
                         }}>
                         <PieceContainer>
                             <FormattedMessage id="header.theme.system" messages={messages} />
+                            <Trigger2 />
                         </PieceContainer>
                         <PieceContainer>
                             <FormattedMessage id="header.theme.dark" messages={messages} />
+                            <Trigger2 />
                         </PieceContainer>
                         <PieceContainer>
                             <FormattedMessage id="header.theme.light" messages={messages} />
+                            <Trigger2 />
                         </PieceContainer>
                     </div>
                 </div>
@@ -97,7 +101,7 @@ const ThemeButton = React.forwardRef<React.ElementRef<"button">, BaseCompProps<"
 function PieceContainer({ children }: { children: React.ReactNode }) {
     return (
         <div className={tm(styles.pieceContainer, "std-bg group-hover:bg-std")}>
-            <span>{children}</span>
+            <span className="flex flex-row gap-1">{children}</span>
         </div>
     );
 }

@@ -7,8 +7,8 @@ import { tm } from "@/shared/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { MdExpandMore } from "react-icons/md/index";
 import { VscLoading } from "react-icons/vsc/index";
+import { Trigger } from "../ui/dropdown";
 import IconedText from "../ui/icon-text";
 import { SearchResult } from "./searcher";
 
@@ -69,12 +69,13 @@ export default function SearchResultPage({
                 </h3>
 
                 <IconedText onClick={() => setCollapse(v => !v)}>
-                    <MdExpandMore className="inline-block" />
-                    {collapse ? (
-                        <FormattedMessage id="anime.search.result.expand" messages={messages} />
-                    ) : (
-                        <FormattedMessage id="anime.search.result.collapse" messages={messages} />
-                    )}
+                    <Trigger open={!collapse}>
+                        {collapse ? (
+                            <FormattedMessage id="anime.search.result.expand" messages={messages} />
+                        ) : (
+                            <FormattedMessage id="anime.search.result.collapse" messages={messages} />
+                        )}
+                    </Trigger>
                 </IconedText>
             </div>
 

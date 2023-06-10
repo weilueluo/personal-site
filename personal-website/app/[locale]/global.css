@@ -16,8 +16,19 @@
         @apply text-black dark:text-gray-300;
     }
 
+    .std-text-darker {
+        @apply text-black dark:text-gray-400;
+    }
+
     .std-text-size {
         @apply text-sm md:text-base;
+    }
+
+    .secondary-text {
+        @apply text-sm font-semibold;
+    }
+    .secondary-hover:hover {
+        @apply cursor-default text-std underline;
     }
 
     .text-ssm {
