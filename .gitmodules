@@ -1,0 +1,7 @@
+[submodule "v1"]
+	path = v1
+	url = https://github.com/weilueluo/website
+[submodule "v2"]
+	path = v2
+	url = https://github.com/weilueluo/personal-website
+	branch = v2

@@ -10,7 +10,7 @@ repos:
     hooks:
       - id: eslint
         name: eslint
-        entry: personal-website/scripts/eslint.sh
+        entry: v3/scripts/eslint.sh
         pass_filenames: false
         language: system
         types: [file]

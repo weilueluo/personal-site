@@ -22,8 +22,8 @@ const fetchGithubGraphQLData = async <T>(query: string) => {
             query,
         }),
     })
-        .then((res) => res.json())
-        .then((res) => {
+        .then(res => res.json())
+        .then(res => {
             if (res.errors) {
                 throw new Error(JSON.stringify(res.errors));
             }
@@ -42,7 +42,7 @@ const fetchGithubRestData = async <T>(path: string) => {
         next: {
             revalidate: 60 * 10, // revalidate every 10 minutes
         },
-    }).then((res) => res.json() as T);
+    }).then(res => res.json() as T);
 };
 
 // export const fetchBlogData = async (id: number | string) => {

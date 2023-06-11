@@ -9,7 +9,7 @@ export default function Room(props: React.ComponentPropsWithoutRef<any>) {
     useEffectOnce(() => {
         scene.receiveShadow = true;
         scene.castShadow = true;
-        scene.children.forEach((mesh) => {
+        scene.children.forEach(mesh => {
             mesh.castShadow = true;
             mesh.receiveShadow = true;
         });
