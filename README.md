@@ -26,5 +26,14 @@ npm run start
 - [ ] waifu page
 - [ ] ...
 
+
+### Deploy
+build
+```
+npm i
+npm run build
+```
+serve the `out` dir
+
 ### Feedback
 You are more than welcome to raise an issue :D
