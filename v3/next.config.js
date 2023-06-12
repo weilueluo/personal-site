@@ -35,6 +35,8 @@ const nextConfig = withBundleAnalyzer({
         // eslint ran during pre-commit hooks
         ignoreDuringBuilds: true,
     },
+
+    output: "standalone",
 });
 
 module.exports = nextConfig;
