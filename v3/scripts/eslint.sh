@@ -2,7 +2,7 @@
 
 # a pre-commit hook, used in personal-website/pre-commit-config.yaml
 
-cd personal-website
+cd v3
 tf=$(tempfile)
 npm run lint -- -o $tf --format compact
 lines=$(wc -l < $tf)
