@@ -9,3 +9,7 @@ variable "subnet_1_cidr" {
 variable "subnet_2_cidr" {
   type = string
 }
+
+variable "resource_prefix" {
+  type = string
+}

@@ -1,10 +1,4 @@
-
-
-variable "name" {
-  type = string
-}
-
-variable "access_logs_bucket" {
+variable "resource_prefix" {
   type = string
 }
 
@@ -12,7 +6,7 @@ variable "subnets" {
   type = list(string)
 }
 
-variable "egress_security_groups" {
+variable "target_security_groups" {
   type = list(string)
 }
 
@@ -24,6 +18,10 @@ variable "lb_account_id" {
   type = string
 }
 
-variable "container_port" {
+variable "target_container_port" {
   type = number
+}
+
+variable "ssl_certificate_arn" {
+  type = string
 }

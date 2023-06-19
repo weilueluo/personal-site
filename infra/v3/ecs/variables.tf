@@ -10,14 +10,18 @@ variable "image" {
   type = string
 }
 
-variable "cluster_name" {
-  type = string
-}
-
-variable "load_balancer_target_group_arn" {
+variable "target_group_arn" {
   type = string
 }
 
 variable "container_port" {
   type = number
+}
+
+variable "region" {
+  type = string
+}
+
+variable "resource_prefix" {
+  type = string
 }

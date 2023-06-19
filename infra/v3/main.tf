@@ -5,30 +5,44 @@ locals {
 module "network" {
   source = "./network"
 
-  vpc_cidr      = "10.1.0.0/16"
+  vpc_cidr        = "10.1.0.0/16"
+  resource_prefix = var.resource_prefix
+
   subnet_1_cidr = "10.1.1.0/24"
   subnet_2_cidr = "10.1.2.0/24"
-}
-
-module "ecs" {
-  source = "./ecs"
-
-  cluster_name                   = "v3_cluster"
-  vpc_id                         = module.network.vpc_id
-  service_subnets                = [module.network.subnet_1_id, module.network.subnet_2_id]
-  image                          = "public.ecr.aws/d0l7r8j1/personal-website-v3:latest"
-  container_port                 = local.container_port
-  load_balancer_target_group_arn = module.load_balancer.target_group_arn
 }
 
 module "load_balancer" {
   source = "./load_balancer"
 
-  vpc_id                 = module.network.vpc_id
-  name                   = "v3-load-balancer"
-  access_logs_bucket     = "v3-load-balancer-access-logs"
+  vpc_id          = module.network.vpc_id
+  resource_prefix = var.resource_prefix
+
   subnets                = [module.network.subnet_1_id, module.network.subnet_2_id]
-  egress_security_groups = [module.ecs.service_security_group_id]
+  target_security_groups = [module.ecs.service_security_group_id]
+  target_container_port  = local.container_port
   lb_account_id          = var.lb_account_id
-  container_port         = local.container_port
+  ssl_certificate_arn    = module.route53.ssl_certificate_arn
+}
+
+module "route53" {
+  source = "./route53"
+
+  domain_name = var.domain_name
+  lb_dns_name = module.load_balancer.lb_dns_name
+  lb_zone_id  = module.load_balancer.lb_zone_id
+}
+
+module "ecs" {
+  source = "./ecs"
+
+  vpc_id          = module.network.vpc_id
+  resource_prefix = var.resource_prefix
+
+  image            = "public.ecr.aws/d0l7r8j1/personal-website-v3:latest"
+  service_subnets  = [module.network.subnet_1_id, module.network.subnet_2_id]
+  container_port   = local.container_port
+  target_group_arn = module.load_balancer.target_group_arn
+
+  region = var.region
 }

@@ -8,7 +8,7 @@ resource "aws_subnet" "v3_1" {
   availability_zone = data.aws_availability_zones.available.names[0]
 
   tags = {
-    Name = "v3-subnet-1"
+    Name = "${var.resource_prefix}-subnet-1"
   }
 }
 
@@ -18,6 +18,6 @@ resource "aws_subnet" "v3_2" {
   availability_zone = data.aws_availability_zones.available.names[1]
 
   tags = {
-    Name = "v3-subnet-2"
+    Name = "${var.resource_prefix}-subnet-2"
   }
 }

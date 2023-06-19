@@ -1,5 +1,5 @@
 resource "aws_security_group" "v3_ecs_service" {
-  name        = "v3_ecs_service_security_group"
+  name        = "${var.resource_prefix}-ecs-service-sg"
   description = "Allow personal website v3 traffic"
   vpc_id      = var.vpc_id
 
@@ -20,7 +20,7 @@ resource "aws_security_group" "v3_ecs_service" {
   }
 
   tags = {
-    Name = "v3"
+    Prefix = var.resource_prefix
   }
 
   lifecycle {

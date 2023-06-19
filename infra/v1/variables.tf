@@ -1,3 +1,3 @@
-variable "bucket_name" {
+variable "resource_prefix" {
   type = string
 }

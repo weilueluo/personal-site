@@ -1,5 +1,5 @@
 
 
 locals {
-  container_name = "v3_container"
+  container_name = "${var.resource_prefix}-container"
 }

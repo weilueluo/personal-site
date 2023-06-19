@@ -1,5 +1,5 @@
 resource "aws_ecs_service" "v3" {
-  name            = "v3_service"
+  name            = "${var.resource_prefix}-service"
   cluster         = aws_ecs_cluster.v3.id
   task_definition = aws_ecs_task_definition.v3.arn
   desired_count   = 1
@@ -24,7 +24,7 @@ resource "aws_ecs_service" "v3" {
   }
 
   load_balancer {
-    target_group_arn = var.load_balancer_target_group_arn
+    target_group_arn = var.target_group_arn
     container_name   = local.container_name
     container_port   = var.container_port
   }

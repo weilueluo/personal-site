@@ -1,6 +1,6 @@
 
 # resource "aws_s3_bucket" "access_logs" {
-#   bucket = var.access_logs_bucket
+#   bucket = 
 # }
 
 # resource "aws_s3_bucket_server_side_encryption_configuration" "v3" {

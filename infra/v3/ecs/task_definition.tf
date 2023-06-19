@@ -1,5 +1,5 @@
 resource "aws_ecs_task_definition" "v3" {
-  family                   = "v3-family"
+  family                   = "${var.resource_prefix}-family"
   cpu                      = 256
   memory                   = 512
   requires_compatibilities = ["FARGATE"]
@@ -21,9 +21,9 @@ resource "aws_ecs_task_definition" "v3" {
       logDriver = "awslogs"
       options = {
         awslogs-create-group  = "true",
-        awslogs-group         = "personal-website-v3-log-group"
-        awslogs-region        = "eu-west-2"
-        awslogs-stream-prefix = "personal-website-v3-stream"
+        awslogs-group         = "${var.resource_prefix}-lg"
+        awslogs-region        = var.region
+        awslogs-stream-prefix = var.resource_prefix
       }
     }
     essential = true

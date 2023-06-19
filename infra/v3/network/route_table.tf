@@ -2,7 +2,7 @@ resource "aws_internet_gateway" "v3" {
   vpc_id = aws_vpc.v3.id
 
   tags = {
-    Name = "v3"
+    Name = var.resource_prefix
   }
 }
 
@@ -13,7 +13,7 @@ resource "aws_route_table" "v3" {
     gateway_id = aws_internet_gateway.v3.id
   }
   tags = {
-    "Name" = "v3"
+    Name = var.resource_prefix
   }
 }
 

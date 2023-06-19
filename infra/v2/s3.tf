@@ -1,6 +1,6 @@
 
 resource "aws_s3_bucket" "v2" {
-  bucket = var.bucket_name
+  bucket = "${var.resource_prefix}-lwl-personal-website"
 }
 
 resource "aws_s3_bucket_website_configuration" "v2" {
