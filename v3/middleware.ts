@@ -11,7 +11,15 @@ function getLocale(request: NextRequest) {
         headers[key] = value;
     });
     const languages = new Negotiator({ headers }).languages();
-    return match(languages, LOCALES, DEFAULT_LOCALE);
+    try {
+        return match(languages, LOCALES, DEFAULT_LOCALE);
+    } catch (e) {
+        // https://github.com/formatjs/formatjs/discussions/2440
+        // this happens when languages is not in locales but it is correct format
+        console.error("locale error", e);
+        console.error("headers", headers);
+        return DEFAULT_LOCALE;
+    }
 }
 
 export function middleware(request: NextRequest) {

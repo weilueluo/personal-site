@@ -1,6 +1,6 @@
 
 resource "aws_s3_bucket" "v2" {
-  bucket = "luoweilue-personal-website-v2"
+  bucket = var.bucket_name
 }
 
 resource "aws_s3_bucket_website_configuration" "v2" {
