@@ -1,3 +1,4 @@
+from pprint import pprint
 from deep_translator import GoogleTranslator
 import json
 from copy import deepcopy
@@ -13,8 +14,12 @@ SOURCE = ('../../public/messages/en.json', 'en')
 TARGETS = [
     ('../../public/messages/zh.json', 'zh-CN'),
     ('../../public/messages/jp.json', 'ja'),
+    ('../../public/messages/hi.json', 'hi'),
+    ('../../public/messages/iw.json', 'iw'),
 ]
 
+def langs():
+    pprint(GoogleTranslator().get_supported_languages(as_dict=True))
 
 def main():
     

@@ -18,3 +18,4 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 main = "translate:main"
+langs = "translate:langs"
