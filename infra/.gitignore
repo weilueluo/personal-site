@@ -35,3 +35,5 @@ terraform.rc
 
 
 ssh.pkey.pem
+
+plan.json
