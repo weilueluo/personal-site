@@ -17,3 +17,7 @@ variable "domain_name" {
 variable "image" {
   type = string
 }
+
+variable "health_check_path" {
+  type = string
+}

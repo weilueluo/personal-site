@@ -25,3 +25,7 @@ variable "target_container_port" {
 variable "ssl_certificate_arn" {
   type = string
 }
+
+variable "health_check_path" {
+  type = string
+}

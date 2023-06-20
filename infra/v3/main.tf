@@ -23,6 +23,7 @@ module "load_balancer" {
   target_container_port  = local.container_port
   # lb_account_id          = var.lb_account_id
   ssl_certificate_arn = module.route53.ssl_certificate_arn
+  health_check_path   = var.health_check_path
 }
 
 module "route53" {

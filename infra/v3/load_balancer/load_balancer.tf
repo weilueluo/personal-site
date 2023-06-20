@@ -24,7 +24,7 @@ resource "aws_lb_target_group" "v3" {
   target_type = "ip"
 
   health_check {
-    path = "/api/health"
+    path = var.health_check_path
   }
 }
 
@@ -48,15 +48,11 @@ resource "aws_lb_listener" "HTTP" {
   protocol          = "HTTP"
 
   default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.v3.arn
+    type = "redirect"
+    redirect {
+      status_code = "HTTP_301" # permanent redirect
+      protocol    = "HTTPS"
+      port        = 443
+    }
   }
 }
-
-moved {
-  from = aws_lb_listener.v3
-  to   = aws_lb_listener.HTTP
-}
-
-
-
