@@ -1,6 +1,6 @@
-variable "lb_account_id" {
-  type = string
-}
+# variable "lb_account_id" {
+#   type = string
+# }
 
 variable "region" {
   type = string
@@ -11,5 +11,9 @@ variable "resource_prefix" {
 }
 
 variable "domain_name" {
+  type = string
+}
+
+variable "image" {
   type = string
 }

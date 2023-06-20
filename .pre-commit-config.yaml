@@ -16,3 +16,7 @@ repos:
         language: system
         types: [file]
         files: \.[jt]sx?$ # *.js, *.jsx, *.ts and *.tsx
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: "v1.81.0"
+    hooks:
+      - id: terraform_fmt

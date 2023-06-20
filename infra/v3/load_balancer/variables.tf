@@ -14,9 +14,9 @@ variable "vpc_id" {
   type = string
 }
 
-variable "lb_account_id" {
-  type = string
-}
+# variable "lb_account_id" {
+#   type = string
+# }
 
 variable "target_container_port" {
   type = number

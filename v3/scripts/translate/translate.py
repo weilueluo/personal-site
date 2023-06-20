@@ -16,6 +16,7 @@ TARGETS = [
     ('../../public/messages/jp.json', 'ja'),
     ('../../public/messages/hi.json', 'hi'),
     ('../../public/messages/iw.json', 'iw'),
+    ('../../public/messages/tw.json', 'zh-TW'),
 ]
 
 def langs():

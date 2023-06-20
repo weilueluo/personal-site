@@ -21,8 +21,8 @@ module "load_balancer" {
   subnets                = [module.network.subnet_1_id, module.network.subnet_2_id]
   target_security_groups = [module.ecs.service_security_group_id]
   target_container_port  = local.container_port
-  lb_account_id          = var.lb_account_id
-  ssl_certificate_arn    = module.route53.ssl_certificate_arn
+  # lb_account_id          = var.lb_account_id
+  ssl_certificate_arn = module.route53.ssl_certificate_arn
 }
 
 module "route53" {
@@ -39,7 +39,7 @@ module "ecs" {
   vpc_id          = module.network.vpc_id
   resource_prefix = var.resource_prefix
 
-  image            = "public.ecr.aws/d0l7r8j1/personal-website-v3:latest"
+  image            = var.image
   service_subnets  = [module.network.subnet_1_id, module.network.subnet_2_id]
   container_port   = local.container_port
   target_group_arn = module.load_balancer.target_group_arn
