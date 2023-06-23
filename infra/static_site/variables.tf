@@ -1,0 +1,15 @@
+variable "resource_prefix" {
+  type = string
+}
+
+variable "ssl_certificate_arn" {
+  type = string
+}
+
+variable "domain_name" {
+  type = string
+}
+
+variable "zone_name" {
+  type = string
+}

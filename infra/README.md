@@ -18,6 +18,7 @@ This infra package contains code for hosting personal website v1/v2/v3 on aws.
 #### Notes
 For the url you want to deploy v3, you should have a hosted zone.
 
+- If you see error in apply: AccessControlListNotSupported, just plan and apply again
 
 ### Utilities
 **get task arns**
