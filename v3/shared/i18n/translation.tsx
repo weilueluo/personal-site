@@ -6,7 +6,7 @@ export async function fetchMessages(locale: string): Promise<Messages> {
     if (!locale) {
         throw new Error(`locale is nullish: ${locale}`);
     }
-    const messages = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/i18n/${locale}`, {
+    const messages = await fetch(`http://localhost:3000/api/i18n/${locale}`, {
         next: {
             revalidate: readDefaultRevalidate(),
         },

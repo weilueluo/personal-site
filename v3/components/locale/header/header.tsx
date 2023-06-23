@@ -1,8 +1,11 @@
+import "@/components/ui/border.scss";
+import IconedText from "@/components/ui/icon-text";
 import Separator from "@/components/ui/separator";
-import { GITHUB_CV_URL, GITHUB_REPO_URL, LOCALES, LOCALE_DISPLAY_MAP, V1_URL, V2_URL } from "@/shared/constants";
+import { GITHUB_CV_URL, GITHUB_REPO_URL, LOCALES, LOCALE_DISPLAY_MAP } from "@/shared/constants";
 import { FormattedMessage } from "@/shared/i18n/translation";
 import { BaseCompProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
+import { FaRegClone } from "react-icons/fa/index";
 import { GiClover } from "react-icons/gi/index";
 import { ImHome } from "react-icons/im/index";
 import { IoLanguage, IoLayers, IoNavigateCircle } from "react-icons/io5/index";
@@ -12,8 +15,6 @@ import { SiGithub } from "react-icons/si/index";
 import * as dropdown from "../../ui/dropdown";
 import NavItem from "./nav-item";
 import ThemeButton from "./theme-button";
-import IconedText from "@/components/ui/icon-text";
-import "@/components/ui/border.scss";
 
 export default async function Header({ className, messages, locale, ...props }: BaseCompProps<"header">) {
     return (
@@ -105,15 +106,16 @@ export default async function Header({ className, messages, locale, ...props }: 
                             </span>
                         </NavItem>
                         <Separator size="sm" />
-                        <NavItem locale={locale} messages={messages} href={V1_URL} target="_blank">
-                            <SiGithub className="icon-md" />
+                        {/* v1 and v2 domain are redirected in route53 */}
+                        <NavItem locale={locale} messages={messages} domain="v1" target="_blank">
+                            <FaRegClone className="icon-md" />
                             <span className="grow">
                                 <FormattedMessage messages={messages} id="header.v1" />
                             </span>
                         </NavItem>
                         <Separator size="sm" />
-                        <NavItem locale={locale} messages={messages} href={V2_URL} target="_blank">
-                            <SiGithub className="icon-md" />
+                        <NavItem locale={locale} messages={messages} domain={"v2"} target="_blank">
+                            <FaRegClone className="icon-md" />
                             <span className="grow">
                                 <FormattedMessage messages={messages} id="header.v2" />
                             </span>
