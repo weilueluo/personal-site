@@ -22,9 +22,11 @@ export const Card = React.forwardRef<ElementRef<"div">, CardProps>(
                 className="group hover:cursor-pointer hover:underline"
                 target="_blank"
                 onMouseOver={() => setHover(true)}
-                onMouseOut={() => setHover(false)}>
+                onMouseLeave={() => setHover(false)}>
                 <div ref={ref} className={tm("relative w-20 shrink-0 md:w-28", className)} {...rest}>
-                    {hover && <ImNewTab className="pointer-events-none absolute right-0 top-0 z-10 bg-white" />}
+                    {hover && (
+                        <ImNewTab className="pointer-events-none absolute right-0 top-0 z-10 bg-white text-black" />
+                    )}
 
                     <ProgressiveImage
                         srcs={srcs}
@@ -61,9 +63,9 @@ export const Section = React.forwardRef<ElementRef<"div">, ComponentPropsWithout
         return (
             <div className={tm("flex flex-col", className)} ref={ref} {...rest}>
                 <div className="mb-1 flex flex-row gap-2">
-                    <div className="mb-2 grow border-b border-black"></div>
+                    <div className="mb-2 grow border-b border-black dark:border-white"></div>
                     <h3 className="text-xl font-semibold">{title}</h3>
-                    <div className="mb-2 grow border-b border-black"></div>
+                    <div className="mb-2 grow border-b border-black dark:border-white"></div>
                 </div>
                 {children}
             </div>
@@ -94,7 +96,7 @@ export const Label = React.forwardRef<ElementRef<"span">, LabelProps>(({ childre
     const label = (
         <span
             className={tm(
-                "secondary-text secondary-hover whitespace-nowrap px-2 font-semibold md:whitespace-normal",
+                "secondary-text secondary-hover whitespace-nowrap px-2 py-1 font-semibold md:whitespace-normal",
                 className
             )}
             ref={ref}

@@ -67,6 +67,8 @@
     "header.theme.dark": "黑暗的",
     "header.theme.light": "光",
     "header.theme.system": "系統",
+    "header.v1": "版本。 1",
+    "header.v2": "版本。 2",
     "index.title": "你好世界！",
     "rss.displayed_all": "~ 顯示所有 {size} 提要 ~",
     "rss.title.bbc_news": "英國廣播公司的新聞",

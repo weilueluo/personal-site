@@ -19,18 +19,16 @@ const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(({ href, locale, chi
     href = useResolvedHref(href, locale);
 
     return (
-        <Link
-            href={href}
-            locale={locale}
-            className={tm("relative", className)}
-            ref={ref}
-            onMouseEnter={() => setHover(true)}
-            onMouseOut={() => setHover(false)}
-            {...rest}>
+        <Link href={href} locale={locale} className={tm("relative", className)} ref={ref} {...rest}>
             {useNewTabIcon && hover && (
                 <ImNewTab className="pointer-events-none absolute right-0 top-0 z-10 bg-white text-black" />
             )}
-            <IconedText className="flex w-full flex-row justify-center">{children}</IconedText>
+            <IconedText
+                className="flex w-full flex-row justify-center"
+                onMouseOver={() => setHover(true)}
+                onMouseLeave={() => setHover(false)}>
+                {children}
+            </IconedText>
         </Link>
     );
 });

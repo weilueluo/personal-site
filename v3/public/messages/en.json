@@ -67,6 +67,8 @@
     "header.theme.dark": "Dark",
     "header.theme.light": "Light",
     "header.theme.system": "System",
+    "header.v1": "Ver. 1",
+    "header.v2": "Ver. 2",
     "index.title": "Hello World!",
     "rss.displayed_all": "~ displayed all {size} feeds ~",
     "rss.title.bbc_news": "BBC News",

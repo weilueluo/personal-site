@@ -1,5 +1,5 @@
 import Separator from "@/components/ui/separator";
-import { GITHUB_CV_URL, GITHUB_REPO_URL, LOCALES, LOCALE_DISPLAY_MAP } from "@/shared/constants";
+import { GITHUB_CV_URL, GITHUB_REPO_URL, LOCALES, LOCALE_DISPLAY_MAP, V1_URL, V2_URL } from "@/shared/constants";
 import { FormattedMessage } from "@/shared/i18n/translation";
 import { BaseCompProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
@@ -102,6 +102,20 @@ export default async function Header({ className, messages, locale, ...props }: 
                             <SiGithub className="icon-md" />
                             <span className="grow">
                                 <FormattedMessage messages={messages} id="header.source" />
+                            </span>
+                        </NavItem>
+                        <Separator size="sm" />
+                        <NavItem locale={locale} messages={messages} href={V1_URL} target="_blank">
+                            <SiGithub className="icon-md" />
+                            <span className="grow">
+                                <FormattedMessage messages={messages} id="header.v1" />
+                            </span>
+                        </NavItem>
+                        <Separator size="sm" />
+                        <NavItem locale={locale} messages={messages} href={V2_URL} target="_blank">
+                            <SiGithub className="icon-md" />
+                            <span className="grow">
+                                <FormattedMessage messages={messages} id="header.v2" />
                             </span>
                         </NavItem>
                     </dropdown.Dropdown>

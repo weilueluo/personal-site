@@ -67,6 +67,8 @@
     "header.theme.dark": "黑暗",
     "header.theme.light": "光明",
     "header.theme.system": "系统",
+    "header.v1": "版本。 1",
+    "header.v2": "版本。 2",
     "index.title": "你好世界！",
     "rss.displayed_all": "~ 已显示所有 {size} 件提要 ~",
     "rss.title.bbc_news": "BBC新闻",

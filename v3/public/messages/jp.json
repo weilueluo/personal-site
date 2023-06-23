@@ -67,6 +67,8 @@
     "header.theme.dark": "暗い",
     "header.theme.light": "ライト",
     "header.theme.system": "系统",
+    "header.v1": "Ver. 1",
+    "header.v2": "Ver. 2",
     "index.title": "「こんにちは世界」",
     "rss.displayed_all": "~ すべての {size} フィードを表示しました ~",
     "rss.title.bbc_news": "BBCのニュース",
