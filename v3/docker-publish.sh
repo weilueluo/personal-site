@@ -2,7 +2,7 @@
 
 set -xeuo pipefail
 
-TAG="1.0.0"
+TAG=${1:-latest}
 
 aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/d0l7r8j1
 docker build -t personal-website-v3 .

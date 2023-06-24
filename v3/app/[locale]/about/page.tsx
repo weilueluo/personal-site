@@ -5,9 +5,9 @@ import {
     SiReact,
     SiSass,
     SiTailwindcss,
+    SiTerraform,
     SiThreedotjs,
     SiTypescript,
-    SiVercel,
 } from "react-icons/si/index";
 
 import { FormattedMessage, fetchMessages } from "@/shared/i18n/translation";
@@ -57,8 +57,8 @@ export default async function Page({ params }: BasePageProps) {
                         <Item name="AWS" className="group" href="https://aws.amazon.com/">
                             <SiAmazonaws size="2rem" className="group-hover:animate-spin" />
                         </Item>
-                        <Item name="Vercel" className="group" href="https://vercel.com/">
-                            <SiVercel size="2rem" className="group-hover:animate-spin" />
+                        <Item name="Terraform" className="group" href="https://www.terraform.io/">
+                            <SiTerraform size="2rem" className="group-hover:animate-spin" />
                         </Item>
                         <Item
                             name="Github"

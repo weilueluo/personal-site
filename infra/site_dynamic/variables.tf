@@ -7,6 +7,10 @@ variable "resource_prefix" {
 }
 
 variable "domain_name" {
+  type = string
+}
+
+variable "zone_name" {
   type        = string
   description = "zone name to create records and certificate for ssl"
 }

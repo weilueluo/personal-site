@@ -7,10 +7,7 @@
 
 ## Providers
 
-| Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.67.0 |
-| <a name="provider_aws.ue1"></a> [aws.ue1](#provider\_aws.ue1) | 4.67.0 |
+No providers.
 
 ## Modules
 
@@ -22,11 +19,7 @@
 
 ## Resources
 
-| Name | Type |
-|------|------|
-| [aws_acm_certificate.v1_v2](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acm_certificate) | resource |
-| [aws_route53_record.dns_validation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
-| [aws_route53_zone.zone](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/route53_zone) | data source |
+No resources.
 
 ## Inputs
 

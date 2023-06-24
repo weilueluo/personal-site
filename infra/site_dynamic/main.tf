@@ -26,6 +26,7 @@ module "route53" {
   source = "./route53"
 
   domain_name = var.domain_name
+  zone_name   = var.zone_name
   lb_dns_name = module.load_balancer.lb_dns_name
   lb_zone_id  = module.load_balancer.lb_zone_id
 }
