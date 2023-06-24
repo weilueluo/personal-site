@@ -4,6 +4,10 @@ output "bucket_name" {
   value = aws_s3_bucket_website_configuration.ss.bucket
 }
 
-output "website_endpoint" {
-  value = aws_s3_bucket_website_configuration.ss.website_endpoint
+output "cloudfront_domain_name" {
+  value = aws_cloudfront_distribution.ss.domain_name
+}
+
+output "domain_name" {
+  value = var.domain_name
 }
