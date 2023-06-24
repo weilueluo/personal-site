@@ -1,7 +1,3 @@
-locals {
-  container_port = 3000
-}
-
 module "network" {
   source = "./network"
 
@@ -20,7 +16,7 @@ module "load_balancer" {
 
   subnets                = [module.network.subnet_1_id, module.network.subnet_2_id]
   target_security_groups = [module.ecs.service_security_group_id]
-  target_container_port  = local.container_port
+  target_container_port  = var.container_port
   ssl_certificate_arn    = module.route53.ssl_certificate_arn
   health_check_path      = var.health_check_path
   # lb_account_id          = var.lb_account_id
@@ -42,7 +38,7 @@ module "ecs" {
 
   image            = var.image
   service_subnets  = [module.network.subnet_1_id, module.network.subnet_2_id]
-  container_port   = local.container_port
+  container_port   = var.container_port
   target_group_arn = module.load_balancer.target_group_arn
 
   region = var.region

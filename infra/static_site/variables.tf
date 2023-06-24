@@ -11,5 +11,6 @@ variable "domain_name" {
 }
 
 variable "zone_name" {
-  type = string
+  type        = string
+  description = "zone name to host the site, will create records in it"
 }

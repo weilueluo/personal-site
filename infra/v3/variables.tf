@@ -21,3 +21,7 @@ variable "image" {
 variable "health_check_path" {
   type = string
 }
+
+variable "container_port" {
+  type = number
+}

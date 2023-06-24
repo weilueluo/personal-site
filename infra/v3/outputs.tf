@@ -9,3 +9,7 @@ output "network" {
 output "load_balancer" {
   value = module.load_balancer
 }
+
+output "route53" {
+  value = module.route53
+}

@@ -35,5 +35,6 @@ module "v3" {
   region            = local.region
   domain_name       = local.domain_name
   image             = "public.ecr.aws/d0l7r8j1/personal-website-v3:1.0.0"
+  container_port    = 3000
   health_check_path = "/api/health"
 }
