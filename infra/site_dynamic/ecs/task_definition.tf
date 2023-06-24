@@ -1,3 +1,5 @@
+data "aws_region" "current" {}
+
 resource "aws_ecs_task_definition" "v3" {
   family                   = "${var.resource_prefix}-family"
   cpu                      = 256
@@ -22,7 +24,7 @@ resource "aws_ecs_task_definition" "v3" {
       options = {
         awslogs-create-group  = "true",
         awslogs-group         = "${var.resource_prefix}-lg"
-        awslogs-region        = var.region
+        awslogs-region        = data.aws_region.current.name
         awslogs-stream-prefix = var.resource_prefix
       }
     }

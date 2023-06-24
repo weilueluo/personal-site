@@ -18,10 +18,6 @@ variable "container_port" {
   type = number
 }
 
-variable "region" {
-  type = string
-}
-
 variable "resource_prefix" {
   type = string
 }

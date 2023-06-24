@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 module "v1" {
-  source              = "./static_site"
+  source              = "./site_static"
   resource_prefix     = "v1"
   domain_name         = "v1.${local.domain_name}"
   zone_name           = local.domain_name
@@ -20,7 +20,7 @@ module "v1" {
 }
 
 module "v2" {
-  source              = "./static_site"
+  source              = "./site_static"
   resource_prefix     = "v2"
   domain_name         = "v2.${local.domain_name}"
   zone_name           = local.domain_name
@@ -28,11 +28,10 @@ module "v2" {
 }
 
 module "v3" {
-  source          = "./v3"
+  source          = "./site_dynamic"
   resource_prefix = "v3"
 
   # lb_account_id = "652711504416" # for "eu-west-2" region, check https://docs.aws.amazon.com/elasticloadbalancing/latest/application/enable-access-logging.html
-  region      = local.region
   domain_name = local.domain_name
 
   image             = "public.ecr.aws/d0l7r8j1/personal-website-v3:1.0.0"

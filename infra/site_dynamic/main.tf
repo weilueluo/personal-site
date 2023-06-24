@@ -37,9 +37,7 @@ module "ecs" {
   resource_prefix = var.resource_prefix
 
   image            = var.image
-  service_subnets  = [module.network.subnet_1_id, module.network.subnet_2_id]
   container_port   = var.container_port
+  service_subnets  = [module.network.subnet_1_id, module.network.subnet_2_id]
   target_group_arn = module.load_balancer.target_group_arn
-
-  region = var.region
 }

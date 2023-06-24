@@ -16,9 +16,9 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_v1"></a> [v1](#module\_v1) | ./static_site | n/a |
-| <a name="module_v2"></a> [v2](#module\_v2) | ./static_site | n/a |
-| <a name="module_v3"></a> [v3](#module\_v3) | ./v3 | n/a |
+| <a name="module_v1"></a> [v1](#module\_v1) | ./site_static | n/a |
+| <a name="module_v2"></a> [v2](#module\_v2) | ./site_static | n/a |
+| <a name="module_v3"></a> [v3](#module\_v3) | ./site_dynamic | n/a |
 
 ## Resources
 
