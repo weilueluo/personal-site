@@ -7,7 +7,6 @@ repos:
           - prettier@2.8.4
           - prettier-plugin-tailwindcss@0.2.4
         files: ^v3/
-        fail_fast: true
   - repo: local
     hooks:
       - id: eslint
@@ -17,7 +16,6 @@ repos:
         language: system
         types: [file]
         files: \.[jt]sx?$ # *.js, *.jsx, *.ts and *.tsx
-        failfast: true
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: "v1.81.0"
     hooks:
@@ -27,4 +25,4 @@ repos:
     rev: "v0.16.0"
     hooks:
       - id: terraform-docs-go
-        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infra"]
+        args: ["markdown", "table", "--recursive", "--recursive-path", "", "--output-file", "TERRAFORM_DOCS.md", "./infra"]
