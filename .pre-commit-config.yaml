@@ -25,4 +25,4 @@ repos:
     rev: "v0.16.0"
     hooks:
       - id: terraform-docs-go
-        args: ["markdown", "table", "--recursive", "--recursive-path", "", "--output-file", "TERRAFORM_DOCS.md", "./infra"]
+        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infra"]
