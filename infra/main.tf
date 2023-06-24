@@ -7,6 +7,11 @@ terraform {
   }
 }
 
+locals {
+  region      = "eu-west-2"
+  domain_name = "llwll.net"
+}
+
 provider "aws" {
   region = local.region
 }
@@ -32,7 +37,23 @@ module "v3" {
   zone_name       = local.domain_name
 
   image             = "public.ecr.aws/d0l7r8j1/personal-website-v3:0.0.1"
-  container_port    = 3000
+  port              = 3000
   health_check_path = "/api/health"
+  cpu               = 256
+  memory            = 512
   # lb_account_id = "652711504416" # for "eu-west-2" region, check https://docs.aws.amazon.com/elasticloadbalancing/latest/application/enable-access-logging.html
+}
+
+module "luoweilue_com_redirect" {
+  source = "./redirect"
+
+  from_domain = "luoweilue.com"
+  to_domain   = local.domain_name
+}
+
+module "weilueluo_com_redirect" {
+  source = "./redirect"
+
+  from_domain = "weilueluo.com"
+  to_domain   = local.domain_name
 }

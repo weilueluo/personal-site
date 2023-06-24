@@ -1,11 +1,12 @@
 module "network" {
   source = "./network"
 
-  vpc_cidr        = "10.1.0.0/16"
-  resource_prefix = var.resource_prefix
-
-  subnet_1_cidr = "10.1.1.0/24"
-  subnet_2_cidr = "10.1.2.0/24"
+  resource_prefix       = var.resource_prefix
+  vpc_cidr              = "10.1.0.0/16"
+  public_subnet_1_cidr  = "10.1.1.0/24"
+  public_subnet_2_cidr  = "10.1.2.0/24"
+  private_subnet_1_cidr = "10.1.3.0/24"
+  private_subnet_2_cidr = "10.1.4.0/24"
 }
 
 module "load_balancer" {
@@ -14,11 +15,11 @@ module "load_balancer" {
   vpc_id          = module.network.vpc_id
   resource_prefix = var.resource_prefix
 
-  subnets                = [module.network.subnet_1_id, module.network.subnet_2_id]
-  target_security_groups = [module.ecs.service_security_group_id]
-  target_container_port  = var.container_port
-  ssl_certificate_arn    = module.route53.ssl_certificate_arn
-  health_check_path      = var.health_check_path
+  subnets             = [module.network.public_subnet_1_id, module.network.public_subnet_2_id]
+  target_sg           = [module.ecs.service_sg_id]
+  target_port         = var.port
+  ssl_certificate_arn = module.route53.ssl_certificate_arn
+  health_check_path   = var.health_check_path
   # lb_account_id          = var.lb_account_id
 }
 
@@ -37,8 +38,10 @@ module "ecs" {
   vpc_id          = module.network.vpc_id
   resource_prefix = var.resource_prefix
 
-  image            = var.image
-  container_port   = var.container_port
-  service_subnets  = [module.network.subnet_1_id, module.network.subnet_2_id]
-  target_group_arn = module.load_balancer.target_group_arn
+  image   = var.image
+  port    = var.port
+  subnets = [module.network.private_subnet_1_id, module.network.private_subnet_2_id]
+  tg_arn  = module.load_balancer.tg_arn
+  cpu     = var.cpu
+  memory  = var.memory
 }

@@ -6,7 +6,7 @@ variable "subnets" {
   type = list(string)
 }
 
-variable "target_security_groups" {
+variable "target_sg" {
   type = list(string)
 }
 
@@ -18,7 +18,7 @@ variable "vpc_id" {
 #   type = string
 # }
 
-variable "target_container_port" {
+variable "target_port" {
   type = number
 }
 

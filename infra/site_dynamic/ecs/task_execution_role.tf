@@ -1,4 +1,4 @@
-data "aws_iam_policy_document" "v3_assume_role_policy_document" {
+data "aws_iam_policy_document" "ecs_task_assume_role" {
   statement {
     actions = ["sts:AssumeRole"]
 
@@ -9,12 +9,30 @@ data "aws_iam_policy_document" "v3_assume_role_policy_document" {
   }
 }
 
-resource "aws_iam_role" "v3_task_execution_role" {
+data "aws_iam_policy_document" "ecs_task_pull_from_ecr" {
+  statement {
+    actions = [
+      "ecr:BatchGetImage",
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:GetAuthorizationToken"
+    ]
+    effect    = "Allow"
+    resources = ["*"]
+  }
+}
+
+
+resource "aws_iam_role" "task_execution" {
   name               = "${var.resource_prefix}-task-execution-role"
-  assume_role_policy = data.aws_iam_policy_document.v3_assume_role_policy_document.json
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_assume_role.json
 
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
-    "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess",
+    "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
   ]
+
+  inline_policy {
+    name   = "allow-pull-from-ecr"
+    policy = data.aws_iam_policy_document.ecs_task_pull_from_ecr.json
+  }
 }

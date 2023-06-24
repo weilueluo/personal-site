@@ -1,5 +1,5 @@
 
-resource "aws_ecs_cluster" "v3" {
+resource "aws_ecs_cluster" "cluster" {
   name = "${var.resource_prefix}-cluster"
 
   setting {
@@ -9,7 +9,7 @@ resource "aws_ecs_cluster" "v3" {
 }
 
 resource "aws_ecs_cluster_capacity_providers" "v3" {
-  cluster_name = aws_ecs_cluster.v3.name
+  cluster_name = aws_ecs_cluster.cluster.name
 
   capacity_providers = ["FARGATE"]
 

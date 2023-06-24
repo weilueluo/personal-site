@@ -1,6 +1,6 @@
 
 
-resource "aws_security_group" "v3_load_balancer_security_group" {
+resource "aws_security_group" "lb_sg" {
   name   = "${var.resource_prefix}-lb-sg"
   vpc_id = var.vpc_id
 
@@ -21,11 +21,11 @@ resource "aws_security_group" "v3_load_balancer_security_group" {
   }
 
   egress {
-    description     = "HTTP"
-    from_port       = var.target_container_port
-    to_port         = var.target_container_port
+    description     = "Allow HTTP from/to target group"
+    from_port       = var.target_port
+    to_port         = var.target_port
     protocol        = "tcp"
-    security_groups = var.target_security_groups
+    security_groups = var.target_sg
   }
 
   lifecycle {

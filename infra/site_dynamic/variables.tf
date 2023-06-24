@@ -24,7 +24,15 @@ variable "health_check_path" {
   type = string
 }
 
-variable "container_port" {
+variable "port" {
   type        = number
   description = "port to expose in fargate container, also connected to target group"
+}
+
+variable "cpu" {
+  type = number
+}
+
+variable "memory" {
+  type = number
 }
