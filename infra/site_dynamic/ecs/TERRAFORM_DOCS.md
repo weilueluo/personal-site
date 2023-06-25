@@ -46,6 +46,7 @@ No modules.
 |------|-------------|
 | <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | n/a |
 | <a name="output_container_name"></a> [container\_name](#output\_container\_name) | n/a |
+| <a name="output_image"></a> [image](#output\_image) | n/a |
 | <a name="output_service_name"></a> [service\_name](#output\_service\_name) | n/a |
 | <a name="output_service_sg_id"></a> [service\_sg\_id](#output\_service\_sg\_id) | security group id for the ECS service, used to allow traffic from the load balancer |
 <!-- END_TF_DOCS -->

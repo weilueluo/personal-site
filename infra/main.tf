@@ -9,7 +9,7 @@ terraform {
 
 locals {
   region      = "eu-west-2"
-  domain_name = "llwll.net"
+  domain_name = "wll.dev"
 }
 
 provider "aws" {
@@ -18,14 +18,14 @@ provider "aws" {
 
 module "v1" {
   source          = "./site_static"
-  resource_prefix = "v1"
+  resource_prefix = "v1-lwl"
   domain_name     = "v1.${local.domain_name}"
   zone_name       = local.domain_name
 }
 
 module "v2" {
   source          = "./site_static"
-  resource_prefix = "v2"
+  resource_prefix = "v2-lwl"
   domain_name     = "v2.${local.domain_name}"
   zone_name       = local.domain_name
 }
@@ -36,7 +36,7 @@ module "v3" {
   domain_name     = local.domain_name
   zone_name       = local.domain_name
 
-  image             = "public.ecr.aws/d0l7r8j1/personal-website-v3:0.0.1"
+  image             = var.image
   port              = 3000
   health_check_path = "/api/health"
   cpu               = 256

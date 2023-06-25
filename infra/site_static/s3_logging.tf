@@ -1,10 +1,6 @@
 
 resource "aws_s3_bucket" "logging" {
   bucket = "${var.resource_prefix}-lwl-personal-website-logging"
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "aws_s3_bucket_policy" "logging" {
@@ -31,6 +27,8 @@ resource "aws_s3_bucket_ownership_controls" "logging" {
 resource "aws_s3_bucket_acl" "logging" {
   bucket = aws_s3_bucket.logging.id
   acl    = "private"
+
+  depends_on = [aws_s3_bucket_ownership_controls.logging]
 }
 
 data "aws_iam_policy_document" "logging" {

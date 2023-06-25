@@ -1,10 +1,6 @@
 
 resource "aws_s3_bucket" "ss" {
-  bucket = "${var.resource_prefix}-lwl-personal-website"
-
-  lifecycle {
-    prevent_destroy = true
-  }
+  bucket = "${var.resource_prefix}-static-website"
 }
 
 resource "aws_s3_bucket_website_configuration" "ss" {
@@ -39,6 +35,8 @@ resource "aws_s3_bucket_policy" "ss" {
 resource "aws_s3_bucket_acl" "ss" {
   bucket = aws_s3_bucket.ss.id
   acl    = "private"
+
+  depends_on = [aws_s3_bucket_ownership_controls.ss]
 }
 
 data "aws_iam_policy_document" "ss" {

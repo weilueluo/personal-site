@@ -1,0 +1,3 @@
+variable "image" {
+  type = string
+}

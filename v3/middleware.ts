@@ -16,8 +16,7 @@ function getLocale(request: NextRequest) {
     } catch (e) {
         // https://github.com/formatjs/formatjs/discussions/2440
         // this happens when languages is not in locales but it is correct format
-        console.error("locale error", e);
-        console.error("headers", headers);
+        // can happen in health check from load balancer
         return DEFAULT_LOCALE;
     }
 }

@@ -25,7 +25,9 @@ No resources.
 
 ## Inputs
 
-No inputs.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_image"></a> [image](#input\_image) | n/a | `string` | n/a | yes |
 
 ## Outputs
 

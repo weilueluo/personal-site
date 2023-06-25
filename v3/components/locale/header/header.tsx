@@ -57,7 +57,7 @@ export default async function Header({ className, messages, locale, ...props }: 
                         </dropdown.Trigger>
                     </IconedText>
                     <dropdown.Dropdown variant="glass" sep={false}>
-                        <NavItem locale={locale} messages={messages} href={"/blogs"}>
+                        <NavItem locale={locale} messages={messages} href={"/blog"}>
                             <RiFilePaper2Fill className="icon-md" />
                             <span className="grow">
                                 <FormattedMessage messages={messages} id="header.blogs" />

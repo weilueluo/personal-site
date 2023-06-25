@@ -1,0 +1,17 @@
+name: deploy
+help: Personal Website Deployment
+version: 0.1.0
+
+args:
+  - name: tag
+    required: false
+    help: "existing tag to build deploy v3 site image"
+flags:
+  - long: --force
+    short: -f
+    default: false
+    help: "force build v3 site image, even if tag is specify"
+
+examples:
+  - cli deploy
+  - cli deploy 1.0.0

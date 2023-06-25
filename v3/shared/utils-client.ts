@@ -1,6 +1,10 @@
 "use client";
 
-// https://xxx.com => https://${domain}xxx.com
+// https://xxx.com => https://${domain}.xxx.com
 export function getDomainedOrigin(domain: string) {
-    return `${window.location.protocol}//${domain}.${window.location.host}`;
+    const domainedOrigin = `${window.location.protocol}//${domain}.${window.location.host}`;
+
+    console.log(`domained origin: ${domainedOrigin}`);
+
+    return domainedOrigin;
 }

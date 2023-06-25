@@ -14,3 +14,7 @@ output "service_sg_id" {
   value       = aws_security_group.service.id
   description = "security group id for the ECS service, used to allow traffic from the load balancer"
 }
+
+output "image" {
+  value = var.image
+}
