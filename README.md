@@ -1,38 +1,18 @@
 # Personal Website
 
-> Weilue's Personal Website
+## Live Deployment
+https://wll.dev
 
-## Development
+## Stacks
+- [NextJs](https://github.com/vercel/next.js)
+- [Tailwind](https://github.com/tailwindlabs/tailwindcss)
+- [ThreeJs](https://github.com/mrdoob/three.js/)
 
-```bash
-pre-commit install
-nvm use
-npm i
-npm run dev
-```
+## Folders
+- **`deploy`** deployment script built with bashly.
+- **`infra`** infrastructure managed using terraform.
+- **`v3`** latest version.
+- **`v2`** version 2021.
+- **`v1`** version 2019.
 
-### Stack
 
-- NextJs
-- ReactJs
-- Tailwindcss
-
-### Tools
-
-- nvm
-- prettier
-
-## Older Version
-See `v1` and `v2` submodule.
-
-## Deployment
-### Terraform
-> TODO
-### Docker
-#### Build and Run locally
-```
-docker build -t v3 .
-```
-```
-docker run -p 127.0.0.1:3000:3000 v3
-```

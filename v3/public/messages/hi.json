@@ -78,5 +78,5 @@
     "rss.title.github_trending": "जीथब ट्रेंडिंग",
     "rss.title.steam_news": "स्टीम न्यूज",
     "rss.title.weibo_hot": "वीबो हॉट",
-    "rss.view_more": "20 और देखने के लिए क्लिक करें ({वर्तमान}/{कुल})"
+    "rss.view_more": "20 और देखने के लिए क्लिक करें ({current}/{total})"
 }
