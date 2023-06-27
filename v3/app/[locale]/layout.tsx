@@ -1,10 +1,9 @@
-import Header from "@/components/locale/header/header";
+import Header from "@/components/header/header";
 import Separator from "@/components/ui/separator";
 import { fetchMessages } from "@/shared/i18n/translation";
 import Init from "@/shared/init";
 import { BaseCompProps, BasePageProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
-import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 import Script from "next/script";
 
 export default async function Layout({ children, params }: BasePageProps) {
@@ -40,7 +39,6 @@ function Analytics() {
     const g_tag = process.env.NEXT_PUBLIC_G_TAG;
     return (
         <>
-            <VercelAnalytics />
             {/* <!-- Google tag (gtag.js) --> */}
             <Script src={`https://www.googletagmanager.com/gtag/js?id=${g_tag}`} strategy="afterInteractive" />
             <Script id="google-analytics" strategy="afterInteractive">

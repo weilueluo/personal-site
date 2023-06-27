@@ -12,7 +12,7 @@ import { IoLanguage, IoLayers, IoNavigateCircle } from "react-icons/io5/index";
 import { MdWork } from "react-icons/md/index";
 import { RiContactsBook2Fill, RiFilePaper2Fill } from "react-icons/ri/index";
 import { SiGithub } from "react-icons/si/index";
-import * as dropdown from "../../ui/dropdown";
+import * as dropdown from "../ui/dropdown";
 import NavItem from "./nav-item";
 import ThemeButton from "./theme-button";
 
@@ -85,7 +85,7 @@ export default async function Header({ className, messages, locale, ...props }: 
                             </span>
                         </NavItem>
 
-                        <Separator size="sm" variant="square" className="mx-0" />
+                        <Separator size="sm" className="mx-0" />
 
                         <NavItem
                             locale={locale}

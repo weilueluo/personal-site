@@ -14,7 +14,6 @@ const CanvasLayout = ({ children }: { children: React.ReactNode }) => {
                 position: "relative",
                 width: "100%",
                 height: "100%",
-                overflow: "hidden",
                 touchAction: "auto",
             }}>
             {children}
