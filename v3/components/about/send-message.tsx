@@ -59,7 +59,7 @@ export default function SendMessage({ messages, locale, className, ...rest }: Ba
                 const timeLeft = seconds * 1000 - timeElasped;
                 if (timeLeft <= 0) {
                     setSendButtonDisabled(false);
-                    setButtonText("Send");
+                    setButtonText(formattedMessage(messages, "about.sendMessage.send"));
                 } else {
                     setButtonText(`${(timeLeft / 1000).toFixed(2)}`);
                     countDown();
