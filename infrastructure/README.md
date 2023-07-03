@@ -1,11 +1,11 @@
-# Infra
-This infra package contains code for hosting personal website v1/v2/v3 on aws.
+# infrastructure
+This infrastructure package contains code for hosting personal website v1/v2/v3 on aws.
 - **v1** and **v2** are static sites, meaning that they can be hosted in s3 bucket.
 - **v3** is not static and requires a server to run.
 
 ### Deployment Steps
 1. Setup AWS credentials locally.
-2. Modify `infra/main.tf` to suit your needs.
+2. Modify `infrastructure/main.tf` to suit your needs.
 3. Modify and run `docker-publish.sh` in `v3` folder to build the docker image and upload to correct docker repository.
 4. `terraform plan -out "plan.json"`.
 5. `terraform apply "plan.json"`.

@@ -11,7 +11,7 @@ PROJECT_ROOT=$(
 )
 
 # set infra root
-INFRA_ROOT="$PROJECT_ROOT/infra"
+INFRA_ROOT="$PROJECT_ROOT/infrastructure"
 
 # set v1 root
 V1_ROOT="$PROJECT_ROOT/v1"

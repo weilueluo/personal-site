@@ -26,52 +26,52 @@ repos:
     hooks:
       - id: terraform-docs-go
         name: terraform-docs-main
-        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infra"]
+        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infrastructure"]
   - repo: https://github.com/terraform-docs/terraform-docs
     rev: "v0.16.0"
     hooks:
       - id: terraform-docs-go
         name: terraform-docs-redirect
-        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infra/redirect"]
+        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infrastructure/redirect"]
   - repo: https://github.com/terraform-docs/terraform-docs
     rev: "v0.16.0"
     hooks:
       - id: terraform-docs-go
         name: terraform-docs-site-static
-        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infra/site_static"]
+        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infrastructure/site_static"]
   - repo: https://github.com/terraform-docs/terraform-docs
     rev: "v0.16.0"
     hooks:
       - id: terraform-docs-go
         name: terraform-docs-site-dynamic
-        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infra/site_dynamic"]
+        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infrastructure/site_dynamic"]
   - repo: https://github.com/terraform-docs/terraform-docs
     rev: "v0.16.0"
     hooks:
       - id: terraform-docs-go
         name: terraform-docs-site-dynamic-ecs
-        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infra/site_dynamic/ecs"]
+        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infrastructure/site_dynamic/ecs"]
   - repo: https://github.com/terraform-docs/terraform-docs
     rev: "v0.16.0"
     hooks:
       - id: terraform-docs-go
         name: terraform-docs-site-dynamic-load-balancer
-        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infra/site_dynamic/load_balancer"]
+        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infrastructure/site_dynamic/load_balancer"]
   - repo: https://github.com/terraform-docs/terraform-docs
     rev: "v0.16.0"
     hooks:
       - id: terraform-docs-go
         name: terraform-docs-site-dynamic-network
-        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infra/site_dynamic/network"]
+        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infrastructure/site_dynamic/network"]
   - repo: https://github.com/terraform-docs/terraform-docs
     rev: "v0.16.0"
     hooks:
       - id: terraform-docs-go
         name: terraform-docs-site-dynamic-route53
-        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infra/site_dynamic/route53"]
+        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infrastructure/site_dynamic/route53"]
   - repo: https://github.com/terraform-docs/terraform-docs
     rev: "v0.16.0"
     hooks:
       - id: terraform-docs-go
         name: terraform-docs-other
-        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infra/other"]
+        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infrastructure/other"]

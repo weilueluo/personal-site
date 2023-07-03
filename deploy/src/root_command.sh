@@ -15,6 +15,12 @@ TAG="${args[tag]}"
 if [ -z "${TAG}" ]; then
     echo "No tag specified"
     TAG=$(<$V3_NEXT_TAG_FILE)
+
+    if [ "${args[--prev]}" = "1" ]; then
+        echo "prev tag specified"
+        TAG="$(($TAG-1))"
+    fi
+
     echo "Setting TAG=$TAG"
     NEXT_V3_TAG="$(($TAG + 1))"
     echo "$NEXT_V3_TAG" >"$V3_NEXT_TAG_FILE"

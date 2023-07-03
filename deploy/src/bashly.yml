@@ -11,6 +11,9 @@ flags:
     short: -f
     default: false
     help: "force build v3 site image, even if tag is specify"
+  - long: --prev
+    default: false
+    help: "deploy previous version of the site, will be overwriten by tag if specified"
 
 examples:
   - cli deploy

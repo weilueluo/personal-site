@@ -19,6 +19,7 @@ export default async function Layout({ children }: BasePageProps) {
                         name="keywords"
                         content="Weilue Luo, Personal Website, Anime, Blog, RSS, Github, NextJs, TailwindCSS, React, portfolio, lwl, wll"
                     />
+                    <meta name="description" content="A place where I put random stuff" />
                     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
                     {/* Icons for various purposes */}

@@ -10,7 +10,7 @@ https://wll.dev
 
 ## Folders
 - **`deploy`** deployment script built with bashly.
-- **`infra`** infrastructure managed using terraform.
+- **`infrastructure`** infrastructure managed using terraform.
 - **`v3`** latest version.
 - **`v2`** version 2021.
 - **`v1`** version 2019.

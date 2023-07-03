@@ -28,6 +28,12 @@ root_command() {
   if [ -z "${TAG}" ]; then
       echo "No tag specified"
       TAG=$(<$V3_NEXT_TAG_FILE)
+
+      if [ "${args[--prev]}" = "1" ]; then
+          echo "prev tag specified"
+          TAG="$(($TAG-1))"
+      fi
+
       echo "Setting TAG=$TAG"
       NEXT_V3_TAG="$(($TAG + 1))"
       echo "$NEXT_V3_TAG" >"$V3_NEXT_TAG_FILE"
@@ -126,6 +132,11 @@ deploy_usage() {
     # :flag.usage
     printf "  %s\n" "--force, -f"
     printf "    force build v3 site image, even if tag is specify\n"
+    echo
+
+    # :flag.usage
+    printf "  %s\n" "--prev"
+    printf "    deploy previous version of the site, will be overwriten by tag if specified\n"
     echo
 
     # :command.usage_fixed_flags
@@ -257,6 +268,14 @@ parse_requirements() {
         shift
         ;;
 
+      # :flag.case
+      --prev)
+
+        # :flag.case_no_arg
+        args['--prev']=1
+        shift
+        ;;
+
       -?*)
         printf "invalid option: %s\n" "$key" >&2
         exit 1
@@ -300,7 +319,7 @@ initialize() {
   )
 
   # set infra root
-  INFRA_ROOT="$PROJECT_ROOT/infra"
+  INFRA_ROOT="$PROJECT_ROOT/infrastructure"
 
   # set v1 root
   V1_ROOT="$PROJECT_ROOT/v1"
