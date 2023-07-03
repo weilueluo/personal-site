@@ -69,9 +69,3 @@ repos:
       - id: terraform-docs-go
         name: terraform-docs-site-dynamic-route53
         args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infrastructure/site_dynamic/route53"]
-  - repo: https://github.com/terraform-docs/terraform-docs
-    rev: "v0.16.0"
-    hooks:
-      - id: terraform-docs-go
-        name: terraform-docs-other
-        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infrastructure/other"]
