@@ -31,7 +31,7 @@ module "v2" {
 }
 
 module "v3" {
-  source          = "./site_dynamic"
+  source          = "./site_dynamic/v2"
   resource_prefix = "v3"
   domain_name     = local.domain_name
   zone_name       = local.domain_name

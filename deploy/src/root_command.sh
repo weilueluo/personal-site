@@ -5,6 +5,12 @@ set -eo pipefail
 # show aws profile for debug purpose
 aws iam get-user --output json
 
+## V3 Translation  ##########################################################
+echo "Translating V3 site..."
+cd "$V3_ROOT"
+cd scripts/translate
+poetry run main
+
 ## Build V3 image ##########################################################
 echo "Building V3 image..."
 

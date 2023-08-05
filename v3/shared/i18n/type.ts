@@ -60,7 +60,7 @@ export interface Messages {
     "header.anime": string;
     "header.blogs": string;
     "header.cv": string;
-    "header.explore": string;
+    "header.more": string;
     "header.home": string;
     "header.rss": string;
     "header.source": string;

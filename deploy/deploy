@@ -19,6 +19,11 @@ root_command() {
   # show aws profile for debug purpose
   aws iam get-user --output json
 
+  echo "Translating V3 site..."
+  cd "$V3_ROOT"
+  cd scripts/translate
+  poetry run main
+
   echo "Building V3 image..."
 
   do_build=0

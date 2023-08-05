@@ -27,11 +27,7 @@ export default async function Page({ params }: { params: { filename: string } } 
         messagesPromise,
     ]);
 
-    // console.log("blogContent", blogContent);
-    // console.log("blogCommit", blogCommit);
-
     const blogText = Buffer.from(blogContent.content, "base64").toString("utf-8");
-    // console.log("blogText", blogText);
 
     const date = new Date(blogCommit[0].commit.author.date).toLocaleString();
 

@@ -1,10 +1,9 @@
 import CanvasLayout from "@/components/three/layout";
+import "@/components/ui/board.scss";
 import Loading from "@/components/ui/loading/spinner";
 import { FormattedMessage, fetchMessages } from "@/shared/i18n/translation";
 import { BasePageProps } from "@/shared/types/comp";
 import dynamic from "next/dynamic";
-import "@/components/ui/board.scss";
-import { tm } from "@/shared/utils";
 
 const MyRoom = dynamic(() => import("@/components/locale/my-room"), {
     ssr: false,
@@ -22,7 +21,7 @@ export default async function Page({ params }: BasePageProps) {
                 </h3>
 
                 <MyRoom />
-
+                {/* 
                 <div className="board-container h-96 w-[80%]">
                     <div className={tm("grid h-full w-full grid-cols-3 gap-6", "board")}>
                         {Array.from(Array(9)).map((_, i) => (
@@ -31,7 +30,7 @@ export default async function Page({ params }: BasePageProps) {
                             </div>
                         ))}
                     </div>
-                </div>
+                </div> */}
             </div>
         </CanvasLayout>
     );

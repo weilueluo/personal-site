@@ -127,7 +127,11 @@ export default function SendMessage({ messages, locale, className, ...rest }: Ba
                             <Label name={formattedMessage(messages, "about.sendMessage.label.contact")}>
                                 <Input onChange={e => setContact(e.target.value)} />
                             </Label>
-                            <button disabled={sendButtonDisabled} type="submit" onClick={e => onSubmit(e)}>
+                            <button
+                                disabled={sendButtonDisabled}
+                                type="submit"
+                                onClick={e => onSubmit(e)}
+                                className="disabled:pointer-events-none disabled:text-gray-500">
                                 <IconedText className="justify-end">
                                     <BsSendFill /> {buttonText}
                                 </IconedText>

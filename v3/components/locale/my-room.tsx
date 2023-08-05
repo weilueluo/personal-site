@@ -13,7 +13,7 @@ const View = dynamic(() => import("@/components/three/view"), {
 
 export default function MyRoom() {
     return (
-        <View className="h-[36rem] w-full" orbit>
+        <View className="h-96 w-full" orbit>
             <Suspense fallback={null}>
                 <Room scale={0.1} position={[0, 0, 1]} rotation={[0.65, 0.0, 0]} />
                 <Common />

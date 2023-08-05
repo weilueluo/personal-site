@@ -52,7 +52,7 @@ export default async function Header({ className, messages, locale, ...props }: 
                         <dropdown.Trigger>
                             <IoNavigateCircle className="icon-md" />
                             <span className="grow">
-                                <FormattedMessage messages={messages} id={"header.explore"} />
+                                <FormattedMessage messages={messages} id="header.more" />
                             </span>
                         </dropdown.Trigger>
                     </IconedText>

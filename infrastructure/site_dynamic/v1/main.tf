@@ -1,5 +1,5 @@
 module "network" {
-  source = "./network"
+  source = "../modules/network_v1"
 
   resource_prefix       = var.resource_prefix
   vpc_cidr              = "10.1.0.0/16"
@@ -10,7 +10,7 @@ module "network" {
 }
 
 module "load_balancer" {
-  source = "./load_balancer"
+  source = "../modules/load_balancer"
 
   vpc_id          = module.network.vpc_id
   resource_prefix = var.resource_prefix
@@ -24,7 +24,7 @@ module "load_balancer" {
 }
 
 module "route53" {
-  source = "./route53"
+  source = "../modules/route53"
 
   domain_name = var.domain_name
   zone_name   = var.zone_name
@@ -33,7 +33,7 @@ module "route53" {
 }
 
 module "ecs" {
-  source = "./ecs"
+  source = "../modules/ecs"
 
   vpc_id          = module.network.vpc_id
   resource_prefix = var.resource_prefix
