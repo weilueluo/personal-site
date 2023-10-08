@@ -5,7 +5,7 @@ import React from "react";
 import { useEffectOnce } from "react-use";
 
 export default function Room(props: React.ComponentPropsWithoutRef<any>) {
-    const { scene } = useGLTF("/models/room.glb");
+    const { scene } = useGLTF("/models/room2.glb");
     useEffectOnce(() => {
         scene.receiveShadow = true;
         scene.castShadow = true;
