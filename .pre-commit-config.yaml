@@ -6,12 +6,12 @@ repos:
         additional_dependencies:
           - prettier@2.8.4
           - prettier-plugin-tailwindcss@0.2.4
-        files: ^v3/
+        files: ^src/
   - repo: local
     hooks:
       - id: eslint
         name: eslint
-        entry: v3/scripts/eslint.sh
+        entry: src/scripts/eslint.sh
         pass_filenames: false
         language: system
         types: [file]
@@ -26,16 +26,16 @@ repos:
     hooks:
       - id: terraform-docs-go
         name: terraform-docs-main
-        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infrastructure"]
+        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infra"]
   - repo: https://github.com/terraform-docs/terraform-docs
     rev: "v0.16.0"
     hooks:
       - id: terraform-docs-go
         name: terraform-docs-redirect
-        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infrastructure/redirect"]
+        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infra/redirect"]
   - repo: https://github.com/terraform-docs/terraform-docs
     rev: "v0.16.0"
     hooks:
       - id: terraform-docs-go
         name: terraform-docs-site-static
-        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infrastructure/site_static"]
+        args: ["markdown", "table", "--output-file", "TERRAFORM_DOCS.md", "./infra/site_static"]

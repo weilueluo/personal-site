@@ -143,7 +143,7 @@ Card.displayName = "Card";
 function PlaceholderCard() {
     return (
         <div>
-            <div className="max-w-36 w-24 animate-in slide-in-from-top-6 duration-150 sm:w-36">
+            <div className="max-w-36 w-24 duration-150 animate-in slide-in-from-top-6 sm:w-36">
                 <div className="h-36 bg-gray-400 sm:h-52" />
                 <span className="inline-block h-4 w-full bg-gray-400"></span>
             </div>

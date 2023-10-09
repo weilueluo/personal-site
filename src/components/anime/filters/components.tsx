@@ -105,7 +105,7 @@ export function FilterLabel<T extends FilterItem>({
                 // !item.active && "bg-gray-500 hover:bg-gray-600",
                 !item.active && item.isAdult && "opacity-75",
                 item.type === "clearAll" &&
-                    "bg-gray-400 animate-in fade-in-0 slide-in-from-left-8 duration-200 hover:bg-gray-600"
+                    "bg-gray-400 duration-200 animate-in fade-in-0 slide-in-from-left-8 hover:bg-gray-600"
             )}
             onClick={() => toggleSelection(item)}>
             {item.name}
