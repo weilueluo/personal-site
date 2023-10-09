@@ -8,3 +8,7 @@ export function getDomainedOrigin(domain: string) {
 
     return domainedOrigin;
 }
+
+export function isVerticalScreen() {
+    return screen.orientation.type.startsWith("portrait");
+}
