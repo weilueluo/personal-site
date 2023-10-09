@@ -28,6 +28,7 @@ const CanvasLayout = ({ children }: { children: React.ReactNode }) => {
                 }}
                 eventSource={ref}
                 eventPrefix="client"
+                shadows={true}
             />
         </div>
     );

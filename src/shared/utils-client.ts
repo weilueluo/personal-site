@@ -10,5 +10,9 @@ export function getDomainedOrigin(domain: string) {
 }
 
 export function isVerticalScreen() {
-    return screen.orientation.type.startsWith("portrait");
+    if (screen && screen.orientation && screen.orientation.type) {
+        return screen.orientation.type.startsWith("portrait");
+    } else {
+        return true; // probably in wechat app browser
+    }
 }

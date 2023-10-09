@@ -5,10 +5,6 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 });
 
 const nextConfig = withBundleAnalyzer({
-    experimental: {
-        appDir: true,
-    },
-
     sassOptions: {
         logger: {
             warn: function (message) {

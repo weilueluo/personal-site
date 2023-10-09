@@ -6,7 +6,7 @@ check_command jq
 
 # set project root
 PROJECT_ROOT=$(
-    cd "$(dirname "$0")/.."
+    cd "$(dirname "$0")/../.."
     pwd
 )
 
@@ -23,7 +23,7 @@ V2_OUTPUT_ROOT="$V2_ROOT/out"
 
 # set v3 root
 V3_ROOT="$PROJECT_ROOT/src"
-V3_NEXT_TAG_FILE="$PROJECT_ROOT/deploy/V3_NEXT_TAG.txt"
+V3_NEXT_TAG_FILE="$PROJECT_ROOT/scripts/deploy/V3_NEXT_TAG.txt"
 
 # avoid aws cli pager which launch less/vi
 export AWS_PAGER=""
