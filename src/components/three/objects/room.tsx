@@ -6,7 +6,7 @@ import React from "react";
 export default function Room(props: React.ComponentPropsWithoutRef<any>) {
     return (
         <Stage>
-            <Gltf src="/models/room3.glb" {...props} />
+            <Gltf src="/models/room3.glb" castShadow receiveShadow {...props} />
         </Stage>
     );
 }
