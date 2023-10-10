@@ -9,8 +9,8 @@ https://wll.dev
 - [ThreeJs](https://github.com/mrdoob/three.js/)
 
 ## Folders
-- **`scripts/deploy`** deployment script built with bashly.
-- **`infra`** infrastructure managed using terraform.
+- **`deploy`** deployment script built with bashly.
+- **`infrastructure`** infrastructure managed using terraform.
 - **`src`** latest version.
 - **`2021`** version 2021.
 - **`2019`** version 2019.
