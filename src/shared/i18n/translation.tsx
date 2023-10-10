@@ -6,7 +6,7 @@ export async function fetchMessages(locale: string): Promise<Messages> {
     if (!locale) {
         throw new Error(`locale is nullish: ${locale}`);
     }
-    const messages = await fetch(`http://localhost:3000/api/i18n/${locale}`, {
+    const messages = await fetch(`http://127.0.0.1:3000/api/i18n/${locale}`, {
         next: {
             revalidate: readDefaultRevalidate(),
         },
