@@ -1,7 +1,7 @@
 # Personal Website
 
 ## Live Deployment
-https://wll.dev
+[wll.dev](https://wll.dev)
 
 ## Stacks
 - [NextJs](https://github.com/vercel/next.js)
