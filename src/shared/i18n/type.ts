@@ -67,8 +67,10 @@ export interface Messages {
     "header.theme.dark": string;
     "header.theme.light": string;
     "header.theme.system": string;
-    "header.v1": string;
-    "header.v2": string;
+    "header.v1.short": string;
+    "header.v2.short": string;
+    "header.v1.long": string;
+    "header.v2.long": string;
     "index.title": string;
     "rss.displayed_all": string;
     "rss.title.bbc_news": string;

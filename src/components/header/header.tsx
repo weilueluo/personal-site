@@ -110,14 +110,14 @@ export default async function Header({ className, messages, locale, ...props }: 
                         <NavItem locale={locale} messages={messages} domain="v1" target="_blank">
                             <FaRegClone className="icon-md" />
                             <span className="grow">
-                                <FormattedMessage messages={messages} id="header.v1" />
+                                <FormattedMessage messages={messages} id="header.v1.short" />
                             </span>
                         </NavItem>
                         <Separator size="sm" />
                         <NavItem locale={locale} messages={messages} domain={"v2"} target="_blank">
                             <FaRegClone className="icon-md" />
                             <span className="grow">
-                                <FormattedMessage messages={messages} id="header.v2" />
+                                <FormattedMessage messages={messages} id="header.v2.short" />
                             </span>
                         </NavItem>
                     </dropdown.Dropdown>
