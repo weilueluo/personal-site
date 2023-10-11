@@ -7,6 +7,8 @@ https://wll.dev
 - [NextJs](https://github.com/vercel/next.js)
 - [Tailwind](https://github.com/tailwindlabs/tailwindcss)
 - [ThreeJs](https://github.com/mrdoob/three.js/)
+- [Terraform](https://www.terraform.io/)
+- [Bashly](https://bashly.dannyb.co/)
 
 ## Folders
 - **`deploy`** deployment script built with bashly.
