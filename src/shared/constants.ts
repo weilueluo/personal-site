@@ -13,3 +13,5 @@ export const LOCALE_DISPLAY_MAP: Record<LOCALE_TYPE, string> = {
     tw: "繁體中文",
 };
 export const DEFAULT_LOCALE = "en";
+
+export const ORIGIN = "https://wll.dev";

@@ -3,18 +3,18 @@ import { LOCALES, LOCALE_TYPE } from "../constants";
 import { isAbsoluteUrl } from "../utils";
 
 export function localedPath(path: string | undefined | null, newLocale: LOCALE_TYPE | undefined | null): string {
-    if (path == null) {
+    if (path === null || path === undefined) {
         throw new Error("path must not be null or undefined");
     }
-    if (newLocale == null) {
-        throw new Error("new locale must not be null or undefined");
+    if (newLocale === null || newLocale === undefined) {
+        throw new Error("locale must not be null or undefined");
     }
     if (!LOCALES.includes(newLocale)) {
-        throw new Error(`new locale must be one of ${LOCALES}`);
+        throw new Error(`invalid locale: ${newLocale}, must be one of ${LOCALES}`);
     }
 
     for (const locale of LOCALES) {
-        // case: /locale/xxx/yyy/zzz ===> /newLocale/xxx/yyy/zzz
+        // case: /locale/xxx/ ===> /newLocale/xxx
         const localePrefix1 = `/${locale}/`;
         if (path.startsWith(localePrefix1)) {
             return `/${newLocale}/${path.slice(localePrefix1.length)}`;
@@ -31,14 +31,15 @@ export function localedPath(path: string | undefined | null, newLocale: LOCALE_T
         // case: / ===> /locale
         return `/${newLocale}`;
     } else if (path.startsWith("/")) {
-        // case: /xxx/yyy/zzz ===> /locale/xxx/yyy/zzz
+        // case: /xxx/ ===> /locale/xxx/
         return `/${newLocale}${path}`;
     } else {
-        // case: xxx/yyy/zzz ===> /locale/xxx/yyy/zzz
+        // case: xxx/ ===> /locale/xxx/
         return `/${newLocale}/${path}`;
     }
 }
 
+// a client util function that returns the path with new locale
 export function useResolvedHref(href?: string | undefined | null, locale?: LOCALE_TYPE): string {
     // use current path if href is not provided
     const pathname = usePathname();
