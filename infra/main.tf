@@ -30,17 +30,32 @@ module "v2" {
   zone_name       = local.domain_name
 }
 
-module "v3" {
-  source          = "./site_dynamic/v2"
-  resource_prefix = "v3"
-  domain_name     = local.domain_name
-  zone_name       = local.domain_name
+# module "v3" {
+#   source          = "./site_dynamic/v2"
+#   resource_prefix = "v3"
+#   domain_name     = local.domain_name
+#   zone_name       = local.domain_name
 
-  image             = var.image
-  port              = 3000
-  health_check_path = "/api/health"
-  cpu               = 256
-  memory            = 512
+#   image             = var.image
+#   port              = 3000
+#   health_check_path = "/api/health"
+#   cpu               = 256
+#   memory            = 512
+#   # lb_account_id = "652711504416" # for "eu-west-2" region, check https://docs.aws.amazon.com/elasticloadbalancing/latest/application/enable-access-logging.html
+# }
+
+module "v3" {
+  source          = "./site_dynamic/v3"
+  resource_prefix = "v3"
+  cidr_block      = "10.10.0.0/16"
+  # image = "public.ecr.aws/d0l7r8j1/personal-website-v3:latest"
+  domain_name = local.domain_name
+
+  image = var.image
+  port  = 3000
+  # health_check_path = "/api/health"
+  # cpu               = 256
+  # memory            = 512
   # lb_account_id = "652711504416" # for "eu-west-2" region, check https://docs.aws.amazon.com/elasticloadbalancing/latest/application/enable-access-logging.html
 }
 

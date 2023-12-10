@@ -16,7 +16,7 @@ No providers.
 | <a name="module_luoweilue_com_redirect"></a> [luoweilue\_com\_redirect](#module\_luoweilue\_com\_redirect) | ./redirect | n/a |
 | <a name="module_v1"></a> [v1](#module\_v1) | ./site_static | n/a |
 | <a name="module_v2"></a> [v2](#module\_v2) | ./site_static | n/a |
-| <a name="module_v3"></a> [v3](#module\_v3) | ./site_dynamic/v2 | n/a |
+| <a name="module_v3"></a> [v3](#module\_v3) | ./site_dynamic/v3 | n/a |
 | <a name="module_weilueluo_com_redirect"></a> [weilueluo\_com\_redirect](#module\_weilueluo\_com\_redirect) | ./redirect | n/a |
 
 ## Resources
