@@ -3,9 +3,9 @@
 resource "aws_s3_bucket" "from_domain_bucket" {
   bucket = var.from_domain
 
-  lifecycle {
-    prevent_destroy = true
-  }
+  # lifecycle {
+  #   prevent_destroy = true
+  # }
 }
 
 resource "aws_s3_bucket_website_configuration" "redirect" {
@@ -40,6 +40,8 @@ resource "aws_s3_bucket_policy" "policy" {
 resource "aws_s3_bucket_acl" "private_acl" {
   bucket = aws_s3_bucket.from_domain_bucket.id
   acl    = "private"
+
+  depends_on = [aws_s3_bucket_ownership_controls.ownership_controls]
 }
 
 data "aws_iam_policy_document" "allow_cloudfront_access" {

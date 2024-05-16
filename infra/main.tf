@@ -5,6 +5,12 @@ terraform {
       version = "~> 4.0"
     }
   }
+  # NOTE: create this bucket manually first
+  backend "s3" {
+    bucket = "terraform-state-personal-website"
+    key    = "terraform.tfstate"
+    region = "eu-west-2"
+  }
 }
 
 locals {
@@ -26,7 +32,7 @@ module "v1" {
 module "v2" {
   source          = "./site_static"
   resource_prefix = "v2-lwl"
-  domain_name     = "v2.${local.domain_name}"
+  domain_name     = local.domain_name
   zone_name       = local.domain_name
 }
 
@@ -49,7 +55,8 @@ module "v3" {
   resource_prefix = "v3"
   cidr_block      = "10.10.0.0/16"
   # image = "public.ecr.aws/d0l7r8j1/personal-website-v3:latest"
-  domain_name = local.domain_name
+  domain_name = "v2.${local.domain_name}"
+  zone_name   = local.domain_name
 
   image = var.image
   port  = 3000

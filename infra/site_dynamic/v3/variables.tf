@@ -12,6 +12,6 @@ variable "port" {
   type = number
 }
 
-variable "domain_name" {
+variable "domain_name" {}
 
-}
+variable "zone_name" {}

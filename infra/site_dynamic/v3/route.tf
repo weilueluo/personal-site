@@ -41,7 +41,7 @@ resource "aws_route53_record" "dns_validation" {
 }
 
 data "aws_route53_zone" "zone" {
-  name = var.domain_name
+  name = var.zone_name
 }
 
 resource "aws_route53_record" "A" {

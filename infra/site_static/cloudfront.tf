@@ -17,7 +17,7 @@ resource "aws_cloudfront_distribution" "ss" {
     bucket          = "${aws_s3_bucket.logging.id}.s3.amazonaws.com" # fk man, this is so stupid
   }
 
-  aliases = [var.domain_name]
+  aliases = [var.domain_name, "*.${var.domain_name}"]
 
   default_cache_behavior {
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]

@@ -1,5 +1,4 @@
 resource "aws_cloudfront_distribution" "distribution" {
-  aliases = [var.domain_name, "*.${var.domain_name}"]
 
   origin {
     origin_id   = aws_instance.instance.public_dns
@@ -11,6 +10,8 @@ resource "aws_cloudfront_distribution" "distribution" {
       origin_ssl_protocols   = ["TLSv1.2"]
     }
   }
+
+  aliases = [var.domain_name, "*.${var.domain_name}"]
 
   restrictions {
     geo_restriction {
