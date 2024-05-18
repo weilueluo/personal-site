@@ -18,6 +18,10 @@ const navItems: NavItem[] = [
         name: 'Newer Site',
         link: 'https://v2.wll.dev'
     },
+    {
+        name: 'Source',
+        link: 'https://github.com/weilueluo/personal-site'
+    }
 ]
 
 export default function NavigationPanel() {
