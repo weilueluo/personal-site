@@ -1,6 +1,8 @@
 export const GITHUB_REPO_URL = "https://github.com/weilueluo/personal-website";
 
 export const GITHUB_CV_URL = "https://github.com/weilueluo/cv/blob/master/resume.pdf";
+export const V1_URL = "https://v1.wll.dev";
+export const V2_URL = "https://wll.dev";
 
 export type LOCALE_TYPE = "en" | "zh" | "jp" | "hi" | "iw" | "tw";
 export const LOCALES: LOCALE_TYPE[] = ["en", "zh", "jp", "hi", "iw", "tw"];

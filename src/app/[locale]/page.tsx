@@ -1,7 +1,7 @@
 import NavItem from "@/components/header/nav-item";
 import CanvasLayout from "@/components/three/layout";
 import "@/components/ui/board.scss";
-import { GITHUB_CV_URL, GITHUB_REPO_URL } from "@/shared/constants";
+import { GITHUB_CV_URL, GITHUB_REPO_URL, V1_URL, V2_URL } from "@/shared/constants";
 import Loading from "@/components/ui/loading/spinner";
 import { FormattedMessage, fetchMessages } from "@/shared/i18n/translation";
 import { BasePageProps } from "@/shared/types/comp";
@@ -93,7 +93,7 @@ export default async function Page({ params }: BasePageProps) {
                             className="std-pad"
                             locale={params.locale}
                             messages={messages}
-                            domain="v1"
+                            href={V1_URL}
                             target="_blank">
                             <FaRegClone className="icon-md" />
                             <span className="grow">
@@ -105,7 +105,7 @@ export default async function Page({ params }: BasePageProps) {
                             className="std-pad"
                             locale={params.locale}
                             messages={messages}
-                            domain="v2"
+                            href={V2_URL}
                             target="_blank">
                             <FaRegClone className="icon-md" />
                             <span className="grow">
