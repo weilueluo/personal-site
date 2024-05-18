@@ -1,7 +1,7 @@
 import "@/components/ui/border.scss";
 import IconedText from "@/components/ui/icon-text";
 import Separator from "@/components/ui/separator";
-import { GITHUB_CV_URL, GITHUB_REPO_URL, LOCALES, LOCALE_DISPLAY_MAP } from "@/shared/constants";
+import { GITHUB_CV_URL, GITHUB_REPO_URL, LOCALES, LOCALE_DISPLAY_MAP, V1_URL, V2_URL } from "@/shared/constants";
 import { FormattedMessage } from "@/shared/i18n/translation";
 import { BaseCompProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
@@ -107,14 +107,14 @@ export default async function Header({ className, messages, locale, ...props }: 
                         </NavItem>
                         <Separator size="sm" />
                         {/* v1 and v2 domain are redirected in route53 */}
-                        <NavItem locale={locale} messages={messages} domain="v1" target="_blank">
+                        <NavItem locale={locale} messages={messages} href={V1_URL} target="_blank">
                             <FaRegClone className="icon-md" />
                             <span className="grow">
                                 <FormattedMessage messages={messages} id="header.v1.short" />
                             </span>
                         </NavItem>
                         <Separator size="sm" />
-                        <NavItem locale={locale} messages={messages} domain={"v2"} target="_blank">
+                        <NavItem locale={locale} messages={messages} href={V2_URL} target="_blank">
                             <FaRegClone className="icon-md" />
                             <span className="grow">
                                 <FormattedMessage messages={messages} id="header.v2.short" />
