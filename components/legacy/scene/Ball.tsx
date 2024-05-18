@@ -22,8 +22,8 @@ import { getMainBallRadius } from './global';
 import sphere_fs from './shaders/sphere_fs.glsl';
 import sphere_vs from './shaders/sphere_vs.glsl';
 
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { lightPositionContext } from '../../common/contexts';
 
 import { LineAnimator } from '../../animation/LineAnimator';

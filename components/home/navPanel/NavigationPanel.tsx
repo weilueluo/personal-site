@@ -11,21 +11,13 @@ type NavItem = {
 
 const navItems: NavItem[] = [
     {
-        name: 'CV',
-        link: '/cv'
+        name: 'Older Site',
+        link: 'https://v1.wll.dev'
     },
     {
-        name: 'RSS',
-        link: '/rss'
-    }, 
-    {
-        name: 'About',
-        link: '/about'
+        name: 'Newer Site',
+        link: 'https://v2.wll.dev'
     },
-    {
-        name: 'Anime',
-        link: '/anime'
-    }
 ]
 
 export default function NavigationPanel() {

@@ -2,7 +2,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect } from 'react';
 import { BloomPass } from 'three/examples/jsm/postprocessing/BloomPass';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 
 export function usePostEffects() {
     const { gl, scene, camera } = useThree();

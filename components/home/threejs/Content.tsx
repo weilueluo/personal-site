@@ -10,7 +10,7 @@ import ThreeJsLights from './Lights';
 import { ThreeJsPostEffects } from './PostEffects';
 import GradientBackground from './gradientBackground/GradientBackground';
 import Lines from './lines/Lines';
-import MainBall from './mainBall//MainBall';
+import MainBall from './mainBall/MainBall';
 import Moon from './moon/Moon';
 import ThreeRotateText from './rotateText/ThreeRotateText';
 import ThreeJsStats from './stats/Stats';
