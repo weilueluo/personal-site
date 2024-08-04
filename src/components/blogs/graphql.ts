@@ -5,14 +5,8 @@ export interface Query<T> {
     data: T;
 }
 
-const repository = (name: string, owner: string, str: string) => `repository(name:"${name}",owner:"${owner}"){
-    id
-    openGraphImageUrl
-    name
-    url
-    updatedAt
-    stargazerCount
-    ${str}}`;
+const repository = (name: string, owner: string, str: string) =>
+    `repository(name:"${name}",owner:"${owner}"){id openGraphImageUrl name url updatedAt stargazerCount ${str}}`;
 export interface Repository<T> {
     repository: RespositoryContent<T>;
 }

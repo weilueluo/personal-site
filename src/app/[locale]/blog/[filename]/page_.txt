@@ -5,18 +5,18 @@ import Separator from "@/components/ui/separator";
 import { fetchMessages, FormattedMessage } from "@/shared/i18n/translation";
 import { BasePageProps } from "@/shared/types/comp";
 import Link from "next/link";
+import { AiFillClockCircle } from "react-icons/ai";
 import { BsCalendar2DateFill } from "react-icons/bs/index";
 import { FaDownload, FaLink } from "react-icons/fa/index";
 import { SiGithub } from "react-icons/si/index";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import rehypeMathjax from "rehype-mathjax";
 import rehypeRaw from "rehype-raw";
+import remarkGemoji from "remark-gemoji";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkToc from "remark-toc";
-import remarkGemoji from "remark-gemoji";
-import { AiFillClockCircle } from "react-icons/ai";
-import ShareButton from "@/components/blogs/filename/share";
+import ShareButton from "../../../../components/blogs/filename/share";
 
 export default async function Page({ params }: { params: { filename: string } } & BasePageProps) {
     const blogContentPromise = fetchBlogContent(params.filename);
@@ -71,23 +71,25 @@ export default async function Page({ params }: { params: { filename: string } } 
             <div className="flex w-4/5 flex-col items-center">
                 {hasDiscussion && (
                     <>
-                        <ul className="flex w-full flex-col gap-2">
+                        <ul className="items-left flex w-full flex-col gap-2">
                             {discussion.search.nodes[0].comments.nodes.map((comment, i) => (
                                 // px-2 border border-black dark:border-white
-                                <li key={i}>
+                                <li key={i} className="">
                                     <ReactMarkdown
                                         remarkPlugins={[remarkGfm, remarkMath, remarkToc, remarkGemoji]}
                                         rehypePlugins={[rehypeRaw, rehypeMathjax]}
                                         className="prose-sm mx-auto my-0 max-w-none dark:prose-invert md:prose">
                                         {comment.body}
                                     </ReactMarkdown>
-                                    <span className="secondary-text secondary-hover flex flex-row items-center gap-1 text-gray-500 hover:cursor-default">
+                                    <span className="secondary-text secondary-hover flex flex-row items-center gap-1 text-gray-500 hover:cursor-default hover:text-gray-300 dark:hover:text-gray-700">
                                         <AiFillClockCircle className="inline-block" />
                                         <span className="italic ">{new Date(comment.createdAt).toLocaleString()}</span>
                                     </span>
                                 </li>
                             ))}
                         </ul>
+                        
+                        {/* <SendComment messages={messages} locale={params.locale} className="mt-12"></SendComment> */}
                         <div className="mt-4 flex flex-row justify-end">
                             <Link
                                 href={`https://github.com/weilueluo/blogs/discussions/${discussion.search.nodes[0].number}`}
