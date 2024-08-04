@@ -5,8 +5,8 @@ import React from "react";
 
 export default function Room(props: React.ComponentPropsWithoutRef<any>) {
     return (
-        <Stage shadows={false}>
-            <Gltf src="/models/room3.glb" {...props} />
+        <Stage shadows={"accumulative"}>
+            <Gltf src="/models/room3.glb" castShadow receiveShadow {...props} />
         </Stage>
     );
 }
