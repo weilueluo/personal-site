@@ -1,5 +1,7 @@
 // written on top of graphql.ts to fetch graphql query from github
 
+import { GetBlog, GetBlogs, GetDiscussion, GithubGraphQL } from "./graphql";
+
 const GITHUB_GRAPHQL_ENDPOINT = "https://api.github.com/graphql";
 const GITHUB_REST_ENDPOINT = "https://api.github.com";
 const OWNER = "weilueluo";
@@ -31,6 +33,22 @@ const fetchGithubGraphQLData = async <T>(query: string) => {
         });
 };
 
+export const getBlogs = async (): Promise<GetBlogs> => {
+    const query = GithubGraphQL.getBlogs();
+    return fetchGithubGraphQLData<GetBlogs>(query);
+};
+
+export const getBlog = async (id: number | string): Promise<GetBlog> => {
+    const query = GithubGraphQL.getBlog(id);
+    return fetchGithubGraphQLData(query);
+};
+
+export const getDiscussion = async (q: string, first: number, after: string): Promise<GetDiscussion> => {
+    const query = GithubGraphQL.getDiscussion(q, first, after);
+    // console.log("query", query);
+    return fetchGithubGraphQLData<GetDiscussion>(query);
+};
+
 const fetchGithubRestData = async <T>(path: string) => {
     console.log("query github rest", path);
     return fetch(`${GITHUB_REST_ENDPOINT}${path}`, {
@@ -59,7 +77,9 @@ export const fetchBlogDirectory = async (): Promise<FetchBlogDirectory> => {
     //     .filter((entry) => entry.name.endsWith(".md"));
     return fetchGithubRestData<FetchBlogDirectory>(`/repos/${OWNER}/${REPO}/contents/`);
 };
-export type FetchBlogDirectory = Omit<FetchBlogContent, "text" | "encoding">[];
+
+export type BlogDirectory = Omit<FetchBlogContent, "text" | "encoding">;
+export type FetchBlogDirectory = BlogDirectory[];
 
 //////////////////////////////////////////////////////////////////////////////////////////
 

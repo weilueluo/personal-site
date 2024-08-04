@@ -1,7 +1,7 @@
 "use client";
 
 import IconedText from "@/components/ui/icon-text";
-import { useResolvedHref } from "@/shared/i18n/locale";
+import { useResolvedHref } from "@/shared/i18n/locale.client";
 import { BaseCompProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
 import { getDomainedOrigin } from "@/shared/utils-client";
@@ -19,7 +19,8 @@ const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(
         const useNewTabIcon = rest.target === "_blank";
         const [hover, setHover] = useState(false);
 
-        const [href_, setHref] = useState(useResolvedHref(href, locale));
+        const resolvedHref = useResolvedHref(href, locale);
+        const [href_, setHref] = useState(resolvedHref);
         useEffect(() => {
             if (domain) {
                 setHref(getDomainedOrigin(domain));

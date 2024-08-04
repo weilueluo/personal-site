@@ -10,7 +10,9 @@ export async function fetchMessages(locale: string): Promise<Messages> {
         next: {
             revalidate: readDefaultRevalidate(),
         },
-    }).then(res => res.json());
+    }).then(res => {
+        return res.json();
+    });
 
     return messages;
 }

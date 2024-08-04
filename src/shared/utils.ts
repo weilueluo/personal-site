@@ -104,5 +104,8 @@ export function isAbsoluteUrl(url: string | undefined | null) {
 }
 
 export function readDefaultRevalidate() {
-    return process.env.DEFAULT_REVALIDATE !== "false" ? Number(process.env.DEFAULT_REVALIDATE) : false;
+    if (process.env.DEFAULT_REVALIDATE || process.env.DEFAULT_REVALIDATE === "0") {
+        return Number(process.env.DEFAULT_REVALIDATE);
+    }
+    return false;
 }

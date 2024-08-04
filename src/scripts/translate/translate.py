@@ -43,8 +43,10 @@ def translate_json(source_json, target_json, translator):
     target_json = deepcopy(target_json)
     for k, v in source_json.items():
         if isinstance(v, dict):
+            # recursively translate inner json
             target_json[k] = translate_json(v, target_json.get(k, {}), translator)
         elif k not in target_json:
+            # only translate if it is missing/not already translated
             target_json[k] = translator.translate(v)
             print(f'{v} ===> {target_json[k]}')
     return target_json
