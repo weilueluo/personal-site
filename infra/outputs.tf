@@ -19,3 +19,11 @@ output "redirect" {
     "weilueluo.com" : module.weilueluo_com_redirect,
   })
 }
+
+output "db" {
+  value = module.db
+}
+
+output "cognito" {
+  value = module.cognito
+}

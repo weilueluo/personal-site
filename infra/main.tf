@@ -50,6 +50,27 @@ module "v2" {
 #   # lb_account_id = "652711504416" # for "eu-west-2" region, check https://docs.aws.amazon.com/elasticloadbalancing/latest/application/enable-access-logging.html
 # }
 
+module "db" {
+  source = "./modules/dynamo"
+
+  resource_prefix = "v3"
+  partition_key = {
+    name = "name"
+    type = "S"
+  }
+  sort_key = {
+    name = "time"
+    type = "N"
+  }
+}
+
+# requires updating the .env.local file for the cognito pool id
+module "cognito" {
+  source          = "./modules/cognito"
+  resource_prefix = "v3"
+  dynamodb_arn    = module.db.arn
+}
+
 module "v3" {
   source          = "./site_dynamic/v3"
   resource_prefix = "v3"

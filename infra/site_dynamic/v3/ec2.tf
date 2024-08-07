@@ -47,14 +47,15 @@ data "template_file" "user_data" {
 
 # instance
 resource "aws_instance" "instance" {
-  ami             = data.aws_ami.ami.id
-  instance_type   = var.instance_type
-  subnet_id       = aws_subnet.subnet.id
-  security_groups = [aws_security_group.security_group.id]
+  ami                    = data.aws_ami.ami.id
+  instance_type          = var.instance_type
+  subnet_id              = aws_subnet.subnet.id
+  vpc_security_group_ids = [aws_security_group.security_group.id]
 
   associate_public_ip_address = true
   key_name                    = aws_key_pair.key_pair.key_name
   user_data                   = data.template_file.user_data.rendered
+  user_data_replace_on_change = true
 
   tags = {
     Name = var.resource_prefix

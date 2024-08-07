@@ -13,6 +13,8 @@ No providers.
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_cognito"></a> [cognito](#module\_cognito) | ./modules/cognito | n/a |
+| <a name="module_db"></a> [db](#module\_db) | ./modules/dynamo | n/a |
 | <a name="module_luoweilue_com_redirect"></a> [luoweilue\_com\_redirect](#module\_luoweilue\_com\_redirect) | ./redirect | n/a |
 | <a name="module_v1"></a> [v1](#module\_v1) | ./site_static | n/a |
 | <a name="module_v2"></a> [v2](#module\_v2) | ./site_static | n/a |
@@ -33,6 +35,8 @@ No resources.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_cognito"></a> [cognito](#output\_cognito) | n/a |
+| <a name="output_db"></a> [db](#output\_db) | n/a |
 | <a name="output_redirect"></a> [redirect](#output\_redirect) | n/a |
 | <a name="output_v1"></a> [v1](#output\_v1) | n/a |
 | <a name="output_v2"></a> [v2](#output\_v2) | n/a |
