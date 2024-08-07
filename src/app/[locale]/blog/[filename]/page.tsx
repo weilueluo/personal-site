@@ -1,4 +1,5 @@
-import { fetchBlogCommit, fetchBlogContent, getDiscussion } from "@/components/blogs/query";
+import ShareButton from "@/components/blogs/filename/share";
+import { fetchBlogCommit, fetchBlogContent } from "@/components/blogs/query";
 import BackButton from "@/components/ui/back";
 import IconedText from "@/components/ui/icon-text";
 import Separator from "@/components/ui/separator";
@@ -6,38 +7,31 @@ import { fetchMessages, FormattedMessage } from "@/shared/i18n/translation";
 import { BasePageProps } from "@/shared/types/comp";
 import Link from "next/link";
 import { BsCalendar2DateFill } from "react-icons/bs/index";
-import { FaDownload, FaLink } from "react-icons/fa/index";
+import { FaDownload } from "react-icons/fa/index";
 import { SiGithub } from "react-icons/si/index";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import rehypeMathjax from "rehype-mathjax";
 import rehypeRaw from "rehype-raw";
+import remarkGemoji from "remark-gemoji";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkToc from "remark-toc";
-import remarkGemoji from "remark-gemoji";
-import { AiFillClockCircle } from "react-icons/ai";
-import ShareButton from "@/components/blogs/filename/share";
+import CommentSection from "./comments";
 
 export default async function Page({ params }: { params: { filename: string } } & BasePageProps) {
     const blogContentPromise = fetchBlogContent(params.filename);
     const blogCommitPromise = fetchBlogCommit(params.filename);
     const messagesPromise = fetchMessages(params.locale);
-    const discussionPromise = getDiscussion(params.filename, 10, "");
 
-    const [blogContent, blogCommit, messages, discussion] = await Promise.all([
+    const [blogContent, blogCommit, messages] = await Promise.all([
         blogContentPromise,
         blogCommitPromise,
         messagesPromise,
-        discussionPromise,
     ]);
 
     const blogText = Buffer.from(blogContent.content, "base64").toString("utf-8");
 
     const date = new Date(blogCommit[0].commit.author.date).toLocaleString();
-
-    const hasDiscussion = discussion.search.nodes.length > 0;
-    // console.log("discussion.search", discussion.search);
-    // console.log("discussion.search.nodes[0].comments", discussion.search.nodes[0].comments);
 
     return (
         <div className="flex flex-col items-center">
@@ -66,47 +60,7 @@ export default async function Page({ params }: { params: { filename: string } } 
                 {blogText}
             </ReactMarkdown>
             <Separator className="mb-2 mt-12 h-2" />
-            <h1 className="text-center font-bold">Comments (Experimental)</h1>
-            <Separator className="mb-4 h-2" />
-            <div className="flex w-4/5 flex-col items-center">
-                {hasDiscussion && (
-                    <>
-                        <ul className="flex w-full flex-col gap-2">
-                            {discussion.search.nodes[0].comments.nodes.map((comment, i) => (
-                                // px-2 border border-black dark:border-white
-                                <li key={i}>
-                                    <ReactMarkdown
-                                        remarkPlugins={[remarkGfm, remarkMath, remarkToc, remarkGemoji]}
-                                        rehypePlugins={[rehypeRaw, rehypeMathjax]}
-                                        className="prose-sm mx-auto my-0 max-w-none dark:prose-invert md:prose">
-                                        {comment.body}
-                                    </ReactMarkdown>
-                                    <span className="secondary-text secondary-hover flex flex-row items-center gap-1 text-gray-500 hover:cursor-default">
-                                        <AiFillClockCircle className="inline-block" />
-                                        <span className="italic ">{new Date(comment.createdAt).toLocaleString()}</span>
-                                    </span>
-                                </li>
-                            ))}
-                        </ul>
-                        <div className="mt-4 flex flex-row justify-end">
-                            <Link
-                                href={`https://github.com/weilueluo/blogs/discussions/${discussion.search.nodes[0].number}`}
-                                target="_blank">
-                                <IconedText>
-                                    <FaLink /> {"Open in GitHub"}
-                                </IconedText>
-                            </Link>
-                        </div>
-                    </>
-                )}
-                {!hasDiscussion && (
-                    <div className="w-full text-center">
-                        <span className="secondary-text italic text-gray-500">
-                            ~Comments not yet enabled for this blog~
-                        </span>
-                    </div>
-                )}
-            </div>
+            <CommentSection messages={messages} locale={params.locale} filename={params.filename} />
         </div>
     );
 }
