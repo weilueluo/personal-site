@@ -1,9 +1,10 @@
 "use client";
 import IconedText from "@/components/ui/icon-text";
+import Loading from "@/components/ui/loading/spinner";
 import Separator from "@/components/ui/separator";
 import { useComments } from "@/shared/dynamo";
 import { BaseCompProps } from "@/shared/types/comp";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AiFillClockCircle } from "react-icons/ai";
 import { FiSend } from "react-icons/fi";
 import ReactMarkdown from "react-markdown";
@@ -63,36 +64,74 @@ export default function CommentSection({ filename, messages, locale }: CommentSe
                                 </li>
                             ))}
                         </ul>
-                        <Separator className="mb-6 mt-6 h-2" />
-                        <div>
-                            <textarea
-                                className="std-bg dark:std-bg-dark std-text w-full rounded-md border border-gray-400 p-2"
-                                placeholder="Write something..."
-                                rows={3}
-                                cols={60}
-                                ref={commentTextareaRef}
-                            />
-                            <IconedText className="flex flex-row justify-end" onClick={onSendComment}>
-                                <FiSend /> {"Add Comment"}
-                            </IconedText>
-                        </div>
                     </>
                 )}
-                {comments.length == 0 && (
-                    <div>
-                        <textarea
-                            className="std-bg dark:std-bg-dark std-text w-full rounded-md border border-gray-400 p-2"
-                            placeholder="Be first to comment!"
-                            rows={3}
-                            cols={60}
-                            ref={commentTextareaRef}
-                        />
-                        <IconedText className="flex flex-row justify-end" onClick={onSendComment}>
-                            <FiSend /> {"Add Comment"}
-                        </IconedText>
-                    </div>
-                )}
+                {loading && <Loading className="h-24" />}
+                {/* <Separator className="mb-6 mt-6 h-2" /> */}
+                <SendComment sendComment={sendComment} />
             </div>
         </>
+    );
+}
+
+const getRandomSmallMilliseconds = () => {
+    return Math.floor(Math.random() * 50);
+};
+
+function SendComment({ sendComment }: { sendComment: (comment: string) => void }) {
+    const [buttonText, setButtonText] = useState("Add Comment");
+    const commentTextareaRef = useRef<HTMLTextAreaElement>(null);
+    const onSendComment = () => {
+        if (commentTextareaRef.current) {
+            const comment = commentTextareaRef.current.value;
+            if (comment) {
+                sendComment(comment);
+                commentTextareaRef.current.value = "";
+                initCooldown();
+            }
+        }
+    };
+
+    const initCooldown = () => {
+        setCooldown(true);
+        const startTime = Date.now();
+        const cooldownMs = 5000;
+        const updateCooldown = () => {
+            setTimeout(() => {
+                const currTime = Date.now();
+                const timeLeft = cooldownMs - (currTime - startTime);
+                if (timeLeft <= 0) {
+                    setButtonText("Add Comment");
+                    setCooldown(false);
+                } else {
+                    setButtonText(`${(timeLeft / 1000).toFixed(2)}s`);
+                    updateCooldown();
+                }
+            }, getRandomSmallMilliseconds());
+        };
+        updateCooldown();
+    };
+
+    const [cooldown, setCooldown] = useState(false);
+
+    return (
+        <div className="mt-6 flex flex-col gap-2">
+            <textarea
+                className="std-bg dark:std-bg-dark std-text w-full rounded-md border border-gray-400 p-2"
+                placeholder={"Write something..."}
+                rows={3}
+                cols={60}
+                ref={commentTextareaRef}
+            />
+            <button
+                type="submit"
+                onClick={onSendComment}
+                disabled={cooldown}
+                className="flex w-full flex-row  disabled:pointer-events-none disabled:text-gray-600">
+                <IconedText className="flex w-full flex-row items-center justify-center">
+                    <FiSend /> {buttonText}
+                </IconedText>
+            </button>
+        </div>
     );
 }
