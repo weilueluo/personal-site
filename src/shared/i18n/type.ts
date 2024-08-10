@@ -55,6 +55,9 @@ export interface Messages {
     "anime.search.result.loading": string;
     "anime.search.result.results": string;
     "anime.search.settings": string;
+    "blog.comments.placeholder": string;
+    "blog.comments.send": string;
+    "blog.comments.title": string;
     "blog.copy_link": string;
     "blog.download": string;
     "blog.share": string;

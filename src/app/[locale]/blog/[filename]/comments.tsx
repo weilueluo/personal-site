@@ -3,6 +3,8 @@ import IconedText from "@/components/ui/icon-text";
 import Loading from "@/components/ui/loading/spinner";
 import Separator from "@/components/ui/separator";
 import { useComments } from "@/shared/dynamo";
+import { formattedMessage, FormattedMessage } from "@/shared/i18n/translation";
+import { Messages } from "@/shared/i18n/type";
 import { BaseCompProps } from "@/shared/types/comp";
 import { useEffect, useRef, useState } from "react";
 import { AiFillClockCircle } from "react-icons/ai";
@@ -21,20 +23,7 @@ export interface CommentSectionProps {
 export default function CommentSection({ filename, messages, locale }: CommentSectionProps & BaseCompProps<"div">) {
     const tableName = process.env.NEXT_PUBLIC_COMMENT_TABLE_NAME ?? "";
     const identityPoolId = process.env.NEXT_PUBLIC_COMMENT_COGNITO_POOL_ID ?? "";
-    // console.log("tableName", tableName);
-    // console.log("identityPoolId", identityPoolId);
     const { comments, loading, reload, sendComment } = useComments(identityPoolId, tableName, filename);
-
-    const commentTextareaRef = useRef<HTMLTextAreaElement>(null);
-    const onSendComment = () => {
-        if (commentTextareaRef.current) {
-            const comment = commentTextareaRef.current.value;
-            if (comment) {
-                sendComment(comment);
-                commentTextareaRef.current.value = "";
-            }
-        }
-    };
 
     useEffect(() => {
         reload();
@@ -42,7 +31,9 @@ export default function CommentSection({ filename, messages, locale }: CommentSe
 
     return (
         <>
-            <h1 className="text-center font-bold">Comments (Experimental)</h1>
+            <h1 className="text-center font-bold">
+                <FormattedMessage messages={messages} id="blog.comments.title" />
+            </h1>
             <Separator className="mb-4 h-2" />
             <div className="flex w-4/5 flex-col items-center">
                 {comments.length > 0 && (
@@ -67,8 +58,7 @@ export default function CommentSection({ filename, messages, locale }: CommentSe
                     </>
                 )}
                 {loading && <Loading className="h-24" />}
-                {/* <Separator className="mb-6 mt-6 h-2" /> */}
-                <SendComment sendComment={sendComment} />
+                <SendComment sendComment={sendComment} messages={messages} />
             </div>
         </>
     );
@@ -78,8 +68,8 @@ const getRandomSmallMilliseconds = () => {
     return Math.floor(Math.random() * 50);
 };
 
-function SendComment({ sendComment }: { sendComment: (comment: string) => void }) {
-    const [buttonText, setButtonText] = useState("Add Comment");
+function SendComment({ sendComment, messages }: { sendComment: (comment: string) => void; messages: Messages }) {
+    const [buttonText, setButtonText] = useState(formattedMessage(messages, "blog.comments.send"));
     const commentTextareaRef = useRef<HTMLTextAreaElement>(null);
     const onSendComment = () => {
         if (commentTextareaRef.current) {
@@ -101,7 +91,7 @@ function SendComment({ sendComment }: { sendComment: (comment: string) => void }
                 const currTime = Date.now();
                 const timeLeft = cooldownMs - (currTime - startTime);
                 if (timeLeft <= 0) {
-                    setButtonText("Add Comment");
+                    setButtonText(formattedMessage(messages, "blog.comments.send"));
                     setCooldown(false);
                 } else {
                     setButtonText(`${(timeLeft / 1000).toFixed(2)}s`);
@@ -117,10 +107,10 @@ function SendComment({ sendComment }: { sendComment: (comment: string) => void }
     return (
         <div className="mt-6 flex flex-col gap-2">
             <textarea
-                className="std-bg dark:std-bg-dark std-text w-full rounded-md border border-gray-400 p-2"
-                placeholder={"Write something..."}
+                className="std-bg dark:std-bg-dark std-text max-w-full rounded-md border border-gray-400 p-2"
+                placeholder={formattedMessage(messages, "blog.comments.placeholder")}
                 rows={3}
-                cols={60}
+                cols={64}
                 ref={commentTextareaRef}
             />
             <button
