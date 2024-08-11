@@ -5,7 +5,7 @@ import React, { Children, ComponentPropsWithoutRef, useEffect, useState } from "
 
 import Separator from "./separator";
 import "@/components/ui/border.scss";
-import { MdExpandMore, MdUnfoldMore } from "react-icons/md/index";
+import { MdExpandMore, MdUnfoldMore } from "react-icons/md";
 
 export interface DropdownProps extends ComponentPropsWithoutRef<"div"> {}
 export interface DropdownListProps extends ComponentPropsWithoutRef<"div"> {

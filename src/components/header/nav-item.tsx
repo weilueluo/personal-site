@@ -7,7 +7,7 @@ import { tm } from "@/shared/utils";
 import { getDomainedOrigin } from "@/shared/utils-client";
 import Link from "next/link";
 import React, { forwardRef, useEffect, useState } from "react";
-import { ImNewTab } from "react-icons/im/index";
+import { ImNewTab } from "react-icons/im";
 
 interface NavItemProps extends BaseCompProps<"a"> {
     href?: string;

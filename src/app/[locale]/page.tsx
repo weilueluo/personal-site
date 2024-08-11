@@ -6,12 +6,12 @@ import Loading from "@/components/ui/loading/spinner";
 import { FormattedMessage, fetchMessages } from "@/shared/i18n/translation";
 import { BasePageProps } from "@/shared/types/comp";
 import dynamic from "next/dynamic";
-import { GiClover } from "react-icons/gi/index";
-import { IoLayers } from "react-icons/io5/index";
-import { RiContactsBook2Fill, RiFilePaper2Fill } from "react-icons/ri/index";
+import { GiClover } from "react-icons/gi";
+import { IoLayers } from "react-icons/io5";
+import { RiContactsBook2Fill, RiFilePaper2Fill, RiPaintFill } from "react-icons/ri";
 import { MdWork } from "react-icons/md/index";
 import { SiGithub } from "react-icons/si/index";
-import { FaRegClone } from "react-icons/fa/index";
+import { FaPaintBrush, FaRegClone } from "react-icons/fa";
 import "@/components/ui/border.scss";
 
 const MyRoom = dynamic(() => import("@/components/locale/my-room"), {
@@ -61,6 +61,13 @@ export default async function Page({ params }: BasePageProps) {
                             <IoLayers className="icon-md" />
                             <span className="grow">
                                 <FormattedMessage messages={messages} id="header.rss" />
+                            </span>
+                        </NavItem>
+
+                        <NavItem className="std-pad" locale={params.locale} messages={messages} href={"/shader"}>
+                            <FaPaintBrush className="icon-md" />
+                            <span className="grow">
+                                <FormattedMessage messages={messages} id="header.shader" />
                             </span>
                         </NavItem>
                     </div>

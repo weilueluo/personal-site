@@ -9,8 +9,8 @@ import { FormattedMessage, formattedMessage } from "@/shared/i18n/translation";
 import { BaseCompProps } from "@/shared/types/comp";
 import dynamic from "next/dynamic";
 import React, { ComponentPropsWithoutRef, FormEvent, useEffect, useState } from "react";
-import { BsSendFill } from "react-icons/bs/index";
-import { IoCheckbox } from "react-icons/io5/index";
+import { BsSendFill } from "react-icons/bs";
+import { IoCheckbox } from "react-icons/io5";
 import IconedText from "../ui/icon-text";
 
 export interface SendMessageOutput {

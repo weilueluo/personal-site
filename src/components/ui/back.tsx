@@ -2,7 +2,7 @@
 import { FormattedMessage } from "@/shared/i18n/translation";
 import { BaseCompProps } from "@/shared/types/comp";
 import { useRouter } from "next/navigation";
-import { IoChevronBackCircle } from "react-icons/io5/index";
+import { IoChevronBackCircle } from "react-icons/io5";
 import IconedText from "./icon-text";
 
 export default function BackButton({ messages, ...rest }: BaseCompProps<"span">) {

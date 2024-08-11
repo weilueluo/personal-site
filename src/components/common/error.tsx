@@ -1,4 +1,4 @@
-import { IoArrowRedoCircle } from "react-icons/io5/index";
+import { IoArrowRedoCircle } from "react-icons/io5";
 import IconedText from "../ui/icon-text";
 
 export default function ErrorPage({ error, reset }: { error: Error; reset: () => void }) {

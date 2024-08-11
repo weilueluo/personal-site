@@ -7,9 +7,29 @@
     .std-pad {
         @apply px-1 py-1 md:px-2;
     }
+
     /* standard stuff applied at body */
     .std-hover:hover {
         @apply cursor-pointer bg-std text-black underline;
+    }
+
+    .std-active {
+        /* @apply bg-black dark:bg-gray-300 font-bold text-white dark:text-black; */
+        /* @apply font-bold; */
+        @apply outline outline-2 outline-gray-300;
+        background: repeating-linear-gradient(45deg, lightgray, lightgray 4px, transparent 4px, transparent 10px);
+        /* repeating-linear-gradient(165deg, black, black 4px, transparent 4px, transparent 10px); */
+    }
+    .std-active.std-hover:hover {
+        @apply text-black;
+    }
+
+    .std-active-dark {
+        @apply outline outline-2 outline-black;
+        background: repeating-linear-gradient(45deg, black, black 4px, transparent 4px, transparent 10px);
+    }
+    .std-active-dark.std-hover:hover {
+        @apply text-white;
     }
 
     .std-text {
@@ -27,6 +47,7 @@
     .secondary-text {
         @apply text-sm font-semibold;
     }
+
     .secondary-hover:hover {
         @apply cursor-default text-std underline;
     }
@@ -35,6 +56,7 @@
         font-size: 0.75rem /* 12px */;
         line-height: 1rem /* 16px */;
     }
+
     .sm-text-size {
         @apply text-ssm md:text-sm;
     }
@@ -42,9 +64,11 @@
     .std-bg {
         @apply bg-white dark:bg-slate-800;
     }
+
     .std-bg-dark {
         @apply bg-slate-800;
     }
+
     /* icon */
 
     /* for icon + text styling, commonly used */
@@ -56,9 +80,11 @@
     .std-icon {
         @apply h-3 w-3 md:h-4 md:w-4;
     }
+
     .md-icon {
         @apply h-4 w-4 md:h-5 md:w-5;
     }
+
     .lg-icon {
         @apply h-5 w-5 md:h-6 md:w-6;
     }
@@ -70,12 +96,15 @@
     .my-grid-cols-2 {
         grid-template-columns: repeat(2, minmax(0, max-content));
     }
+
     .my-grid-cols-3 {
         grid-template-columns: repeat(3, minmax(0, max-content));
     }
+
     .my-grid-cols-4 {
         grid-template-columns: repeat(4, minmax(0, max-content));
     }
+
     .my-grid-cols-5 {
         grid-template-columns: repeat(5, minmax(0, max-content));
     }
@@ -84,6 +113,7 @@
 details > summary {
     list-style: none;
 }
+
 details > summary::-webkit-details-marker {
     display: none;
 }

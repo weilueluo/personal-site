@@ -5,13 +5,13 @@ import { GITHUB_CV_URL, GITHUB_REPO_URL, LOCALES, LOCALE_DISPLAY_MAP, V1_URL, V2
 import { FormattedMessage } from "@/shared/i18n/translation";
 import { BaseCompProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
-import { FaRegClone } from "react-icons/fa/index";
-import { GiClover } from "react-icons/gi/index";
-import { ImHome } from "react-icons/im/index";
-import { IoLanguage, IoLayers, IoNavigateCircle } from "react-icons/io5/index";
-import { MdWork } from "react-icons/md/index";
-import { RiContactsBook2Fill, RiFilePaper2Fill } from "react-icons/ri/index";
-import { SiGithub } from "react-icons/si/index";
+import { FaPaintBrush, FaRegClone } from "react-icons/fa";
+import { GiClover } from "react-icons/gi";
+import { ImHome } from "react-icons/im";
+import { IoLanguage, IoLayers, IoNavigateCircle } from "react-icons/io5";
+import { MdWork } from "react-icons/md";
+import { RiContactsBook2Fill, RiFilePaper2Fill } from "react-icons/ri";
+import { SiGithub } from "react-icons/si";
 import * as dropdown from "../ui/dropdown";
 import NavItem from "./nav-item";
 import ThemeButton from "./theme-button";
@@ -82,6 +82,13 @@ export default async function Header({ className, messages, locale, ...props }: 
                             <IoLayers className="icon-md" />
                             <span className="grow">
                                 <FormattedMessage messages={messages} id="header.rss" />
+                            </span>
+                        </NavItem>
+                        <Separator size="sm" />
+                        <NavItem locale={locale} messages={messages} href={"/shader"}>
+                            <FaPaintBrush className="icon-md" />
+                            <span className="grow">
+                                <FormattedMessage messages={messages} id="header.shader" />
                             </span>
                         </NavItem>
 
