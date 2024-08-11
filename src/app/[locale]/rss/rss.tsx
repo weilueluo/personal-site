@@ -17,12 +17,12 @@ import {
     AiFillEyeInvisible,
     AiFillTag,
     AiOutlineCloseCircle,
-} from "react-icons/ai/index";
-import { CgFormatSeparator } from "react-icons/cg/index";
-import { FaAngleDown, FaAngleUp } from "react-icons/fa/index";
-import { ImNewTab } from "react-icons/im/index";
-import { IoMdRefreshCircle } from "react-icons/io/index";
-import { VscLoading } from "react-icons/vsc/index";
+} from "react-icons/ai";
+import { CgFormatSeparator } from "react-icons/cg";
+import { FaAngleDown, FaAngleUp } from "react-icons/fa";
+import { ImNewTab } from "react-icons/im";
+import { IoMdRefreshCircle } from "react-icons/io";
+import { VscLoading } from "react-icons/vsc";
 import { useUserRSSConfigs, useSingleUserFeedConfigs } from "./context";
 
 export default function RSS({ messages, locale }: BaseCompProps<"div">) {

@@ -2,7 +2,7 @@
 import { tm } from "@/shared/utils";
 import Link from "next/link";
 import React from "react";
-import { ImNewTab } from "react-icons/im/index";
+import { ImNewTab } from "react-icons/im";
 import "../ui/border.scss";
 
 export function Item({

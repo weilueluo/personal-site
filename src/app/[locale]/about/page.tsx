@@ -8,13 +8,13 @@ import {
     SiTerraform,
     SiThreedotjs,
     SiTypescript,
-} from "react-icons/si/index";
+} from "react-icons/si";
 
 import { FormattedMessage, fetchMessages } from "@/shared/i18n/translation";
 import { BasePageProps } from "@/shared/types/comp";
 import { tm } from "@/shared/utils";
 import React from "react";
-import { MdEmail } from "react-icons/md/index";
+import { MdEmail } from "react-icons/md";
 import { Item } from "../../../components/about/item";
 import SendMessage from "@/components/about/send-message";
 

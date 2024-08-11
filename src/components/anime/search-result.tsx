@@ -7,7 +7,7 @@ import { tm } from "@/shared/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { VscLoading } from "react-icons/vsc/index";
+import { VscLoading } from "react-icons/vsc";
 import { Trigger } from "../ui/dropdown";
 import IconedText from "../ui/icon-text";
 import { SearchResult } from "./searcher";

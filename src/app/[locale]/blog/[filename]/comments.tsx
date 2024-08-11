@@ -35,7 +35,7 @@ export default function CommentSection({ filename, messages, locale }: CommentSe
                 <FormattedMessage messages={messages} id="blog.comments.title" />
             </h1>
             <Separator className="mb-4 h-2" />
-            <div className="flex w-4/5 flex-col items-center">
+            <div className="flex w-full flex-col items-center md:w-4/5">
                 {comments.length > 0 && (
                     <>
                         <ul className="flex w-full flex-col gap-2">
@@ -105,7 +105,7 @@ function SendComment({ sendComment, messages }: { sendComment: (comment: string)
     const [cooldown, setCooldown] = useState(false);
 
     return (
-        <div className="mt-6 flex flex-col gap-2">
+        <div className="mt-6 flex max-w-full flex-col gap-2">
             <textarea
                 className="std-bg dark:std-bg-dark std-text max-w-full rounded-md border border-gray-400 p-2"
                 placeholder={formattedMessage(messages, "blog.comments.placeholder")}

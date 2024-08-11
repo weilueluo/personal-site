@@ -4,8 +4,8 @@ import * as dropdown from "@/components/ui/dropdown";
 import IconedText from "@/components/ui/icon-text";
 import { FormattedMessage } from "@/shared/i18n/translation";
 import { Messages } from "@/shared/i18n/type";
-import { BsShareFill } from "react-icons/bs/index";
-import { MdContentPaste } from "react-icons/md/index";
+import { BsShareFill } from "react-icons/bs";
+import { MdContentPaste } from "react-icons/md";
 
 export default function ShareButton({ messages }: { messages: Messages }) {
     const copylinkOnClick = () => {

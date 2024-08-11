@@ -1,18 +1,18 @@
 import NavItem from "@/components/header/nav-item";
 import CanvasLayout from "@/components/three/layout";
 import "@/components/ui/board.scss";
-import { GITHUB_CV_URL, GITHUB_REPO_URL, V1_URL, V2_URL } from "@/shared/constants";
+import "@/components/ui/border.scss";
 import Loading from "@/components/ui/loading/spinner";
+import { GITHUB_CV_URL, GITHUB_REPO_URL, V1_URL, V2_URL } from "@/shared/constants";
 import { FormattedMessage, fetchMessages } from "@/shared/i18n/translation";
 import { BasePageProps } from "@/shared/types/comp";
 import dynamic from "next/dynamic";
+import { FaPaintBrush, FaRegClone } from "react-icons/fa";
 import { GiClover } from "react-icons/gi";
 import { IoLayers } from "react-icons/io5";
-import { RiContactsBook2Fill, RiFilePaper2Fill, RiPaintFill } from "react-icons/ri";
-import { MdWork } from "react-icons/md/index";
-import { SiGithub } from "react-icons/si/index";
-import { FaPaintBrush, FaRegClone } from "react-icons/fa";
-import "@/components/ui/border.scss";
+import { MdWork } from "react-icons/md";
+import { RiContactsBook2Fill, RiFilePaper2Fill } from "react-icons/ri";
+import { SiGithub } from "react-icons/si";
 
 const MyRoom = dynamic(() => import("@/components/locale/my-room"), {
     ssr: false,
