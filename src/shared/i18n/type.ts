@@ -70,6 +70,7 @@ export interface Messages {
     "header.home": string;
     "header.more": string;
     "header.rss": string;
+    "header.shader": string;
     "header.source": string;
     "header.theme.dark": string;
     "header.theme.light": string;
