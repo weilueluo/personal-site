@@ -1,0 +1,110 @@
+* {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  font-family: "Fira Code", monospace;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+body {
+  background-color: gray;
+}
+
+.wrapper {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+ul {
+  list-style-type: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+.pointer-events-none {
+  pointer-events: none;
+}
+
+#all-wrapper, #content-wrapper {
+  height: 100vh;
+  width: 100vw;
+}
+
+#content-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.background-image {
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: url(../../../assets/image/background.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.website-tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3rem;
+  width: 3rem;
+  margin: 1rem;
+  background-image: url("../../../assets/icon/android-chrome-512x512.png");
+  background-size: cover;
+  z-index: 99;
+  filter: blur(1px);
+  opacity: 0.5;
+}
+
+.website-tag:hover {
+  filter: blur(0px);
+  opacity: 0.8;
+  cursor: pointer;
+}
+.website-tag:hover .tooltip {
+  visibility: visible;
+  opacity: 0.4;
+}
+
+.tooltip {
+  visibility: hidden;
+  height: 100%;
+  width: 100%;
+  display: inline-block;
+  position: relative;
+}
+
+.tooltip-text {
+  position: absolute;
+  height: 100%;
+  width: fit-content;
+  left: 105%;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  padding: 1rem;
+  background-color: white;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

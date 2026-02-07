@@ -1,0 +1,76 @@
+﻿@use 'sass:math'
+@use '../styles/Card.module' as Card
+@use '../styles/Section.module' as Section
+@use 'components/common/css/button'
+
+.cardList
+    @include Card.cardList
+    margin-top: 10px
+
+    &.collapse
+        @include Card.collapse
+
+
+.card
+    @include Card.card
+    max-width: 200px
+
+
+.image
+    @include Card.image
+
+.link
+    @include Card.link
+
+.imageContainer
+    @include Card.imageContainer
+
+.title
+    @include Card.title
+
+.sectionContainer
+    @include Section.sectionContainer
+    border-bottom: 1px solid black
+    
+.headerLeft
+    @include Section.headerLeft
+    
+.headerRight
+    @include Section.headerRight
+    
+.sectionTitle
+    @include Section.sectionTitle
+
+.sectionHeader
+    @include Section.sectionHeader
+
+.sectionFooter
+    @include Section.sectionFooter
+    margin-top: 10px
+    margin-bottom: 20px
+    
+.expandButton, .loadMoreButton
+    text-transform: uppercase
+
+    @include button.button
+
+    font-size: max(min(3vw, 0.8em), 0.6em)
+    width: max(min(22vw, 120px), 60px)
+    height: clamp(20px, 30px, 8vw)
+
+    overflow: hidden
+    
+    display: flex
+    align-items: center
+    justify-content: center
+
+    &.allLoaded,
+    &.loading
+        border: 0px
+        background-color: transparent
+
+        &:hover
+            cursor: default
+
+.loadingCardContainer
+    height: clamp(160px, 260px, 35vw)

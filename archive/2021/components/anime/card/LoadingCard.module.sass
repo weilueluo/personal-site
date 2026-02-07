@@ -1,0 +1,60 @@
+@use 'sass:math'
+@use '../styles/Card.module' as Card
+
+
+@mixin loadingCard
+
+    @include Card.card
+
+    height: 100%
+    width: 100%
+
+    position: relative
+
+    border-radius: 5px
+
+@mixin rotate
+    content: ''
+    position: absolute
+    height: 100%
+    width: 100%
+    background: linear-gradient(90deg, transparent, #77777780, transparent)
+    
+    scale: 3
+
+    animation-name: loading
+    animation-duration: 2s
+    animation-iteration-count: infinite
+    animation-fill-mode: both
+    animation-play-state: running
+    animation-timing-function: linear
+    z-index: -1
+
+
+@for $i from 1 through 50
+    .loadingCard
+        @include loadingCard
+
+        .rotateOne_#{$i}
+            @include rotate
+
+            left: percentage(random() * 0.8 - 0.4)
+            top: percentage(random() * 0.8 - 0.4)
+            animation-duration: random() * 2 + 1s
+
+        .rotateTwo_#{$i}
+            @include rotate
+            
+            left: percentage(random() * 0.8 - 0.4)
+            top: percentage(random() * 0.8 - 0.4)
+            animation-duration: random() * 3 + 1s
+
+            animation-direction: reverse
+
+
+@keyframes loading
+    0%
+        transform: rotateZ(0deg)
+        
+    100%
+        transform: rotateZ(180deg)

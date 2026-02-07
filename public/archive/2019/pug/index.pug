@@ -1,0 +1,87 @@
+extends templates/base
+
+append stylesheets
+    link(rel="stylesheet", href="css/postcss-generated/index/index.css")
+
+append scripts
+    script(src='js/index/index.js', type='module')
+    script(src='js/index/list-item.js', type='module')
+
+append contents
+    #all-wrapper
+        #intro-wrapper 
+            .description-wrapper
+                span.description-span Hello I am Weilue Luo.
+                span.description-span A Computer Vision &#38; Graphics student at University College London. Graduating in Sept 2022.
+        //- params
+        ul#list 
+            - 
+                const params = {
+                    cv: { 
+                        mixin: 'cv',
+                        name: 'CV', 
+                        description: 'View My Career.'
+                    },
+                    works: { 
+                        mixin: 'works',
+                        name: 'WORKS', 
+                        description: 'View My Works.'
+                    },
+                    waifu: {
+                        mixin: 'waifu',
+                        name: 'WAIFUS', 
+                        description: 'View My Hobbies.'
+                    },
+                    about: {
+                        mixin: 'about',
+                        name: 'ABOUT', 
+                        description: 'View This Website.'
+                    }
+                }
+            //- functions
+            mixin cv
+                each _ in Array(2)
+                    .background-image-container
+                        .background-image 
+                        .mini-cv
+                            .photo
+                                .human 
+                                    .head 
+                                    .body 
+                            .details 
+                                each _ in Array(5)
+                                    .line 
+                            .content 
+                                each _ in Array(7)
+                                    .line
+                                    
+            mixin waifu
+                .background-image-container 
+                    .background-image 
+                    .waifu
+                        .water-curtain 
+                            .mona-container
+                                .mona
+                            .gray-mona-container
+                                .gray-mona
+                        
+            mixin about
+                .background-image-container 
+                    .background-image 
+
+            mixin works 
+                .background-image-container 
+                    .background-image 
+
+            //- render html
+            each param, key in params
+                li.list-item(class="list-item-" + key)
+                        .cube
+                            .background-cube
+                            +#{param.mixin}()
+                            .cube-face.cube-face-front 
+                                a(href='#') #{param.name}
+                            .cube-face.cube-face-back 
+                                a(href='#') #{param.description}
+                            .cube-face.cube-face-bottom 
+                            .cube-face.cube-face-top 

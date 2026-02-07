@@ -1,0 +1,138 @@
+@use "../utils" as *;
+
+.mini-cv {
+    @include dimension-fill;
+    background: black;
+    
+    position: relative;  // child absolute
+    // children positions
+    display: grid;
+    grid-template-areas: 
+        "photo details"
+        "content content";
+    padding: 10%;
+    grid-gap: 5%;
+
+    opacity: 0; // hide at start up, reveal later
+    transform: rotateZ(180deg);
+
+    @for $i from 1 through 5 {
+        .details .line:nth-of-type(#{$i}) {
+            @if random() > 0.5 {
+                left: 100%;
+            } @else {
+                left: -100%;
+            }
+        }
+    }
+
+    @for $i from 1 through 7 {
+        .content .line:nth-of-type(#{$i}) {
+            @if random() > 0.5 {
+                left: 100%;
+            } @else {
+                left: -100%;
+            }
+        }
+    }
+}
+
+.photo {
+    grid-area: photo;
+    background: white;
+
+    .human {
+        height: 100%;
+        width: 100%;
+        bottom: -100%;
+        position: relative;
+
+        .head {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background: black;
+        }
+    
+        .body {
+            position: absolute;
+            top: 50%;
+            bottom: 0;
+            background: black;
+            height: 50%;
+            width: 100%;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+    }
+}
+
+.details {
+    grid-area: details;
+}
+
+.content {
+    grid-area: content;
+}
+
+.details,
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+
+    overflow: hidden;
+}
+
+$line-height: 0.2rem;
+
+.line {
+    height: $line-height;
+    width: 100%;
+    background: white;
+    position: relative;
+
+
+    &::after, &::before {
+        content: '';
+        height: $line-height;
+        width: $line-height;
+        background: black;
+        position: absolute;
+        top: 0;
+    }
+}
+
+@mixin gap-style() {
+    left: percentage(random());
+    width: random() + 0.1 + rem;
+}
+
+@for $j from 1 through 3 {
+    .background-image-container:nth-of-type(#{$j}) {
+        @for $i from 1 through 5 {
+            .details .line:nth-of-type(#{$i})::after {
+                @include gap-style();
+            }
+            .details .line:nth-of-type(#{$i})::before {
+                @include gap-style();
+            }
+        }
+
+        @for $i from 1 through 7 {
+            .content .line:nth-of-type(#{$i})::after {
+                @include gap-style();
+            }
+            .content .line:nth-of-type(#{$i})::before {
+                @include gap-style();
+            }
+        }
+    }
+}
+
+
+

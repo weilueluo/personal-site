@@ -1,0 +1,39 @@
+﻿@use 'components/common/css/button'
+
+
+.under-development-banner
+    position: relative
+    height: fit-content
+    width: 100%
+    background-color: #8a7529
+    color: #fff
+    text-transform: uppercase
+
+    padding: 15px 0px
+
+    display: flex
+    align-items: center
+    justify-content: center
+
+    z-index: 99999
+
+.under-development-button
+
+    @include button.button
+
+    position: absolute
+    right: 2vw
+    width: max(min(50px, 9vw), 35px)
+
+    margin: auto 0px
+
+    background-color: #ccc
+    color: #000
+    border: none
+    border-radius: 5px
+    padding: 6px 0px
+
+    &:hover
+        background-color: #333
+        cursor: pointer
+        color: #ccc

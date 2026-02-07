@@ -1,0 +1,65 @@
+@use "sass:math";
+@reference "tailwindcss";
+
+$width: 2.2em;
+$height: 2em;
+
+.textContainer {
+    @apply flex h-full w-20 items-center justify-center whitespace-nowrap;
+    perspective: 100px;
+}
+.iconContainer {
+    @apply flex h-full w-6 items-center justify-center;
+    perspective: 100px;
+}
+
+$distToCenter: math.tan(30deg) * math.div(-$height, 2);
+
+.pieces {
+    position: relative;
+    transform-style: preserve-3d;
+    transform-origin: center center $distToCenter;
+    transform: rotateX(0deg);
+    transition: transform 0.5s ease-in-out;
+    width: fit-content;
+}
+
+.pieces,
+.pieceContainer {
+    position: absolute;
+    height: $height;
+    width: 100%;
+}
+
+.pieceContainer:nth-child(1) {
+    span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.pieceContainer:nth-child(2) {
+    transform-origin: top;
+    transform: rotateX(-60deg);
+
+    span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotateX(180deg);
+    }
+}
+
+.pieceContainer:nth-child(3) {
+    transform-origin: bottom;
+    transform: rotateX(60deg);
+
+    span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotateX(180deg);
+    }
+}

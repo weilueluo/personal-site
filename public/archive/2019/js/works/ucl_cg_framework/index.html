@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CG Framework Test</title>
+
+    <style>
+        .canvas-container {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-direction: column;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="canvas-container">
+        <canvas id="gl-canvas-cwk1" width="800" height="400">
+            Your browser doesn't support canvas D:
+        </canvas>
+    
+        <canvas id="gl-canvas-cwk2" width="800" height="400">
+            Your browser doesn't support canvas D:
+        </canvas>
+    
+        <canvas id="gl-canvas-cwk3" width="800" height="400">
+            Your browser doesn't support canvas D:
+        </canvas>
+    </div>
+
+    <!-- cwk 1 -->
+    <script id="cwk1-fragment-shader" , type="x-shader/x-fragment" , src="shaders/cwk1/fragmentShader.glsl"></script>
+    <script id='cwk1-vertex-shader' , type="x-shader/x-vertex" , src="shaders/cwk1/vertexShader.glsl"></script>
+
+    <!-- cwk 2 -->
+
+    <script id="cwk2-fragment-shader" , type="x-shader/x-fragment" , src="shaders/cwk2/fragmentShader.glsl"></script>
+    <script id='cwk2-vertex-shader' , type="x-shader/x-vertex" , src="shaders/cwk2/vertexShader.glsl"></script>
+
+    <!-- cwk 3 -->
+    <script id="cwk3-fragment-shader" , type="x-shader/x-fragment" , src="shaders/cwk3/fragmentShader.glsl"></script>
+    <script id='cwk3-vertex-shader' , type="x-shader/x-vertex" , src="shaders/cwk3/vertexShader.glsl"></script>
+    <script id="cwk3-tonemap-shader" , type="x-shader/x-fragment" , src="shaders/cwk3/tonemapShader.glsl"></script>
+
+    <script type="text/javascript" src="js/framework.js"></script>
+
+    <script>
+        window.addEventListener('load', () => {
+            let cwk1Framework = new Framework(
+                canvasId = 'gl-canvas-cwk1',
+                vertexShaderId = 'cwk1-vertex-shader',
+                fragmentShaderId = 'cwk1-fragment-shader',
+                isPathTracer = false,
+                tonemapShaderId = 'tonemap-shader'
+            );
+            cwk1Framework.addSolution('SOLUTION_FRESNEL');
+            cwk1Framework.initialize().then(() => cwk1Framework.drawCanvas());
+
+
+            let cwk2Framework = new Framework(
+                canvasId = 'gl-canvas-cwk2',
+                vertexShaderId = 'cwk2-vertex-shader',
+                fragmentShaderId = 'cwk2-fragment-shader',
+                isPathTracer = false,
+                tonemapShaderId = 'tonemap-shader'
+            );
+            cwk2Framework.addSolution('SOLUTION_AALIAS');
+            cwk2Framework.initialize().then(() => cwk2Framework.drawCanvas());
+
+
+            let cwk3Framework = new Framework(
+                canvasId = 'gl-canvas-cwk3',
+                vertexShaderId = 'cwk3-vertex-shader',
+                fragmentShaderId = 'cwk3-fragment-shader',
+                isPathTracer = true,
+                tonemapShaderId = 'cwk3-tonemap-shader'
+            );
+            cwk3Framework.addSolution('SOLUTION_MIS');
+            cwk3Framework.initialize().then(() => cwk3Framework.start(300));
+
+
+        });
+    </script>
+
+</body>
+
+</html>

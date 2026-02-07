@@ -1,0 +1,35 @@
+doctype html
+html(lang='en')
+    head
+        meta(charset='utf-8')
+        meta(name='viewport' content='width=device-width, initial-scale=1.0')
+        title Weilue's Place
+
+        // stylesheets
+        block stylesheets
+            link(rel="stylesheet", href="css/postcss-generated/base/base.css")
+
+        // font
+        link(rel='preconnect' href='https://fonts.googleapis.com')
+        link(rel='preconnect' href='https://fonts.gstatic.com' crossorigin)
+        link(rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Fira+Code&display=swap' crossorigin)
+
+        // favicon
+        link(rel='apple-touch-icon' sizes='180x180' href='assets/icon/apple-touch-icon.png')
+        link(rel='icon' type='image/png' sizes='32x32' href='assets/icon/favicon-32x32.png')
+        link(rel='icon' type='image/png' sizes='16x16' href='assets/icon/favicon-16x16.png')
+        link(rel='manifest' href='site.webmanifest')
+    // https://www.pixiv.net/artworks/92619250
+    body.background-image
+        #all-wrapper
+            .website-tag
+                .tooltip
+                    .tooltip-text return to main page
+            block wrapper
+            #content-wrapper
+                block contents
+
+
+block scripts
+    script(src='js/dependencies/jquery-3.6.0.min.js')
+    script(src='js/base/base.js')

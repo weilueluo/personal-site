@@ -1,0 +1,246 @@
+
+
+#wrapper {
+    height: 100%;
+    width: 100%;
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-container {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 5%;
+}
+@media screen and (orientation:portrait) {
+    .content-container {
+        flex-direction: column;
+    }
+}
+
+.links-container {
+    height: 80vh;
+    width: min(80vw, 40rem);
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+
+    transition: width 0.5s, height 0.5s;
+}
+
+
+
+.link {
+    $height: 3rem;
+
+    height: $height;
+    width: 80%;
+
+    background-color: wheat;
+    border: 1px solid black;
+    color: black;
+
+    text-align: center;
+    line-height: $height;
+    vertical-align: middle;
+
+    overflow: hidden;
+}
+
+.link:hover {
+    cursor: pointer;
+
+    box-shadow: 0 0 5px 0px wheat;
+}
+
+.passive-state {
+    .links-container {
+        width: min(20vw, 10rem);
+    }
+}
+
+
+.works-container {
+    height: 75vh;
+    width: 0vw;
+
+    background-color: wheat;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: width 0.5s;
+}
+.works-container.active-state {
+    width: 70vw;
+}
+
+
+// uclcg stuff
+.uclcg-container {
+    height: 0%;
+    width: 0%;
+
+    background-color: rgb(41, 41, 41);
+
+    display: grid;
+    grid-template-areas: 
+        "reserved option"
+        "coursework canvas";
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 1fr 3fr;
+    grid-gap: 0.5rem;
+
+    transition: height 0.5s, width 0.5s;
+}
+
+@media screen and (orientation:portrait) {
+    .uclcg-container {
+        grid-template-areas: 
+        "coursework"
+        "option"
+        "canvas";
+
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 3fr;
+    }
+}
+
+.uclcg-container * {
+    opacity: 0;
+}
+
+.uclcg-active {
+    .uclcg-container {
+        height: 100%;
+        width: 100%;
+    }
+
+    .uclcg-container * {
+        opacity: 1;
+    }
+}
+
+.options-container {
+    grid-area: option;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+
+    overflow: hidden;
+}
+
+.courseworks-container {
+    grid-area: coursework;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    row-gap: 3rem;
+}
+
+.canvas-container {
+    grid-area: canvas;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    background-color: rgb(31, 31, 31);
+}
+
+.gl-canvas {
+    // position: absolute;
+    // top: 0;
+    // left: 0;
+}
+
+button {
+    width: 10rem;
+    height: 2rem;
+
+    background-color: transparent;
+    border-radius: 5px;
+    border: 2px solid white;
+    color: white;
+}
+
+button:hover {
+    cursor: pointer;
+    background-color: wheat;
+    color: black;
+    border: 2px solid black;
+}
+
+.coursework1-active #coursework1,
+.coursework2-active #coursework2,
+.coursework3-active #coursework3 {
+    box-shadow: 0 0 10px 0 wheat;
+    border: 2px solid black;
+}
+
+.options-container {
+    position: relative;
+}
+
+.uclcg-active .options-container * {
+    display: none;
+}
+
+.uclcg-active .coursework1-active .coursework1-options,
+.uclcg-active .coursework2-active .coursework2-options,
+.uclcg-active .coursework3-active .coursework3-options {
+    display: flex;
+    * {
+        display: initial;
+    }
+}
+
+.coursework1-options,
+.coursework2-options,
+.coursework3-options {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 1.5rem;
+}
+
+.coursework2-options {
+    column-gap: 4rem;
+    row-gap: 2rem;
+}
+
+.coursework3-options {
+    column-gap: 3rem;
+    row-gap: 2rem;
+}
+
+.option-button.active-state {
+    border: 2px solid black;
+    box-shadow: 0 0 10px 0 wheat;
+}

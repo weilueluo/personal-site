@@ -1,0 +1,162 @@
+@forward "list-item-hover-cv";
+@forward "list-item-hover-waifu";
+
+$phase-duration: 0.3s;
+
+$list-item-height: 3rem;
+$list-item-width: 15rem;
+
+$list-item-hover-height: 15rem;
+$list-item-hover-width: 10rem;
+
+.list-item.list-item-hover-in {
+    cursor: pointer;
+    transition: box-shadow 0s 0s;
+    box-shadow: 0px 0px 0px 0px white;
+
+    @keyframes dimension-animation {
+        to {
+            height: $list-item-hover-height;
+            width: $list-item-hover-width;
+        }
+    }
+
+    @keyframes text-shadow-animation {
+        to {
+            text-shadow: 0px 0px 5px black;
+        }
+    }
+
+    @keyframes cube-animation {
+        to {
+            transform: rotateX(-180deg);
+        }
+    }
+
+    @keyframes image-container-animation {
+        from {
+            border: 0px solid white;
+            box-shadow: 0px 0px 0px 0px black;
+        }
+        to {
+            border: 1px solid white;
+            box-shadow: 0px -3px 3px 0px black;
+        }
+    }
+
+    @keyframes rotate-animation {
+        from {
+            transform: translate(-50%, -50%) rotateX(0deg);
+        }
+        to {
+            transform: translate(-50%, -50%) rotateX(45deg);
+        }
+    }
+
+    @keyframes filter-animation {
+        from {
+            filter: grayscale(100%) blur(3px);
+        }
+        to {
+            filter: grayscale(0%) blur(0px);
+        }
+    }
+
+    animation: dimension-animation $phase-duration $phase-duration forwards;
+    a {
+        animation: text-shadow-animation $phase-duration forwards;
+    }
+    .cube {
+        animation: cube-animation $phase-duration forwards;
+    }
+    .background-image-container {
+        animation: image-container-animation $phase-duration $phase-duration forwards,
+            rotate-animation $phase-duration $phase-duration * 2 forwards;
+    }
+}
+
+.list-item.list-item-hover-out {
+    @keyframes dimension-animation-reverse {
+        0% {
+            height: $list-item-hover-height;
+            width: $list-item-hover-width;
+        }
+        50% {
+            height: $list-item-height;
+            width: $list-item-hover-width;
+        }
+        100% {
+            height: $list-item-height;
+            width: $list-item-width;
+        }
+    }
+
+    @keyframes text-shadow-animation-reverse {
+        0%,
+        66% {
+            text-shadow: 0px 0px 5px black;
+        }
+        100% {
+            text-shadow: 0px 0px 0px black;
+        }
+    }
+
+    @keyframes cube-animation-reverse {
+        0%,
+        66% {
+            transform: rotateX(-180deg);
+        }
+        100% {
+            transform: rotateX(0deg);
+        }
+    }
+
+    @keyframes image-container-animation-reverse {
+        0%,
+        66% {
+            border: 1px solid white;
+            box-shadow: 0px -3px 3px 0px black;
+        }
+        100% {
+            border: 1px solid transparent;
+            box-shadow: 0px 0px 0px 0px black;
+        }
+    }
+
+    @keyframes rotate-animation-reverse {
+        0%,
+        66% {
+            transform: translate(-50%, -50%) rotateX(45deg);
+        }
+        to {
+            transform: translate(-50%, -50%) rotateX(0deg);
+        }
+    }
+
+    animation: dimension-animation-reverse $phase-duration * 2 forwards;
+
+    .cube {
+        animation: cube-animation-reverse $phase-duration * 3 forwards;
+    }
+    a {
+        animation: text-shadow-animation-reverse $phase-duration * 3 forwards;
+    }
+    .background-image-container {
+        animation: image-container-animation-reverse $phase-duration * 3 forwards,
+            rotate-animation-reverse $phase-duration * 3 forwards;
+    }
+}
+
+.list-item.list-item-mouse-down {
+    transform: translateY(5px);
+}
+
+.list-item.list-item-hover-in-siblings {
+    opacity: 0;
+    transition: 0.3s $phase-duration;
+}
+
+.list-item {
+    opacity: 1;
+    transition: 0.3s;
+}

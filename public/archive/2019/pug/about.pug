@@ -1,0 +1,43 @@
+extends templates/construction
+
+append stylesheets 
+    link(rel="stylesheet", href="css/postcss-generated/about/about.css")
+
+append scripts
+    script(src="./js/about/about.js") 
+
+append contents
+    .description 
+        .section
+            .title This Website Is Built With ...
+            .icons
+                .icon.pug
+                .icon.scss
+                .icon.autoprefixer
+        .section
+            .title This Website is Hosted With ...
+            .icons
+                .icon.route53
+                .icon.cloudfront
+                .icon.s3
+    .message
+        .title Leave me a message ...
+        .message-box
+            textarea(class='message-input', name='message', placeholder='Write something interesting here ...')
+        .contact
+            label(for='anonymous', class='identity-label')
+                input(type='radio', id='anonymous', name='identity', value='Anonymous', checked)
+                div.checkmark
+                span Anonymous
+
+            label(for='email', class='email-label')
+                input(type='radio', id='email', name='identity', value='Email')
+                div.checkmark
+                span Email
+                input(type='text', class='email-input', name='message', placeholer='Email')
+        .action
+            button.send-button Send (Not working yet)
+    #background-image
+        
+
+                                

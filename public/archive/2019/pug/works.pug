@@ -1,0 +1,59 @@
+extends templates/construction
+
+append stylesheets 
+    link(rel="stylesheet", href="css/postcss-generated/works/works.css")
+
+append contents
+    #wrapper
+        .content-container
+            .links-container 
+                .link#uclcg-link UCL Computer Graphics Coursework
+            .works-container
+                .uclcg-container
+                    .canvas-container
+                        canvas.gl-canvas#glCanvas
+                    .courseworks-container
+                        button.coursework-button#coursework1 Ray Tracer
+                        button.coursework-button#coursework2 Rasteriazation
+                        button.coursework-button#coursework3 Path Tracer
+                    .options-container
+                        .coursework1-options
+                            button.option-button#cylinder-and-plane Cylinder And Plane
+                            button.option-button#reflection-refraction Reflect And Refract
+                            button.option-button#fresnel Fresnel
+                        .coursework2-options
+                            button.option-button#projection Projection
+                            button.option-button#rasterization Rasterization
+                            button.option-button#clipping Clipping
+                            button.option-button#interpolation Interpolation
+                            button.option-button#zbuffering Zbuffering
+                            button.option-button#aalias AAlias
+                        .coursework3-options
+                            button.option-button#light Light
+                            button.option-button#bounce Bounce
+                            button.option-button#throughput Throughput
+                            button.option-button#halton Halton
+                            button.option-button#aa AAlias
+                            button.option-button#is Importance Sampling
+                            button.option-button#mis Multi-light IS
+
+append scripts
+    // cwk 1
+    <script id="cwk1-fragment-shader" , type="x-shader/x-fragment" , src="js/works/ucl_cg_framework/shaders/cwk1/fragmentShader.glsl"></script>
+    <script id='cwk1-vertex-shader' , type="x-shader/x-vertex" , src="js/works/ucl_cg_framework/shaders/cwk1/vertexShader.glsl"></script>
+
+    // cwk 2
+    <script id="cwk2-fragment-shader" , type="x-shader/x-fragment" , src="js/works/ucl_cg_framework/shaders/cwk2/fragmentShader.glsl"></script>
+    <script id='cwk2-vertex-shader' , type="x-shader/x-vertex" , src="js/works/ucl_cg_framework/shaders/cwk2/vertexShader.glsl"></script>
+
+    // cwk 3
+    <script id="cwk3-fragment-shader" , type="x-shader/x-fragment" , src="js/works/ucl_cg_framework/shaders/cwk3/fragmentShader.glsl"></script>
+    <script id='cwk3-vertex-shader' , type="x-shader/x-vertex" , src="js/works/ucl_cg_framework/shaders/cwk3/vertexShader.glsl"></script>
+    <script id="cwk3-tonemap-shader" , type="x-shader/x-fragment" , src="js/works/ucl_cg_framework/shaders/cwk3/tonemapShader.glsl"></script>
+
+    // cwk framework
+    script(src='js/works/ucl_cg_framework/js/framework.js')
+
+
+    script(src='js/works/works.js')
+    

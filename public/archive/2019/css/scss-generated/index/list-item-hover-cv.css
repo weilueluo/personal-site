@@ -1,0 +1,72 @@
+.list-item-hover-in.list-item-cv .mini-cv {
+  animation: opacity-animation 0.5s forwards;
+}
+@keyframes opacity-animation {
+  to {
+    opacity: 0.3;
+  }
+}
+.list-item-hover-in.list-item-cv .mini-cv .human {
+  transition: bottom 0.7s 0.5s ease-out;
+  bottom: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .details .line:nth-of-type(1) {
+  transition: left 0.5005782381s 1.3281530179s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .details .line:nth-of-type(2) {
+  transition: left 0.8463992894s 0.8492055635s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .details .line:nth-of-type(3) {
+  transition: left 1.3408003198s 1.2079868537s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .details .line:nth-of-type(4) {
+  transition: left 0.9644586765s 1.0163424105s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .details .line:nth-of-type(5) {
+  transition: left 1.1345124329s 0.5237969054s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .content .line:nth-of-type(1) {
+  transition: left 1.459525783s 1.0487353685s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .content .line:nth-of-type(2) {
+  transition: left 1.2421485689s 0.6330972389s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .content .line:nth-of-type(3) {
+  transition: left 0.9428834482s 0.8655407143s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .content .line:nth-of-type(4) {
+  transition: left 0.51811344s 1.0468843785s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .content .line:nth-of-type(5) {
+  transition: left 0.8037681979s 0.6861217481s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .content .line:nth-of-type(6) {
+  transition: left 1.0507549523s 1.4925714323s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .content .line:nth-of-type(7) {
+  transition: left 0.9669164181s 1.021361765s;
+  left: 0%;
+}
+
+.list-item-hover-out.list-item-cv .mini-cv {
+  animation: opacity-animation-reverse 1s forwards;
+}
+@keyframes opacity-animation-reverse {
+  from {
+    opacity: 0.3;
+  }
+  to {
+    opacity: 0;
+  }
+}

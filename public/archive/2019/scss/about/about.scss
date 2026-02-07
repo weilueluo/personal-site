@@ -1,0 +1,268 @@
+@use "../utils" as *;
+@import "../vars";
+
+$about-theme-color: rgb(218, 200, 168);
+
+
+body {
+    overflow-y: scroll;
+}
+
+.background-image {
+    backdrop-filter: blur(5px) grayscale(50%);
+}
+
+#content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    height: fit-content;
+    width: min(40rem, 90vw);
+    margin-top: 5%;
+
+    row-gap: 5rem;
+}
+
+.message {
+    height: fit-content;
+    width: 100%;
+
+    border: 1px solid wheat;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    padding: 1rem;
+
+    row-gap: 2rem;
+}
+
+.message-box {
+    height: fit-content;
+    width: 100%;
+}
+
+.message-input {
+    width: 100%;
+    height: 8rem;
+
+    display: inline-block;
+    background-color: rgba(128, 128, 128, 0.5);
+
+    border-bottom: 1px solid black;
+    caret-color: white;
+    padding: 1rem;
+    font-size: medium;
+
+    color: white;
+}
+
+.message-input::placeholder {
+    color: white;
+    opacity: 0.75;
+}
+
+.message-input:focus {
+    border-bottom: 2px solid wheat;
+    outline: none;
+}
+
+.contact {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: row;
+}
+
+.contact label {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    align-items: center;
+
+    color: white;
+}
+
+.identity-label {
+    width: 10rem;
+}
+
+.email-label {
+    width: 20rem;
+}
+
+.contact input[type=radio] {
+    height: 0;
+    width: 0;
+}
+
+.email-input {
+    width: 16rem;
+    background-color: transparent;
+
+    display: inline-block;
+
+    border-bottom: 1px solid black;
+    caret-color: white;
+    padding: 0.5rem;
+    margin-left: 0.5rem;
+
+    color: white;
+}
+
+.email-input:focus {
+    border-bottom: 2px solid wheat;
+    outline: none;
+}
+
+.checkmark {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+
+    border: 2px solid wheat;
+    // background-color: wheat;
+    position: relative;
+    margin: 0.3rem;
+}
+
+.checkmark:hover {
+    background-color: wheat;
+}
+
+input + .checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+
+    height: 60%;
+    width: 60%;
+
+    top: 50%;
+    left: 50%;
+
+    border-radius: 50%;
+
+    transform: translate(-50%, -50%);
+    background-color: white;
+}
+
+input:checked + .checkmark {
+    box-shadow: 0 0 5px 0 white;
+}
+
+input:checked + .checkmark::after {
+    display: block;
+}
+
+.send-button {
+    width: 12rem;
+    height: 2rem;
+    background-color: wheat;
+    
+}
+
+.send-button:hover {
+    box-shadow: 0 0 10px 0 white;
+    cursor: pointer;
+    color: white;
+    background-color: gray;
+    border-radius: 5px;
+    border: 2px solid gray
+}
+
+.description {
+    height: 24rem;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    row-gap: 2rem;
+}
+
+.section {
+    height: 10rem;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    row-gap: 2rem;
+}
+
+.title {
+    height: 4rem;
+    width: 100%;
+    background-color: $about-theme-color;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.icons {
+    height: 4rem;
+    width: 70%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.icon {
+    height: 4rem;
+    width: 4rem;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid white;
+
+    &.pug {
+        background-image: $pug-image;
+        background-size: 90%;
+    }
+    
+    &.scss {
+        background-image: $scss-image;
+        background-size: 90%;
+    }
+
+    &.autoprefixer {
+        background-image: $autoprefixer-image;
+        background-size: 90%;
+    }
+    
+    &.cloudfront {
+        background-image: $cloudfront-image;
+    }
+    
+    &.s3 {
+        background-image: $s3-image;
+    }
+    
+    &.route53 {
+        background-image: $route53-image;
+    }
+}
+
+.icon:hover {
+    background-color: $about-theme-color;
+    cursor: pointer;
+}
+
+

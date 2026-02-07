@@ -1,0 +1,21 @@
+@keyframes waifu-filter-animation {
+  to {
+    filter: blur(3px) grayscale(100%);
+  }
+}
+.list-item-hover-in.list-item-waifu .background-image {
+  animation: waifu-filter-animation 3s 0.5s forwards;
+}
+.list-item-hover-in.list-item-waifu .mona-svg {
+  transform: rotateX(180deg);
+}
+.list-item-hover-in.list-item-waifu .water-curtain .mona, .list-item-hover-in.list-item-waifu .water-curtain .gray-mona {
+  height: 100%;
+  border-bottom: 3px solid gray;
+}
+.list-item-hover-in.list-item-waifu .water-curtain .mona {
+  transition: height 1s 0.8s;
+}
+.list-item-hover-in.list-item-waifu .water-curtain .gray-mona {
+  transition: height 1s 0.5s;
+}

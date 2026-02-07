@@ -1,0 +1,227 @@
+.list-item-hover-in.list-item-cv .mini-cv {
+  animation: opacity-animation 0.5s forwards;
+}
+@keyframes opacity-animation {
+  to {
+    opacity: 0.3;
+  }
+}
+.list-item-hover-in.list-item-cv .mini-cv .human {
+  transition: bottom 0.7s 0.5s ease-out;
+  bottom: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .details .line:nth-of-type(1) {
+  transition: left 1.1584412234s 0.7600674313s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .details .line:nth-of-type(2) {
+  transition: left 0.8456227561s 0.8647723827s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .details .line:nth-of-type(3) {
+  transition: left 0.6896356848s 1.3474575703s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .details .line:nth-of-type(4) {
+  transition: left 0.9152635849s 0.828935104s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .details .line:nth-of-type(5) {
+  transition: left 1.1661415321s 0.5207415183s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .content .line:nth-of-type(1) {
+  transition: left 1.3814600878s 0.5678355135s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .content .line:nth-of-type(2) {
+  transition: left 0.8842412052s 0.8744351578s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .content .line:nth-of-type(3) {
+  transition: left 0.9942439022s 0.7366900575s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .content .line:nth-of-type(4) {
+  transition: left 1.474880211s 0.5081833012s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .content .line:nth-of-type(5) {
+  transition: left 1.1369727124s 0.9877036244s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .content .line:nth-of-type(6) {
+  transition: left 1.2207956674s 0.6955184532s;
+  left: 0%;
+}
+.list-item-hover-in.list-item-cv .mini-cv .content .line:nth-of-type(7) {
+  transition: left 1.2724616619s 1.2630027367s;
+  left: 0%;
+}
+
+.list-item-hover-out.list-item-cv .mini-cv {
+  animation: opacity-animation-reverse 1s forwards;
+}
+@keyframes opacity-animation-reverse {
+  from {
+    opacity: 0.3;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes waifu-filter-animation {
+  to {
+    filter: blur(3px) grayscale(100%);
+  }
+}
+.list-item-hover-in.list-item-waifu .background-image {
+  animation: waifu-filter-animation 3s 0.5s forwards;
+}
+.list-item-hover-in.list-item-waifu .mona-svg {
+  transform: rotateX(180deg);
+}
+.list-item-hover-in.list-item-waifu .water-curtain .mona, .list-item-hover-in.list-item-waifu .water-curtain .gray-mona {
+  height: 100%;
+  border-bottom: 3px solid gray;
+}
+.list-item-hover-in.list-item-waifu .water-curtain .mona {
+  transition: height 1s 0.8s;
+}
+.list-item-hover-in.list-item-waifu .water-curtain .gray-mona {
+  transition: height 1s 0.5s;
+}
+
+.list-item.list-item-hover-in {
+  cursor: pointer;
+  transition: box-shadow 0s 0s;
+  box-shadow: 0px 0px 0px 0px white;
+  animation: dimension-animation 0.3s 0.3s forwards;
+}
+@keyframes dimension-animation {
+  to {
+    height: 15rem;
+    width: 10rem;
+  }
+}
+@keyframes text-shadow-animation {
+  to {
+    text-shadow: 0px 0px 5px black;
+  }
+}
+@keyframes cube-animation {
+  to {
+    transform: rotateX(-180deg);
+  }
+}
+@keyframes image-container-animation {
+  from {
+    border: 0px solid white;
+    box-shadow: 0px 0px 0px 0px black;
+  }
+  to {
+    border: 1px solid white;
+    box-shadow: 0px -3px 3px 0px black;
+  }
+}
+@keyframes rotate-animation {
+  from {
+    transform: translate(-50%, -50%) rotateX(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotateX(45deg);
+  }
+}
+@keyframes filter-animation {
+  from {
+    filter: grayscale(100%) blur(3px);
+  }
+  to {
+    filter: grayscale(0%) blur(0px);
+  }
+}
+.list-item.list-item-hover-in a {
+  animation: text-shadow-animation 0.3s forwards;
+}
+.list-item.list-item-hover-in .cube {
+  animation: cube-animation 0.3s forwards;
+}
+.list-item.list-item-hover-in .background-image-container {
+  animation: image-container-animation 0.3s 0.3s forwards, rotate-animation 0.3s 0.6s forwards;
+}
+
+.list-item.list-item-hover-out {
+  animation: dimension-animation-reverse 0.6s forwards;
+}
+@keyframes dimension-animation-reverse {
+  0% {
+    height: 15rem;
+    width: 10rem;
+  }
+  50% {
+    height: 3rem;
+    width: 10rem;
+  }
+  100% {
+    height: 3rem;
+    width: 15rem;
+  }
+}
+@keyframes text-shadow-animation-reverse {
+  0%, 66% {
+    text-shadow: 0px 0px 5px black;
+  }
+  100% {
+    text-shadow: 0px 0px 0px black;
+  }
+}
+@keyframes cube-animation-reverse {
+  0%, 66% {
+    transform: rotateX(-180deg);
+  }
+  100% {
+    transform: rotateX(0deg);
+  }
+}
+@keyframes image-container-animation-reverse {
+  0%, 66% {
+    border: 1px solid white;
+    box-shadow: 0px -3px 3px 0px black;
+  }
+  100% {
+    border: 1px solid transparent;
+    box-shadow: 0px 0px 0px 0px black;
+  }
+}
+@keyframes rotate-animation-reverse {
+  0%, 66% {
+    transform: translate(-50%, -50%) rotateX(45deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotateX(0deg);
+  }
+}
+.list-item.list-item-hover-out .cube {
+  animation: cube-animation-reverse 0.9s forwards;
+}
+.list-item.list-item-hover-out a {
+  animation: text-shadow-animation-reverse 0.9s forwards;
+}
+.list-item.list-item-hover-out .background-image-container {
+  animation: image-container-animation-reverse 0.9s forwards, rotate-animation-reverse 0.9s forwards;
+}
+
+.list-item.list-item-mouse-down {
+  transform: translateY(5px);
+}
+
+.list-item.list-item-hover-in-siblings {
+  opacity: 0;
+  transition: 0.3s 0.3s;
+}
+
+.list-item {
+  opacity: 1;
+  transition: 0.3s;
+}

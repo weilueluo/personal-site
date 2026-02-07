@@ -1,0 +1,113 @@
+@use "../utils" as *;
+@import "../vars";
+
+* {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    font-family: "Fira Code", monospace;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+}
+
+body {
+    background-color: gray;
+}
+
+.wrapper {
+    @include dimension-fill;
+    position: relative;
+}
+
+ul {
+    list-style-type: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.pointer-events-none {
+    pointer-events: none;
+}
+
+#all-wrapper, #content-wrapper {
+    @include dimension-viewport;
+}
+
+#content-wrapper {
+    @include absolute-center;
+    @include flex-center-items;
+}
+
+.background-image {
+    @include dimension-viewport;
+    @include absolute-top-left;
+    
+    background-image: $background-image;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.website-tag {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 3rem;
+    width: 3rem;
+    margin: 1rem;
+    background-image: $favicon-image;
+    background-size: cover;
+    z-index: 99;
+
+    filter: blur(1px);
+    opacity: 0.5;
+}
+
+.website-tag:hover {
+    filter: blur(0px);
+    opacity: 0.8;
+
+    cursor: pointer;
+
+    .tooltip {
+        visibility: visible;
+        opacity: 0.4;
+    }
+}
+
+.tooltip {
+    visibility: hidden;
+    height: 100%;
+    width: 100%;
+    display: inline-block;
+
+    position: relative;
+}
+
+.tooltip-text {
+    position: absolute;
+    height: 100%;
+    width: fit-content;
+
+    left: 105%;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+
+    padding: 1rem;
+
+    background-color: white;
+
+    color: black;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

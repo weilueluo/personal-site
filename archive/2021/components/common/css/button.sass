@@ -1,0 +1,18 @@
+@use './colors'
+
+@mixin button
+    background-color: transparent
+    width: 100px
+    padding: 3px 6px
+    background-color: colors.$inactive-color
+    border-radius: 5px
+    border: 0
+
+    &:hover
+        cursor: pointer
+        background-color: colors.$active-color
+
+    &:disabled
+        cursor: default
+        background-color: colors.$disabled-color
+        box-shadow: 0px 0px 1px 1px gray inset

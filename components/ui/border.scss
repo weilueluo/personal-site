@@ -1,0 +1,74 @@
+.borderBR {
+    border: 1px solid;
+    border-image: linear-gradient(to top left, black, transparent 15%) 1;
+}
+.borderTL {
+    border: 1px solid;
+    border-image: linear-gradient(to bottom right, black, transparent 15%) 1;
+}
+.borderTR {
+    border: 1px solid;
+    border-image: linear-gradient(to bottom left, black, transparent 15%) 1;
+}
+.borderBL {
+    border: 1px solid;
+    border-image: linear-gradient(to top right, black, transparent 15%) 1;
+}
+
+.inverseBorderB {
+    border-bottom: 1px solid;
+    border-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent) 1;
+}
+
+// has to be consistent with tailwind.config.js
+$std-light: #d1d5db;
+
+.dark .inverseBorderB {
+    border-bottom: 1px solid;
+    border-image: linear-gradient(to right, transparent, $std-light 15%, $std-light 85%, transparent) 1;
+}
+
+.dark .borderBR {
+    border: 1px solid;
+    border-image: linear-gradient(to top left, $std-light, transparent 15%) 1;
+}
+.dark .borderTL {
+    border: 1px solid;
+    border-image: linear-gradient(to bottom right, $std-light, transparent 15%) 1;
+}
+.dark .borderTR {
+    border: 1px solid;
+    border-image: linear-gradient(to bottom left, $std-light, transparent 15%) 1;
+}
+.dark .borderBL {
+    border: 1px solid;
+    border-image: linear-gradient(to top right, $std-light, transparent 15%) 1;
+}
+
+.borderT,
+.borderB,
+.borderL,
+.borderR {
+    &::before,
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -10;
+    }
+}
+.borderT::after {
+    @extend .borderTL;
+}
+.borderT::before {
+    @extend .borderTR;
+}
+.borderB::after {
+    @extend .borderBL;
+}
+.borderB::before {
+    @extend .borderBR;
+}

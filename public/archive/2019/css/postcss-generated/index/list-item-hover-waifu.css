@@ -1,0 +1,29 @@
+@-webkit-keyframes waifu-filter-animation {
+  to {
+    filter: blur(3px) grayscale(100%);
+  }
+}
+@keyframes waifu-filter-animation {
+  to {
+    filter: blur(3px) grayscale(100%);
+  }
+}
+.list-item-hover-in.list-item-waifu .background-image {
+  -webkit-animation: waifu-filter-animation 3s 0.5s forwards;
+          animation: waifu-filter-animation 3s 0.5s forwards;
+}
+.list-item-hover-in.list-item-waifu .mona-svg {
+  transform: rotateX(180deg);
+}
+.list-item-hover-in.list-item-waifu .water-curtain .mona, .list-item-hover-in.list-item-waifu .water-curtain .gray-mona {
+  height: 100%;
+  border-bottom: 3px solid gray;
+}
+.list-item-hover-in.list-item-waifu .water-curtain .mona {
+  transition: height 1s 0.8s;
+}
+.list-item-hover-in.list-item-waifu .water-curtain .gray-mona {
+  transition: height 1s 0.5s;
+}
+
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3Njc3MtZ2VuZXJhdGVkL2luZGV4L2xpc3QtaXRlbS1ob3Zlci13YWlmdS5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRTtJQUNFLGlDQUFpQztFQUNuQztBQUNGO0FBSkE7RUFDRTtJQUNFLGlDQUFpQztFQUNuQztBQUNGO0FBQ0E7RUFDRSwwREFBa0Q7VUFBbEQsa0RBQWtEO0FBQ3BEO0FBQ0E7RUFDRSwwQkFBMEI7QUFDNUI7QUFDQTtFQUNFLFlBQVk7RUFDWiw2QkFBNkI7QUFDL0I7QUFDQTtFQUNFLDBCQUEwQjtBQUM1QjtBQUNBO0VBQ0UsMEJBQTBCO0FBQzVCIiwiZmlsZSI6Imxpc3QtaXRlbS1ob3Zlci13YWlmdS5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyJAa2V5ZnJhbWVzIHdhaWZ1LWZpbHRlci1hbmltYXRpb24ge1xuICB0byB7XG4gICAgZmlsdGVyOiBibHVyKDNweCkgZ3JheXNjYWxlKDEwMCUpO1xuICB9XG59XG4ubGlzdC1pdGVtLWhvdmVyLWluLmxpc3QtaXRlbS13YWlmdSAuYmFja2dyb3VuZC1pbWFnZSB7XG4gIGFuaW1hdGlvbjogd2FpZnUtZmlsdGVyLWFuaW1hdGlvbiAzcyAwLjVzIGZvcndhcmRzO1xufVxuLmxpc3QtaXRlbS1ob3Zlci1pbi5saXN0LWl0ZW0td2FpZnUgLm1vbmEtc3ZnIHtcbiAgdHJhbnNmb3JtOiByb3RhdGVYKDE4MGRlZyk7XG59XG4ubGlzdC1pdGVtLWhvdmVyLWluLmxpc3QtaXRlbS13YWlmdSAud2F0ZXItY3VydGFpbiAubW9uYSwgLmxpc3QtaXRlbS1ob3Zlci1pbi5saXN0LWl0ZW0td2FpZnUgLndhdGVyLWN1cnRhaW4gLmdyYXktbW9uYSB7XG4gIGhlaWdodDogMTAwJTtcbiAgYm9yZGVyLWJvdHRvbTogM3B4IHNvbGlkIGdyYXk7XG59XG4ubGlzdC1pdGVtLWhvdmVyLWluLmxpc3QtaXRlbS13YWlmdSAud2F0ZXItY3VydGFpbiAubW9uYSB7XG4gIHRyYW5zaXRpb246IGhlaWdodCAxcyAwLjhzO1xufVxuLmxpc3QtaXRlbS1ob3Zlci1pbi5saXN0LWl0ZW0td2FpZnUgLndhdGVyLWN1cnRhaW4gLmdyYXktbW9uYSB7XG4gIHRyYW5zaXRpb246IGhlaWdodCAxcyAwLjVzO1xufVxuIl19 */

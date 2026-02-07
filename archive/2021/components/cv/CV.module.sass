@@ -1,0 +1,223 @@
+﻿@use 'components/common/css/button'
+
+// misc
+@mixin title
+    font-size: xx-large
+    font-weight: bold
+    
+@mixin sectionHeader
+    font-size: x-large
+    font-weight: bold
+
+@mixin sectionSubHeader
+    font-weight: bold
+
+@mixin contentText
+    color: gray
+
+// overall cv
+.cv
+    width: 750px
+    max-width: 90%
+    height: fit-content
+    margin: 0px auto
+
+    display: flex
+    flex-direction: column
+    gap: 10px
+
+    *
+        margin: 0px
+        padding: 0px
+
+
+// header
+.cv > p
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: space-around
+    margin-top: 20px
+
+    a
+        display: flex
+        align-items: center
+        justify-content: center
+
+    @media (max-width:550px)
+        gap: 15px
+        flex-wrap: wrap
+        a:not(:nth-child(2))
+            flex-basis: 40%
+            order: -1  // put button on top
+
+    button
+        @include button.button
+        height: 30px
+
+    // header text
+    a:nth-child(2)
+        @include title
+
+        :hover
+            text-decoration: underline
+
+// contact
+.cv > span
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: space-around
+    @media (max-width:700px)
+        flex-direction: column
+
+    a
+        position: relative
+        margin-left: 30px
+
+    a:hover
+        text-decoration: underline
+
+    a::before
+        content: ''
+        position: absolute
+        height: 15px
+        width: 15px
+        left: -20px
+        top: 4px
+        background-position: center
+        background-repeat: no-repeat
+    
+    a:nth-child(1)::before
+        background-image: url('/icons/contact/phone-solid.svg')
+    
+    a:nth-child(2)::before
+        background-image: url('/icons/contact/envelope-solid.svg')
+
+    a:nth-child(3)::before
+        background-image: url('/icons/contact/github.svg')
+
+    a:nth-child(4)::before
+        background-image: url('/icons/contact/house-chimney-solid.svg')
+
+
+// all sections
+.cv > div
+    position: relative
+    overflow: hidden
+    
+    p
+        position: relative
+        display: flex
+        flex-direction: column
+
+        span:nth-child(3), span:nth-child(4)
+            position: absolute
+            right: 0
+            font-style: italic
+            @media (max-width:580px)
+                position: relative
+
+        span:nth-child(4)
+            top: 1rem
+            @media (max-width:580px)
+                top: 0px
+
+// section header
+.cv > div::before
+    @include sectionHeader
+    z-index: 1
+    background: white
+    padding-right: 15px
+    color: #0395de
+
+// section header line
+.cv > div::after
+    content: ''
+    position: absolute
+    background: #0395de
+    width: 100%
+    height: 3px
+    top: 1.5rem
+    // left: 150px
+    z-index: -1
+
+// education
+.cv > div:nth-child(3)
+    &::before
+        content: 'Education'
+        @include sectionHeader
+
+    p
+        margin: 5px 0px
+        // college name first
+        span:nth-child(2)
+            order: -1
+            @include sectionSubHeader
+        
+
+// experience
+.cv > div:nth-child(4)
+    &::before
+        content: 'Experience'
+
+// events
+.cv > div:nth-child(5)
+    &::before
+        content: 'Events'
+
+
+// projects
+.cv > div:nth-child(6)
+    &::before
+        content: 'Selected Projects'
+
+// skills
+.cv > div:nth-child(7)
+    &::before
+        content: 'Skills'
+    >p
+        display: flex
+        flex-direction: row-reverse
+        @media (max-width:1100px)
+            flex-direction: column-reverse
+
+        span:nth-child(1)
+            @include sectionSubHeader
+            width: 20%
+            @media (max-width:1100px)
+                width: 100%
+
+        span:nth-child(2)
+            width: 80%
+            font-weight: normal
+            @include contentText
+            @media (max-width:1100px)
+                width: 100%
+
+
+// all sections
+.cv > div
+    >p
+        span:nth-child(2)
+            order: -1
+            @include sectionSubHeader
+    
+    >div
+        padding: 0px 10px
+
+        >p
+            margin: 5px auto
+            @include contentText
+            position: relative
+            width: 100%
+            max-width: 100%
+            
+            ::before
+                content: '\2022  '
+                font-weight: bold
+                color: black
+                position: absolute
+                left: -10px
+                top: 0
+

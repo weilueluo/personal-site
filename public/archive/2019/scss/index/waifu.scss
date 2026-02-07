@@ -1,0 +1,75 @@
+@use "../utils" as *;
+@import "../vars";
+
+.mona-svg {
+    @include dimension-fill;
+}
+
+$mona-path-length: 1000px;  // TODO: use getTotalLength with js instead
+
+.mona-path {
+    // stroke-dasharray: $mona-path-length;
+    // stroke-dashoffset: $mona-path-length;
+    opacity: 0;
+    fill: none;
+    stroke: black;
+    stroke-width: 4rem;
+}
+
+.waifu {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: absolute;
+}
+
+.water-curtain {
+    @include dimension-fill;
+    @include absolute-top-left;
+    mask-image: $colored-mona-image;
+    mask-size: 100%;
+    mask-repeat: no-repeat;
+    transform: rotateY(180deg) rotateZ(180deg);
+    z-index: -1;
+}
+
+.curtain {
+    height: 100%;
+    width: 140%;
+    background: black;
+    position: absolute;
+    left: -20%;
+    bottom: -100%;
+    z-index: 1;
+    opacity: 0;
+}
+
+.gray-mona-container, .mona-container {
+    @include dimension-fill;
+    @include absolute-top-left;
+}
+
+.mona, .gray-mona {
+    @include absolute-top-left;
+
+    background: $colored-mona-image;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+
+.mona, .gray-mona {
+    height: 0%;
+    width: 100%;
+    border-bottom: 0px solid gray;
+    transition: height 2s;
+}
+
+.mona {
+    z-index: 2;
+}
+
+.gray-mona {
+    filter: grayscale(100%);
+    z-index: 1;
+}
+

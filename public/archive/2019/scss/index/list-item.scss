@@ -1,0 +1,97 @@
+@use "../utils" as *;
+@forward"list-item-hover";
+@forward "mini-cv";
+@forward "waifu";
+
+
+#list {
+    height: 25rem;
+    width: fit-content;
+    color: black;
+
+    @include flex-space-around-center;
+    flex-direction: column;
+}
+
+// Background Cube
+.background-cube {
+    @include dimension-fill;
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+.background-image-container {
+    @include dimension-fill;
+    @include absolute-center;
+    overflow: hidden;
+}
+
+
+.list-item {
+    height: 3rem;
+    width: 15rem;
+
+    @include flex-center-items;
+    flex-direction: column;
+    flex-wrap: wrap;
+    position: relative;
+
+    opacity: 1;
+    perspective: 600px;
+
+    transition: box-shadow 0.5s 1s;
+    box-shadow: 0px 0px 3px 0px white;
+
+    * {
+        pointer-events: none;
+    }
+
+    a {
+        font-size: large;
+        color: white;
+        pointer-events: none;
+        user-select: none;
+    }
+
+    .background-image {
+        filter: none;
+    }
+
+    .cube {
+        @include dimension-fill;
+        @include flex-center-items;
+
+        position: relative;
+        transform-style: preserve-3d;  // 3d effects
+        /* transform: rotateY(90deg); */
+        transition: transform 0.5s;
+
+        .cube-face {
+            @include dimension-fill;
+            @include absolute-center;
+            @include flex-center-items;
+        }
+
+        .cube-face-front {
+            transform: tf-center() rotateX(90deg) translateY(50%) rotateX(-90deg);
+        }
+
+        .cube-face-back {
+            transform: tf-center() rotateX(-90deg) translateY(50%) rotateX(-90deg);
+        }
+
+        .cube-face-top {
+            transform: tf-center() translateY(-50%) rotateX(90deg);
+        }
+
+        .cube-face-bottom {
+            transform: tf-center() translateY(50%) rotateX(-90deg);
+        }
+    }
+}
+
+// control by js
+
+.mouse-events-none {
+    pointer-events: none;
+}

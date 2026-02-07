@@ -1,0 +1,38 @@
+"use client";
+
+import React, { useRef } from "react";
+import Scene from "@/components/three/scene";
+
+const CanvasLayout = ({ children }: { children: React.ReactNode }) => {
+    const ref = useRef<HTMLDivElement>(null!);
+
+    return (
+        <div
+            ref={ref}
+            style={{
+                position: "relative",
+                width: "100%",
+                height: "100%",
+                touchAction: "auto",
+            }}>
+            {children}
+            <Scene
+                style={{
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    width: "100vw",
+                    height: "100vh",
+                    pointerEvents: "none",
+                }}
+                eventSource={ref}
+                eventPrefix="client"
+                shadows={true}
+            />
+        </div>
+    );
+};
+
+CanvasLayout.displayName = "CanvasLayout";
+
+export default CanvasLayout;

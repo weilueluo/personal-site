@@ -1,0 +1,144 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer components {
+    /* common utilities */
+    .std-pad {
+        @apply px-1 py-1 md:px-2;
+    }
+
+    /* standard stuff applied at body */
+    .std-hover:hover {
+        @apply cursor-pointer bg-std text-black underline;
+    }
+
+    .std-active {
+        /* @apply bg-black dark:bg-gray-300 font-bold text-white dark:text-black; */
+        /* @apply font-bold; */
+        @apply outline outline-2 outline-gray-300;
+        background: repeating-linear-gradient(45deg, lightgray, lightgray 4px, transparent 4px, transparent 10px);
+        /* repeating-linear-gradient(165deg, black, black 4px, transparent 4px, transparent 10px); */
+    }
+    .std-active.std-hover:hover {
+        @apply text-black;
+    }
+
+    .std-active-dark {
+        @apply outline outline-2 outline-black;
+        background: repeating-linear-gradient(45deg, black, black 4px, transparent 4px, transparent 10px);
+    }
+    .std-active-dark.std-hover:hover {
+        @apply text-white;
+    }
+
+    .std-text {
+        @apply text-black dark:text-gray-300;
+    }
+
+    .std-text-darker {
+        @apply text-black dark:text-gray-400;
+    }
+
+    .std-text-size {
+        @apply text-sm md:text-base;
+    }
+
+    .secondary-text {
+        @apply text-sm font-semibold;
+    }
+
+    .secondary-hover:hover {
+        @apply cursor-default text-std underline;
+    }
+
+    .sm-text-size {
+        @apply text-xs md:text-sm;
+    }
+
+    .std-bg {
+        @apply bg-white dark:bg-slate-800;
+    }
+
+    .std-bg-dark {
+        @apply bg-slate-800;
+    }
+
+    /* icon */
+
+    /* for icon + text styling, commonly used */
+    .std-icon-text {
+        @apply flex flex-row items-center gap-2 text-sm md:text-base;
+    }
+
+    /* for icon */
+    .std-icon {
+        @apply h-3 w-3 md:h-4 md:w-4;
+    }
+
+    .md-icon {
+        @apply h-4 w-4 md:h-5 md:w-5;
+    }
+
+    .lg-icon {
+        @apply h-5 w-5 md:h-6 md:w-6;
+    }
+
+    .hover-subtext {
+        @apply italic text-gray-600 hover:cursor-pointer hover:text-black hover:underline;
+    }
+
+    .my-grid-cols-2 {
+        grid-template-columns: repeat(2, minmax(0, max-content));
+    }
+
+    .my-grid-cols-3 {
+        grid-template-columns: repeat(3, minmax(0, max-content));
+    }
+
+    .my-grid-cols-4 {
+        grid-template-columns: repeat(4, minmax(0, max-content));
+    }
+
+    .my-grid-cols-5 {
+        grid-template-columns: repeat(5, minmax(0, max-content));
+    }
+}
+
+details > summary {
+    list-style: none;
+}
+
+details > summary::-webkit-details-marker {
+    display: none;
+}
+
+button:focus {
+    outline: none;
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html {
+    /* give space for scrollbar, so that when it appears, it does not cause layout shift */
+    /* https://stackoverflow.com/questions/1417934/how-to-prevent-scrollbar-from-repositioning-web-page */
+    margin-right: calc(-1 * (100vw - 100%));
+}
+
+html,
+body {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}

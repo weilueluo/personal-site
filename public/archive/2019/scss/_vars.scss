@@ -1,0 +1,17 @@
+$image-folder: "../../../assets/image";
+
+$background-image: url(#{$image-folder + "/background.jpg"});
+
+$colored-mona-image: url(#{$image-folder + "/mona_color.png"});
+
+// about page
+$pug-image: url(#{$image-folder + "/pug.svg"});
+$scss-image: url(#{$image-folder + "/scss.svg"});
+$autoprefixer-image: url(#{$image-folder + "/autoprefixer.svg"});
+$s3-image: url(#{$image-folder + "/s3.svg"});
+$cloudfront-image: url(#{$image-folder + "/cloudfront.svg"});
+$route53-image: url(#{$image-folder + "/route53.svg"});
+
+
+// misc
+$favicon-image: url("../../../assets/icon/android-chrome-512x512.png")

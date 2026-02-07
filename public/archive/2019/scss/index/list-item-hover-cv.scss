@@ -1,0 +1,45 @@
+.list-item-hover-in.list-item-cv {
+    // randomize line animation and breaks
+    .mini-cv {
+        @keyframes opacity-animation {
+            to {
+                opacity: 0.3;
+            }
+        }
+        animation: opacity-animation 0.5s forwards;
+
+        .human {
+            transition: bottom 0.7s 0.5s ease-out;
+            bottom: 0%;
+        }
+
+        @for $i from 1 through 5 {
+            .details .line:nth-of-type(#{$i}) {
+                transition: left random() + 0.5 + s random() + 0.5 + s;
+                left: 0%;
+            }
+        }
+
+        @for $i from 1 through 7 {
+            .content .line:nth-of-type(#{$i}) {
+                transition: left random() + 0.5 + s random() + 0.5 + s;
+                left: 0%;
+            }
+        }
+    }
+
+}
+
+.list-item-hover-out.list-item-cv {
+    .mini-cv {
+        @keyframes opacity-animation-reverse {
+            from {
+                opacity: 0.3;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+        animation: opacity-animation-reverse 1s forwards;
+    }
+}
