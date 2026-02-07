@@ -169,8 +169,6 @@ function RSSState({ config }: { config: RSSConfig }) {
     const { addFeeds } = React.useContext(RSSContext);
 
     useEffect(() => {
-        console.log(config.title, { data, isLoading, isValidating, error, mutate: mutateRef.current });
-
         addFeeds(config, {
             data,
             isLoading,

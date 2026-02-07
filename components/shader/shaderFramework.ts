@@ -12,8 +12,8 @@ function _compileShader(gl: WebGLRenderingContext, type: GLenum, shaderCode: str
     gl.compileShader(shader);
 
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.log("Error while compiling shader");
-        console.log(gl.getShaderInfoLog(shader));
+        console.error("Error while compiling shader");
+        console.error(gl.getShaderInfoLog(shader));
         return null;
     } else {
         return shader;
@@ -38,8 +38,8 @@ function _initShaderProgram(gl: WebGLRenderingContext, shaderInfos: { type: GLen
     gl.linkProgram(shaderProgram);
 
     if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-        console.log("Error linking shader program");
-        console.log(gl.getProgramInfoLog(shaderProgram));
+        console.error("Error linking shader program");
+        console.error(gl.getProgramInfoLog(shaderProgram));
     }
 
     gl.useProgram(shaderProgram);
@@ -82,7 +82,7 @@ function _initScreenBuffer(gl: WebGLRenderingContext): WebGLBuffer | null {
 function _getSourceCode(id: string) {
     const node = document.getElementById(id) as HTMLScriptElement;
     if (node == null) {
-        console.log(`Error: did not find source code with id: ${id}`);
+        console.error(`Error: did not find source code with id: ${id}`);
     }
 
     if (node && node.src) {
@@ -194,13 +194,13 @@ async function _initPathTracer(
     // add framebuffer
     const rttFramebuffer = gl.createFramebuffer();
     if (!rttFramebuffer) {
-        console.log("Error create framebuffer failed");
+        console.error("Error create framebuffer failed");
     }
     gl.bindFramebuffer(gl.FRAMEBUFFER, rttFramebuffer);
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, rttTexture, 0);
 
     if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) {
-        console.log("Error: frame buffer status is not complete");
+        console.error("Error: frame buffer status is not complete");
     }
 
     return {
@@ -414,7 +414,7 @@ export class ShaderFramework {
 
     async _initializePathTracer() {
         if (!this.gl) {
-            console.log("Error: gl is not initialized");
+            console.error("Error: gl is not initialized");
             return;
         }
         if (!this.screenBuffer) {

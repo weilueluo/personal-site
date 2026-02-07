@@ -13,8 +13,6 @@ const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const fetchGithubGraphQLData = async <T>(query: string) => {
-    console.log("query github graphql", query);
-
     return fetch(GITHUB_GRAPHQL_ENDPOINT, {
         method: "POST",
         headers: {

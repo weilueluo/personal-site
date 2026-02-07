@@ -26,9 +26,10 @@ export default async function Page({ params }: BasePageProps) {
                     <MyRoom />
                 </Suspense>
 
-                <span className="mt-6">
-                    Hello I&#39;m <b>Weilue Luo</b>
+                <span className="mt-6 text-center">
+                    Hello. I&#39;m <b>Weilue Luo</b>.
                 </span>
+                <span className="secondary-text mt-2 text-center">Notes. Shaders. Feeds. Anime.</span>
 
                 <div className="mt-4 flex w-full flex-col items-center justify-center">
                     {/* <div>

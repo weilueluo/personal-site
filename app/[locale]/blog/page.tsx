@@ -31,11 +31,11 @@ export default async function Page() {
 
     const readmeText = readme?.content
         ? Buffer.from(readme.content, "base64").toString("utf-8")
-        : "README unavailable.";
+        : "README not found.";
 
     return (
         <div className="flex flex-col items-center justify-center text-xl">
-            <h1 className="font-bold">Blogs</h1>
+            <h1 className="font-bold">Blog</h1>
             <Separator className="mb-4 h-2" />
             <ul className="flex w-[80%] flex-col gap-2">
                 {entries.map(data => (

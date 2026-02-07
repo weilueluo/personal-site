@@ -1,6 +1,5 @@
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { Nullable } from "../types/utils";
-import { cookieToObj } from "../utils";
 
 export type ResolvedTheme = "light" | "dark";
 export type UnResolvedTheme = ResolvedTheme | "system";
@@ -9,33 +8,40 @@ export const DEFAULT_RESOLVED_THEME = "dark";
 export const THEMES: UnResolvedTheme[] = ["system", "light", "dark"];
 
 export function getThemeFromCookies(cookies: ReadonlyRequestCookies): Nullable<UnResolvedTheme> {
-    // console.log(`getCookiesTheme: cookies=${JSON.stringify(cookies)}`);
-
-    let theme: Nullable<UnResolvedTheme>;
-    if (cookies) {
-        for (const cookie of cookies) {
-            // console.log(`getCookiesTheme: cookie=${JSON.stringify(cookie)}`);
-            if (cookie[0] == THEME_KEY) {
-                theme = cookie[1].value as UnResolvedTheme;
-            }
-        }
-    }
-    // console.log(`getCookiesTheme: theme=${JSON.stringify(theme)}`);
-    return theme;
+    return cookies.get(THEME_KEY)?.value as UnResolvedTheme | undefined;
 }
 
-export function setClientSideCookieTheme(theme: UnResolvedTheme, days = 0) {
-    if (typeof document !== "undefined" && theme) {
-        const cookieObj = cookieToObj(document.cookie);
-        cookieObj[THEME_KEY] = theme;
-        if (days) {
-            const date = new Date();
-            date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-            document.cookie = `expires=${date.toUTCString()}`;
-        }
+function serializeCookie(
+    name: string,
+    value: string,
+    options?: { days?: number; path?: string; sameSite?: "Lax" | "Strict" | "None"; secure?: boolean }
+) {
+    const parts: string[] = [`${encodeURIComponent(name)}=${encodeURIComponent(value)}`];
 
-        document.cookie = `${THEME_KEY}=${theme}`;
+    const path = options?.path ?? "/";
+    if (path) parts.push(`Path=${path}`);
+
+    const sameSite = options?.sameSite ?? "Lax";
+    if (sameSite) parts.push(`SameSite=${sameSite}`);
+
+    if (options?.secure) parts.push("Secure");
+
+    if (typeof options?.days === "number") {
+        const expires = new Date(Date.now() + options.days * 24 * 60 * 60 * 1000);
+        parts.push(`Expires=${expires.toUTCString()}`);
     }
+
+    return parts.join("; ");
+}
+
+export function setClientSideCookieTheme(theme: UnResolvedTheme, days?: number) {
+    if (typeof document === "undefined" || !theme) return;
+
+    document.cookie = serializeCookie(THEME_KEY, theme, {
+        days: typeof days === "number" && days > 0 ? days : undefined,
+        path: "/",
+        sameSite: "Lax",
+    });
 }
 
 export function getSystemTheme(): ResolvedTheme {
@@ -67,10 +73,13 @@ export function getLocalStorageTheme(): Nullable<UnResolvedTheme> {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function removeClientSideCookieTheme() {
-    if (typeof document !== "undefined") {
-        const cookieObj = cookieToObj(document.cookie);
-        delete cookieObj[THEME_KEY];
-    }
+    if (typeof document === "undefined") return;
+
+    document.cookie = serializeCookie(THEME_KEY, "", {
+        days: -1,
+        path: "/",
+        sameSite: "Lax",
+    });
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -81,6 +90,7 @@ export function removeLocalStorageTheme(): void {
 }
 
 // internal methods, for implementation
-export function resolve(unResolvedTheme: UnResolvedTheme, systemTheme: ResolvedTheme) {
-    return unResolvedTheme === "system" ? systemTheme : unResolvedTheme;
+export function resolve(unResolvedTheme: Nullable<UnResolvedTheme>, systemTheme: ResolvedTheme): ResolvedTheme {
+    if (!unResolvedTheme || unResolvedTheme === "system") return systemTheme;
+    return unResolvedTheme;
 }

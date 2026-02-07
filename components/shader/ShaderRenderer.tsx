@@ -105,7 +105,7 @@ export default function ShaderRenderer(_props: BaseCompProps<"div">) {
                         {frames}/{framework?.getMaxFrame()} frames | {getFps(startTime, frames)} fps
                     </span>
                 </IconedText>
-                <span className="secondary-text z-10">*This runs in real-time on your machine</span>
+                <span className="secondary-text z-10">Runs locally. Real time.</span>
             </div>
             <Script
                 id="cwk1-fragment-shader"

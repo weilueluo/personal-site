@@ -2,15 +2,23 @@ import { MutableRefObject } from "react";
 import { twMerge } from "tailwind-merge";
 
 export function cookieToObj(cookie: string | undefined): Record<string, string> {
-    if (cookie) {
-        return cookie.split("; ").reduce((obj: Record<string, string>, pair) => {
-            const [k, v] = pair.split("=");
-            obj[k] = v;
-            return obj;
-        }, {});
-    }
+    if (!cookie) return {};
 
-    return {};
+    return cookie.split(";").reduce((obj: Record<string, string>, part) => {
+        const trimmed = part.trim();
+        if (!trimmed) return obj;
+
+        const eqIndex = trimmed.indexOf("=");
+        if (eqIndex === -1) {
+            obj[trimmed] = "";
+            return obj;
+        }
+
+        const key = trimmed.slice(0, eqIndex);
+        const value = trimmed.slice(eqIndex + 1);
+        obj[key] = value;
+        return obj;
+    }, {});
 }
 
 export function objToCookie(obj: Record<string, string>) {
@@ -24,28 +32,25 @@ export const tm = (...classNames: (string | undefined | false | null | 0)[]): st
 };
 
 export function timeSinceSeconds(seconds: number) {
-    let interval = seconds / 31536000;
+    const s = Math.max(0, Math.floor(seconds));
 
-    if (interval > 1) {
-        return Math.floor(interval) + " years";
+    const units: Array<{ label: string; seconds: number }> = [
+        { label: "year", seconds: 31_536_000 },
+        { label: "month", seconds: 2_592_000 },
+        { label: "day", seconds: 86_400 },
+        { label: "hour", seconds: 3_600 },
+        { label: "minute", seconds: 60 },
+        { label: "second", seconds: 1 },
+    ];
+
+    for (const unit of units) {
+        const n = Math.floor(s / unit.seconds);
+        if (n >= 1 || unit.label === "second") {
+            return `${n} ${unit.label}${n === 1 ? "" : "s"}`;
+        }
     }
-    interval = seconds / 2592000;
-    if (interval > 1) {
-        return Math.floor(interval) + " months";
-    }
-    interval = seconds / 86400;
-    if (interval > 1) {
-        return Math.floor(interval) + " days";
-    }
-    interval = seconds / 3600;
-    if (interval > 1) {
-        return Math.floor(interval) + " hours";
-    }
-    interval = seconds / 60;
-    if (interval > 1) {
-        return Math.floor(interval) + " minutes";
-    }
-    return Math.floor(seconds) + " seconds";
+
+    return "0 seconds";
 }
 
 export function timeSince(from: Date, date: Date) {
@@ -55,24 +60,26 @@ export function timeSince(from: Date, date: Date) {
 }
 
 export function isDevEnv() {
-    return process && process.env.NODE_ENV === "development";
+    return typeof process !== "undefined" && process.env.NODE_ENV === "development";
 }
 
-export function reTriggerAnimateFunction(element: MutableRefObject<any>, className: string) {
-    return function (e: MouseEvent) {
-        e.preventDefault;
+export function reTriggerAnimateFunction(element: MutableRefObject<HTMLElement | null>, className: string) {
+    return function (_e: MouseEvent) {
+        const el = element.current;
+        if (!el) return;
+
         // -> removing the class
-        element.current.classList.remove(className);
+        el.classList.remove(className);
 
         // -> triggering reflow /* The actual magic */
         // without this it wouldn't work. Try uncommenting the line and the transition won't be retriggered.
         // This was, from the original tutorial, will no work in strict mode. Thanks Felis Phasma! The next uncommented line is the fix.
         // element.offsetWidth = element.offsetWidth;
 
-        void element.current.offsetWidth;
+        void el.offsetWidth;
 
         // -> and re-adding the class
-        element.current.classList.add(className);
+        el.classList.add(className);
     };
 }
 
@@ -104,8 +111,10 @@ export function isAbsoluteUrl(url: string | undefined | null) {
 }
 
 export function readDefaultRevalidate() {
-    if (process.env.DEFAULT_REVALIDATE || process.env.DEFAULT_REVALIDATE === "0") {
-        return Number(process.env.DEFAULT_REVALIDATE);
+    const raw = typeof process !== "undefined" ? process.env.DEFAULT_REVALIDATE : undefined;
+    if (raw || raw === "0") {
+        const n = Number(raw);
+        return Number.isFinite(n) ? n : false;
     }
     return false;
 }

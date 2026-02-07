@@ -10,7 +10,7 @@ import { MdContentPaste } from "react-icons/md";
 export default function ShareButton({ messages }: { messages: Messages }) {
     const copylinkOnClick = () => {
         navigator.clipboard.writeText(window.location.href).then(() => {
-            alert("Copied to clipboard");
+            alert("Copied.");
         });
     };
 

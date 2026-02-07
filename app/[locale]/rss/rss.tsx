@@ -256,7 +256,7 @@ function FeedData({ feedData, messages }: { feedData: Feed } & BaseCompProps<"li
                                 {sanitizedContent ? (
                                     <p dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
                                 ) : (
-                                    <p className="italic">~empty content~</p>
+                                    <p className="italic">No summary.</p>
                                 )}
                             </div>
                         </div>
@@ -271,7 +271,7 @@ function FeedData({ feedData, messages }: { feedData: Feed } & BaseCompProps<"li
                                     className="h-64 resize-y overflow-y-scroll break-normal"
                                 />
                             ) : (
-                                <p className="italic">~empty content~</p>
+                                <p className="italic">No summary.</p>
                             )}
                             <Separator className="mb-2 h-2" />
                         </div>

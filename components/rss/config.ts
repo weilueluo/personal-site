@@ -9,37 +9,6 @@ export type RSSConfig = {
 
 export const RSS_CONFIGS: RSSConfig[] = [
     {
-        title: "rss.title.reuters_top",
-        // Reuters' legacy RSS endpoints are frequently unavailable; use a Google News RSS query as a fallback.
-        url: "https://news.google.com/rss/search?q=site%3Areuters.com%20world&hl=en-US&gl=US&ceid=US:en",
-        homeUrl: "https://www.reuters.com/world/",
-        fetchMode: "client",
-    },
-    {
-        title: "rss.title.bbc_news",
-        url: "http://newsrss.bbc.co.uk/rss/newsonline_uk_edition/front_page/rss.xml",
-        homeUrl: "https://www.bbc.com/news",
-        fetchMode: "client",
-    },
-    {
-        title: "rss.title.nyt_home",
-        url: "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
-        homeUrl: "https://www.nytimes.com",
-        fetchMode: "client",
-    },
-    {
-        title: "rss.title.guardian_world",
-        url: "https://www.theguardian.com/world/rss",
-        homeUrl: "https://www.theguardian.com/world",
-        fetchMode: "client",
-    },
-    {
-        title: "rss.title.cnn_top",
-        url: "http://rss.cnn.com/rss/cnn_topstories.rss",
-        homeUrl: "https://www.cnn.com",
-        fetchMode: "client",
-    },
-    {
         title: "rss.title.cloudflare_blog",
         url: "https://blog.cloudflare.com/rss/",
         homeUrl: "https://blog.cloudflare.com",

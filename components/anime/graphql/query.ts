@@ -39,8 +39,6 @@ const HEADERS = {
 };
 
 async function fetchAnilist<T>(query: string): Promise<T> {
-    console.log("Fetching Anilist data", query);
-
     const allOptions = {
         method: "POST",
         headers: HEADERS,
@@ -52,24 +50,17 @@ async function fetchAnilist<T>(query: string): Promise<T> {
         },
     };
 
-    return fetch(ANILIST_GRAPHQL_ENDPOINT, allOptions).then(res =>
-        res
-            .json()
-            .then(json => {
-                if (json.errors) {
-                    throw new Error(JSON.stringify(json.errors));
-                }
-                if (json.status >= 400) {
-                    throw new Error(JSON.stringify(json));
-                }
-                return json.data;
-            })
-            .then(data => {
-                console.log("Received Anilist data");
-                // console.log(data);
-                return data;
-            })
-    );
+    const res = await fetch(ANILIST_GRAPHQL_ENDPOINT, allOptions);
+    const json = (await res.json()) as { data?: T; errors?: unknown; status?: number };
+
+    if (json.errors) {
+        throw new Error(JSON.stringify(json.errors));
+    }
+    if (typeof json.status === "number" && json.status >= 400) {
+        throw new Error(JSON.stringify(json));
+    }
+
+    return json.data as T;
 }
 
 export interface Page<T> {

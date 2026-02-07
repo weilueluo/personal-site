@@ -22,7 +22,7 @@ export default async function Layout({ children }: BasePageProps) {
                     name="keywords"
                     content="Weilue Luo, Personal Website, Anime, Blog, RSS, Github, NextJs, TailwindCSS, React, portfolio, lwl, wll"
                 />
-                <meta name="description" content="A place where I put random stuff" />
+                <meta name="description" content="Personal site. Notes, shaders, feeds." />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
                 {/* Icons for various purposes */}
@@ -44,9 +44,9 @@ export default async function Layout({ children }: BasePageProps) {
                 <meta property="og:image:height" content="600" />
                 <meta
                     property="og:image:alt"
-                    content="Here is some text for open graph image, but the image should be working."
+                    content="Weilue Luo. Personal site."
                 />
-                <meta property="og:description" content="I dump random stuff here." />
+                <meta property="og:description" content="Notes, shaders, feeds." />
 
                 <meta property="og:profile:first_name" content="Weilue" />
                 <meta property="og:profile:last_name" content="Luo" />

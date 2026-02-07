@@ -53,13 +53,13 @@ export default function ShaderHeader({ messages }: ShaderHeaderProps) {
                         active={options.includes("Cylinder And Plane")}
                         onClick={() => toggleOption("Cylinder And Plane")}>
                         <TbTriangleSquareCircleFilled />
-                        Cylinder And Plane
+                        Cylinder + Plane
                     </IconedText>
                     <IconedText
                         active={options.includes("Reflect And Refract")}
                         onClick={() => toggleOption("Reflect And Refract")}>
                         <PiWaveTriangleFill />
-                        Reflect And Refract
+                        Reflect + Refract
                     </IconedText>
                     <IconedText active={options.includes("Fresnel")} onClick={() => toggleOption("Fresnel")}>
                         <BsShadows />
@@ -93,11 +93,11 @@ export default function ShaderHeader({ messages }: ShaderHeaderProps) {
                     </IconedText>
                     <IconedText active={options.includes("Zbuffering")} onClick={() => toggleOption("Zbuffering")}>
                         <IoLayers />
-                        Zbuffering
+                        Z-buffer
                     </IconedText>
                     <IconedText active={options.includes("AAlias")} onClick={() => toggleOption("AAlias")}>
                         <MdBlurOn />
-                        AAlias
+                        AA
                     </IconedText>
                 </div>
                 <div
@@ -123,7 +123,7 @@ export default function ShaderHeader({ messages }: ShaderHeaderProps) {
                     </IconedText>
                     <IconedText active={options.includes("AAlias")} onClick={() => toggleOption("AAlias")}>
                         <MdBlurOn />
-                        AAlias
+                        AA
                     </IconedText>
                     <IconedText
                         active={options.includes("Importance Sampling")}

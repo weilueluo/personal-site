@@ -6,17 +6,16 @@ export function getDomainedOrigin(domain: string) {
         // server hydration
         return "";
     }
-    const domainedOrigin = `${window.location.protocol}//${domain}.${window.location.host}`;
 
-    console.log(`domained origin: ${domainedOrigin}`);
+    const safeDomain = domain.trim();
+    if (!safeDomain) return window.location.origin;
 
-    return domainedOrigin;
+    return `${window.location.protocol}//${safeDomain}.${window.location.host}`;
 }
 
 export function isVerticalScreen() {
-    if (screen && screen.orientation && screen.orientation.type) {
-        return screen.orientation.type.startsWith("portrait");
-    } else {
-        return true; // probably in wechat app browser , or server side hydration
-    }
+    if (typeof screen === "undefined") return true; // server-side or unsupported environment
+
+    const type = screen.orientation?.type;
+    return type ? type.startsWith("portrait") : true; // e.g. embedded browsers without orientation API
 }

@@ -64,11 +64,15 @@ const FeedItem = React.forwardRef<React.ElementRef<"li">, FeedItemProps>(({ item
     useImperativeHandle(ref, () => feedItemRef.current);
 
     useEffect(() => {
-        if (!feedItemRef.current) return;
-
         const element = feedItemRef.current;
+        if (!element) return;
 
-        element.addEventListener("click", reTriggerAnimateFunction(feedItemRef, styles.animate), false);
+        const handler = reTriggerAnimateFunction(feedItemRef, styles.animate);
+        element.addEventListener("click", handler, false);
+
+        return () => {
+            element.removeEventListener("click", handler, false);
+        };
     }, []);
 
     return (
