@@ -180,6 +180,7 @@ for ($i = 0; $i -lt $Branches.Count; $i++) {
   Write-Host "== $branch (port $port) =="
 
   git switch $branch | Out-Null
+  if ($LASTEXITCODE -ne 0) { throw "git switch failed for branch: $branch" }
 
   $branchSafe = $branch -replace "[^a-zA-Z0-9._-]", "_"
   $dir = Join-Path $outRoot $branchSafe
