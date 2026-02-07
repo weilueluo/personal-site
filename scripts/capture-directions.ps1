@@ -89,8 +89,8 @@ function Start-DevServer {
     [string]$StderrLogPath
   )
 
-  # Use cmd.exe so pnpm.cmd resolution is consistent.
-  $cmd = "pnpm dev -- -p $Port"
+  # Prefer `pnpm exec next` so argument forwarding is consistent on Windows.
+  $cmd = "pnpm exec next dev -p $Port"
   # Start-Process does not allow stdout/stderr redirect to the same file.
   return Start-Process `
     -FilePath "cmd.exe" `
