@@ -80,12 +80,21 @@ function Wait-HttpOk {
 function Start-DevServer {
   param(
     [int]$Port,
-    [string]$LogPath
+    [string]$StdoutLogPath,
+    [string]$StderrLogPath
   )
 
   # Use cmd.exe so pnpm.cmd resolution is consistent.
   $cmd = "pnpm dev -- -p $Port"
-  return Start-Process -FilePath "cmd.exe" -ArgumentList @("/c", $cmd) -WorkingDirectory $PWD -WindowStyle Hidden -PassThru -RedirectStandardOutput $LogPath -RedirectStandardError $LogPath
+  # Start-Process does not allow stdout/stderr redirect to the same file.
+  return Start-Process `
+    -FilePath "cmd.exe" `
+    -ArgumentList @("/c", $cmd) `
+    -WorkingDirectory $PWD `
+    -WindowStyle Hidden `
+    -PassThru `
+    -RedirectStandardOutput $StdoutLogPath `
+    -RedirectStandardError $StderrLogPath
 }
 
 function Stop-DevServerByPort {
@@ -171,10 +180,11 @@ for ($i = 0; $i -lt $Branches.Count; $i++) {
   $dir = Join-Path $outRoot $branchSafe
   if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir | Out-Null }
 
-  $log = Join-Path $dir "dev.log.txt"
+  $stdoutLog = Join-Path $dir "dev.stdout.log.txt"
+  $stderrLog = Join-Path $dir "dev.stderr.log.txt"
 
   Stop-DevServerByPort -Port $port
-  $proc = Start-DevServer -Port $port -LogPath $log
+  $proc = Start-DevServer -Port $port -StdoutLogPath $stdoutLog -StderrLogPath $stderrLog
 
   try {
     $home = "http://127.0.0.1:$port/$Locale"
