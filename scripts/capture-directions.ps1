@@ -64,17 +64,22 @@ function Wait-HttpOk {
     [string]$Url,
     [int]$Seconds
   )
+  $lastStatus = $null
   $deadline = (Get-Date).AddSeconds([Math]::Max(1, $Seconds))
   while ((Get-Date) -lt $deadline) {
     try {
       $resp = Invoke-WebRequest -Uri $Url -Method Get -TimeoutSec 4 -UseBasicParsing
-      if ($resp.StatusCode -ge 200 -and $resp.StatusCode -lt 300) { return $true }
-      return $false
+      $lastStatus = $resp.StatusCode
+      if ($resp.StatusCode -ge 200 -and $resp.StatusCode -lt 300) {
+        return [pscustomobject]@{ ok = $true; lastStatus = $lastStatus }
+      }
     } catch {
-      Start-Sleep -Milliseconds 350
+      # ignore; keep polling until deadline
     }
+
+    Start-Sleep -Milliseconds 350
   }
-  return $false
+  return [pscustomobject]@{ ok = $false; lastStatus = $lastStatus }
 }
 
 function Start-DevServer {
@@ -188,9 +193,10 @@ for ($i = 0; $i -lt $Branches.Count; $i++) {
 
   try {
     $homeUrl = "http://127.0.0.1:$port/$Locale"
-    $ok = Wait-HttpOk -Url $homeUrl -Seconds $WaitSeconds
-    if (-not $ok) {
-      Write-Host "FAILED: $homeUrl did not return 2xx within $WaitSeconds seconds"
+    $wait = Wait-HttpOk -Url $homeUrl -Seconds $WaitSeconds
+    if (-not $wait.ok) {
+      $last = if ($null -ne $wait.lastStatus) { " (last status $($wait.lastStatus))" } else { "" }
+      Write-Host "FAILED: $homeUrl did not return 2xx within $WaitSeconds seconds$last"
       $summary += [pscustomobject]@{ branch = $branch; ok = $false; note = "dev server not ready or 5xx"; out = $dir }
       continue
     }
