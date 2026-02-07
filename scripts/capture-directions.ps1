@@ -187,10 +187,10 @@ for ($i = 0; $i -lt $Branches.Count; $i++) {
   $proc = Start-DevServer -Port $port -StdoutLogPath $stdoutLog -StderrLogPath $stderrLog
 
   try {
-    $home = "http://127.0.0.1:$port/$Locale"
-    $ok = Wait-HttpOk -Url $home -Seconds $WaitSeconds
+    $homeUrl = "http://127.0.0.1:$port/$Locale"
+    $ok = Wait-HttpOk -Url $homeUrl -Seconds $WaitSeconds
     if (-not $ok) {
-      Write-Host "FAILED: $home did not return 2xx within $WaitSeconds seconds"
+      Write-Host "FAILED: $homeUrl did not return 2xx within $WaitSeconds seconds"
       $summary += [pscustomobject]@{ branch = $branch; ok = $false; note = "dev server not ready or 5xx"; out = $dir }
       continue
     }
