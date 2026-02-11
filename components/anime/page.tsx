@@ -84,13 +84,13 @@ export default function AnimePage({ messages, locale }: BaseCompProps<"div">) {
             {/* search bar */}
             <div className="flex flex-col gap-2">
                 {/* 1st row search input */}
-                <div className="flex h-8 max-h-full w-full flex-row justify-between md:h-10">
+                <div className="flex h-10 max-h-full w-full flex-row justify-between md:h-12">
                     <SearchIcon />
                     <SearchInput messages={messages} setSearchString={setSearchString} locale={locale} />
                     <SearchSettings messages={messages} onClickShowFilter={onClickShowFilter} locale={locale} />
                 </div>
                 {/* 2nd row quick filters */}
-                <div className="flex flex-row flex-wrap justify-between md:justify-start md:gap-2">
+                <div className="flex flex-row flex-wrap justify-between gap-1.5 md:justify-start md:gap-2">
                     <BooleanQuickFilter
                         name={myFavouriteFilter.name}
                         onClick={() => myFavouriteFilter.onClick(myFavouriteFilter)}
@@ -124,7 +124,7 @@ export default function AnimePage({ messages, locale }: BaseCompProps<"div">) {
 
                 {/* 3rd row active slow filters */}
                 {(activeSlowFilters.length > 0 || showFilter) && (
-                    <div className=" flex flex-row items-center">
+                    <div className=" flex flex-row items-center gap-2">
                         <h3 className="my-1 mr-2 font-bold">
                             <FormattedMessage id="anime.search.filter.active_filters" messages={messages} />
                         </h3>
@@ -134,7 +134,7 @@ export default function AnimePage({ messages, locale }: BaseCompProps<"div">) {
 
                 {/* 4th row settings panel which shows slow filters */}
                 {showFilter && (
-                    <div className="flex flex-col gap-2 border border-black p-2">
+                    <div className="flex flex-col gap-3 border border-black p-4">
                         <SeparatedList>
                             <FilterPanel
                                 title={formattedMessage(messages, "anime.search.filter.meta")}
@@ -199,7 +199,7 @@ function SearchInput({ setSearchString, messages }: SearchInputProps) {
     }, [searchBarFocused, messages]);
 
     return (
-        <form onSubmit={e => handleOnSubmit(e)} className="mx-1 flex grow items-center">
+        <form onSubmit={e => handleOnSubmit(e)} className="mx-2 flex grow items-center">
             <input
                 ref={searchBarRef}
                 className="std-text-size w-full bg-transparent font-semibold focus:outline-none"

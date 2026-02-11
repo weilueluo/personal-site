@@ -12,6 +12,7 @@ export default async function Layout({ children }: BasePageProps) {
     const resolvedTheme = resolve(theme || DEFAULT_RESOLVED_THEME, DEFAULT_RESOLVED_THEME);
     return (
         <html
+            lang="en"
             className={resolvedTheme}
             suppressHydrationWarning
             style={{ colorScheme: resolvedTheme }}>
@@ -24,6 +25,8 @@ export default async function Layout({ children }: BasePageProps) {
                 />
                 <meta name="description" content="Personal site. Notes, shaders, feeds." />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <meta name="robots" content="index, follow" />
+                <link rel="canonical" href="https://wll.dev/" />
 
                 {/* Icons for various purposes */}
                 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />

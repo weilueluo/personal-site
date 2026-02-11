@@ -23,8 +23,8 @@ export default async function Page({ params }: BasePageProps) {
     const messages = await fetchMessages(locale);
 
     return (
-        <div className="flex w-full flex-col items-center">
-            <div className="flex w-max flex-col gap-4">
+        <div className="flex w-full flex-col items-center py-2">
+            <div className="flex w-max flex-col gap-6">
                 <Section>
                     <Title>
                         <FormattedMessage id="about.framework" messages={messages} />
@@ -92,9 +92,9 @@ export default async function Page({ params }: BasePageProps) {
 }
 
 function Title({ children }: { children: React.ReactNode }) {
-    return <h2 className=" text-lg font-semibold capitalize">{children}</h2>;
+    return <h2 className="text-xl font-semibold capitalize">{children}</h2>;
 }
 
 const Section = ({ children, className }: { children: React.ReactNode; className?: string }) => {
-    return <div className={tm("flex flex-col items-center gap-1", className)}>{children}</div>;
+    return <div className={tm("flex flex-col items-center gap-3", className)}>{children}</div>;
 };

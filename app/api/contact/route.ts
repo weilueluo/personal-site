@@ -3,9 +3,9 @@ import { ServerClient } from "postmark";
 import { z } from "zod";
 
 const contactSchema = z.object({
-    name: z.string().trim().optional().or(z.literal("")),
-    contact: z.string().trim().optional().or(z.literal("")),
-    message: z.string().trim().min(1, "Message is empty"),
+    name: z.string().trim().max(200).optional().or(z.literal("")),
+    contact: z.string().trim().max(200).optional().or(z.literal("")),
+    message: z.string().trim().min(1, "Message is empty").max(5000),
 });
 
 const buildMessageBody = (data: z.infer<typeof contactSchema>, isDev: boolean) => {
@@ -44,7 +44,9 @@ export async function POST(request: NextRequest) {
             ...(messageStream ? { MessageStream: messageStream } : {}),
         });
 
-        return Response.json({ id: response.MessageID });
+        return Response.json({ id: response.MessageID }, {
+            headers: { "Cache-Control": "no-store, max-age=0" },
+        });
     } catch (error) {
         const message = error instanceof Error ? error.message : "Failed to send message";
         return Response.json({ error: message }, { status: 500 });

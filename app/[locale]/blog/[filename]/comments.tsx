@@ -86,11 +86,11 @@ export default function CommentSection({
             <h1 className="text-center font-bold">
                 <FormattedMessage messages={messages} id="blog.comments.title" />
             </h1>
-            <Separator className="mb-4 h-2" />
+            <Separator className="mb-6 h-4" />
             <div className="flex w-full flex-col items-center md:w-4/5">
                 {comments.length > 0 && (
                     <>
-                        <ul className="flex w-full flex-col gap-2">
+                        <ul className="flex w-full flex-col gap-4">
                             {comments.map((comment, i) => (
                                 // px-2 border border-black dark:border-white
                                 <li key={i}>
@@ -167,7 +167,7 @@ function SendComment({ sendComment, messages }: { sendComment: (comment: string)
     const [cooldown, setCooldown] = useState(false);
 
     return (
-        <form onSubmit={form.handleSubmit(onSendComment)} className="mt-6 flex max-w-full flex-col gap-2">
+        <form onSubmit={form.handleSubmit(onSendComment)} className="mt-8 flex max-w-full flex-col gap-3">
             <Textarea
                 className="std-bg dark:std-bg-dark std-text max-w-full rounded-md border border-gray-400 p-2"
                 placeholder={formattedMessage(messages, "blog.comments.placeholder")}

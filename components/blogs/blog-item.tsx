@@ -11,7 +11,7 @@ export function BlogItem({ data }: { data: BlogMetadata }) {
 
     return (
         <Link href={`${pathname}/${data.name}`}>
-            <li className="std-hover std-pad flex flex-row flex-wrap justify-between">
+            <li className="std-hover std-pad flex flex-row flex-wrap justify-between gap-4">
                 <h2 className="capitalize">{displayFilename}</h2>
                 <span className="secondary-text self-center text-gray-600 dark:text-gray-500">
                     {Math.round(data.size / 4)} words

@@ -18,8 +18,8 @@ import ThemeButton from "./theme-button";
 
 export default async function Header({ className, messages, locale, ...props }: BaseCompProps<"header">) {
     return (
-        <header className={tm("w-full", className)} {...props}>
-            <nav className="flex w-full flex-row flex-wrap items-center justify-center gap-2 md:gap-4 xl:gap-6">
+        <header className={tm("w-full py-2", className)} {...props}>
+            <nav className="flex w-full flex-row flex-wrap items-center justify-center gap-1 md:gap-1.5 xl:gap-2">
                 <NavItem href={"/"} locale={locale} messages={messages}>
                     <ImHome className="icon-md" />
                     <FormattedMessage messages={messages} id="header.home" />

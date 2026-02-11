@@ -60,12 +60,12 @@ export default function RSS({ messages, locale }: BaseCompProps<"div">) {
 
     return (
         <>
-            <ul className="flex h-fit w-full flex-col gap-2 md:my-2">
+            <ul className="flex h-fit w-full flex-col gap-3 md:my-4">
                 {Array.from(infoMap).map(([title]) => (
                     <FeedTitle key={title} title={title} messages={messages} locale={locale} />
                 ))}
             </ul>
-            <Separator className="mb-0 h-3" />
+            <Separator className="mb-2 h-4" />
 
             <ul>
                 {displayFeeds.map(feedData => (
@@ -121,14 +121,14 @@ function FeedTitle({ title, messages, locale, ...rest }: { title: keyof Messages
     const isFetchingFeed = info.status === FeedStatus.VALIDATING || info.status === FeedStatus.LOADING;
 
     return (
-        <div className={tm("flex h-fit flex-row items-center justify-between gap-1 rounded-md")} {...rest}>
-            <div className="flex h-fit flex-row items-center justify-center gap-1 rounded-md">
+        <div className={tm("flex h-fit flex-row items-center justify-between gap-2 rounded-md py-1")} {...rest}>
+            <div className="flex h-fit flex-row items-center justify-center gap-2 rounded-md">
                 <span className="std-text-size">
                     <FormattedMessage messages={messages} id={title} />
                 </span>
             </div>
 
-            <div className="mx-1 flex h-full w-fit flex-row items-center gap-1">
+            <div className="mx-2 flex h-full w-fit flex-row items-center gap-2">
                 <span className="flex h-full text-sm">
                     {isFetchingFeed
                         ? formattedMessage(messages, "rss.title.fetching_feed")
@@ -181,6 +181,10 @@ function FeedData({ feedData, messages }: { feedData: Feed } & BaseCompProps<"li
     const { setShowRawDate, userConfigs } = useUserRSSConfigs();
     const content = feedData.item.summary || feedData.item.contentSnippet || feedData.item.content;
     const sanitizedContent = content ? DOMPurify.sanitize(content) : undefined;
+    // Strip images for collapsed summary
+    const textOnlyContent = sanitizedContent
+        ? DOMPurify.sanitize(content!, { FORBID_TAGS: ["img", "video", "iframe", "picture", "source", "figure"] })
+        : undefined;
 
     const date = userConfigs.globalConfigs.showRawDate ? feedData.date?.toISOString() : feedData.date?.toLocaleString();
     const dateOnClick = (e: React.MouseEvent<HTMLSpanElement>) => {
@@ -198,12 +202,12 @@ function FeedData({ feedData, messages }: { feedData: Feed } & BaseCompProps<"li
     };
 
     return (
-        <li key={rsshash(feedData)} className={tm("my-3 break-all border border-transparent")}>
+        <li key={rsshash(feedData)} className={tm("my-4 break-all border border-transparent")}>
             <div className="relative animate-in slide-in-from-bottom-4">
                 {/* summary */}
                 <div className="flex flex-row">
                     {/* title, source, date, etc */}
-                    <div>
+                    <div className="flex flex-col gap-1">
                         {/* first row: title */}
                         <Link
                             href={feedData.item?.link || "#"}
@@ -249,12 +253,12 @@ function FeedData({ feedData, messages }: { feedData: Feed } & BaseCompProps<"li
                     onMouseUp={detailsMouseUp}
                     onMouseEnter={onDetailsMouseEnter}
                     onMouseLeave={onDetailsMouseLeave}
-                    className="std-text-size relative mt-1 flex flex-row hover:cursor-pointer">
+                    className="std-text-size relative mt-2 flex flex-row hover:cursor-pointer">
                     {!showDetails && (
                         <div>
                             <div className="std-text-darker line-clamp-3 break-normal animate-in slide-in-from-bottom-4">
-                                {sanitizedContent ? (
-                                    <p dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+                                {textOnlyContent ? (
+                                    <p dangerouslySetInnerHTML={{ __html: textOnlyContent }} />
                                 ) : (
                                     <p className="italic">No summary.</p>
                                 )}
@@ -268,7 +272,7 @@ function FeedData({ feedData, messages }: { feedData: Feed } & BaseCompProps<"li
                             {sanitizedContent ? (
                                 <p
                                     dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-                                    className="h-64 resize-y overflow-y-scroll break-normal"
+                                    className="break-normal [&_img]:max-h-48 [&_img]:w-auto [&_img]:rounded"
                                 />
                             ) : (
                                 <p className="italic">No summary.</p>

@@ -39,8 +39,8 @@ export default async function Page({ params }: { params: BlogParams | Promise<Bl
     const date = new Date(blogCommit[0].commit.author.date).toLocaleString();
 
     return (
-        <div className="flex flex-col items-center">
-            <div className="flex flex-row flex-wrap items-center justify-around gap-2 md:justify-between">
+        <div className="flex flex-col items-center gap-2">
+            <div className="flex flex-row flex-wrap items-center justify-around gap-3 md:justify-between">
                 <BackButton messages={messages} locale={locale} />
                 <Link href={blogContent.html_url} target="_blank">
                     <IconedText>
@@ -57,7 +57,7 @@ export default async function Page({ params }: { params: BlogParams | Promise<Bl
                     <BsCalendar2DateFill /> {date}
                 </IconedText>
             </div>
-            <Separator className="mb-2 h-2" />
+            <Separator className="mb-4 h-2" />
             <div className="prose-sm mx-auto my-0 max-w-none dark:prose-invert md:prose">
                 <ReactMarkdown
                     remarkPlugins={[remarkGfm, remarkMath, remarkToc, remarkGemoji]}
@@ -65,7 +65,7 @@ export default async function Page({ params }: { params: BlogParams | Promise<Bl
                     {blogText}
                 </ReactMarkdown>
             </div>
-            <Separator className="mb-2 mt-12 h-2" />
+            <Separator className="mb-4 mt-12 h-2" />
             <CommentSection messages={messages} locale={locale} filename={filename} />
         </div>
     );

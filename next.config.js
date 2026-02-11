@@ -61,7 +61,6 @@ const nextConfig = withNextIntl(
 
             return config;
         },
-        output: "standalone",
     })
 );
 

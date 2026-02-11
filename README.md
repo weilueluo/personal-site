@@ -20,7 +20,7 @@ Required:
 - `NEXT_PUBLIC_G_TAG` (Google Analytics)
 - `GITHUB_TOKEN` (read-only token for GitHub blog content)
 - `SUPABASE_URL`
-- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_SECRET_KEY` (preferred) or `SUPABASE_PUBLISHABLE_KEY` with RLS enabled
 - `POSTMARK_SERVER_TOKEN`
 - `POSTMARK_FROM`
 - `POSTMARK_TO`
@@ -31,17 +31,32 @@ Optional:
 
 ### Supabase Schema
 
-Create a `comments` table for blog comments:
+Schema + RLS are managed with Supabase CLI migrations in `supabase/migrations`.
 
-```sql
-create table if not exists public.comments (
-  id uuid primary key default gen_random_uuid(),
-  filename text not null,
-  content text not null,
-  created_at timestamptz not null default now()
-);
+Apply migrations:
 
-create index if not exists comments_filename_idx on public.comments (filename);
+```bash
+supabase link --project-ref <your-project-ref>
+supabase db push
+```
+
+The initial migration creates the `comments` table and RLS policies for read/insert.
+
+### CI/CD
+
+- **Deploys**: Use Vercel GitHub integration (no deploy workflow required).
+- **Supabase migrations**: GitHub Actions workflow `.github/workflows/supabase-migrate.yml`.
+
+Required GitHub secrets:
+- `SUPABASE_ACCESS_TOKEN`
+- `SUPABASE_PROJECT_REF`
+- `SUPABASE_DB_PASSWORD`
+
+Manual run:
+
+```bash
+npx supabase link --project-ref <project-ref>
+npx supabase db push
 ```
 
 ### Archive

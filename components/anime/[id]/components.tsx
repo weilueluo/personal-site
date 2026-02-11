@@ -5,6 +5,7 @@ import LoadingItem from "@/components/ui/loading/loading";
 import { FormattedMessage, formattedMessage } from "@/shared/i18n/translation";
 import { BaseCompProps } from "@/shared/types/comp";
 import Link from "next/link";
+import DOMPurify from "dompurify";
 import React, { ElementRef, useState } from "react";
 import { useAnimeDetails } from "./context";
 import { Character, Relation, Staff, VoiceActor } from "../graphql/graphql";
@@ -216,7 +217,7 @@ export function Description() {
     const data = useAnimeDetails();
 
     return data?.description ? (
-        <p dangerouslySetInnerHTML={{ __html: data.description }} className="font-semibold" />
+        <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.description) }} className="font-semibold" />
     ) : null;
 }
 

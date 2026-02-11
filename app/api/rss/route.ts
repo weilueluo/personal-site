@@ -16,7 +16,21 @@ const RSS_ACCEPT_HEADER =
     "application/rss+xml, application/atom+xml, application/xml, text/xml;q=0.9, text/html;q=0.8, */*;q=0.7";
 
 function isValidUrl(url: string) {
-    return /^https?:\/\//i.test(url);
+    if (!/^https?:\/\//i.test(url)) return false;
+    try {
+        const parsed = new URL(url);
+        const hostname = parsed.hostname.toLowerCase();
+        // Block localhost
+        if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1" || hostname === "[::1]")
+            return false;
+        // Block private/reserved IP ranges
+        if (/^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|169\.254\.|0\.)/.test(hostname)) return false;
+        // Block common metadata endpoints
+        if (hostname === "metadata.google.internal") return false;
+        return true;
+    } catch {
+        return false;
+    }
 }
 
 function stripCdata(value: string) {

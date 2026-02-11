@@ -29,7 +29,7 @@ export default function ShaderHeader({ messages }: ShaderHeaderProps) {
 
     return (
         <div>
-            <div className="flex flex-row justify-center gap-4">
+            <div className="flex flex-row justify-center gap-5">
                 <IconedText active={isRayTracer} onClick={() => toggleType("ray tracer")}>
                     <GiShieldReflect />
                     Ray Tracer
@@ -46,7 +46,7 @@ export default function ShaderHeader({ messages }: ShaderHeaderProps) {
             <div>
                 <div
                     className={tm(
-                        "mt-2 flex flex-row flex-wrap justify-around gap-2 md:gap-4",
+                        "mt-4 flex flex-row flex-wrap justify-around gap-3 md:gap-5",
                         !isRayTracer && "hidden"
                     )}>
                     <IconedText
@@ -68,7 +68,7 @@ export default function ShaderHeader({ messages }: ShaderHeaderProps) {
                 </div>
                 <div
                     className={tm(
-                        "mt-4 flex flex-row flex-wrap justify-around gap-2 md:gap-4",
+                        "mt-4 flex flex-row flex-wrap justify-around gap-3 md:gap-5",
                         !isRasterization && "hidden"
                     )}>
                     <IconedText active={options.includes("Projection")} onClick={() => toggleOption("Projection")}>
@@ -102,7 +102,7 @@ export default function ShaderHeader({ messages }: ShaderHeaderProps) {
                 </div>
                 <div
                     className={tm(
-                        "mt-4 flex flex-row flex-wrap justify-around gap-2 md:gap-4",
+                        "mt-4 flex flex-row flex-wrap justify-around gap-3 md:gap-5",
                         !isPathTracer && "hidden"
                     )}>
                     <IconedText active={options.includes("Light")} onClick={() => toggleOption("Light")}>

@@ -17,7 +17,7 @@ const Separator = forwardRef<React.ElementRef<"div">, SeparatorProps>(
                     variant === "sharp" && "inverseBorderB",
                     variant === "square" && "border-b border-black dark:border-std-light",
                     size === "std" && "mb-6 h-6",
-                    size === "sm" && "mb-1 h-1",
+                    size === "sm" && "mb-2 h-2",
                     className
                 )}
                 {...otherProps}

@@ -21,6 +21,10 @@ function resolveMessage(messages: Record<string, unknown>, id: string): string {
             throw new Error(`message not found for id: ${id}`);
         }
     }
+    // Handle branch nodes that also have a leaf value stored as _default
+    if (current && typeof current === "object" && "_default" in (current as Record<string, unknown>)) {
+        current = (current as Record<string, unknown>)._default;
+    }
     if (typeof current !== "string") {
         throw new Error(`message is not a string for id: ${id}`);
     }

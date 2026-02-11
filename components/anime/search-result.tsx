@@ -60,7 +60,7 @@ export default function SearchResultPage({
     return (
         <>
             {/* loading header */}
-            <div className="my-2 flex flex-row justify-between" {...rest}>
+            <div className="my-4 flex flex-row justify-between" {...rest}>
                 <h3 className="text-xl font-bold capitalize">
                     <FormattedMessage id="anime.search.result.results" messages={messages} />
                     {(rawResponse.isLoading || rawResponse.isValidating) && (
@@ -84,8 +84,9 @@ export default function SearchResultPage({
                 {/* image cards */}
                 <ul
                     className={tm(
-                        collapse && "flex w-full flex-row gap-2 overflow-x-auto",
-                        !collapse && "my-grid-cols-3 md:my-grid-cols-4 lg:my-grid-cols-5 grid justify-between"
+                        "flex flex-row flex-wrap gap-3",
+                        collapse && "w-full overflow-x-auto flex-nowrap gap-2",
+                        !collapse && "justify-center"
                     )}>
                     {animeData.map(data => (
                         <Link href={`${pathname}/${data.id}`} key={data.id} prefetch={false}>
@@ -100,7 +101,7 @@ export default function SearchResultPage({
                 {/* load more info / button */}
                 <div className="flex w-full justify-center">
                     <button
-                        className="std-pad std-hover mt-2"
+                        className="std-pad std-hover mt-4"
                         onClick={() => rawResponse.setSize(rawResponse.size + 1)}
                         disabled={!pageInfo?.hasNextPage}>
                         {buttonText}

@@ -2,14 +2,16 @@
 @reference "tailwindcss";
 
 $width: 2.2em;
-$height: 2em;
+$height: 1.1em;
 
 .textContainer {
-    @apply flex h-full w-20 items-center justify-center whitespace-nowrap;
+    @apply flex w-20 items-center justify-center overflow-hidden whitespace-nowrap;
+    height: $height;
     perspective: 100px;
 }
 .iconContainer {
-    @apply flex h-full w-6 items-center justify-center;
+    @apply flex w-6 items-center justify-center overflow-hidden;
+    height: $height;
     perspective: 100px;
 }
 

@@ -10,7 +10,7 @@ export default function IconedText({ children, className, hover = true, active =
     return (
         <span
             className={tm(
-                "std-icon-text std-pad",
+                "std-icon-text std-pad rounded-md",
                 hover && "std-hover",
                 active && "std-active dark:std-active-dark",
                 className

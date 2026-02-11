@@ -24,13 +24,13 @@ function Main({ children, locale, messages, className, ...rest }: BaseCompProps<
     return (
         <main
             className={tm(
-                "max-w-screen relative flex h-fit min-h-screen w-[60em] max-w-[100vw] flex-col p-4 md:px-24 md:py-4",
+                "max-w-screen relative flex h-fit min-h-screen w-[60em] max-w-[100vw] flex-col p-4 md:px-24 md:py-6",
                 className
             )}
             {...rest}>
             {/* @ts-ignore Async Server Component */}
             <Header messages={messages} locale={locale} />
-            <Separator className="mb-2 h-2" />
+            <Separator className="mb-4 h-2" />
             {children}
         </main>
     );

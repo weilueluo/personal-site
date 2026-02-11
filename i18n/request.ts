@@ -7,10 +7,20 @@ function setNestedValue(target: Record<string, unknown>, path: string, value: st
     for (let i = 0; i < parts.length; i++) {
         const key = parts[i];
         if (i === parts.length - 1) {
-            current[key] = value;
+            if (current[key] && typeof current[key] === "object") {
+                // Key already exists as a branch — store leaf value as _default
+                (current[key] as Record<string, unknown>)._default = value;
+            } else {
+                current[key] = value;
+            }
         } else {
             if (!current[key] || typeof current[key] !== "object") {
+                const existing = typeof current[key] === "string" ? current[key] as string : undefined;
                 current[key] = {};
+                if (existing !== undefined) {
+                    // Promote existing leaf value to _default
+                    (current[key] as Record<string, unknown>)._default = existing;
+                }
             }
             current = current[key] as Record<string, unknown>;
         }

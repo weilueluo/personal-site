@@ -60,5 +60,7 @@ export async function GET(req: Request) {
     }
 
     const data = await res.json();
-    return NextResponse.json(data);
+    return NextResponse.json(data, {
+        headers: { "Cache-Control": "s-maxage=600, stale-while-revalidate=1200" },
+    });
 }

@@ -34,16 +34,16 @@ export default async function Page() {
         : "README not found.";
 
     return (
-        <div className="flex flex-col items-center justify-center text-xl">
-            <h1 className="font-bold">Blog</h1>
+        <div className="flex flex-col items-center justify-center gap-2 text-xl">
+            <h1 className="text-2xl font-bold">Blog</h1>
             <Separator className="mb-4 h-2" />
-            <ul className="flex w-[80%] flex-col gap-2">
+            <ul className="flex w-[90%] flex-col gap-3">
                 {entries.map(data => (
                     <BlogItem data={data} key={data.name} />
                 ))}
             </ul>
-            <Separator className="mb-2 h-2" />
-            <h1 className="font-bold">README</h1>
+            <Separator className="mb-4 mt-4 h-2" />
+            <h1 className="text-2xl font-bold">README</h1>
             <Separator className="mb-4 h-2" />
             <div className="prose-sm mx-auto my-0 max-w-none dark:prose-invert md:prose">
                 <ReactMarkdown

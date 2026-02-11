@@ -14,8 +14,8 @@ export function AnimeDetailsPage({ messages, locale, className, ...rest }: BaseC
     const data = useAnimeDetails();
 
     return (
-        <div className={tm("flex flex-col gap-2 md:gap-4", className)} {...rest}>
-            <div className="flex flex-col gap-1 md:gap-2">
+        <div className={tm("flex flex-col gap-4 md:gap-6", className)} {...rest}>
+            <div className="flex flex-col gap-2 md:gap-4">
                 <BackButton messages={messages} locale={locale} />
                 {/* banner image */}
                 <ProgressiveImage
@@ -28,9 +28,9 @@ export function AnimeDetailsPage({ messages, locale, className, ...rest }: BaseC
                 />
             </div>
 
-            <div className="flex grid-cols-4 grid-rows-1 flex-col gap-4 md:grid">
+            <div className="flex grid-cols-4 grid-rows-1 flex-col gap-6 md:grid">
                 {/* side panel */}
-                <div className="flex flex-col gap-2 md:gap-4">
+                <div className="flex flex-col gap-4 md:gap-6">
                     <CoverImage messages={messages} locale={locale} />
                     <div className="flex flex-col gap-2">
                         <Status messages={messages} locale={locale} />
@@ -42,7 +42,7 @@ export function AnimeDetailsPage({ messages, locale, className, ...rest }: BaseC
                     <Tags />
                 </div>
                 {/* main panel */}
-                <div className="col-start-2 col-end-[-1] flex flex-col gap-6">
+                <div className="col-start-2 col-end-[-1] flex flex-col gap-8">
                     <Title messages={messages} locale={locale} />
                     <Description />
                     <Trailer messages={messages} locale={locale} />

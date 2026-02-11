@@ -130,8 +130,8 @@ export default function SendMessage({ messages, locale, className, ...rest }: Ba
         <div className={tm("relative h-fit w-full", className)} {...rest}>
             <div className={tm("borderT h-full w-full")}>
                 <div className={tm("borderB h-full w-full")}>
-                    <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className="flex h-fit w-full flex-col gap-1">
-                        <div className="flex w-full flex-col gap-2 p-4">
+                    <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className="flex h-fit w-full flex-col gap-2">
+                        <div className="flex w-full flex-col gap-3 p-5">
                             <Label name={formattedMessage(messages, "about.sendMessage.label.message")}>
                                 <Textarea
                                     className={tm(

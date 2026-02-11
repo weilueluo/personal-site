@@ -26,16 +26,16 @@ export default async function Page({ params }: BasePageProps) {
                     <MyRoom />
                 </Suspense>
 
-                <span className="mt-6 text-center">
+                <span className="mt-8 text-center text-lg md:text-xl">
                     Hello. I&#39;m <b>Weilue Luo</b>.
                 </span>
-                <span className="secondary-text mt-2 text-center">Notes. Shaders. Feeds. Anime.</span>
 
-                <div className="mt-4 flex w-full flex-col items-center justify-center">
+
+                <div className="mt-6 flex w-full flex-col items-center justify-center gap-3">
                     {/* <div>
                         <FormattedMessage messages={messages} id="index.title" />
                     </div> */}
-                    <div className="flex w-full flex-row flex-wrap items-center justify-center gap-2 md:gap-4 xl:gap-6">
+                    <div className="flex w-full flex-row flex-wrap items-center justify-center gap-1 md:gap-1.5 xl:gap-2">
                         <NavItem className="std-pad" locale={locale} messages={messages} href={"/blog"}>
                             <RiFilePaper2Fill className="icon-md" />
                             <span className="grow">
@@ -71,7 +71,7 @@ export default async function Page({ params }: BasePageProps) {
                             </span>
                         </NavItem>
                     </div>
-                    <div className="flex w-full flex-row flex-wrap items-center justify-center gap-2 md:gap-4 xl:gap-6">
+                    <div className="flex w-full flex-row flex-wrap items-center justify-center gap-1 md:gap-1.5 xl:gap-2">
                         <NavItem
                             className="std-pad flex flex-row"
                             locale={locale}
